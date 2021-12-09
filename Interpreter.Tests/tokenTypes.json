@@ -1,0 +1,104 @@
+[
+  {
+    "tag": "Comment",
+    "pattern": "[\/]{2}.*",
+    "priority": 0,
+    "whiteSpace": true
+  },
+  {
+    "tag": "Ident",
+    "pattern": "[a-zA-Z][a-zA-Z0-9]*",
+    "priority": 50,
+    "whiteSpace": false
+  },
+  {
+    "tag": "IntegerLiteral",
+    "pattern": "[0-9]+",
+    "priority": 3,
+    "whiteSpace": false
+  },
+  {
+    "tag": "FloatLiteral",
+    "pattern": "[0-9]+[.][0-9]+",
+    "priority": 2,
+    "whiteSpace": false
+  },
+  {
+    "tag": "NullLiteral",
+    "pattern": "null",
+    "priority": 4,
+    "whiteSpace": false
+  },
+  {
+    "tag": "BooleanLiteral",
+    "pattern": "true|false",
+    "priority": 5,
+    "whiteSpace": false
+  }, 
+  {
+    "tag": "StringLiteral",
+    "pattern": "\\\"(\\\\.|[^\"\\\\])*\\\"",
+    "priority": 6,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Keyword",
+    "pattern": "let|const|function|if|else|do|while|switch|case|default|break|continue|return|number|string|boolean",
+    "priority": 11,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Operator",
+    "pattern": "[+]|[-]|[*]|[\/]|([!]|[=])[=]|([<]|[>])[=]?|[!]",
+    "priority": 12,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Comma",
+    "pattern": "[,]",
+    "priority": 100,
+    "whiteSpace": false
+  },
+  {
+    "tag": "LeftCurl",
+    "pattern": "[{]",
+    "priority": 101,
+    "whiteSpace": false
+  },
+  {
+    "tag": "RightCurl",
+    "pattern": "[}]",
+    "priority": 102,
+    "whiteSpace": false
+  },
+  {
+    "tag": "LeftParen",
+    "pattern": "[(]",
+    "priority": 103,
+    "whiteSpace": false
+  },
+  {
+    "tag": "RightParen",
+    "pattern": "[)]",
+    "priority": 104,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Assign",
+    "pattern": "[=]",
+    "priority": 99,
+    "whiteSpace": false
+  },
+  {
+    "tag": "QuestionMark",
+    "pattern": "[?]",
+    "priority": 90,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Colon",
+    "pattern": "[:]",
+    "priority": 91,
+    "whiteSpace": false
+  }
+]

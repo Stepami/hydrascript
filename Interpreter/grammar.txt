@@ -1,0 +1,63 @@
+Script -> StatementList
+StatementList -> StatementListItem*
+StatementListItem -> Statement
+                     Declaration
+                     
+Statement -> BlockStatement
+             ExpressionStatement
+             IfStatement
+             WhileStatement
+             ContinueStatement
+             BreakStatement
+             ReturnStatement
+             
+Declaration -> LexicalDeclaration
+               FunctionDeclaration
+               
+BlockStatement -> '{' StatementList '}'
+
+ExpressionStatement -> Expression
+Expression -> AssignExpression
+AssignExpression -> "Ident" '=' (AssignExpression | ConditionalExpression) | OrExpression
+ConditionalExpression -> OrExpression '?' ConditionalExpression ':' ConditionalExpression
+OrExpression -> AndExpression ('||' AndExpression)*
+AndExpression -> EqExpression ('&&' EqExpression)*
+EqExpression -> RelExpression (('=='|'!=') RelExpression)*
+RelExpression -> AddExpression (('<'|'>'|'<='|'>=') AddExpression)*
+AddExpression -> MulExpression (('+'|'-') MulExpression)*
+MulExpression -> UnaryExpression (('*'|'/'|'%') UnaryExpression)*
+UnaryExpression -> PrimaryExpression | ('-'|'!') UnaryExpression
+PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | CallExpression
+CallExpression -> "Ident" '(' (Expression (',' Expression)*)? ')'
+Literal -> "NullLiteral"
+           "IntegerLiteral"
+           "FloatLiteral"
+           "StringLiteral"
+           "BooleanLiteral"
+                
+IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
+
+WhileStatement -> 'while' '(' Expression ')' Statement
+
+ContinueStatement -> 'continue'
+
+BreakStatement -> 'break'
+
+ReturnStatement -> 'return' Expression?
+                       
+LexicalDeclaration -> LetOrConst "Ident" Initialization (',' "Ident" Initialization)*
+Initialization -> Type
+                  Initializer
+LetOrConst -> 'let'
+              'const'
+Initializer -> '=' Expression
+
+FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement
+FunctionParameters -> ParameterDeclaration (',' ParameterDeclaration)*
+ParameterDeclaration -> "Ident" ':' TypeIdentifier
+Type -> ':' TypeIdentifier
+TypeIdentifier -> PrimitiveType
+PrimitiveType -> 'number'
+                 'string'
+                 'boolean'
+                       
