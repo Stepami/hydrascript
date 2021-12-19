@@ -24,9 +24,10 @@
       <None Update="tokenTypes.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="test.js">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net5.0" />
     </ItemGroup>
 
 </Project>
