@@ -25,7 +25,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 
         public bool HasReturnStatement() => statements.HasReturnStatement();
 
-        public void SetArguments(List<Expression> expressions)
+        public void SetArguments(CallExpression call, List<Expression> expressions)
         {
             if (function.Parameters.Count == expressions.Count)
             {
@@ -44,7 +44,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
                         }
                     });
             }
-            else throw new WrongNumberOfArguments(Segment, function.Parameters.Count, expressions.Count);
+            else throw new WrongNumberOfArguments(call.Segment, function.Parameters.Count, expressions.Count);
         }
 
         public void Clear()

@@ -36,7 +36,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 }
             }
 
-            function.Body.SetArguments(expressions);
+            function.Body.SetArguments(this, expressions);
 
             var block = function.Body.First().GetAllNodes();
             foreach (var node in block)

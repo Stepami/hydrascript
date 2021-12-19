@@ -534,7 +534,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     Expect("RightParen");
                     return new CallExpression(id, expressions)
                     {
-                        SymbolTable = table
+                        SymbolTable = table,
+                        Segment = ident.Segment
                     };
                 }
 
