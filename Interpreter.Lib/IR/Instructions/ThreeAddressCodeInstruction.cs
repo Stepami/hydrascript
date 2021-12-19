@@ -41,14 +41,6 @@ namespace Interpreter.Lib.IR.Instructions
             else
             {
                 object lValue = right.left.Get(frame), rValue = right.right.Get(frame);
-                if (lValue is string)
-                {
-                    frame[Left] = lValue.ToString() + rValue;
-                }
-                else
-                {
-                    frame[Left] = Convert.ToDouble(lValue) + Convert.ToDouble(rValue);
-                }
                 frame[Left] = @operator switch
                 {
                     "+" when lValue is string => lValue.ToString() + rValue,
