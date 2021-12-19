@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.Semantic.Nodes.Statements
@@ -19,12 +22,25 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 
             this.statement = statement;
             this.statement.Parent = this;
+
+            CanEvaluate = true;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             yield return condition;
             yield return statement;
+        }
+
+        internal override Type NodeCheck()
+        {
+            var condType = condition.NodeCheck();
+            if (!condType.Equals(TypeUtils.JavaScriptTypes.Boolean))
+            {
+                throw new NotBooleanTestExpression(Segment, condType);
+            }
+
+            return condType;
         }
 
         protected override string NodeRepresentation() => "while";

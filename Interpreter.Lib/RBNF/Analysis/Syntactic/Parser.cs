@@ -202,7 +202,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private IfStatement IfStatement(SymbolTable table)
         {
-            Expect("Keyword", "if");
+            var token = Expect("Keyword", "if");
             Expect("LeftParen");
             var expr = Expression(table);
             Expect("RightParen");
@@ -211,20 +211,20 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             {
                 Expect("Keyword", "else");
                 var @else = Statement(table);
-                return new IfStatement(expr, then, @else) {SymbolTable = table};
+                return new IfStatement(expr, then, @else) {SymbolTable = table, Segment = token.Segment};
             }
 
-            return new IfStatement(expr, then) {SymbolTable = table};
+            return new IfStatement(expr, then) {SymbolTable = table, Segment = token.Segment};
         }
 
         private WhileStatement WhileStatement(SymbolTable table)
         {
-            Expect("Keyword", "while");
+            var token = Expect("Keyword", "while");
             Expect("LeftParen");
             var expr = Expression(table);
             Expect("RightParen");
             var stmt = Statement(table);
-            return new WhileStatement(expr, stmt) {SymbolTable = table};
+            return new WhileStatement(expr, stmt) {SymbolTable = table, Segment = token.Segment};
         }
 
         private Declaration Declaration(SymbolTable table)

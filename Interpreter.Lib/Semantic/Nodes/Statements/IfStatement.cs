@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.Semantic.Nodes.Statements
@@ -26,6 +29,8 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
                 this.@else = @else;
                 this.@else.Parent = this;
             }
+
+            CanEvaluate = true;
         }
 
         public bool HasReturnStatement()
@@ -59,6 +64,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
             {
                 yield return @else;
             }
+        }
+
+        internal override Type NodeCheck()
+        {
+            var testType = test.NodeCheck();
+            if (!testType.Equals(TypeUtils.JavaScriptTypes.Boolean))
+            {
+                throw new NotBooleanTestExpression(Segment, testType);
+            }
+
+            return testType;
         }
 
         protected override string NodeRepresentation() => "if";
