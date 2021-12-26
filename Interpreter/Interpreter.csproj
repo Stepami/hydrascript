@@ -18,9 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="test.tjs">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="tokenTypes.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
