@@ -23,8 +23,4 @@
       </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="bin\Debug\net5.0" />
-    </ItemGroup>
-
 </Project>

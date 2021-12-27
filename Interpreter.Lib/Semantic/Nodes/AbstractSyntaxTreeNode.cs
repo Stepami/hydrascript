@@ -51,6 +51,23 @@ namespace Interpreter.Lib.Semantic.Nodes
 
             return false;
         }
+        
+        public bool ChildOf<T>(out T node) where T : AbstractSyntaxTreeNode
+        {
+            var parent = Parent;
+            while (parent != null)
+            {
+                if (parent is T tNode)
+                {
+                    node = tNode;
+                    return true;
+                }
+                parent = parent.Parent;
+            }
+
+            node = null;
+            return false;
+        }
 
         public void SemanticCheck()
         {

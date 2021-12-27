@@ -18,6 +18,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             this.test = test;
             this.consequent = consequent;
             this.alternate = alternate;
+
+            this.test.Parent = this;
+            this.consequent.Parent = this;
+            this.alternate.Parent = this;
         }
 
         internal override Type NodeCheck()

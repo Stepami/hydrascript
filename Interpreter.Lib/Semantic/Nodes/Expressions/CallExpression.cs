@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;

@@ -24,7 +24,8 @@ namespace Interpreter.Lib.IR.Instructions
             this.@operator = @operator;
         }
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
+        public override int Execute(Stack<Call> callStack, Stack<Frame> frames,
+            Stack<(string Id, object Value)> arguments)
         {
             var frame = frames.Peek();
             if (right.left == null)
@@ -51,6 +52,8 @@ namespace Interpreter.Lib.IR.Instructions
                     "%" => Convert.ToDouble(lValue) % Convert.ToDouble(rValue),
                     "||" => Convert.ToBoolean(lValue) || Convert.ToBoolean(rValue),
                     "&&" => Convert.ToBoolean(lValue) && Convert.ToBoolean(rValue),
+                    "==" => Equals(lValue, rValue),
+                    "!=" => !Equals(lValue, rValue),
                     ">" => Convert.ToDouble(lValue) > Convert.ToDouble(rValue),
                     ">=" => Convert.ToDouble(lValue) >= Convert.ToDouble(rValue),
                     "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
