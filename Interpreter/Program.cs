@@ -95,6 +95,11 @@ namespace Interpreter
                 {
                     Console.WriteLine(ex.Message);
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Internal Interpreter Error");
+                    Console.WriteLine(ex);
+                }
             });
             await parserResult.WithNotParsedAsync(_ =>
             {
