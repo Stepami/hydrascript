@@ -34,7 +34,7 @@
     "pattern": "true|false",
     "priority": 5,
     "whiteSpace": false
-  }, 
+  },
   {
     "tag": "StringLiteral",
     "pattern": "\\\"(\\\\.|[^\"\\\\])*\\\"",
@@ -42,14 +42,20 @@
     "whiteSpace": false
   },
   {
+    "tag": "TypeIdentifier",
+    "pattern": "number|string|boolean|object",
+    "priority": 10,
+    "whiteSpace": false
+  },
+  {
     "tag": "Keyword",
-    "pattern": "let|const|function|if|else|do|while|switch|case|default|break|continue|return|number|string|boolean",
+    "pattern": "let|const|function|if|else|do|while|switch|case|default|break|continue|return",
     "priority": 11,
     "whiteSpace": false
   },
   {
     "tag": "Operator",
-    "pattern": "[+]|[-]|[*]|[\/]|([!]|[=])[=]|([<]|[>])[=]?|[!]",
+    "pattern": "[+]|[-]|[*]|[\/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}",
     "priority": 12,
     "whiteSpace": false
   },
@@ -57,6 +63,12 @@
     "tag": "Comma",
     "pattern": "[,]",
     "priority": 100,
+    "whiteSpace": false
+  },
+  {
+    "tag": "Dot",
+    "pattern": "[.]",
+    "priority": 105,
     "whiteSpace": false
   },
   {
@@ -81,6 +93,18 @@
     "tag": "RightParen",
     "pattern": "[)]",
     "priority": 104,
+    "whiteSpace": false
+  },
+  {
+    "tag": "LeftBracket",
+    "pattern": "[[]",
+    "priority": 107,
+    "whiteSpace": false
+  },
+  {
+    "tag": "RightBracket",
+    "pattern": "[]]",
+    "priority": 109,
     "whiteSpace": false
   },
   {

@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Interpreter.Lib\Interpreter.Lib.csproj" />
+      <ProjectReference Include="..\Interpreter\Interpreter.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -15,12 +15,10 @@ namespace Interpreter
 
         public LexerQueryModel CreateLexerQuery()
         {
-            var queryObj = new JObject
-            {
-                ["tokenTypes"] = JToken.Parse(File.ReadAllText(options.TokenTypesJsonFilePath)),
-                ["text"] = options.InputFilePath == null ? "" : File.ReadAllText(options.InputFilePath)
-            };
-            return queryObj.ToObject<LexerQueryModel>();
+            var query = new LexerQueryModel(options.TokenTypesJsonFilePath);
+            var sourceCode = File.ReadAllText(options.InputFilePath);
+            query.Text = sourceCode;
+            return query;
         }
     }
 }

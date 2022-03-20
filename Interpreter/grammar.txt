@@ -18,8 +18,15 @@ BlockStatement -> '{' StatementList '}'
 
 ExpressionStatement -> Expression
 Expression -> AssignExpression
-AssignExpression -> "Ident" '=' (AssignExpression | ConditionalExpression) | OrExpression
-ConditionalExpression -> OrExpression '?' ConditionalExpression ':' ConditionalExpression
+AssignExpression -> LeftHandSideExpression ('=' AssignExpression)?
+LeftHandSideExpression -> CastExpression
+                          CallExpression
+CallExpression -> MemberExpression Arguments*
+Arguments -> '(' ArgumentsList? ')'
+ArgumentsList -> AssignExpression (',' AssignExpression)*
+MemberExpression -> "Ident" ('[' Expression ']' | '.' "Ident" )*
+CastExpression -> ConditionalExpression 'as' TypeIdentifier
+ConditionalExpression -> OrExpression ('?' AssignExpression ':' AssignExpression)?
 OrExpression -> AndExpression ('||' AndExpression)*
 AndExpression -> EqExpression ('&&' EqExpression)*
 EqExpression -> RelExpression (('=='|'!=') RelExpression)*
@@ -27,13 +34,17 @@ RelExpression -> AddExpression (('<'|'>'|'<='|'>=') AddExpression)*
 AddExpression -> MulExpression (('+'|'-') MulExpression)*
 MulExpression -> UnaryExpression (('*'|'/'|'%') UnaryExpression)*
 UnaryExpression -> PrimaryExpression | ('-'|'!') UnaryExpression
-PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | CallExpression
-CallExpression -> "Ident" '(' (Expression (',' Expression)*)? ')'
+PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
 Literal -> "NullLiteral"
            "IntegerLiteral"
            "FloatLiteral"
            "StringLiteral"
            "BooleanLiteral"
+ObjectLiteral -> '{' PropertyDefinitionList? '}'
+PropertyDefinitionList -> Property (',' Property)*
+Property -> "Ident" ':' Expression
+ArrayLiteral -> '[' ElementList? ']'
+ElementList -> Expression (',' Expression)*
                 
 IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
 
@@ -56,8 +67,9 @@ FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? Bloc
 FunctionParameters -> ParameterDeclaration (',' ParameterDeclaration)*
 ParameterDeclaration -> "Ident" ':' TypeIdentifier
 Type -> ':' TypeIdentifier
-TypeIdentifier -> PrimitiveType
+TypeIdentifier -> ArrayType
+ArrayType -> PrimitiveType ('[' ']')*
 PrimitiveType -> 'number'
                  'string'
                  'boolean'
-                       
+                 'object'

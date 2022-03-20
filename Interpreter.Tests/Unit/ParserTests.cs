@@ -1,49 +1,45 @@
-using System.Collections.Generic;
-using System.Reflection;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
 using Interpreter.Lib.RBNF.Analysis.Syntactic;
-using Interpreter.Lib.RBNF.Utils;
-using Moq;
+using Interpreter.Models;
+using Interpreter.Services;
+using Interpreter.Tests.TestData;
 using Xunit;
 
 namespace Interpreter.Tests.Unit
 {
     public class ParserTests
     {
-        [Fact]
-        public void NextIsTest()
+        private TestContainer container;
+        private LexerQueryModel query;
+
+        public ParserTests()
         {
-            var lexer = new Mock<IEnumerable<Token>>();
-            var domain = GetDomain();
-            lexer.Setup(x => x.GetEnumerator()).Returns(TokensMock(domain));
+            container = new TestContainer();
+            query = new LexerQueryModel("tokenTypes.json");
+        }
 
-            var parser = new Parser(lexer.Object, domain);
+        private Parser GetParser(string text)
+        {
+            query.Text = text;
+            var lexerCreator = container.Get<ILexerCreatorService>();
+            var parserCreator = container.Get<IParserCreatorService>();
 
-            var nextIsMethod = typeof(Parser).GetMethod("NextIs", BindingFlags.NonPublic | BindingFlags.Instance);
-            var currentIsMethod = typeof(Parser).GetMethod("CurrentIs", BindingFlags.NonPublic | BindingFlags.Instance);
+            var lexer = lexerCreator.CreateLexer(query);
+            var parser = parserCreator.CreateParser(lexer);
+            return parser;
+        }
 
-            // ReSharper disable once PossibleNullReferenceException
-            var nextIsEop = (bool) nextIsMethod.Invoke(parser, new object[] {"EOP"});
-            // ReSharper disable once PossibleNullReferenceException
-            var currentIsToken = (bool) currentIsMethod.Invoke(parser, new object[] {"token"});
+        [Theory]
+        [ClassData(typeof(ParserTestData))]
+        public void ParserDoesNotThrowTest(string text)
+        {
+            var parser = GetParser(text);
             
-            Assert.True(nextIsEop && currentIsToken);
-        }
-
-        private static Domain GetDomain()
-        {
-            var tt1 = new TokenType("token", "token", 1);
-            return new Domain(new List<TokenType> {tt1});
-        }
-
-        private static IEnumerator<Token> TokensMock(Domain domain)
-        {
-            return new List<Token>
+            var ex = Record.Exception(() =>
             {
-                new (domain.FindByTag("token")),
-                new (LexerUtils.End)
-            }.GetEnumerator();
+                // ReSharper disable once UnusedVariable
+                var ast = parser.TopDownParse();
+            });
+            Assert.Null(ex);
         }
     }
 }

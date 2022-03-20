@@ -12,11 +12,11 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
         private readonly List<int> lines = new();
         private readonly string source;
 
-        public Domain Domain { get; }
+        public Structure Structure { get; }
 
-        public Lexer(Domain domain, string source)
+        public Lexer(Structure structure, string source)
         {
-            Domain = domain;
+            Structure = structure;
             this.source = source;
 
             var lineMatches =
@@ -28,9 +28,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
 
         public IEnumerator<Token> GetEnumerator()
         {
-            var tokens = Domain.Regex.Matches(source).Select(match =>
+            var matches = Structure.Regex.Matches(source);
+            foreach (Match match in matches)
             {
-                foreach (var type in Domain)
+                foreach (var type in Structure)
                 {
                     var group = match.Groups[type.Tag];
 
@@ -45,18 +46,13 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
 
                     if (type == LexerUtils.Error) throw new LexerException(token);
 
-                    return token;
+                    yield return token;
                 }
+            }
 
-                return null;
-            }).Where(t => t != null && !t.Type.WhiteSpace()).ToList();
-            tokens.Add(new Token(LexerUtils.End));
-            return tokens.GetEnumerator();
+            yield return new Token(LexerUtils.End);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

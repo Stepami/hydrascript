@@ -3,6 +3,7 @@ using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 
 namespace Interpreter.Lib.Semantic.Nodes.Declarations
@@ -19,9 +20,14 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 
         public void AddAssignment(string id, Segment identSegment, Expression expression)
         {
+            var identRef = new IdentifierReference(id)
+            {
+                SymbolTable = SymbolTable, 
+                Segment = identSegment
+            };
             var assignment =
                 new AssignmentExpression(
-                    new IdentifierReference(id) {SymbolTable = SymbolTable, Segment = identSegment},
+                    new MemberExpression(identRef, new List<AccessExpression>()),
                     expression
                 )
                 {

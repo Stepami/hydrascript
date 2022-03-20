@@ -7,9 +7,9 @@ using Interpreter.Lib.RBNF.Utils;
 
 namespace Interpreter.Lib.RBNF.Analysis.Lexical
 {
-    public class Domain : IEnumerable<TokenType>
+    public class Structure : IEnumerable<TokenType>
     {
-        public Domain(List<TokenType> types)
+        public Structure(List<TokenType> types)
         {
             types.AddRange(new List<TokenType>
             {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.RBNF.Analysis.Exceptions;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
@@ -7,6 +8,7 @@ using Interpreter.Lib.Semantic;
 using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
@@ -19,13 +21,13 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
     public class Parser
     {
         private readonly IEnumerator<Token> tokens;
-        private readonly Domain domain;
+        private readonly Structure structure;
 
-        public Parser(IEnumerable<Token> lexer, Domain domain)
+        public Parser(IEnumerable<Token> lexer, Structure structure)
         {
-            tokens = lexer.GetEnumerator();
+            tokens = lexer.Where(t => !t.Type.WhiteSpace()).GetEnumerator();
             tokens.MoveNext();
-            this.domain = domain;
+            this.structure = structure;
         }
 
         private Token Expect(string expectedTag, string expectedValue = null)
@@ -49,7 +51,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             return current;
         }
 
-        private bool CurrentIs(string tag) => tokens.Current.Type == domain.FindByTag(tag);
+        private bool CurrentIs(string tag) => tokens.Current.Type == structure.FindByTag(tag);
 
         private bool CurrentIsLiteral() => CurrentIs("NullLiteral") ||
                                            CurrentIs("IntegerLiteral") ||
@@ -60,20 +62,6 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
         private bool CurrentIsKeyword(string keyword) => CurrentIs("Keyword") && tokens.Current.Value == keyword;
 
         private bool CurrentIsOperator(string @operator) => CurrentIs("Operator") && tokens.Current.Value == @operator;
-
-        private bool NextIs(string expectedTag)
-        {
-            var currentValue = tokens.Current;
-            tokens.MoveNext();
-            var result = CurrentIs(expectedTag);
-            tokens.Reset();
-            while (!currentValue.Equals(tokens.Current))
-            {
-                tokens.MoveNext();
-            }
-
-            return result;
-        }
 
         public AbstractSyntaxTree TopDownParse()
         {
@@ -185,7 +173,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
         {
             var ret = Expect("Keyword", "return");
             if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-                CurrentIsOperator("!"))
+                CurrentIsOperator("!") || CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
             {
                 return new ReturnStatement(Expression(table))
                 {
@@ -312,7 +300,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             else if (CurrentIs("Colon"))
             {
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("Keyword").Value);
+                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                 declaration.AddAssignment(
                     ident.Value,
                     ident.Segment,
@@ -357,19 +345,107 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private Expression AssignmentExpression(SymbolTable table)
         {
-            if (CurrentIs("Ident") && NextIs("Assign"))
+            var lhs = LeftHandSideExpression(table);
+            if (CurrentIs("Assign") && !(lhs is CallExpression))
             {
-                var ident = Expect("Ident");
-                var id = new IdentifierReference(ident.Value) {SymbolTable = table, Segment = ident.Segment};
-                if (CurrentIs("Assign"))
+                var assign = Expect("Assign");
+                var member = lhs is IdentifierReference reference
+                    ? (MemberExpression) reference
+                    : (MemberExpression) lhs;
+                return new AssignmentExpression(member, AssignmentExpression(table))
+                    {SymbolTable = table, Segment = assign.Segment};
+            }
+
+            return lhs;
+        }
+
+        private Expression LeftHandSideExpression(SymbolTable table)
+        {
+            var expr = CastExpression(table);
+            if (expr is IdentifierReference identRef)
+            {
+                if (CurrentIs("LeftParen") || CurrentIs("LeftBracket") || CurrentIs("Dot"))
                 {
-                    var assign = Expect("Assign");
-                    return new AssignmentExpression(id, AssignmentExpression(table))
-                        {SymbolTable = table, Segment = assign.Segment};
+                    return CallExpression(identRef, table);
                 }
             }
 
-            return ConditionalExpression(table);
+            return expr;
+        }
+
+        private Expression CallExpression(IdentifierReference identRef, SymbolTable table)
+        {
+            var member = MemberExpression(identRef, table);
+            if (CurrentIs("LeftParen"))
+            {
+                var lp = Expect("LeftParen");
+                var expressions = new List<Expression>();
+                if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-"))
+                {
+                    expressions.Add(Expression(table));
+                }
+
+                while (CurrentIs("Comma"))
+                {
+                    Expect("Comma");
+                    expressions.Add(Expression(table));
+                }
+
+                Expect("RightParen");
+                return new CallExpression(member, expressions)
+                {
+                    SymbolTable = table,
+                    Segment = lp.Segment
+                };
+            }
+
+            return member;
+        }
+
+        private MemberExpression MemberExpression(IdentifierReference identRef, SymbolTable table)
+        {
+            var accessChain = new List<AccessExpression>();
+            while (CurrentIs("LeftBracket") || CurrentIs("Dot"))
+            {
+                Token access;
+                if (CurrentIs("LeftBracket"))
+                {
+                    access = Expect("LeftBracket");
+                    var expr = Expression(table);
+                    Expect("RightBracket");
+                    accessChain.Add(
+                        new IndexAccess(expr) {Segment = access.Segment}
+                    );
+                }
+                else if (CurrentIs("Dot"))
+                {
+                    access = Expect("Dot");
+                    var identToken = Expect("Ident");
+                    var idRef = new IdentifierReference(identToken.Value)
+                    {
+                        Segment = identToken.Segment,
+                        SymbolTable = table
+                    };
+                    accessChain.Add(
+                        new DotAccess(idRef) {Segment = access.Segment}
+                    );
+                }
+            }
+ 
+            return new MemberExpression(identRef, accessChain);
+        }
+
+        private Expression CastExpression(SymbolTable table)
+        {
+            var cond = ConditionalExpression(table);
+            if (CurrentIsKeyword("as"))
+            {
+                var asKeyword = Expect("Keyword", "as");
+                // get TypeIdentifier
+                return null;
+            }
+
+            return cond;
         }
 
         private Expression ConditionalExpression(SymbolTable table)
@@ -378,9 +454,9 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIs("QuestionMark"))
             {
                 Expect("QuestionMark");
-                var consequent = ConditionalExpression(table);
+                var consequent = AssignmentExpression(table);
                 Expect("Colon");
-                var alternate = ConditionalExpression(table);
+                var alternate = AssignmentExpression(table);
                 return new ConditionalExpression(test, consequent, alternate);
             }
 
@@ -516,28 +592,6 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     Segment = ident.Segment,
                     SymbolTable = table
                 };
-                if (CurrentIs("LeftParen"))
-                {
-                    Expect("LeftParen");
-                    var expressions = new List<Expression>();
-                    if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-"))
-                    {
-                        expressions.Add(Expression(table));
-                    }
-
-                    while (CurrentIs("Comma"))
-                    {
-                        Expect("Comma");
-                        expressions.Add(Expression(table));
-                    }
-
-                    Expect("RightParen");
-                    return new CallExpression(id, expressions)
-                    {
-                        SymbolTable = table,
-                        Segment = ident.Segment
-                    };
-                }
 
                 return id;
             }
@@ -545,6 +599,16 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIsLiteral())
             {
                 return Literal();
+            }
+
+            if (CurrentIs("LeftCurl"))
+            {
+                return ObjectLiteral(table);
+            }
+            
+            if (CurrentIs("LeftBracket"))
+            {
+                return ArrayLiteral(table);
             }
 
             return null;
@@ -578,6 +642,16 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     bool.Parse(Expect("BooleanLiteral").Value), segment),
                 _ => new Literal(TypeUtils.JavaScriptTypes.Undefined, new TypeUtils.Undefined())
             };
+        }
+
+        private Literal ObjectLiteral(SymbolTable table)
+        {
+            return null;
+        }
+
+        private Literal ArrayLiteral(SymbolTable table)
+        {
+            return null;
         }
     }
 }

@@ -5,6 +5,6 @@ namespace Interpreter.Services
 {
     public class ParserCreatorService : IParserCreatorService
     {
-        public Parser CreateParser(Lexer lexer) => new (lexer, lexer.Domain);
+        public Parser CreateParser(Lexer lexer) => new (lexer, lexer.Structure);
     }
 }

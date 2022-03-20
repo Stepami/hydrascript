@@ -13,10 +13,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class CallExpression : Expression
     {
-        private readonly IdentifierReference ident;
+        private readonly MemberExpression ident;
         private readonly List<Expression> expressions;
 
-        public CallExpression(IdentifierReference ident, IEnumerable<Expression> expressions)
+        public CallExpression(MemberExpression ident, IEnumerable<Expression> expressions)
         {
             this.ident = ident;
             this.ident.Parent = this;

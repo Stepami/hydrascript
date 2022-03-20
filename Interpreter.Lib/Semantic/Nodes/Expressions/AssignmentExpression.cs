@@ -13,10 +13,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class AssignmentExpression : Expression
     {
-        private readonly IdentifierReference destination;
+        private readonly MemberExpression destination;
         private readonly Expression source;
 
-        public AssignmentExpression(IdentifierReference destination, Expression source)
+        public AssignmentExpression(MemberExpression destination, Expression source)
         {
             this.destination = destination;
             destination.Parent = this;
