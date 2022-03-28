@@ -414,7 +414,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     var expr = Expression(table);
                     Expect("RightBracket");
                     accessChain.Add(
-                        new IndexAccess(expr) {Segment = access.Segment}
+                        new IndexAccess(expr, accessChain.LastOrDefault()) {Segment = access.Segment}
                     );
                 }
                 else if (CurrentIs("Dot"))
@@ -427,12 +427,12 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                         SymbolTable = table
                     };
                     accessChain.Add(
-                        new DotAccess(idRef) {Segment = access.Segment}
+                        new DotAccess(idRef, accessChain.LastOrDefault()) {Segment = access.Segment}
                     );
                 }
             }
  
-            return new MemberExpression(identRef, accessChain);
+            return new MemberExpression(identRef, accessChain.FirstOrDefault());
         }
 
         private Expression CastExpression(SymbolTable table)

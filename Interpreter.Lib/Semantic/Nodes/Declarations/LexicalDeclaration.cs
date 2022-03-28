@@ -27,7 +27,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
             };
             var assignment =
                 new AssignmentExpression(
-                    new MemberExpression(identRef, new List<AccessExpression>()),
+                    new MemberExpression(identRef, null),
                     expression
                 )
                 {

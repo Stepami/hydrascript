@@ -8,8 +8,8 @@ namespace Interpreter.Tests.Unit
 {
     public class ParserTests
     {
-        private TestContainer container;
-        private LexerQueryModel query;
+        private readonly TestContainer container;
+        private readonly LexerQueryModel query;
 
         public ParserTests()
         {

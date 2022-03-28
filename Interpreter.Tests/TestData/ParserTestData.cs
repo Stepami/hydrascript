@@ -11,6 +11,7 @@ namespace Interpreter.Tests.TestData
             yield return new object[] {"i[0].j()"};
             yield return new object[] {"i = 1"};
             yield return new object[] {"i[0] = 1"};
+            yield return new object[] {"i[a.b][1].x(1)"};
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

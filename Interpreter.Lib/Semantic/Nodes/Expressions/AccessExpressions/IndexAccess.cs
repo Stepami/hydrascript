@@ -5,9 +5,9 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 {
     public class IndexAccess : AccessExpression
     {
-        private Expression expression;
+        private readonly Expression expression;
 
-        public IndexAccess(Expression expression)
+        public IndexAccess(Expression expression, AccessExpression prev = null) : base(prev)
         {
             this.expression = expression;
             this.expression.Parent = this;
@@ -16,6 +16,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             yield return expression;
+            if (HasNext())
+            {
+                yield return next;
+            }
         }
 
         protected override string NodeRepresentation() => "[]";

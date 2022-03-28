@@ -6,9 +6,9 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 {
     public class DotAccess : AccessExpression
     {
-        private IdentifierReference id;
+        private readonly IdentifierReference id;
 
-        public DotAccess(IdentifierReference id)
+        public DotAccess(IdentifierReference id, AccessExpression prev = null) : base(prev)
         {
             this.id = id;
             this.id.Parent = this;
@@ -17,6 +17,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             yield return id;
+            if (HasNext())
+            {
+                yield return next;
+            }
         }
 
         protected override string NodeRepresentation() => ".";
