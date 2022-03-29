@@ -49,7 +49,7 @@
   },
   {
     "tag": "Keyword",
-    "pattern": "let|const|function|if|else|do|while|switch|case|default|break|continue|return",
+    "pattern": "let|const|function|if|else|do|while|switch|case|default|break|continue|return|as",
     "priority": 11,
     "whiteSpace": false
   },

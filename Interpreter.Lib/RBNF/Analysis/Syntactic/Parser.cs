@@ -244,7 +244,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             {
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("Keyword").Value);
+                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                 args.Add(new VariableSymbol(arg)
                 {
                     Type = type
@@ -256,7 +256,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 Expect("Comma");
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("Keyword").Value);
+                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                 args.Add(new VariableSymbol(arg)
                 {
                     Type = type
@@ -269,7 +269,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIs("Colon"))
             {
                 Expect("Colon");
-                returnType = TypeUtils.GetJavaScriptType(Expect("Keyword").Value);
+                returnType = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
             }
 
             var functionSymbol = new FunctionSymbol(ident.Value, args) {ReturnType = returnType};
@@ -323,7 +323,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 else if (CurrentIs("Colon"))
                 {
                     Expect("Colon");
-                    var type = TypeUtils.GetJavaScriptType(Expect("Keyword").Value);
+                    var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                     declaration.AddAssignment(
                         ident.Value,
                         ident.Segment,
@@ -441,8 +441,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIsKeyword("as"))
             {
                 var asKeyword = Expect("Keyword", "as");
-                // get TypeIdentifier
-                return null;
+                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                return new CastAsExpression(cond, type) {Segment = asKeyword.Segment};
             }
 
             return cond;
