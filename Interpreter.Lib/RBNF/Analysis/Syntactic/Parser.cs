@@ -9,6 +9,7 @@ using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
@@ -644,14 +645,41 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             };
         }
 
-        private Literal ObjectLiteral(SymbolTable table)
+        private ObjectLiteral ObjectLiteral(SymbolTable table)
         {
-            return null;
+            Expect("LeftCurl");
+            var properties = new List<Property>();
+            while (CurrentIs("Ident"))
+            {
+                var idToken = Expect("Ident");
+                var id = new IdentifierReference(idToken.Value)
+                {
+                    Segment = idToken.Segment,
+                    SymbolTable = table
+                };
+                Expect("Colon");
+                var expr = Expression(table);
+                properties.Add(new Property(id, expr));
+                Expect("SemiColon");
+            }
+            Expect("RightCurl");
+            return new ObjectLiteral(properties);
         }
 
-        private Literal ArrayLiteral(SymbolTable table)
+        private ArrayLiteral ArrayLiteral(SymbolTable table)
         {
-            return null;
+            Expect("LeftBracket");
+            var expressions = new List<Expression>();
+            while (CurrentIs("Ident") || CurrentIsLiteral() ||
+                   CurrentIs("LeftParen") || CurrentIsOperator("-") ||
+                   CurrentIsOperator("!") || CurrentIs("LeftCurl") ||
+                   CurrentIs("LeftBracket"))
+            {
+                expressions.Add(Expression(table));
+                Expect("Comma");
+            }
+            Expect("RightBracket");
+            return new ArrayLiteral(expressions);
         }
     }
 }

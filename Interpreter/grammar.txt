@@ -41,10 +41,10 @@ Literal -> "NullLiteral"
            "StringLiteral"
            "BooleanLiteral"
 ObjectLiteral -> '{' PropertyDefinitionList? '}'
-PropertyDefinitionList -> Property (',' Property)*
+PropertyDefinitionList -> (Property ';')*
 Property -> "Ident" ':' Expression
 ArrayLiteral -> '[' ElementList? ']'
-ElementList -> Expression (',' Expression)*
+ElementList -> (Expression ',')*
                 
 IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
 

@@ -124,5 +124,11 @@
     "pattern": "[:]",
     "priority": 91,
     "whiteSpace": false
+  },
+  {
+    "tag": "SemiColon",
+    "pattern": "[;]",
+    "priority": 92,
+    "whiteSpace": false
   }
 ]
