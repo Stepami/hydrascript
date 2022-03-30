@@ -27,6 +27,8 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         internal override Type NodeCheck()
         {
+            IdentifierReference idRef = _ident;
+            idRef.NodeCheck();
             var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
             if (function == null)
             {
