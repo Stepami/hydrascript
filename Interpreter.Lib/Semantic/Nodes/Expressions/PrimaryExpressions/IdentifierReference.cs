@@ -20,7 +20,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
             return symbol switch
             {
                 VariableSymbol v => v.Type,
-                FunctionSymbol f => f.ReturnType,
+                FunctionSymbol f => f.Type,
                 _ => throw new UnknownIdentifierReference(this)
             };
         }

@@ -18,7 +18,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
             _declarationType = readOnly ? DeclarationType.Const : DeclarationType.Let;
         }
 
-        public void AddAssignment(string id, Segment identSegment, Expression expression, Type destinationType = null)
+        public void AddAssignment(string id, Segment identSegment, Expression expression, Segment assignSegment = null, Type destinationType = null)
         {
             var identRef = new IdentifierReference(id)
             {
@@ -33,6 +33,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
                 )
                 {
                     SymbolTable = SymbolTable,
+                    Segment = assignSegment,
                     Parent = this
                 };
             _assignments.Add(assignment);

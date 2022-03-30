@@ -4,6 +4,7 @@ using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Utils
 {
@@ -21,11 +22,9 @@ namespace Interpreter.Lib.Semantic.Utils
                     {
                         Type = TypeUtils.JavaScriptTypes.String
                     }
-                }
-            )
-            {
-                ReturnType = TypeUtils.JavaScriptTypes.Void
-            };
+                },
+                new FunctionType(TypeUtils.JavaScriptTypes.Void, new[] {TypeUtils.JavaScriptTypes.String})
+            );
             print.Body = new FunctionDeclaration(
                 print,
                 new BlockStatement(new List<StatementListItem>())

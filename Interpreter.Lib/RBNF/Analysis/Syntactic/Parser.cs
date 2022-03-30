@@ -13,6 +13,7 @@ using Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Expression = Interpreter.Lib.Semantic.Nodes.Expressions.Expression;
 
@@ -240,7 +241,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             var ident = Expect("Ident");
 
             Expect("LeftParen");
-            var args = new List<Symbol>();
+            var args = new List<VariableSymbol>();
             if (CurrentIs("Ident"))
             {
                 var arg = Expect("Ident").Value;
@@ -273,7 +274,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 returnType = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
             }
 
-            var functionSymbol = new FunctionSymbol(ident.Value, args) {ReturnType = returnType};
+            var functionSymbol =
+                new FunctionSymbol(ident.Value, args, new FunctionType(returnType, args.Select(x => x.Type)));
             table.AddSymbol(functionSymbol);
 
             return new FunctionDeclaration(functionSymbol, BlockStatement(newTable))
@@ -308,8 +310,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             var ident = Expect("Ident");
             if (CurrentIs("Assign"))
             {
-                Expect("Assign");
-                declaration.AddAssignment(ident.Value, ident.Segment, Expression(table));
+                var assignSegment = Expect("Assign").Segment;
+                declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), assignSegment);
             }
             else if (CurrentIs("Colon"))
             {
@@ -317,8 +319,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                 if (CurrentIs("Assign"))
                 {
-                    Expect("Assign");
-                    declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), type);
+                    var assignSegment = Expect("Assign").Segment;
+                    declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), assignSegment, type);
                 }
                 else
                 {

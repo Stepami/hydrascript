@@ -27,21 +27,18 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 
         public void SetArguments(CallExpression call, List<Expression> expressions)
         {
-            if (_function.Parameters.Count == expressions.Count)
+            if (_function.Type.Arguments.Count == expressions.Count)
             {
-                _function.Parameters.Zip(expressions).ToList()
-                    .ForEach(tuple =>
+                expressions.Select((e,i)=>(e,i)).ToList()
+                    .ForEach(pair =>
                     {
-                        var (param, expr) = tuple;
-                        if (param is VariableSymbol p)
+                        var (e, i) = pair;
+                        var eType = e.NodeCheck();
+                        if (_function.Type.Arguments[i].Equals(eType))
                         {
-                            var pType = expr.NodeCheck();
-                            if (p.Type.Equals(pType))
-                            {
-                                SymbolTable.AddSymbol(p);
-                            }
-                            else throw new WrongTypeOfArgument(expr.Segment, p.Type, pType);
+                            SymbolTable.AddSymbol(_function.Parameters[i]);
                         }
+                        else throw new WrongTypeOfArgument(e.Segment, _function.Type.Arguments[i], eType);
                     });
             }
             else throw new WrongNumberOfArguments(call.Segment, _function.Parameters.Count, expressions.Count);

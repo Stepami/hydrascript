@@ -28,7 +28,11 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         internal override Type NodeCheck()
         {
             var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
-            if (!function.ReturnType.Equals(TypeUtils.JavaScriptTypes.Void))
+            if (function == null)
+            {
+                throw new SymbolIsNotCallable(_ident.Id, Segment);
+            }
+            if (!function.Type.ReturnType.Equals(TypeUtils.JavaScriptTypes.Void))
             {
                 if (!function.Body.HasReturnStatement())
                 {
@@ -44,13 +48,13 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 if (node is ReturnStatement retStmt)
                 {
                     var retType = retStmt.NodeCheck();
-                    if (retType.Equals(function.ReturnType))
+                    if (retType.Equals(function.Type.ReturnType))
                     {
                         function.Body.Clear();
                         return retType;
                     }
 
-                    throw new WrongReturnType(retStmt.Segment, function.ReturnType, retType);
+                    throw new WrongReturnType(retStmt.Segment, function.Type.ReturnType, retType);
                 }
 
                 if (node.CanEvaluate)
