@@ -13,21 +13,21 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class CallExpression : Expression
     {
-        private readonly MemberExpression ident;
-        private readonly List<Expression> expressions;
+        private readonly MemberExpression _ident;
+        private readonly List<Expression> _expressions;
 
         public CallExpression(MemberExpression ident, IEnumerable<Expression> expressions)
         {
-            this.ident = ident;
-            this.ident.Parent = this;
+            _ident = ident;
+            _ident.Parent = this;
 
-            this.expressions = new List<Expression>(expressions);
-            this.expressions.ForEach(expr => expr.Parent = this);
+            _expressions = new List<Expression>(expressions);
+            _expressions.ForEach(expr => expr.Parent = this);
         }
 
         internal override Type NodeCheck()
         {
-            var function = SymbolTable.FindSymbol<FunctionSymbol>(ident.Id);
+            var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
             if (!function.ReturnType.Equals(TypeUtils.JavaScriptTypes.Void))
             {
                 if (!function.Body.HasReturnStatement())
@@ -36,7 +36,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 }
             }
 
-            function.Body.SetArguments(this, expressions);
+            function.Body.SetArguments(this, _expressions);
 
             var block = function.Body.First().GetAllNodes();
             foreach (var node in block)
@@ -67,9 +67,9 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         {
             var nodes = new List<AbstractSyntaxTreeNode>
             {
-                ident
+                _ident
             };
-            nodes.AddRange(expressions);
+            nodes.AddRange(_expressions);
             return nodes.GetEnumerator();
         }
 
@@ -78,7 +78,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         private List<Instruction> Print(int start)
         {
             var instructions = new List<Instruction>();
-            var expression = expressions.First();
+            var expression = _expressions.First();
             if (!expression.Primary())
             {
                 instructions.AddRange(expression.ToInstructions(start, "_t"));
@@ -98,7 +98,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         private List<Instruction> CastToString(int start)
         {
             var instructions = new List<Instruction>();
-            var expression = expressions.First();
+            var expression = _expressions.First();
             var castNumber = start;
 
             if (!expression.Primary())
@@ -120,7 +120,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         public override List<Instruction> ToInstructions(int start)
         {
-            return ident.Id switch
+            return _ident.Id switch
             {
                 "print" => Print(start),
                 "toString" => CastToString(start),
@@ -130,16 +130,16 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            if (ident.Id == "toString")
+            if (_ident.Id == "toString")
             {
                 return CastToString(start);
             }
 
             var instructions = new List<Instruction>();
-            var function = SymbolTable.FindSymbol<FunctionSymbol>(ident.Id);
+            var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
             if (function.Body.First().Any())
             {
-                expressions.Zip(function.Parameters).ToList<(Expression expr, Symbol param)>()
+                _expressions.Zip(function.Parameters).ToList<(Expression expr, Symbol param)>()
                     .ForEach(item =>
                     {
                         var (expr, symbol) = item;

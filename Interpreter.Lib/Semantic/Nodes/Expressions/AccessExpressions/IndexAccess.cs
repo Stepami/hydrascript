@@ -5,17 +5,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 {
     public class IndexAccess : AccessExpression
     {
-        private readonly Expression expression;
+        private readonly Expression _expression;
 
         public IndexAccess(Expression expression, AccessExpression prev = null) : base(prev)
         {
-            this.expression = expression;
-            this.expression.Parent = this;
+            _expression = expression;
+            _expression.Parent = this;
         }
         
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return expression;
+            yield return _expression;
             if (HasNext())
             {
                 yield return next;

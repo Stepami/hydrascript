@@ -2,15 +2,15 @@ namespace Interpreter.Lib.VM
 {
     public class Name : IValue
     {
-        private readonly string id;
+        private readonly string _id;
 
         public Name(string id)
         {
-            this.id = id;
+            _id = id;
         }
 
-        public object Get(Frame frame) => frame[id];
+        public object Get(Frame frame) => frame[_id];
 
-        public override string ToString() => id;
+        public override string ToString() => _id;
     }
 }

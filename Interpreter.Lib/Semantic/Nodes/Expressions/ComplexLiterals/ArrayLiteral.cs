@@ -5,16 +5,16 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 {
     public class ArrayLiteral : Expression
     {
-        private readonly List<Expression> expressions;
+        private readonly List<Expression> _expressions;
 
         public ArrayLiteral(IEnumerable<Expression> expressions)
         {
-            this.expressions = new List<Expression>(expressions);
-            this.expressions.ForEach(expr => expr.Parent = this);
+            _expressions = new List<Expression>(expressions);
+            _expressions.ForEach(expr => expr.Parent = this);
         }
         
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
-            expressions.GetEnumerator();
+            _expressions.GetEnumerator();
 
         protected override string NodeRepresentation() => "[]";
 

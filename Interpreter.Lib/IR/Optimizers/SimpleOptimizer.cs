@@ -5,7 +5,7 @@ namespace Interpreter.Lib.IR.Optimizers
 {
     public class SimpleOptimizer
     {
-        private readonly IOptimizable<Instruction> optimizable;
+        private readonly IOptimizable<Instruction> _optimizable;
 
         public SimpleOptimizer()
         {

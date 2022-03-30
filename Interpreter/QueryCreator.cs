@@ -1,22 +1,21 @@
 using System.IO;
-using Newtonsoft.Json.Linq;
 using Interpreter.Models;
 
 namespace Interpreter
 {
     public class QueryCreator
     {
-        private readonly Program.Options options;
+        private readonly Program.Options _options;
 
         public QueryCreator(Program.Options options)
         {
-            this.options = options;
+            _options = options;
         }
 
         public LexerQueryModel CreateLexerQuery()
         {
-            var query = new LexerQueryModel(options.TokenTypesJsonFilePath);
-            var sourceCode = File.ReadAllText(options.InputFilePath);
+            var query = new LexerQueryModel(_options.TokenTypesJsonFilePath);
+            var sourceCode = File.ReadAllText(_options.InputFilePath);
             query.Text = sourceCode;
             return query;
         }

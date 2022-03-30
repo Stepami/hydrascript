@@ -6,30 +6,30 @@ namespace Interpreter.Lib.IR
 {
     public class ControlFlowGraph
     {
-        private readonly Dictionary<BasicBlock, List<BasicBlock>> adjacencyList = new();
+        private readonly Dictionary<BasicBlock, List<BasicBlock>> _adjacencyList = new();
 
         public ControlFlowGraph(List<BasicBlock> basicBlocks)
         {
             basicBlocks.ForEach(basicBlock =>
-                adjacencyList[basicBlock] = basicBlocks
+                _adjacencyList[basicBlock] = basicBlocks
                     .Where(bb => basicBlock.Out().Contains(bb.In()))
                     .ToList()
             );
         }
 
-        public BasicBlock Entry => adjacencyList.Keys.Min();
+        public BasicBlock Entry => _adjacencyList.Keys.Min();
 
         public BasicBlock NextBlock(BasicBlock current, int jump) =>
-            adjacencyList[current]
+            _adjacencyList[current]
                 .FirstOrDefault(bb => bb.In() == jump);
 
         public override string ToString()
         {
             var result = new StringBuilder("digraph cfg {\n");
-            foreach (var basicBlock in adjacencyList.Keys)
+            foreach (var basicBlock in _adjacencyList.Keys)
             {
                 result.Append($"\t{basicBlock}\n");
-                foreach (var bb in adjacencyList[basicBlock])
+                foreach (var bb in _adjacencyList[basicBlock])
                 {
                     result.Append($"\t{basicBlock.GetHashCode()}->{bb.GetHashCode()}\n");
                 }

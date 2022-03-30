@@ -9,7 +9,7 @@ namespace Interpreter.Lib.IR.Instructions
         public string Left { get; set; }
 
         protected readonly (IValue left, IValue right) right;
-        private readonly string @operator;
+        private readonly string _operator;
 
         public ThreeAddressCodeInstruction(
             string left,
@@ -21,7 +21,7 @@ namespace Interpreter.Lib.IR.Instructions
         {
             Left = left;
             this.right = right;
-            this.@operator = @operator;
+            _operator = @operator;
         }
 
         public override int Execute(Stack<Call> callStack, Stack<Frame> frames,
@@ -31,7 +31,7 @@ namespace Interpreter.Lib.IR.Instructions
             if (right.left == null)
             {
                 var value = right.right.Get(frame);
-                frame[Left] = @operator switch
+                frame[Left] = _operator switch
                 {
                     "-" => -Convert.ToDouble(value),
                     "!" => !Convert.ToBoolean(value),
@@ -42,7 +42,7 @@ namespace Interpreter.Lib.IR.Instructions
             else
             {
                 object lValue = right.left.Get(frame), rValue = right.right.Get(frame);
-                frame[Left] = @operator switch
+                frame[Left] = _operator switch
                 {
                     "+" when lValue is string => lValue.ToString() + rValue,
                     "+" => Convert.ToDouble(lValue) + Convert.ToDouble(rValue),
@@ -67,7 +67,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         protected override string ToStringRepresentation() =>
             right.left == null
-                ? $"{Left} = {(@operator == "" ? "" : " " + @operator)}{right.right}"
-                : $"{Left} = {right.left} {@operator} {right.right}";
+                ? $"{Left} = {(_operator == "" ? "" : " " + _operator)}{right.right}"
+                : $"{Left} = {right.left} {_operator} {right.right}";
     }
 }

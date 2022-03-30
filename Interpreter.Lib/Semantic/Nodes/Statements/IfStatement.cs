@@ -12,22 +12,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 {
     public class IfStatement : Statement
     {
-        private readonly Expression test;
-        private readonly Statement then;
-        private readonly Statement @else;
+        private readonly Expression _test;
+        private readonly Statement _then;
+        private readonly Statement _else;
 
         public IfStatement(Expression test, Statement then, Statement @else = null)
         {
-            this.test = test;
-            this.test.Parent = this;
+            _test = test;
+            _test.Parent = this;
 
-            this.then = then;
-            this.then.Parent = this;
+            _then = then;
+            _then.Parent = this;
 
             if (@else != null)
             {
-                this.@else = @else;
-                this.@else.Parent = this;
+                _else = @else;
+                _else.Parent = this;
             }
 
             CanEvaluate = true;
@@ -35,19 +35,19 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 
         public bool HasReturnStatement()
         {
-            var thenResult = then is ReturnStatement;
+            var thenResult = _then is ReturnStatement;
             if (!thenResult)
             {
-                if (then is BlockStatement block)
+                if (_then is BlockStatement block)
                 {
                     thenResult = block.HasReturnStatement();
                 }
             }
 
-            var elseResult = @else == null || @else is ReturnStatement;
+            var elseResult = _else == null || _else is ReturnStatement;
             if (!elseResult)
             {
-                if (@else is BlockStatement block)
+                if (_else is BlockStatement block)
                 {
                     elseResult = block.HasReturnStatement();
                 }
@@ -58,17 +58,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return test;
-            yield return then;
-            if (@else != null)
+            yield return _test;
+            yield return _then;
+            if (_else != null)
             {
-                yield return @else;
+                yield return _else;
             }
         }
 
         internal override Type NodeCheck()
         {
-            var testType = test.NodeCheck();
+            var testType = _test.NodeCheck();
             if (!testType.Equals(TypeUtils.JavaScriptTypes.Boolean))
             {
                 throw new NotBooleanTestExpression(Segment, testType);
@@ -82,27 +82,27 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
-            if (then.Any() && (@else == null || @else.Any()))
+            if (_then.Any() && (_else == null || _else.Any()))
             {
                 IValue ifNotTest;
-                if (!test.Primary())
+                if (!_test.Primary())
                 {
-                    var testInstructions = test.ToInstructions(start, "_t");
+                    var testInstructions = _test.ToInstructions(start, "_t");
                     ifNotTest = new Name(testInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
                     instructions.AddRange(testInstructions);
                 }
                 else
                 {
-                    ifNotTest = ((PrimaryExpression) test).ToValue();
+                    ifNotTest = ((PrimaryExpression) _test).ToValue();
                 }
 
                 var tOffset = start + instructions.Count + 1;
-                var thenInstructions = then.ToInstructions(tOffset);
+                var thenInstructions = _then.ToInstructions(tOffset);
 
                 var eOffset = thenInstructions.Any()
                     ? thenInstructions.Last().Number + 2
                     : tOffset + 1;
-                var elseInstructions = @else?.ToInstructions(eOffset);
+                var elseInstructions = _else?.ToInstructions(eOffset);
 
                 instructions.Add(
                     new IfNotGotoInstruction(

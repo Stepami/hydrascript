@@ -11,43 +11,43 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class ConditionalExpression : Expression
     {
-        private readonly Expression test, consequent, alternate;
+        private readonly Expression _test, _consequent, _alternate;
 
         public ConditionalExpression(Expression test, Expression consequent, Expression alternate)
         {
-            this.test = test;
-            this.consequent = consequent;
-            this.alternate = alternate;
+            _test = test;
+            _consequent = consequent;
+            _alternate = alternate;
 
-            this.test.Parent = this;
-            this.consequent.Parent = this;
-            this.alternate.Parent = this;
+            _test.Parent = this;
+            _consequent.Parent = this;
+            _alternate.Parent = this;
         }
 
         internal override Type NodeCheck()
         {
-            var tType = test.NodeCheck();
+            var tType = _test.NodeCheck();
 
             if (tType.Equals(TypeUtils.JavaScriptTypes.Boolean))
             {
-                var cType = consequent.NodeCheck();
-                var aType = alternate.NodeCheck();
+                var cType = _consequent.NodeCheck();
+                var aType = _alternate.NodeCheck();
                 if (cType.Equals(aType))
                 {
                     return cType;
                 }
 
-                throw new WrongConditionalTypes(consequent.Segment, cType, alternate.Segment, aType);
+                throw new WrongConditionalTypes(_consequent.Segment, cType, _alternate.Segment, aType);
             }
 
-            throw new NotBooleanTestExpression(test.Segment, tType);
+            throw new NotBooleanTestExpression(_test.Segment, tType);
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return test;
-            yield return consequent;
-            yield return alternate;
+            yield return _test;
+            yield return _consequent;
+            yield return _alternate;
         }
 
         protected override string NodeRepresentation() => "?:";
@@ -56,22 +56,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         {
             var instructions = new List<Instruction>();
             IValue ifNotTest;
-            if (!test.Primary())
+            if (!_test.Primary())
             {
-                var testInstructions = test.ToInstructions(start, "_t");
+                var testInstructions = _test.ToInstructions(start, "_t");
                 ifNotTest = new Name(testInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
                 instructions.AddRange(testInstructions);
             }
             else
             {
-                ifNotTest = ((PrimaryExpression) test).ToValue();
+                ifNotTest = ((PrimaryExpression) _test).ToValue();
             }
 
             var cOffset = start + instructions.Count + 1;
-            var consequentInstructions = consequent.ToInstructions(cOffset, temp);
+            var consequentInstructions = _consequent.ToInstructions(cOffset, temp);
 
             var aOffset = consequentInstructions.Last().Number + 2;
-            var alternateInstructions = alternate.ToInstructions(aOffset, temp);
+            var alternateInstructions = _alternate.ToInstructions(aOffset, temp);
 
             instructions.Add(
                 new IfNotGotoInstruction(

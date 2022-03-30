@@ -5,26 +5,26 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
 {
     public class Segment : IEquatable<Segment>
     {
-        [JsonProperty] private readonly Coordinates start, end;
+        [JsonProperty] private readonly Coordinates _start, _end;
 
         public Segment(Coordinates start, Coordinates end)
         {
-            (this.start, this.end) = (start, end);
+            (_start, _end) = (start, end);
         }
 
         public override string ToString()
         {
-            return $"{start}-{end}";
+            return $"{_start}-{_end}";
         }
         
         public override bool Equals(object obj) => Equals(obj as Segment);
 
-        public override int GetHashCode() => HashCode.Combine(start, end);
+        public override int GetHashCode() => HashCode.Combine(_start, _end);
 
         public bool Equals(Segment obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return Equals(start, obj.start) && Equals(end, obj.end);
+            return Equals(_start, obj._start) && Equals(_end, obj._end);
         }
     }
 }

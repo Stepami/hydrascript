@@ -10,24 +10,24 @@ namespace Interpreter.Lib.Semantic
 {
     public class AbstractSyntaxTree : IDisposable
     {
-        private readonly AbstractSyntaxTreeNode root;
+        private readonly AbstractSyntaxTreeNode _root;
 
         public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
         {
-            this.root = root;
+            _root = root;
         }
 
         public void Check(SemanticAnalyzer analyzer) =>
             GetAllNodes().ToList().ForEach(analyzer.CheckCallback);
 
         private IEnumerable<AbstractSyntaxTreeNode> GetAllNodes() =>
-            root.GetAllNodes();
+            _root.GetAllNodes();
 
         public List<Instruction> GetInstructions()
         {
             var start = 0;
             var result = new List<Instruction>();
-            foreach (var node in root)
+            foreach (var node in _root)
             {
                 var instructions = node.ToInstructions(start);
                 result.AddRange(instructions);
@@ -56,7 +56,7 @@ namespace Interpreter.Lib.Semantic
         public override string ToString()
         {
             var tree = new StringBuilder("digraph ast {\n");
-            root.GetAllNodes().ForEach(node =>
+            _root.GetAllNodes().ForEach(node =>
             {
                 tree.Append('\t').Append(node).Append('\n');
                 node.ToList().ForEach(child => tree.Append($"\t{node.GetHashCode()}->{child.GetHashCode()}\n"));
@@ -64,6 +64,6 @@ namespace Interpreter.Lib.Semantic
             return tree.Append("}\n").ToString();
         }
 
-        public void Dispose() => root.SymbolTable.Dispose();
+        public void Dispose() => _root.SymbolTable.Dispose();
     }
 }

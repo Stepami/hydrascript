@@ -6,16 +6,16 @@ namespace Interpreter.Services
 {
     public class LexerCreatorService : ILexerCreatorService
     {
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
         public LexerCreatorService(IMapper mapper)
         {
-            this.mapper = mapper;
+            _mapper = mapper;
         }
 
         public Lexer CreateLexer(LexerQueryModel lexerQuery)
         {
-            var domain = lexerQuery.GetDomain(mapper);
+            var domain = lexerQuery.GetDomain(_mapper);
             var source = lexerQuery.Text;
             return new Lexer(domain, source);
         }

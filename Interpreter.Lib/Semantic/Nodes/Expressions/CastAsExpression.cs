@@ -6,23 +6,23 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class CastAsExpression : Expression
     {
-        private readonly Expression expression;
-        private readonly Type cast;
+        private readonly Expression _expression;
+        private readonly Type _cast;
 
         public CastAsExpression(Expression expression, Type cast)
         {
-            this.expression = expression;
-            this.expression.Parent = this;
+            _expression = expression;
+            _expression.Parent = this;
 
-            this.cast = cast;
+            _cast = cast;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return expression;
+            yield return _expression;
         }
 
-        protected override string NodeRepresentation() => $"as {cast}";
+        protected override string NodeRepresentation() => $"as {_cast}";
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {

@@ -6,18 +6,18 @@ namespace Interpreter.Lib.IR
 {
     public class BasicBlockBuilder
     {
-        private readonly List<Instruction> instructions;
+        private readonly List<Instruction> _instructions;
 
         public BasicBlockBuilder(List<Instruction> instructions)
         {
-            this.instructions = instructions;
+            _instructions = instructions;
         }
 
         public List<BasicBlock> GetBasicBlocks()
         {
-            instructions[0].Leader = true;
+            _instructions[0].Leader = true;
 
-            instructions
+            _instructions
                 .Where(i => i.Branch())
                 .Select(i => new
                 {
@@ -27,13 +27,13 @@ namespace Interpreter.Lib.IR
                 .ToList()
                 .ForEach(obj =>
                 {
-                    instructions[obj.Jump].Leader = true;
-                    instructions[obj.Next].Leader = true;
+                    _instructions[obj.Jump].Leader = true;
+                    _instructions[obj.Next].Leader = true;
                 });
 
             var basicBlocks = new Stack<BasicBlock>();
             var instructionsInBlock = new List<Instruction>();
-            foreach (var instruction in instructions.AsEnumerable().Reverse())
+            foreach (var instruction in _instructions.AsEnumerable().Reverse())
             {
                 instructionsInBlock.Add(instruction);
                 if (instruction.Leader)

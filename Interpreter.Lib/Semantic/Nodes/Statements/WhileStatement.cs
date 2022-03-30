@@ -12,29 +12,29 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 {
     public class WhileStatement : Statement
     {
-        private readonly Expression condition;
-        private readonly Statement statement;
+        private readonly Expression _condition;
+        private readonly Statement _statement;
 
         public WhileStatement(Expression condition, Statement statement)
         {
-            this.condition = condition;
-            this.condition.Parent = this;
+            _condition = condition;
+            _condition.Parent = this;
 
-            this.statement = statement;
-            this.statement.Parent = this;
+            _statement = statement;
+            _statement.Parent = this;
 
             CanEvaluate = true;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return condition;
-            yield return statement;
+            yield return _condition;
+            yield return _statement;
         }
 
         internal override Type NodeCheck()
         {
-            var condType = condition.NodeCheck();
+            var condType = _condition.NodeCheck();
             if (!condType.Equals(TypeUtils.JavaScriptTypes.Boolean))
             {
                 throw new NotBooleanTestExpression(Segment, condType);
@@ -49,19 +49,19 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
         {
             var instructions = new List<Instruction>();
             IValue ifNotTest;
-            if (!condition.Primary())
+            if (!_condition.Primary())
             {
-                var conditionInstructions = condition.ToInstructions(start, "_t");
+                var conditionInstructions = _condition.ToInstructions(start, "_t");
                 ifNotTest = new Name(conditionInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
                 instructions.AddRange(conditionInstructions);
             }
             else
             {
-                ifNotTest = ((PrimaryExpression) condition).ToValue();
+                ifNotTest = ((PrimaryExpression) _condition).ToValue();
             }
 
             var cOffset = start + instructions.Count + 1;
-            var loopBody = statement.ToInstructions(cOffset);
+            var loopBody = _statement.ToInstructions(cOffset);
             if (loopBody.Any())
             {
                 instructions.Add(new IfNotGotoInstruction(ifNotTest, loopBody.Last().Number + 2, cOffset - 1));

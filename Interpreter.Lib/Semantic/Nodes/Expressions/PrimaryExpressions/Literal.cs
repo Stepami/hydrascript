@@ -6,22 +6,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
 {
     public class Literal : PrimaryExpression
     {
-        private readonly Type type;
-        private readonly object value;
-        private readonly string label;
+        private readonly Type _type;
+        private readonly object _value;
+        private readonly string _label;
 
         public Literal(Type type, object value, Segment segment = null, string label = null)
         {
-            this.type = type;
-            this.label = label ?? value.ToString();
-            this.value = value;
+            _type = type;
+            _label = label ?? value.ToString();
+            _value = value;
             Segment = segment;
         }
 
-        internal override Type NodeCheck() => type;
+        internal override Type NodeCheck() => _type;
 
-        protected override string NodeRepresentation() => label;
+        protected override string NodeRepresentation() => _label;
 
-        public override IValue ToValue() => new Constant(value, label);
+        public override IValue ToValue() => new Constant(_value, _label);
     }
 }

@@ -8,22 +8,22 @@ namespace Interpreter.Tests.Unit
 {
     public class ParserTests
     {
-        private readonly TestContainer container;
-        private readonly LexerQueryModel query;
+        private readonly TestContainer _container;
+        private readonly LexerQueryModel _query;
 
         public ParserTests()
         {
-            container = new TestContainer();
-            query = new LexerQueryModel("tokenTypes.json");
+            _container = new TestContainer();
+            _query = new LexerQueryModel("tokenTypes.json");
         }
 
         private Parser GetParser(string text)
         {
-            query.Text = text;
-            var lexerCreator = container.Get<ILexerCreatorService>();
-            var parserCreator = container.Get<IParserCreatorService>();
+            _query.Text = text;
+            var lexerCreator = _container.Get<ILexerCreatorService>();
+            var parserCreator = _container.Get<IParserCreatorService>();
 
-            var lexer = lexerCreator.CreateLexer(query);
+            var lexer = lexerCreator.CreateLexer(_query);
             var parser = parserCreator.CreateParser(lexer);
             return parser;
         }

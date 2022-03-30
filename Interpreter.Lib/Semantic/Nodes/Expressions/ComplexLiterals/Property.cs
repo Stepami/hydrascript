@@ -6,22 +6,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 {
     public class Property : Expression
     {
-        private readonly IdentifierReference id;
-        private readonly Expression expression;
+        private readonly IdentifierReference _id;
+        private readonly Expression _expression;
 
         public Property(IdentifierReference id, Expression expression)
         {
-            this.id = id;
-            this.id.Parent = this;
+            _id = id;
+            _id.Parent = this;
 
-            this.expression = expression;
-            this.expression.Parent = this;
+            _expression = expression;
+            _expression.Parent = this;
         }
         
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return id;
-            yield return expression;
+            yield return _id;
+            yield return _expression;
         }
 
         protected override string NodeRepresentation() => ":";

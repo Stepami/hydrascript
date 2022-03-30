@@ -3,7 +3,6 @@ using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
-using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM;
@@ -13,40 +12,40 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class AssignmentExpression : Expression
     {
-        private readonly MemberExpression destination;
-        private readonly Expression source;
-        private readonly Type destinationType;
+        private readonly MemberExpression _destination;
+        private readonly Expression _source;
+        private readonly Type _destinationType;
 
         public AssignmentExpression(MemberExpression destination, Expression source, Type destinationType = null)
         {
-            this.destination = destination;
+            _destination = destination;
             destination.Parent = this;
 
-            this.source = source;
+            _source = source;
             source.Parent = this;
 
-            this.destinationType = destinationType;
+            _destinationType = destinationType;
         }
 
         internal override Type NodeCheck()
         {
-            var id = destination.Id;
-            var type = source.NodeCheck();
+            var id = _destination.Id;
+            var type = _source.NodeCheck();
             if (Parent is LexicalDeclaration declaration)
             {
                 if (declaration.Const() && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
                 {
-                    throw new ConstWithoutInitializer(destination);
+                    throw new ConstWithoutInitializer(_destination);
                 }
 
-                if (SymbolTable.FindSymbol<Symbol>(destination.Id) != null)
+                if (SymbolTable.FindSymbol<Symbol>(_destination.Id) != null)
                 {
-                    throw new DeclarationAlreadyExists(destination);
+                    throw new DeclarationAlreadyExists(_destination);
                 }
 
-                if (destinationType != null && !destinationType.Equals(type))
+                if (_destinationType != null && !_destinationType.Equals(type))
                 {
-                    throw new IncompatibleTypesOfOperands(Segment, destinationType, type);
+                    throw new IncompatibleTypesOfOperands(Segment, _destinationType, type);
                 }
 
                 SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())
@@ -61,7 +60,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 {
                     if (symbol.ReadOnly)
                     {
-                        throw new AssignmentToConst(destination);
+                        throw new AssignmentToConst(_destination);
                     }
 
                     if (!symbol.Type.Equals(type))
@@ -77,28 +76,28 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
-            instructions.AddRange(source.ToInstructions(start, destination.Id));
-            if (source.Primary()) return instructions;
+            instructions.AddRange(_source.ToInstructions(start, _destination.Id));
+            if (_source.Primary()) return instructions;
             var last = instructions.OfType<ThreeAddressCodeInstruction>().Last();
-            if (source is AssignmentExpression)
+            if (_source is AssignmentExpression)
             {
                 instructions.Add(new ThreeAddressCodeInstruction(
-                    destination.Id,
+                    _destination.Id,
                     (null, new Name(last.Left)),
                     "", last.Jump()
                 ));
             }
             else
             {
-                last.Left = destination.Id;
+                last.Left = _destination.Id;
             }
             return instructions;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return destination;
-            yield return source;
+            yield return _destination;
+            yield return _source;
         }
 
         protected override string NodeRepresentation() => "=";

@@ -14,15 +14,15 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 {
     public class ReturnStatement : Statement
     {
-        private readonly Expression expression;
+        private readonly Expression _expression;
 
         public ReturnStatement(Expression expression = null)
         {
-            this.expression = expression;
+            _expression = expression;
             CanEvaluate = true;
             if (expression != null)
             {
-                this.expression.Parent = this;
+                _expression.Parent = this;
             }
         }
 
@@ -33,17 +33,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
                 throw new ReturnOutsideFunction(Segment);
             }
 
-            return expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
+            return _expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            if (expression == null)
+            if (_expression == null)
             {
                 yield break;
             }
 
-            yield return expression;
+            yield return _expression;
         }
 
         protected override string NodeRepresentation() => "return";
@@ -67,21 +67,21 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
-            if (expression == null)
+            if (_expression == null)
             {
                 instructions.Add(new ReturnInstruction(GetCallee().CallInfo.Location, start));
             }
             else
             {
-                if (expression.Primary())
+                if (_expression.Primary())
                 {
                     instructions.Add(new ReturnInstruction(
-                        GetCallee().CallInfo.Location, start, ((PrimaryExpression) expression).ToValue())
+                        GetCallee().CallInfo.Location, start, ((PrimaryExpression) _expression).ToValue())
                     );
                 }
                 else
                 {
-                    var eInstructions = expression.ToInstructions(start, "_t");
+                    var eInstructions = _expression.ToInstructions(start, "_t");
                     var last = eInstructions.OfType<ThreeAddressCodeInstruction>().Last();
                     instructions.AddRange(eInstructions);
                     instructions.Add(new ReturnInstruction(

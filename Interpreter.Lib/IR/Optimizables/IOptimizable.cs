@@ -1,4 +1,3 @@
-using System;
 using Interpreter.Lib.IR.Instructions;
 
 namespace Interpreter.Lib.IR.Optimizables

@@ -6,20 +6,20 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 {
     public class BlockStatement : Statement
     {
-        private readonly List<StatementListItem> statementList;
+        private readonly List<StatementListItem> _statementList;
 
         public BlockStatement(IEnumerable<StatementListItem> statementList)
         {
-            this.statementList = new List<StatementListItem>(statementList);
-            this.statementList.ForEach(item => item.Parent = this);
+            _statementList = new List<StatementListItem>(statementList);
+            _statementList.ForEach(item => item.Parent = this);
         }
 
         public bool HasReturnStatement()
         {
-            var has = statementList.Any(item => item is ReturnStatement);
+            var has = _statementList.Any(item => item is ReturnStatement);
             if (!has)
             {
-                has = statementList
+                has = _statementList
                     .Where(item => item.IsStatement())
                     .OfType<IfStatement>()
                     .Any(ifStmt => ifStmt.HasReturnStatement());
@@ -28,7 +28,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
             return has;
         }
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => statementList.GetEnumerator();
+        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => _statementList.GetEnumerator();
 
         protected override string NodeRepresentation() => "{}";
 
@@ -36,7 +36,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
         {
             var blockInstructions = new List<Instruction>();
             var offset = start;
-            foreach (var item in statementList)
+            foreach (var item in _statementList)
             {
                 var itemInstructions = item.ToInstructions(offset);
                 blockInstructions.AddRange(itemInstructions);

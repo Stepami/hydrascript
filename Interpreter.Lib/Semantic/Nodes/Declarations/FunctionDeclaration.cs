@@ -10,33 +10,33 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 {
     public class FunctionDeclaration : Declaration
     {
-        private readonly FunctionSymbol function;
+        private readonly FunctionSymbol _function;
 
-        private readonly BlockStatement statements;
+        private readonly BlockStatement _statements;
 
         public FunctionDeclaration(FunctionSymbol function, BlockStatement statements)
         {
-            this.function = function;
+            _function = function;
             function.Body = this;
 
-            this.statements = statements;
-            this.statements.Parent = this;
+            _statements = statements;
+            _statements.Parent = this;
         }
 
-        public bool HasReturnStatement() => statements.HasReturnStatement();
+        public bool HasReturnStatement() => _statements.HasReturnStatement();
 
         public void SetArguments(CallExpression call, List<Expression> expressions)
         {
-            if (function.Parameters.Count == expressions.Count)
+            if (_function.Parameters.Count == expressions.Count)
             {
-                function.Parameters.Zip(expressions).ToList()
+                _function.Parameters.Zip(expressions).ToList()
                     .ForEach(tuple =>
                     {
                         var (param, expr) = tuple;
                         if (param is VariableSymbol p)
                         {
                             var pType = expr.NodeCheck();
-                            if (p.Type.Equals(pType) || pType.SubTypeOf(p.Type))
+                            if (p.Type.Equals(pType))
                             {
                                 SymbolTable.AddSymbol(p);
                             }
@@ -44,36 +44,36 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
                         }
                     });
             }
-            else throw new WrongNumberOfArguments(call.Segment, function.Parameters.Count, expressions.Count);
+            else throw new WrongNumberOfArguments(call.Segment, _function.Parameters.Count, expressions.Count);
         }
 
         public void Clear()
         {
-            statements.SymbolTable.Clear();
+            _statements.SymbolTable.Clear();
             SymbolTable.Clear();
         }
 
-        public FunctionSymbol GetSymbol() => function;
+        public FunctionSymbol GetSymbol() => _function;
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return statements;
+            yield return _statements;
         }
 
-        protected override string NodeRepresentation() => $"function {function.Id}";
+        protected override string NodeRepresentation() => $"function {_function.Id}";
 
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
-            if (statements.Any())
+            if (_statements.Any())
             {
-                function.CallInfo.Location = start + 1;
+                _function.CallInfo.Location = start + 1;
 
                 var body = new List<Instruction>();
-                body.AddRange(statements.ToInstructions(function.CallInfo.Location));
-                if (!statements.HasReturnStatement())
+                body.AddRange(_statements.ToInstructions(_function.CallInfo.Location));
+                if (!_statements.HasReturnStatement())
                 {
-                    body.Add(new ReturnInstruction(function.CallInfo.Location, body.Last().Number + 1));
+                    body.Add(new ReturnInstruction(_function.CallInfo.Location, body.Last().Number + 1));
                 }
 
                 instructions.Add(new GotoInstruction(body.Last().Number + 1, start));

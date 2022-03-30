@@ -7,10 +7,10 @@ namespace Interpreter.Lib.Semantic.Utils
         public static (
             Type Number, Type Boolean, Type String, Type Null, Type Undefined, Type Object, Type Void
             ) JavaScriptTypes { get; } = (
-            new Type("number", new Type("object")),
-            new Type("boolean", new Type("object")),
-            new Type("string", new Type("object")),
-            new Type("null", new Type("object")),
+            new Type("number"),
+            new Type("boolean"),
+            new Type("string"),
+            new Type("null"),
             new Type("undefined"),
             new Type("object"),
             new Type("void")

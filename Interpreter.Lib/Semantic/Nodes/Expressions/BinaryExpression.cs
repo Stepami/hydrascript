@@ -11,34 +11,34 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class BinaryExpression : Expression
     {
-        private readonly Expression left;
+        private readonly Expression _left;
 
-        private readonly string @operator;
+        private readonly string _operator;
 
-        private readonly Expression right;
+        private readonly Expression _right;
 
         public BinaryExpression(Expression left, string @operator, Expression right)
         {
-            this.left = left;
-            this.left.Parent = this;
+            _left = left;
+            _left.Parent = this;
 
-            this.@operator = @operator;
+            _operator = @operator;
 
-            this.right = right;
-            this.right.Parent = this;
+            _right = right;
+            _right.Parent = this;
         }
 
         internal override Type NodeCheck()
         {
-            var lType = left.NodeCheck();
-            var rType = right.NodeCheck();
+            var lType = _left.NodeCheck();
+            var rType = _right.NodeCheck();
             Type retType = null;
             if (!lType.Equals(rType))
             {
                 throw new IncompatibleTypesOfOperands(Segment, lType, rType);
             }
 
-            switch (@operator)
+            switch (_operator)
             {
                 case "+":
                     if (lType.Equals(TypeUtils.JavaScriptTypes.Number))
@@ -49,7 +49,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     {
                         retType = TypeUtils.JavaScriptTypes.String;
                     }
-                    else throw new UnsupportedOperation(Segment, lType, @operator);
+                    else throw new UnsupportedOperation(Segment, lType, _operator);
 
                     break;
                 case "-":
@@ -60,7 +60,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     {
                         retType = TypeUtils.JavaScriptTypes.Number;
                     }
-                    else throw new UnsupportedOperation(Segment, lType, @operator);
+                    else throw new UnsupportedOperation(Segment, lType, _operator);
 
                     break;
                 case "||":
@@ -69,7 +69,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     {
                         retType = TypeUtils.JavaScriptTypes.Boolean;
                     }
-                    else throw new UnsupportedOperation(Segment, lType, @operator);
+                    else throw new UnsupportedOperation(Segment, lType, _operator);
 
                     break;
                 case "==":
@@ -84,7 +84,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     {
                         retType = TypeUtils.JavaScriptTypes.Boolean;
                     }
-                    else throw new UnsupportedOperation(Segment, lType, @operator);
+                    else throw new UnsupportedOperation(Segment, lType, _operator);
 
                     break;
             }
@@ -94,11 +94,11 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return left;
-            yield return right;
+            yield return _left;
+            yield return _right;
         }
 
-        protected override string NodeRepresentation() => @operator;
+        protected override string NodeRepresentation() => _operator;
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
@@ -108,24 +108,24 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             var lInstructions = new List<Instruction>();
             var rInstructions = new List<Instruction>();
 
-            if (left.Primary())
+            if (_left.Primary())
             {
-                newRight.left = ((PrimaryExpression) left).ToValue();
+                newRight.left = ((PrimaryExpression) _left).ToValue();
             }
             else
             {
-                lInstructions.AddRange(left.ToInstructions(start, temp));
+                lInstructions.AddRange(_left.ToInstructions(start, temp));
                 newRight.left = new Name(lInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
             }
 
-            if (right.Primary())
+            if (_right.Primary())
             {
-                newRight.right = ((PrimaryExpression) right).ToValue();
+                newRight.right = ((PrimaryExpression) _right).ToValue();
             }
             else
             {
-                rInstructions.AddRange(right.ToInstructions(
-                    left.Primary()
+                rInstructions.AddRange(_right.ToInstructions(
+                    _left.Primary()
                         ? start
                         : lInstructions.Last().Number + 1,
                     temp
@@ -142,7 +142,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             (
                 new ThreeAddressCodeInstruction(
                     temp + number,
-                    newRight, @operator, number
+                    newRight, _operator, number
                 )
             );
             return instructions;

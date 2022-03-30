@@ -6,21 +6,21 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
 {
     public class ExpressionStatement : Statement
     {
-        private readonly Expression expression;
+        private readonly Expression _expression;
 
         public ExpressionStatement(Expression expression)
         {
-            this.expression = expression;
+            _expression = expression;
             expression.Parent = this;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return expression;
+            yield return _expression;
         }
 
         protected override string NodeRepresentation() => nameof(ExpressionStatement);
 
-        public override List<Instruction> ToInstructions(int start) => expression.ToInstructions(start);
+        public override List<Instruction> ToInstructions(int start) => _expression.ToInstructions(start);
     }
 }

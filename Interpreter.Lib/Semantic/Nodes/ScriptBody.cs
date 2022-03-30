@@ -4,15 +4,15 @@ namespace Interpreter.Lib.Semantic.Nodes
 {
     public class ScriptBody : AbstractSyntaxTreeNode
     {
-        private readonly List<StatementListItem> statementList;
+        private readonly List<StatementListItem> _statementList;
 
         public ScriptBody(IEnumerable<StatementListItem> statementList)
         {
-            this.statementList = new List<StatementListItem>(statementList);
-            this.statementList.ForEach(item => item.Parent = this);
+            _statementList = new List<StatementListItem>(statementList);
+            _statementList.ForEach(item => item.Parent = this);
         }
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => statementList.GetEnumerator();
+        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => _statementList.GetEnumerator();
 
         protected override string NodeRepresentation() => "Script";
     }

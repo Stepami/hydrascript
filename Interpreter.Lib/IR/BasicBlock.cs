@@ -9,19 +9,19 @@ namespace Interpreter.Lib.IR
 {
     public class BasicBlock : IEnumerable<Instruction>, IEquatable<BasicBlock>, IComparable<BasicBlock>
     {
-        private readonly List<Instruction> instructions;
+        private readonly List<Instruction> _instructions;
 
         public BasicBlock(IEnumerable<Instruction> instructions)
         {
-            this.instructions = new List<Instruction>(instructions);
-            this.instructions.Sort();
+            _instructions = new List<Instruction>(instructions);
+            _instructions.Sort();
         }
 
-        public int In() => instructions.First().Number;
+        public int In() => _instructions.First().Number;
 
         public List<int> Out()
         {
-            var last = instructions.Last();
+            var last = _instructions.Last();
             if (last is ReturnInstruction ret)
             {
                 return ret.ToList();
@@ -45,7 +45,7 @@ namespace Interpreter.Lib.IR
             return this.Count() == other.Count() && this.Zip(other).All(pair => pair.First.Equals(pair.Second));
         }
 
-        public IEnumerator<Instruction> GetEnumerator() => new List<Instruction>(instructions).GetEnumerator();
+        public IEnumerator<Instruction> GetEnumerator() => new List<Instruction>(_instructions).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -58,7 +58,7 @@ namespace Interpreter.Lib.IR
         public override string ToString()
         {
             var result = new StringBuilder($@"{GetHashCode()} [shape=box, label=""");
-            result.AppendJoin("\\n", instructions);
+            result.AppendJoin("\\n", _instructions);
             return result.Append(@"""]").ToString();
         }
     }

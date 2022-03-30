@@ -6,11 +6,11 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
 {
     public class Coordinates : IEquatable<Coordinates>
     {
-        [JsonProperty] private readonly int line, column;
+        [JsonProperty] private readonly int _line, _column;
 
         public Coordinates(int line, int column)
         {
-            (this.line, this.column) = (line, column);
+            (_line, _column) = (line, column);
         }
 
         public Coordinates(int absolutePos, List<int> system)
@@ -19,31 +19,31 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
                 if (absolutePos <= system[i])
                 {
                     var offset = i == 0 ? -1 : system[i - 1];
-                    line = i + 1;
-                    column = absolutePos - offset;
+                    _line = i + 1;
+                    _column = absolutePos - offset;
                     break;
                 }
 
-            if (line == 0)
+            if (_line == 0)
             {
-                column = 1;
-                line = system.Count + 1;
+                _column = 1;
+                _line = system.Count + 1;
             }
         }
 
         public override string ToString()
         {
-            return $"({line}, {column})";
+            return $"({_line}, {_column})";
         }
         
         public override bool Equals(object obj) => Equals(obj as Coordinates);
 
-        public override int GetHashCode() => HashCode.Combine(line, column);
+        public override int GetHashCode() => HashCode.Combine(_line, _column);
 
         public bool Equals(Coordinates obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return line == obj.line && column == obj.column;
+            return _line == obj._line && _column == obj._column;
         }
     }
 }

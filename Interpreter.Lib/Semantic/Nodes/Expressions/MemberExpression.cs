@@ -7,28 +7,28 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class MemberExpression : Expression
     {
-        private readonly IdentifierReference id;
-        private readonly AccessExpression accessChain;
+        private readonly IdentifierReference _id;
+        private readonly AccessExpression _accessChain;
 
         public MemberExpression(IdentifierReference id, AccessExpression accessChain)
         {
-            this.id = id;
-            this.id.Parent = this;
+            _id = id;
+            _id.Parent = this;
             
-            this.accessChain = accessChain;
+            _accessChain = accessChain;
             if (accessChain != null)
             {
-                this.accessChain.Parent = this;
+                _accessChain.Parent = this;
             }
         }
 
-        public string Id => id.Id;
+        public string Id => _id.Id;
         
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            if (accessChain != null)
+            if (_accessChain != null)
             {
-                yield return accessChain;
+                yield return _accessChain;
             }
         }
 
@@ -40,7 +40,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         }
 
         public static implicit operator IdentifierReference(MemberExpression member) => 
-            member.id;
+            member._id;
         
         public static explicit operator MemberExpression(IdentifierReference idRef) =>
             new (idRef, null);

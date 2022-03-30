@@ -17,9 +17,7 @@ namespace Interpreter.Lib.Semantic.Types
             return Equals(Type, that.Type);
         }
         
-        public override int GetHashCode()
-        {
-            return Type.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            Type.GetHashCode();
     }
 }

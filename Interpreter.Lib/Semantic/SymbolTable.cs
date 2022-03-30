@@ -7,40 +7,40 @@ namespace Interpreter.Lib.Semantic
 {
     public class SymbolTable : IDisposable
     {
-        private readonly Dictionary<string, Symbol> symbols = new();
+        private readonly Dictionary<string, Symbol> _symbols = new();
 
-        private SymbolTable openScope;
+        private SymbolTable _openScope;
 
-        private List<SymbolTable> subScopes = new();
+        private List<SymbolTable> _subScopes = new();
 
         public void AddOpenScope(SymbolTable table)
         {
-            openScope = table;
-            table.subScopes.Add(this);
+            _openScope = table;
+            table._subScopes.Add(this);
         }
 
-        public void AddSymbol(Symbol symbol) => symbols[symbol.Id] = symbol;
+        public void AddSymbol(Symbol symbol) => _symbols[symbol.Id] = symbol;
 
         /// <summary>
         /// Поиск эффективного символа
         /// </summary>
         public T FindSymbol<T>(string id) where T : Symbol
         {
-            var hasInsideTheScope = symbols.TryGetValue(id, out var symbol);
-            return !hasInsideTheScope ? openScope?.FindSymbol<T>(id) : symbol as T;
+            var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
+            return !hasInsideTheScope ? _openScope?.FindSymbol<T>(id) : symbol as T;
         }
 
         /// <summary>
         /// Проверяет наличие собственного символа
         /// </summary>
-        public bool ContainsSymbol(string id) => symbols.ContainsKey(id);
+        public bool ContainsSymbol(string id) => _symbols.ContainsKey(id);
 
-        public void Clear() => symbols.Clear();
+        public void Clear() => _symbols.Clear();
 
         private void DeepClean()
         {
             Clear();
-            foreach (var child in subScopes)
+            foreach (var child in _subScopes)
             {
                 child.DeepClean();
             }
@@ -49,10 +49,10 @@ namespace Interpreter.Lib.Semantic
         [SuppressMessage("ReSharper", "CA1816")]
         public void Dispose()
         {
-            var table = openScope;
-            while (table.openScope != null)
+            var table = _openScope;
+            while (table._openScope != null)
             {
-                table = table.openScope;
+                table = table._openScope;
             }
 
             table.DeepClean();

@@ -5,16 +5,16 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 {
     public class ObjectLiteral : Expression
     {
-        private readonly List<Property> properties;
+        private readonly List<Property> _properties;
 
         public ObjectLiteral(IEnumerable<Property> properties)
         {
-            this.properties = new List<Property>(properties);
-            this.properties.ForEach(prop => prop.Parent = this);
+            _properties = new List<Property>(properties);
+            _properties.ForEach(prop => prop.Parent = this);
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => 
-            properties.GetEnumerator();
+            _properties.GetEnumerator();
 
         protected override string NodeRepresentation() => "{}";
 

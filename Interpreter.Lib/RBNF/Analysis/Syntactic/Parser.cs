@@ -21,38 +21,38 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class Parser
     {
-        private readonly IEnumerator<Token> tokens;
-        private readonly Structure structure;
+        private readonly IEnumerator<Token> _tokens;
+        private readonly Structure _structure;
 
         public Parser(IEnumerable<Token> lexer, Structure structure)
         {
-            tokens = lexer.Where(t => !t.Type.WhiteSpace()).GetEnumerator();
-            tokens.MoveNext();
-            this.structure = structure;
+            _tokens = lexer.Where(t => !t.Type.WhiteSpace()).GetEnumerator();
+            _tokens.MoveNext();
+            _structure = structure;
         }
 
         private Token Expect(string expectedTag, string expectedValue = null)
         {
-            var current = tokens.Current;
+            var current = _tokens.Current;
 
             if (!CurrentIs(expectedTag))
                 throw new ParserException(
-                    $"{tokens.Current.Segment} expected = {expectedTag}; actual = {tokens.Current.Type.Tag}"
+                    $"{_tokens.Current.Segment} expected = {expectedTag}; actual = {_tokens.Current.Type.Tag}"
                 );
-            if (tokens.Current.Value != (expectedValue ?? tokens.Current.Value))
+            if (_tokens.Current.Value != (expectedValue ?? _tokens.Current.Value))
                 throw new ParserException(
-                    $"{tokens.Current.Segment} expected = {expectedValue}; actual = {tokens.Current.Value}"
+                    $"{_tokens.Current.Segment} expected = {expectedValue}; actual = {_tokens.Current.Value}"
                 );
 
-            if (CurrentIs(expectedTag) && tokens.Current.Value == (expectedValue ?? tokens.Current.Value))
+            if (CurrentIs(expectedTag) && _tokens.Current.Value == (expectedValue ?? _tokens.Current.Value))
             {
-                tokens.MoveNext();
+                _tokens.MoveNext();
             }
 
             return current;
         }
 
-        private bool CurrentIs(string tag) => tokens.Current.Type == structure.FindByTag(tag);
+        private bool CurrentIs(string tag) => _tokens.Current.Type == _structure.FindByTag(tag);
 
         private bool CurrentIsLiteral() => CurrentIs("NullLiteral") ||
                                            CurrentIs("IntegerLiteral") ||
@@ -60,9 +60,9 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                                            CurrentIs("StringLiteral") ||
                                            CurrentIs("BooleanLiteral");
 
-        private bool CurrentIsKeyword(string keyword) => CurrentIs("Keyword") && tokens.Current.Value == keyword;
+        private bool CurrentIsKeyword(string keyword) => CurrentIs("Keyword") && _tokens.Current.Value == keyword;
 
-        private bool CurrentIsOperator(string @operator) => CurrentIs("Operator") && tokens.Current.Value == @operator;
+        private bool CurrentIsOperator(string @operator) => CurrentIs("Operator") && _tokens.Current.Value == @operator;
 
         public AbstractSyntaxTree TopDownParse()
         {
@@ -612,7 +612,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private Literal Literal()
         {
-            var segment = tokens.Current.Segment;
+            var segment = _tokens.Current.Segment;
             if (CurrentIs("StringLiteral"))
             {
                 var str = Expect("StringLiteral");
@@ -626,7 +626,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 );
             }
 
-            return tokens.Current.Type.Tag switch
+            return _tokens.Current.Type.Tag switch
             {
                 "NullLiteral" => new Literal(TypeUtils.JavaScriptTypes.Null,
                     Expect("NullLiteral").Value == "null" ? null : "", segment),

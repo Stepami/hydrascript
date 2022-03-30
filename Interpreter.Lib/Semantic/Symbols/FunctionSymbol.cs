@@ -14,7 +14,7 @@ namespace Interpreter.Lib.Semantic.Symbols
 
         public FunctionDeclaration Body { get; set; }
 
-        public FunctionInfo CallInfo { get; set; }
+        public FunctionInfo CallInfo { get; }
 
         public FunctionSymbol(string id, IEnumerable<Symbol> parameters) : base(id)
         {

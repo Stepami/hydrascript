@@ -11,61 +11,61 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
     public class UnaryExpression : Expression
     {
-        private readonly string @operator;
+        private readonly string _operator;
 
-        private readonly Expression expression;
+        private readonly Expression _expression;
 
         public UnaryExpression(string @operator, Expression expression)
         {
-            this.@operator = @operator;
+            _operator = @operator;
 
-            this.expression = expression;
-            this.expression.Parent = this;
+            _expression = expression;
+            _expression.Parent = this;
         }
 
         internal override Type NodeCheck()
         {
-            var eType = expression.NodeCheck();
+            var eType = _expression.NodeCheck();
             Type retType;
-            if (eType.Equals(TypeUtils.JavaScriptTypes.Number) && @operator == "-")
+            if (eType.Equals(TypeUtils.JavaScriptTypes.Number) && _operator == "-")
             {
                 retType = TypeUtils.JavaScriptTypes.Number;
             }
-            else if (eType.Equals(TypeUtils.JavaScriptTypes.Boolean) && @operator == "!")
+            else if (eType.Equals(TypeUtils.JavaScriptTypes.Boolean) && _operator == "!")
             {
                 retType = TypeUtils.JavaScriptTypes.Boolean;
             }
-            else throw new UnsupportedOperation(Segment, eType, @operator);
+            else throw new UnsupportedOperation(Segment, eType, _operator);
 
             return retType;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            yield return expression;
+            yield return _expression;
         }
 
-        protected override string NodeRepresentation() => @operator;
+        protected override string NodeRepresentation() => _operator;
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
             var instructions = new List<Instruction>();
 
             (IValue left, IValue right) right = (null, null);
-            if (expression.Primary())
+            if (_expression.Primary())
             {
-                right.right = ((PrimaryExpression) expression).ToValue();
+                right.right = ((PrimaryExpression) _expression).ToValue();
             }
             else
             {
-                instructions.AddRange(expression.ToInstructions(start, temp));
+                instructions.AddRange(_expression.ToInstructions(start, temp));
                 right.right = new Name(instructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
             }
 
             var number = instructions.Any() ? instructions.Last().Number + 1 : start;
 
             instructions.Add(new ThreeAddressCodeInstruction(
-                temp + number, right, @operator, number
+                temp + number, right, _operator, number
             ));
             return instructions;
         }

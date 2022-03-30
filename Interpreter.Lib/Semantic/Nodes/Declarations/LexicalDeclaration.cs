@@ -10,12 +10,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 {
     public class LexicalDeclaration : Declaration
     {
-        private readonly DeclarationType declarationType;
-        private readonly List<AssignmentExpression> assignments = new();
+        private readonly DeclarationType _declarationType;
+        private readonly List<AssignmentExpression> _assignments = new();
 
         public LexicalDeclaration(bool readOnly)
         {
-            declarationType = readOnly ? DeclarationType.Const : DeclarationType.Let;
+            _declarationType = readOnly ? DeclarationType.Const : DeclarationType.Let;
         }
 
         public void AddAssignment(string id, Segment identSegment, Expression expression, Type destinationType = null)
@@ -35,20 +35,20 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
                     SymbolTable = SymbolTable,
                     Parent = this
                 };
-            assignments.Add(assignment);
+            _assignments.Add(assignment);
         }
 
-        public bool Const() => declarationType == DeclarationType.Const;
+        public bool Const() => _declarationType == DeclarationType.Const;
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => assignments.GetEnumerator();
+        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => _assignments.GetEnumerator();
 
-        protected override string NodeRepresentation() => declarationType.ToString();
+        protected override string NodeRepresentation() => _declarationType.ToString();
 
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
             var offset = start;
-            foreach (var aInstructions in assignments.Select(assignment => assignment.ToInstructions(offset)))
+            foreach (var aInstructions in _assignments.Select(assignment => assignment.ToInstructions(offset)))
             {
                 instructions.AddRange(aInstructions);
                 offset += aInstructions.Count;

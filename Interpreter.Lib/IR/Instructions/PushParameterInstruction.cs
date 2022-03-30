@@ -5,8 +5,8 @@ namespace Interpreter.Lib.IR.Instructions
 {
     public class PushParameterInstruction : Instruction
     {
-        private readonly string parameter;
-        private readonly IValue value;
+        private readonly string _parameter;
+        private readonly IValue _value;
 
         public PushParameterInstruction(
             int number,
@@ -14,16 +14,16 @@ namespace Interpreter.Lib.IR.Instructions
             IValue value
         ) : base(number)
         {
-            this.parameter = parameter;
-            this.value = value;
+            _parameter = parameter;
+            _value = value;
         }
 
         public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
         {
-            arguments.Push((parameter, value.Get(frames.Peek())));
+            arguments.Push((_parameter, _value.Get(frames.Peek())));
             return Number + 1;
         }
 
-        protected override string ToStringRepresentation() => $"PushParameter {parameter} = {value}";
+        protected override string ToStringRepresentation() => $"PushParameter {_parameter} = {_value}";
     }
 }
