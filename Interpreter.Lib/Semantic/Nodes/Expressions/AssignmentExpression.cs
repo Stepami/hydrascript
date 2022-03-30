@@ -15,14 +15,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
     {
         private readonly MemberExpression destination;
         private readonly Expression source;
+        private readonly Type destinationType;
 
-        public AssignmentExpression(MemberExpression destination, Expression source)
+        public AssignmentExpression(MemberExpression destination, Expression source, Type destinationType = null)
         {
             this.destination = destination;
             destination.Parent = this;
 
             this.source = source;
             source.Parent = this;
+
+            this.destinationType = destinationType;
         }
 
         internal override Type NodeCheck()
@@ -39,6 +42,11 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 if (SymbolTable.FindSymbol<Symbol>(destination.Id) != null)
                 {
                     throw new DeclarationAlreadyExists(destination);
+                }
+
+                if (destinationType != null && !destinationType.Equals(type))
+                {
+                    throw new IncompatibleTypesOfOperands(Segment, destinationType, type);
                 }
 
                 SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())

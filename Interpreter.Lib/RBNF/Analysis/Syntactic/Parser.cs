@@ -292,6 +292,19 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 SymbolTable = table
             };
 
+            AddToDeclaration(declaration, table);
+
+            while (CurrentIs("Comma"))
+            {
+                Expect("Comma");
+                AddToDeclaration(declaration, table);
+            }
+
+            return declaration;
+        }
+
+        private void AddToDeclaration(LexicalDeclaration declaration, SymbolTable table)
+        {
             var ident = Expect("Ident");
             if (CurrentIs("Assign"))
             {
@@ -302,29 +315,13 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             {
                 Expect("Colon");
                 var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
-                declaration.AddAssignment(
-                    ident.Value,
-                    ident.Segment,
-                    new Literal(
-                        type,
-                        TypeUtils.GetDefaultValue(type)
-                    )
-                );
-            }
-
-            while (CurrentIs("Comma"))
-            {
-                Expect("Comma");
-                ident = Expect("Ident");
                 if (CurrentIs("Assign"))
                 {
                     Expect("Assign");
-                    declaration.AddAssignment(ident.Value, ident.Segment, Expression(table));
+                    declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), type);
                 }
-                else if (CurrentIs("Colon"))
+                else
                 {
-                    Expect("Colon");
-                    var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
                     declaration.AddAssignment(
                         ident.Value,
                         ident.Segment,
@@ -335,8 +332,6 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     );
                 }
             }
-
-            return declaration;
         }
 
         private Expression Expression(SymbolTable table)

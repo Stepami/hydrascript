@@ -3,8 +3,8 @@ using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
-using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Nodes.Declarations
 {
@@ -18,7 +18,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
             declarationType = readOnly ? DeclarationType.Const : DeclarationType.Let;
         }
 
-        public void AddAssignment(string id, Segment identSegment, Expression expression)
+        public void AddAssignment(string id, Segment identSegment, Expression expression, Type destinationType = null)
         {
             var identRef = new IdentifierReference(id)
             {
@@ -28,7 +28,8 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
             var assignment =
                 new AssignmentExpression(
                     new MemberExpression(identRef, null),
-                    expression
+                    expression,
+                    destinationType
                 )
                 {
                     SymbolTable = SymbolTable,

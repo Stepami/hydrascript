@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Interpreter.Tests.TestData
 {
-    public class ParserTestData : IEnumerable<object[]>
+    public class ParserSuccessTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {

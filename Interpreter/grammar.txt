@@ -57,10 +57,11 @@ BreakStatement -> 'break'
 ReturnStatement -> 'return' Expression?
                        
 LexicalDeclaration -> LetOrConst "Ident" Initialization (',' "Ident" Initialization)*
-Initialization -> Type
-                  Initializer
 LetOrConst -> 'let'
               'const'
+Initialization -> Typed
+                  Initializer
+Typed -> Type Initializer?
 Initializer -> '=' Expression
 
 FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement

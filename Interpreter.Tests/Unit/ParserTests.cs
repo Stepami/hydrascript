@@ -29,7 +29,7 @@ namespace Interpreter.Tests.Unit
         }
 
         [Theory]
-        [ClassData(typeof(ParserTestData))]
+        [ClassData(typeof(ParserSuccessTestData))]
         public void ParserDoesNotThrowTest(string text)
         {
             var parser = GetParser(text);
