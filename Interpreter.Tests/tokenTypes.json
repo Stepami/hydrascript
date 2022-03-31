@@ -43,7 +43,7 @@
   },
   {
     "tag": "TypeIdentifier",
-    "pattern": "number|string|boolean|object",
+    "pattern": "number|string|boolean|any",
     "priority": 10,
     "whiteSpace": false
   },

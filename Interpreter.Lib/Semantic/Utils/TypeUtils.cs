@@ -23,6 +23,7 @@ namespace Interpreter.Lib.Semantic.Utils
                 "number" => JavaScriptTypes.Number,
                 "boolean" => JavaScriptTypes.Boolean,
                 "string" => JavaScriptTypes.String,
+                "any" => new Any(),
                 "object" => JavaScriptTypes.Object,
                 _ => JavaScriptTypes.Undefined
             };
