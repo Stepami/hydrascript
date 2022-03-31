@@ -101,46 +101,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             return instructions;
         }
 
-        private List<Instruction> CastToString(int start)
-        {
-            var instructions = new List<Instruction>();
-            var expression = _expressions.First();
-            var castNumber = start;
-
-            if (!expression.Primary())
-            {
-                instructions.AddRange(expression.ToInstructions(start, "_t"));
-                castNumber = instructions.Last().Number + 1;
-            }
-
-            instructions.Add(new AsStringInstruction(
-                "_t" + castNumber,
-                expression.Primary()
-                    ? ((PrimaryExpression) expression).ToValue()
-                    : new Name(instructions.OfType<ThreeAddressCodeInstruction>().Last().Left),
-                castNumber
-            ));
-
-            return instructions;
-        }
-
         public override List<Instruction> ToInstructions(int start)
         {
             return _ident.Id switch
             {
                 "print" => Print(start),
-                "toString" => CastToString(start),
                 _ => ToInstructions(start, null)
             };
         }
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            if (_ident.Id == "toString")
-            {
-                return CastToString(start);
-            }
-
             var instructions = new List<Instruction>();
             var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
             if (function.Body.First().Any())
