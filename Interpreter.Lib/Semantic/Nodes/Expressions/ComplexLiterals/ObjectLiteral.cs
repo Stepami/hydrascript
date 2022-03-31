@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 {
@@ -13,6 +15,18 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
             _properties.ForEach(prop => prop.Parent = this);
         }
 
+        internal override Type NodeCheck()
+        {
+            var propertyTypes = new List<PropertyType>();
+            _properties.ForEach(prop =>
+            {
+                var propType = prop.Expression.NodeCheck();
+                propertyTypes.Add(new PropertyType(prop.Id.Id, propType));
+                prop.Id.SymbolTable.AddSymbol(new VariableSymbol(prop.Id.Id) {Type = propType});
+            });
+            return new ObjectType(propertyTypes);
+        }
+
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => 
             _properties.GetEnumerator();
 
@@ -20,6 +34,8 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
+            // reserve frame for temp
+            // foreach prop make assign temp.prop = expr
             throw new System.NotImplementedException();
         }
     }
