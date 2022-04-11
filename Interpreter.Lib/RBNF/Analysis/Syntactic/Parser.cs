@@ -37,13 +37,9 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             var current = _tokens.Current;
 
             if (!CurrentIs(expectedTag))
-                throw new ParserException(
-                    $"{_tokens.Current.Segment} expected = {expectedTag}; actual = {_tokens.Current.Type.Tag}"
-                );
+                throw new ParserException(_tokens.Current.Segment, expectedTag, _tokens.Current);
             if (_tokens.Current.Value != (expectedValue ?? _tokens.Current.Value))
-                throw new ParserException(
-                    $"{_tokens.Current.Segment} expected = {expectedValue}; actual = {_tokens.Current.Value}"
-                );
+                throw new ParserException(_tokens.Current.Segment, expectedValue, _tokens.Current);
 
             if (CurrentIs(expectedTag) && _tokens.Current.Value == (expectedValue ?? _tokens.Current.Value))
             {
