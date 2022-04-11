@@ -42,11 +42,11 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 castNumber = instructions.Last().Number + 1;
             }
 
-            instructions.Add(new AsStringInstruction(
+            instructions.Add(new AsString(
                 "_t" + castNumber,
                 _expression.Primary()
                     ? ((PrimaryExpression) _expression).ToValue()
-                    : new Name(instructions.OfType<ThreeAddressCodeInstruction>().Last().Left),
+                    : new Name(instructions.OfType<Simple>().Last().Left),
                 castNumber
             ));
 

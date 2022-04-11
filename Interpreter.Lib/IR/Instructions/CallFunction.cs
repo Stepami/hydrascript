@@ -3,12 +3,12 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class CallInstruction : ThreeAddressCodeInstruction
+    public class CallFunction : Simple
     {
         private readonly FunctionInfo _function;
         private readonly int _numberOfArguments;
         
-        public CallInstruction(FunctionInfo function, int number, int numberOfArguments, string left = null) :
+        public CallFunction(FunctionInfo function, int number, int numberOfArguments, string left = null) :
             base(left, (null, null), "Call ", number)
         {
             _function = function;

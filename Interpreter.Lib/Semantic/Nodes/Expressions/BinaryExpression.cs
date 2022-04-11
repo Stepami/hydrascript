@@ -115,7 +115,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             else
             {
                 lInstructions.AddRange(_left.ToInstructions(start, temp));
-                newRight.left = new Name(lInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                newRight.left = new Name(lInstructions.OfType<Simple>().Last().Left);
             }
 
             if (_right.Primary())
@@ -130,7 +130,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                         : lInstructions.Last().Number + 1,
                     temp
                 ));
-                newRight.right = new Name(rInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                newRight.right = new Name(rInstructions.OfType<Simple>().Last().Left);
             }
 
             instructions.AddRange(lInstructions);
@@ -140,7 +140,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
             instructions.Add
             (
-                new ThreeAddressCodeInstruction(
+                new Simple(
                     temp + number,
                     newRight, _operator, number
                 )

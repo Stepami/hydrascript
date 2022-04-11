@@ -3,11 +3,11 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class IfNotGotoInstruction : GotoInstruction
+    public class IfNotGoto : Goto
     {
         private readonly IValue _test;
         
-        public IfNotGotoInstruction(IValue test, int jump, int number) :
+        public IfNotGoto(IValue test, int jump, int number) :
             base(jump, number)
         {
             _test = test;

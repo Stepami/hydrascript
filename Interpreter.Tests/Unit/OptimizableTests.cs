@@ -13,7 +13,7 @@ namespace Interpreter.Tests.Unit
         public void IdentityExpressionTests()
         {
             _optimizable = new IdentityExpression(
-                new ThreeAddressCodeInstruction(
+                new Simple(
                     "", (new Constant(0, "0"), new Name("x")), "+", 0
                 )
             );
@@ -21,7 +21,7 @@ namespace Interpreter.Tests.Unit
             Assert.True(_optimizable.Test());
             
             _optimizable = new IdentityExpression(
-                new ThreeAddressCodeInstruction(
+                new Simple(
                     "", (new Constant(1, "1"), new Name("x")), "*", 0
                 )
             );
@@ -29,7 +29,7 @@ namespace Interpreter.Tests.Unit
             Assert.True(_optimizable.Test());
             
             _optimizable = new IdentityExpression(
-                new ThreeAddressCodeInstruction(
+                new Simple(
                     "", (new Constant(2, "2"), new Name("x")), "+", 0
                 )
             );

@@ -16,7 +16,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
         public override List<Instruction> ToInstructions(int start, string temp) =>
             new()
             {
-                new ThreeAddressCodeInstruction(temp, (null, ToValue()), "", start)
+                new Simple(temp, (null, ToValue()), "", start)
             };
     }
 }

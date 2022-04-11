@@ -35,12 +35,12 @@ namespace Interpreter.Lib.Semantic
             }
 
             result.Sort();
-            result.Add(new EndInstruction(result.Count));
+            result.Add(new Halt(result.Count));
 
-            var calls = result.OfType<CallInstruction>().GroupBy(i => i.Jump());
+            var calls = result.OfType<CallFunction>().GroupBy(i => i.Jump());
             foreach (var call in calls)
             {
-                var returns = result.OfType<ReturnInstruction>()
+                var returns = result.OfType<Return>()
                     .Where(r => r.FunctionStart == call.Key);
                 foreach (var ret in returns)
                 {

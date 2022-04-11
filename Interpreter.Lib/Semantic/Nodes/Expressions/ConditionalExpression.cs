@@ -59,7 +59,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             if (!_test.Primary())
             {
                 var testInstructions = _test.ToInstructions(start, "_t");
-                ifNotTest = new Name(testInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                ifNotTest = new Name(testInstructions.OfType<Simple>().Last().Left);
                 instructions.AddRange(testInstructions);
             }
             else
@@ -74,15 +74,15 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             var alternateInstructions = _alternate.ToInstructions(aOffset, temp);
 
             instructions.Add(
-                new IfNotGotoInstruction(
+                new IfNotGoto(
                     ifNotTest, alternateInstructions.First().Number, cOffset - 1
                 )
             );
             instructions.AddRange(consequentInstructions);
-            instructions.OfType<ThreeAddressCodeInstruction>().Last().Left = temp;
+            instructions.OfType<Simple>().Last().Left = temp;
 
             instructions.Add(
-                new GotoInstruction(alternateInstructions.Last().Number + 1, aOffset - 1)
+                new Goto(alternateInstructions.Last().Number + 1, aOffset - 1)
             );
             instructions.AddRange(alternateInstructions);
 

@@ -3,14 +3,14 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class ThreeAddressCodeInstruction : Instruction
+    public class Simple : Instruction
     {
         public string Left { get; set; }
 
         protected readonly (IValue left, IValue right) right;
         private readonly string _operator;
 
-        public ThreeAddressCodeInstruction(
+        public Simple(
             string left,
             (IValue left, IValue right) right,
             string @operator,

@@ -10,7 +10,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
         public override List<Instruction> ToInstructions(int start) =>
             new()
             {
-                new GotoInstruction(-1, start)
+                new Goto(-1, start)
             };
     }
 }

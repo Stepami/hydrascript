@@ -59,12 +59,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             else
             {
                 instructions.AddRange(_expression.ToInstructions(start, temp));
-                right.right = new Name(instructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                right.right = new Name(instructions.OfType<Simple>().Last().Left);
             }
 
             var number = instructions.Any() ? instructions.Last().Number + 1 : start;
 
-            instructions.Add(new ThreeAddressCodeInstruction(
+            instructions.Add(new Simple(
                 temp + number, right, _operator, number
             ));
             return instructions;

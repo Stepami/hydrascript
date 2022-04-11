@@ -3,11 +3,11 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class PrintInstruction : Instruction
+    public class Print : Instruction
     {
         private readonly IValue _value;
         
-        public PrintInstruction(int number, IValue value) : base(number)
+        public Print(int number, IValue value) : base(number)
         {
             _value = value;
         }

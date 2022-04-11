@@ -78,10 +78,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             var instructions = new List<Instruction>();
             instructions.AddRange(_source.ToInstructions(start, _destination.Id));
             if (_source.Primary()) return instructions;
-            var last = instructions.OfType<ThreeAddressCodeInstruction>().Last();
+            var last = instructions.OfType<Simple>().Last();
             if (_source is AssignmentExpression)
             {
-                instructions.Add(new ThreeAddressCodeInstruction(
+                instructions.Add(new Simple(
                     _destination.Id,
                     (null, new Name(last.Left)),
                     "", last.Jump()

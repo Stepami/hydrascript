@@ -2,9 +2,9 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class EndInstruction : Instruction
+    public class Halt : Instruction
     {
-        public EndInstruction(int number) : base(number)
+        public Halt(int number) : base(number)
         {
         }
 

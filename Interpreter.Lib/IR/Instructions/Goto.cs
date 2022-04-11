@@ -2,11 +2,11 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class GotoInstruction : Instruction
+    public class Goto : Instruction
     {
         protected int jump;
         
-        public GotoInstruction(int jump, int number) : base(number)
+        public Goto(int jump, int number) : base(number)
         {
             this.jump = jump;
         }

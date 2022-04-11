@@ -69,22 +69,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
             var instructions = new List<Instruction>();
             if (_expression == null)
             {
-                instructions.Add(new ReturnInstruction(GetCallee().CallInfo.Location, start));
+                instructions.Add(new Return(GetCallee().CallInfo.Location, start));
             }
             else
             {
                 if (_expression.Primary())
                 {
-                    instructions.Add(new ReturnInstruction(
+                    instructions.Add(new Return(
                         GetCallee().CallInfo.Location, start, ((PrimaryExpression) _expression).ToValue())
                     );
                 }
                 else
                 {
                     var eInstructions = _expression.ToInstructions(start, "_t");
-                    var last = eInstructions.OfType<ThreeAddressCodeInstruction>().Last();
+                    var last = eInstructions.OfType<Simple>().Last();
                     instructions.AddRange(eInstructions);
-                    instructions.Add(new ReturnInstruction(
+                    instructions.Add(new Return(
                         GetCallee().CallInfo.Location, last.Number + 1, new Name(last.Left)
                     ));
                 }

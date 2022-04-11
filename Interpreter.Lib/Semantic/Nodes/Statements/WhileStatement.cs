@@ -52,7 +52,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
             if (!_condition.Primary())
             {
                 var conditionInstructions = _condition.ToInstructions(start, "_t");
-                ifNotTest = new Name(conditionInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                ifNotTest = new Name(conditionInstructions.OfType<Simple>().Last().Left);
                 instructions.AddRange(conditionInstructions);
             }
             else
@@ -64,12 +64,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
             var loopBody = _statement.ToInstructions(cOffset);
             if (loopBody.Any())
             {
-                instructions.Add(new IfNotGotoInstruction(ifNotTest, loopBody.Last().Number + 2, cOffset - 1));
+                instructions.Add(new IfNotGoto(ifNotTest, loopBody.Last().Number + 2, cOffset - 1));
                 instructions.AddRange(loopBody);
-                instructions.Add(new GotoInstruction(start, loopBody.Last().Number + 1));
+                instructions.Add(new Goto(start, loopBody.Last().Number + 1));
 
                 loopBody
-                    .OfType<GotoInstruction>()
+                    .OfType<Goto>()
                     .Where(g => g.Jump() < 0)
                     .ToList()
                     .ForEach(j =>

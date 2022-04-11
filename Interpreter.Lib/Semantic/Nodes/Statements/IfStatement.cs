@@ -88,7 +88,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
                 if (!_test.Primary())
                 {
                     var testInstructions = _test.ToInstructions(start, "_t");
-                    ifNotTest = new Name(testInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                    ifNotTest = new Name(testInstructions.OfType<Simple>().Last().Left);
                     instructions.AddRange(testInstructions);
                 }
                 else
@@ -105,7 +105,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
                 var elseInstructions = _else?.ToInstructions(eOffset);
 
                 instructions.Add(
-                    new IfNotGotoInstruction(
+                    new IfNotGoto(
                         ifNotTest, elseInstructions?.First().Number ?? eOffset - 1, tOffset - 1
                     )
                 );
@@ -115,7 +115,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Statements
                 if (elseInstructions != null)
                 {
                     instructions.Add(
-                        new GotoInstruction(
+                        new Goto(
                             elseInstructions.Last().Number + 1,
                             eOffset - 1
                         )

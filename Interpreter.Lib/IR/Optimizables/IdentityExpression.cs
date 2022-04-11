@@ -2,11 +2,11 @@ using Interpreter.Lib.IR.Instructions;
 
 namespace Interpreter.Lib.IR.Optimizables
 {
-    public class IdentityExpression : IOptimizable<ThreeAddressCodeInstruction>
+    public class IdentityExpression : IOptimizable<Simple>
     {
-        public ThreeAddressCodeInstruction Instruction { get; }
+        public Simple Instruction { get; }
 
-        public IdentityExpression(ThreeAddressCodeInstruction instruction)
+        public IdentityExpression(Simple instruction)
         {
             Instruction = instruction;
         }

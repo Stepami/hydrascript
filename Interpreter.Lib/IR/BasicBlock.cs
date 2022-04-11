@@ -22,11 +22,11 @@ namespace Interpreter.Lib.IR
         public List<int> Out()
         {
             var last = _instructions.Last();
-            if (last is ReturnInstruction ret)
+            if (last is Return ret)
             {
                 return ret.ToList();
             }
-            if (last.Branch() && (last is IfNotGotoInstruction))
+            if (last.Branch() && (last is IfNotGoto))
             {
                 return new()
                 {

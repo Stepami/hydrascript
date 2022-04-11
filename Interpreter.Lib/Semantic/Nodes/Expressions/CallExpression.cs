@@ -88,14 +88,14 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             if (!expression.Primary())
             {
                 instructions.AddRange(expression.ToInstructions(start, "_t"));
-                instructions.Add(new PrintInstruction(
+                instructions.Add(new Print(
                     instructions.Last().Number + 1,
-                    new Name(instructions.OfType<ThreeAddressCodeInstruction>().Last().Left)
+                    new Name(instructions.OfType<Simple>().Last().Left)
                 ));
             }
             else
             {
-                instructions.Add(new PrintInstruction(start, ((PrimaryExpression) expression).ToValue()));
+                instructions.Add(new Print(start, ((PrimaryExpression) expression).ToValue()));
             }
 
             return instructions;
@@ -126,9 +126,9 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                         var pushNumber = start + instructions.Count + paramInstructions.Count;
                         var pushValue = expr.Primary()
                             ? ((PrimaryExpression) expr).ToValue()
-                            : new Name(paramInstructions.OfType<ThreeAddressCodeInstruction>().Last().Left);
+                            : new Name(paramInstructions.OfType<Simple>().Last().Left);
                         paramInstructions.Add(
-                            new PushParameterInstruction(pushNumber, symbol.Id, pushValue)
+                            new PushParameter(pushNumber, symbol.Id, pushValue)
                         );
                         instructions.AddRange(paramInstructions);
                     });
@@ -136,7 +136,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     ? temp + (start + instructions.Count)
                     : null;
                 instructions.Add(
-                    new CallInstruction(
+                    new CallFunction(
                         function.CallInfo,
                         start + instructions.Count,
                         function.Parameters.Count, left

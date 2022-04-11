@@ -4,14 +4,14 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class ReturnInstruction : Instruction, IEnumerable<int>
+    public class Return : Instruction, IEnumerable<int>
     {
         private readonly IValue _value;
         private readonly List<int> _callers = new();
 
         public int FunctionStart { get; }
         
-        public ReturnInstruction(int functionStart, int number, IValue value = null) : base(number)
+        public Return(int functionStart, int number, IValue value = null) : base(number)
         {
             _value = value;
             FunctionStart = functionStart;

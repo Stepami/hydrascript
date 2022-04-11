@@ -2,12 +2,12 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class PushParameterInstruction : Instruction
+    public class PushParameter : Instruction
     {
         private readonly string _parameter;
         private readonly IValue _value;
 
-        public PushParameterInstruction(
+        public PushParameter(
             int number,
             string parameter,
             IValue value

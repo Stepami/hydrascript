@@ -2,9 +2,9 @@ using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
 {
-    public class AsStringInstruction : ThreeAddressCodeInstruction
+    public class AsString : Simple
     {
-        public AsStringInstruction(string left, IValue right, int number) :
+        public AsString(string left, IValue right, int number) :
             base(left, (null, right), "", number)
         {
         }

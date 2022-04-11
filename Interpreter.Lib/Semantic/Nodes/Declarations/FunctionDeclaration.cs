@@ -70,10 +70,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
                 body.AddRange(_statements.ToInstructions(_function.CallInfo.Location));
                 if (!_statements.HasReturnStatement())
                 {
-                    body.Add(new ReturnInstruction(_function.CallInfo.Location, body.Last().Number + 1));
+                    body.Add(new Return(_function.CallInfo.Location, body.Last().Number + 1));
                 }
 
-                instructions.Add(new GotoInstruction(body.Last().Number + 1, start));
+                instructions.Add(new Goto(body.Last().Number + 1, start));
 
                 instructions.AddRange(body);
             }
