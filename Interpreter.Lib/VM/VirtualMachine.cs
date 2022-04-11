@@ -8,9 +8,12 @@ namespace Interpreter.Lib.VM
     public class VirtualMachine
     {
         private readonly ControlFlowGraph _cfg;
-        private readonly Stack<Call> _callStack = new();
-        private readonly Stack<Frame> _frames = new();
-        private readonly Stack<(string Id, object Value)> _arguments = new();
+        
+        public Stack<Call> CallStack { get; } = new();
+        
+        public Stack<Frame> Frames { get; } = new();
+        
+        public Stack<(string Id, object Value)> Arguments { get; } = new();
 
         public VirtualMachine(ControlFlowGraph cfg)
         {
@@ -22,12 +25,12 @@ namespace Interpreter.Lib.VM
             var block = _cfg.Entry;
             var instructions = new Stack<Instruction>(block.Reverse());
             
-            _frames.Push(new Frame());
+            Frames.Push(new Frame());
 
             while (!instructions.Peek().End())
             {
                 var instruction = instructions.Pop();
-                var jump = instruction.Execute(_callStack, _frames, _arguments);
+                var jump = instruction.Execute(this);
 
                 if (instructions.Any())
                 {
@@ -38,7 +41,7 @@ namespace Interpreter.Lib.VM
                 instructions = new Stack<Instruction>(block.Reverse());
             }
 
-            instructions.Pop().Execute(_callStack, _frames, _arguments);
+            instructions.Pop().Execute(this);
         }
     }
 }

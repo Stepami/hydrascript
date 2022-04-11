@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
@@ -13,9 +12,9 @@ namespace Interpreter.Lib.IR.Instructions
             _value = value;
         }
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
+        public override int Execute(VirtualMachine vm)
         {
-            Console.Write(_value.Get(frames.Peek()));
+            Console.Write(_value.Get(vm.Frames.Peek()));
             return Number + 1;
         }
 

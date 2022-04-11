@@ -19,13 +19,13 @@ namespace Interpreter.Lib.IR.Instructions
 
         public void AddCaller(int caller) => _callers.Add(caller);
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
+        public override int Execute(VirtualMachine vm)
         {
-            var frame = frames.Pop();
-            var call = callStack.Pop();
+            var frame = vm.Frames.Pop();
+            var call = vm.CallStack.Pop();
             if (call.Where != null && _value != null)
             {
-                frames.Peek()[call.Where] = _value.Get(frame);
+                vm.Frames.Peek()[call.Where] = _value.Get(frame);
             }
 
             return frame.ReturnAddress;

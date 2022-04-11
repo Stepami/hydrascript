@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
@@ -21,7 +20,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         public virtual bool End() => false;
 
-        public abstract int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments);
+        public abstract int Execute(VirtualMachine vm);
 
         public int CompareTo(Instruction other) => Number.CompareTo(other.Number);
 

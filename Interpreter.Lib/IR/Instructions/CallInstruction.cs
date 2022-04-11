@@ -17,21 +17,21 @@ namespace Interpreter.Lib.IR.Instructions
 
         public override int Jump() => _function.Location;
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
+        public override int Execute(VirtualMachine vm)
         {
-            var frame = new Frame(Number + 1, frames.Peek());
+            var frame = new Frame(Number + 1, vm.Frames.Peek());
 
             var i = 0;
             var args = new List<(string Id, object Value)>();
             while (i < _numberOfArguments)
             {
-                args.Add(arguments.Pop());
+                args.Add(vm.Arguments.Pop());
                 frame[args[i].Id] = args[i].Value;
                 i++;
             }
 
-            callStack.Push(new Call(Number, _function, args, Left));
-            frames.Push(frame);
+            vm.CallStack.Push(new Call(Number, _function, args, Left));
+            vm.Frames.Push(frame);
             return _function.Location;
         }
 

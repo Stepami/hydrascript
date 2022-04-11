@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
@@ -14,7 +13,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         public override int Jump() => jump;
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments) => Jump();
+        public override int Execute(VirtualMachine vm) => Jump();
 
         public void SetJump(int newJump) => jump = newJump;
 

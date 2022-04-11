@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Interpreter.Lib.VM;
 
 namespace Interpreter.Lib.IR.Instructions
@@ -14,9 +13,9 @@ namespace Interpreter.Lib.IR.Instructions
             _test = test;
         }
 
-        public override int Execute(Stack<Call> callStack, Stack<Frame> frames, Stack<(string Id, object Value)> arguments)
+        public override int Execute(VirtualMachine vm)
         {
-            var frame = frames.Peek();
+            var frame = vm.Frames.Peek();
             if (!Convert.ToBoolean(_test.Get(frame)))
             {
                 return jump;
