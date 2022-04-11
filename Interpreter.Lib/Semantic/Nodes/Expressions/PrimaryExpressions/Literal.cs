@@ -1,5 +1,5 @@
 using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions

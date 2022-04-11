@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.IR.Instructions
 {

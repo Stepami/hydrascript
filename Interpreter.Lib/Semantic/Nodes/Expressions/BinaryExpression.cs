@@ -4,7 +4,7 @@ using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Utils;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions

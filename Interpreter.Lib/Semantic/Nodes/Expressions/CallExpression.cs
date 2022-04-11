@@ -7,7 +7,7 @@ using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {

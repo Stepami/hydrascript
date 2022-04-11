@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.VM
+namespace Interpreter.Lib.VM.Values
 {
     public interface IValue
     {

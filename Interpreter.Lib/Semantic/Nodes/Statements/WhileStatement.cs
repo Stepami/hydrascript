@@ -6,7 +6,7 @@ using Interpreter.Lib.Semantic.Nodes.Expressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.Semantic.Nodes.Statements
 {

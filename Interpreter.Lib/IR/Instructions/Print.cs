@@ -1,5 +1,6 @@
 using System;
 using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.IR.Instructions
 {

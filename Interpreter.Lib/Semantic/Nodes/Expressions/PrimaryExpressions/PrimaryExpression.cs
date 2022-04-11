@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
 {

@@ -1,6 +1,7 @@
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.IR.Optimizables;
 using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 using Xunit;
 
 namespace Interpreter.Tests.Unit
