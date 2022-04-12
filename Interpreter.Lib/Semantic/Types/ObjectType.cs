@@ -19,7 +19,9 @@ namespace Interpreter.Lib.Semantic.Types
                 );
         }
 
-        public Type this[string id] => _properties[id];
+        public Type this[string id] => _properties.ContainsKey(id)
+            ? _properties[id]
+            : null;
 
         public override bool Equals(object obj)
         {

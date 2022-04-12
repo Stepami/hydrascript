@@ -426,7 +426,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 }
             }
  
-            return new MemberExpression(identRef, accessChain.FirstOrDefault());
+            return new MemberExpression(identRef, accessChain.FirstOrDefault())
+            {
+                SymbolTable = table
+            };
         }
 
         private Expression CastExpression(SymbolTable table)
@@ -640,8 +643,6 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private ObjectLiteral ObjectLiteral(SymbolTable table)
         {
-            var newTable = new SymbolTable();
-            newTable.AddOpenScope(table);
             Expect("LeftCurl");
             var properties = new List<Property>();
             while (CurrentIs("Ident"))
@@ -650,7 +651,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 var id = new IdentifierReference(idToken.Value)
                 {
                     Segment = idToken.Segment,
-                    SymbolTable = newTable
+                    SymbolTable = table
                 };
                 Expect("Colon");
                 var expr = Expression(table);

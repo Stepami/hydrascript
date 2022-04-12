@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM.Values;
@@ -63,7 +65,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                         throw new AssignmentToConst(_destination);
                     }
 
-                    if (!symbol.Type.Equals(type))
+                    if (!_destination.NodeCheck().Equals(type))
                     {
                         throw new IncompatibleTypesOfOperands(Segment, symbol.Type, type);
                     }
@@ -76,8 +78,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         public override List<Instruction> ToInstructions(int start)
         {
             var instructions = new List<Instruction>();
-            instructions.AddRange(_source.ToInstructions(start, _destination.Id));
-            if (_source.Primary()) return instructions;
+            var destInstructions = _destination.ToInstructions(start, _destination.Id);
+
+            instructions.AddRange(destInstructions);
+            instructions.AddRange(_source.ToInstructions(start + destInstructions.Count, _destination.Id));
+            start += instructions.Count;
+            
             var last = instructions.OfType<Simple>().Last();
             if (_source is AssignmentExpression)
             {
@@ -86,11 +92,43 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     (null, new Name(last.Left)),
                     "", last.Jump()
                 ));
+                start++;
             }
             else
             {
                 last.Left = _destination.Id;
             }
+
+            if (_destination.Any())
+            {
+                var access = (_destination.First() as AccessExpression)?.Tail;
+                var lastIndex = instructions.Count - 1;
+                last = instructions.OfType<Simple>().Last();
+                if (last.Assignment)
+                {
+                    instructions.RemoveAt(lastIndex);
+                    start--;
+                }
+                else
+                {
+                    last.Left = "_t" + last.Number;
+                }
+
+                var dest = destInstructions.Any()
+                    ? destInstructions.OfType<Simple>().Last().Left
+                    : _destination.Id;
+                var src = !last.Assignment
+                    ? new Constant(last.Left, last.Left)
+                    : last.Source;
+                Instruction instruction = access switch
+                {
+                    DotAccess dot => new DotAssignment(dest, (new Name(dot.Id), src), start),
+                    IndexAccess => throw new NotImplementedException(),
+                    _ => throw new NotImplementedException()
+                };
+                instructions.Add(instruction);
+            }
+            
             return instructions;
         }
 

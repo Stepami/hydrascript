@@ -1,4 +1,5 @@
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
@@ -16,13 +17,18 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
 
         internal override Type NodeCheck()
         {
-            var symbol = SymbolTable.FindSymbol<Symbol>(Id);
-            return symbol switch
+            if (!ChildOf<AccessExpression>())
             {
-                VariableSymbol v => v.Type,
-                FunctionSymbol f => f.Type,
-                _ => throw new UnknownIdentifierReference(this)
-            };
+                var symbol = SymbolTable.FindSymbol<Symbol>(Id);
+                return symbol switch
+                {
+                    VariableSymbol v => v.Type,
+                    FunctionSymbol f => f.Type,
+                    _ => throw new UnknownIdentifierReference(this)
+                };
+            }
+
+            return null;
         }
 
         protected override string NodeRepresentation() => Id;

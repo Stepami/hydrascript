@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Interpreter.Lib.VM;
 using Interpreter.Lib.VM.Values;
 
@@ -24,6 +25,10 @@ namespace Interpreter.Lib.IR.Instructions
             this.@operator = @operator;
         }
 
+        public IValue Source => right.right;
+
+        public bool Assignment => @operator == "";
+
         public override int Execute(VirtualMachine vm)
         {
             var frame = vm.Frames.Peek();
@@ -35,7 +40,7 @@ namespace Interpreter.Lib.IR.Instructions
                     "-" => -Convert.ToDouble(value),
                     "!" => !Convert.ToBoolean(value),
                     "" => value,
-                    _ => frame[Left]
+                    _ => throw new NotImplementedException()
                 };
             }
             else
@@ -57,7 +62,8 @@ namespace Interpreter.Lib.IR.Instructions
                     ">=" => Convert.ToDouble(lValue) >= Convert.ToDouble(rValue),
                     "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
                     "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
-                    _ => frame[Left]
+                    "." => ((Dictionary<string, object>) lValue)[rValue.ToString()!],
+                    _ => throw new NotImplementedException()
                 };
             }
 

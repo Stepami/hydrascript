@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
@@ -23,7 +26,23 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         }
 
         public string Id => _id.Id;
-        
+
+        internal override Type NodeCheck()
+        {
+            if (_accessChain == null)
+            {
+                return _id.NodeCheck();
+            }
+
+            var symbol = SymbolTable.FindSymbol<VariableSymbol>(_id.Id);
+            if (symbol == null)
+            {
+                throw new UnknownIdentifierReference(_id);
+            }
+
+            return _accessChain.Check(symbol.Type);
+        }
+
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             if (_accessChain != null)
@@ -36,7 +55,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            throw new System.NotImplementedException();
+            if (_accessChain != null && _accessChain.HasNext())
+            {
+                return _accessChain.ToInstructions(start, temp);
+            }
+
+            return new();
         }
 
         public static implicit operator IdentifierReference(MemberExpression member) => 

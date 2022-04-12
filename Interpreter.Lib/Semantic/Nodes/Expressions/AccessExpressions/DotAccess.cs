@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.VM.Values;
+using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 {
@@ -13,7 +17,25 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             _id = id;
             _id.Parent = this;
         }
-        
+
+        public string Id => _id.Id;
+
+        public override Type Check(Type prev)
+        {
+            if (prev is ObjectType objectType)
+            {
+                var fieldType = objectType[_id.Id];
+                if (fieldType != null)
+                {
+                    return HasNext() ? next.Check(fieldType) : fieldType;
+                }
+
+                throw new ObjectAccessException(Segment, objectType, _id.Id);
+            }
+
+            return null;
+        }
+
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             yield return _id;
@@ -27,7 +49,17 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            throw new System.NotImplementedException();
+            if (HasNext())
+            {
+                var left = "_t" + start;
+                var nextInstructions = next.ToInstructions(start + 1, left);
+                nextInstructions.Insert(0,
+                    new Simple(left, (new Name(temp), new Constant(_id.Id, _id.Id)), ".", start)
+                );
+                return nextInstructions;
+            }
+
+            return new();
         }
     }
 }
