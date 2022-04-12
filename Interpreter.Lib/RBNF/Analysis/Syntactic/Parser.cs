@@ -25,11 +25,11 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
         private readonly IEnumerator<Token> _tokens;
         private readonly Structure _structure;
 
-        public Parser(IEnumerable<Token> lexer, Structure structure)
+        public Parser(Lexer lexer)
         {
             _tokens = lexer.Where(t => !t.Type.WhiteSpace()).GetEnumerator();
             _tokens.MoveNext();
-            _structure = structure;
+            _structure = lexer.Structure;
         }
 
         private Token Expect(string expectedTag, string expectedValue = null)
