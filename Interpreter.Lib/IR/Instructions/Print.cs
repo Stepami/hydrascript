@@ -15,7 +15,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         public override int Execute(VirtualMachine vm)
         {
-            Console.Write(_value.Get(vm.Frames.Peek()));
+            Console.WriteLine(_value.Get(vm.Frames.Peek()));
             return Number + 1;
         }
 

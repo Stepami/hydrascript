@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using Interpreter.Lib.VM;
 using Interpreter.Lib.VM.Values;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Interpreter.Lib.IR.Instructions
 {
@@ -13,7 +16,20 @@ namespace Interpreter.Lib.IR.Instructions
         public override int Execute(VirtualMachine vm)
         {
             var frame = vm.Frames.Peek();
-            frame[Left] = right.right.Get(frame).ToString();
+            frame[Left] = JsonConvert.SerializeObject(
+                right.right.Get(frame),
+                new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    FloatFormatHandling = FloatFormatHandling.Symbol,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Converters = new List<JsonConverter>
+                    {
+                        new DoubleValueConverter()
+                    }
+                }
+            );
 
             return Jump();
         }
