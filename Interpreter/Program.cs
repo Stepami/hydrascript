@@ -74,6 +74,11 @@ namespace Interpreter
                             instructions.Select(i => i.ToString())
                         );
 
+                        await File.WriteAllTextAsync(
+                            $"{fileName}.tokens",
+                            string.Join('\n', lexer)
+                        );
+
                         var astDot = ast.ToString();
                         await File.WriteAllTextAsync("ast.dot", astDot);
                         await Cli.Wrap("dot")
