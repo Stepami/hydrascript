@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 {
@@ -34,9 +37,30 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            // reserve frame for temp
-            // foreach prop make assign temp.prop = expr
-            throw new System.NotImplementedException();
+            var instructions = new List<Instruction>
+            {
+                new CreateObject(start, temp)
+            };
+            var i = 1;
+            foreach (var (id, expr) in _properties)
+            {
+                if (expr is PrimaryExpression prim)
+                {
+                    instructions.Add(new DotAssignment(temp, (new Name(id), prim.ToValue()), start + i));
+                    i++;
+                }
+                else
+                {
+                    var propInstructions = expr.ToInstructions(start + i, "_t" + (start + i));
+                    i += propInstructions.Count;
+                    var left = propInstructions.OfType<Simple>().Last().Left;
+                    propInstructions.Add(new DotAssignment(temp, (new Name(id), new Name(left)), start + i));
+                    i++;
+                    instructions.AddRange(propInstructions);
+                }
+            }
+            
+            return instructions;
         }
     }
 }

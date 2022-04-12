@@ -17,6 +17,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
             Expression = expression;
             Expression.Parent = this;
         }
+
+        public void Deconstruct(out string id, out Expression expr)
+        {
+            id = Id.Id;
+            expr = Expression;
+        }
         
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {

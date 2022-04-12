@@ -1,5 +1,6 @@
 using System;
 using Interpreter.Lib.VM;
+using Interpreter.Lib.VM.Values;
 
 namespace Interpreter.Lib.IR.Instructions
 {
@@ -8,7 +9,7 @@ namespace Interpreter.Lib.IR.Instructions
         public string Left { get; set; }
 
         protected readonly (IValue left, IValue right) right;
-        private readonly string _operator;
+        protected readonly string @operator;
 
         public Simple(
             string left,
@@ -20,7 +21,7 @@ namespace Interpreter.Lib.IR.Instructions
         {
             Left = left;
             this.right = right;
-            _operator = @operator;
+            this.@operator = @operator;
         }
 
         public override int Execute(VirtualMachine vm)
@@ -29,7 +30,7 @@ namespace Interpreter.Lib.IR.Instructions
             if (right.left == null)
             {
                 var value = right.right.Get(frame);
-                frame[Left] = _operator switch
+                frame[Left] = @operator switch
                 {
                     "-" => -Convert.ToDouble(value),
                     "!" => !Convert.ToBoolean(value),
@@ -40,7 +41,7 @@ namespace Interpreter.Lib.IR.Instructions
             else
             {
                 object lValue = right.left.Get(frame), rValue = right.right.Get(frame);
-                frame[Left] = _operator switch
+                frame[Left] = @operator switch
                 {
                     "+" when lValue is string => lValue.ToString() + rValue,
                     "+" => Convert.ToDouble(lValue) + Convert.ToDouble(rValue),
@@ -65,7 +66,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         protected override string ToStringRepresentation() =>
             right.left == null
-                ? $"{Left} = {(_operator == "" ? "" : " " + _operator)}{right.right}"
-                : $"{Left} = {right.left} {_operator} {right.right}";
+                ? $"{Left} = {(@operator == "" ? "" : " " + @operator)}{right.right}"
+                : $"{Left} = {right.left} {@operator} {right.right}";
     }
 }
