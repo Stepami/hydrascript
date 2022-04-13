@@ -1,5 +1,3 @@
-using System;
-
 namespace Interpreter.Lib.Semantic.Types
 {
     public class NullableType : Type
