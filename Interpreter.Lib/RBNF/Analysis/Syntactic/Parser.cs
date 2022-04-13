@@ -403,7 +403,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                         ident.Segment,
                         new Literal(
                             type,
-                            TypeUtils.GetDefaultValue(type)
+                            TypeUtils.GetDefaultValue(type),
+                            label: TypeUtils.GetDefaultValue(type) == null ? "null" : null
                         )
                     );
                 }
