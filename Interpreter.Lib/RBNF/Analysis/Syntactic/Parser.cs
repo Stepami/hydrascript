@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Interpreter.Lib.RBNF.Analysis.Exceptions;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Lib.Semantic;
+using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
@@ -81,7 +82,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 CurrentIsKeyword("function") || CurrentIsKeyword("let") || CurrentIsKeyword("const") ||
                 CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") ||
                 CurrentIs("LeftCurl") || CurrentIsKeyword("return") || CurrentIsKeyword("break") ||
-                CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while")
+                CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while") ||
+                CurrentIsKeyword("type")
             )
             {
                 statementList.Add(StatementListItem(table));
@@ -142,6 +144,11 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIsKeyword("while"))
             {
                 return WhileStatement(table);
+            }
+
+            if (CurrentIsKeyword("type"))
+            {
+                return TypeStatement(table);
             }
 
             return null;
@@ -213,6 +220,77 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             return new WhileStatement(expr, stmt) {SymbolTable = table, Segment = token.Segment};
         }
 
+        private TypeStatement TypeStatement(SymbolTable table)
+        {
+            var typeWord = Expect("Keyword", "type");
+            var ident = Expect("Ident");
+            Expect("Assign");
+            var type = TypeValue(table);
+            
+            table.AddType(type, ident.Value);
+            
+            return new TypeStatement(ident.Value, type)
+            {
+                Segment = typeWord.Segment,
+                SymbolTable = table
+            };
+        }
+
+        private Type TypeValue(SymbolTable table)
+        {
+            if (CurrentIs("Ident"))
+            {
+                var ident = Expect("Ident");
+                var typeFromTable = table.FindType(ident.Value);
+                if (typeFromTable == null)
+                    throw new UnknownIdentifierReference(
+                        new IdentifierReference(ident.Value)
+                            {Segment = ident.Segment}
+                    );
+                return WithSuffix(typeFromTable);
+            }
+
+            if (CurrentIs("LeftCurl"))
+            {
+                Expect("LeftCurl");
+                var propertyTypes = new List<PropertyType>();
+                while (CurrentIs("Ident"))
+                {
+                    var ident = Expect("Ident");
+                    Expect("Colon");
+                    var propType = TypeValue(table);
+                    propertyTypes.Add(new PropertyType(ident.Value, propType));
+                    Expect("SemiColon");
+                }
+
+                Expect("RightCurl");
+                return WithSuffix(new ObjectType(propertyTypes));
+            }
+
+            return null;
+        }
+
+        private Type WithSuffix(Type baseType)
+        {
+            var type = baseType;
+            while (CurrentIs("LeftBracket") || CurrentIs("QuestionMark"))
+            {
+                if (CurrentIs("LeftBracket"))
+                {
+                    Expect("LeftBracket");
+                    Expect("RightBracket");
+                    type = new ArrayType(type);
+                } 
+                else if (CurrentIs("QuestionMark"))
+                {
+                    Expect("QuestionMark");
+                    type = new NullableType(type);
+                }
+            }
+
+            return type;
+        }
+
         private Declaration Declaration(SymbolTable table)
         {
             if (CurrentIsKeyword("function"))
@@ -242,7 +320,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             {
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                var type = TypeValue(table);
                 args.Add(new VariableSymbol(arg)
                 {
                     Type = type
@@ -254,7 +332,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 Expect("Comma");
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                var type = TypeValue(table);
                 args.Add(new VariableSymbol(arg)
                 {
                     Type = type
@@ -267,7 +345,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIs("Colon"))
             {
                 Expect("Colon");
-                returnType = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                returnType = TypeValue(table);
             }
 
             var functionSymbol =
@@ -312,7 +390,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             else if (CurrentIs("Colon"))
             {
                 Expect("Colon");
-                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                var type = TypeValue(table);
                 if (CurrentIs("Assign"))
                 {
                     var assignSegment = Expect("Assign").Segment;
@@ -438,7 +516,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             if (CurrentIsKeyword("as"))
             {
                 var asKeyword = Expect("Keyword", "as");
-                var type = TypeUtils.GetJavaScriptType(Expect("TypeIdentifier").Value);
+                var type = TypeValue(table);
                 return new CastAsExpression(cond, type) {Segment = asKeyword.Segment};
             }
 
@@ -630,7 +708,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             return _tokens.Current.Type.Tag switch
             {
                 "NullLiteral" => new Literal(TypeUtils.JavaScriptTypes.Null,
-                    Expect("NullLiteral").Value == "null" ? null : "", segment),
+                    Expect("NullLiteral").Value == "null" ? null : "", segment, "null"),
                 "IntegerLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,
                     double.Parse(Expect("IntegerLiteral").Value), segment),
                 "FloatLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,

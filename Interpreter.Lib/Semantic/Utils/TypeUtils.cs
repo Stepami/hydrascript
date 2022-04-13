@@ -5,30 +5,15 @@ namespace Interpreter.Lib.Semantic.Utils
     public static class TypeUtils
     {
         public static (
-            Type Number, Type Boolean, Type String, Type Null, Type Undefined, Type Object, Type Void
+            Type Number, Type Boolean, Type String, Type Null, Type Undefined, Type Void
             ) JavaScriptTypes { get; } = (
             new Type("number"),
             new Type("boolean"),
             new Type("string"),
             new NullType(),
             new Type("undefined"),
-            new Type("object"),
             new Type("void")
         );
-
-        public static Type GetJavaScriptType(string id)
-        {
-            return id switch
-            {
-                "number" => JavaScriptTypes.Number,
-                "boolean" => JavaScriptTypes.Boolean,
-                "string" => JavaScriptTypes.String,
-                "null" => new NullType(),
-                "any" => new Any(),
-                "object" => JavaScriptTypes.Object,
-                _ => JavaScriptTypes.Undefined
-            };
-        }
 
         public static object GetDefaultValue(Type type)
         {
@@ -50,7 +35,7 @@ namespace Interpreter.Lib.Semantic.Utils
             public override string ToString() => JavaScriptTypes.Undefined.ToString();
         }
 
-        public struct Void
+        private struct Void
         {
             public override string ToString() => JavaScriptTypes.Void.ToString();
         }

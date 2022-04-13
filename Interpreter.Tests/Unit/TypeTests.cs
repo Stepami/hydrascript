@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.Semantic.Utils;
 using Xunit;
 
 namespace Interpreter.Tests.Unit
@@ -78,6 +80,23 @@ namespace Interpreter.Tests.Unit
             var number = new Type("number");
             // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.True(new NullType().Equals(new NullableType(number)));
+        }
+
+        [Fact]
+        public void TypeWrappingTest()
+        {
+            var str = new Type("string");
+            str = new NullableType(str);
+            str = new ArrayType(str);
+            Assert.Equal("string?[]", str.ToString());
+        }
+
+        [Fact]
+        public void DefaultValueTest()
+        {
+            Assert.Null(TypeUtils.GetDefaultValue(new NullableType(new Any())));
+            Assert.Null(TypeUtils.GetDefaultValue(new NullType()));
+            Assert.Null(TypeUtils.GetDefaultValue(new ObjectType(new List<PropertyType>())));
         }
     }
 }

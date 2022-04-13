@@ -13,6 +13,12 @@ namespace Interpreter.Lib.Semantic.Utils
         public static SymbolTable GetStandardLibrary()
         {
             var library = new SymbolTable();
+            
+            library.AddType(TypeUtils.JavaScriptTypes.Number);
+            library.AddType(TypeUtils.JavaScriptTypes.Boolean);
+            library.AddType(TypeUtils.JavaScriptTypes.String);
+            library.AddType(TypeUtils.JavaScriptTypes.Null);
+            library.AddType(TypeUtils.JavaScriptTypes.Void);
 
             var print = new FunctionSymbol(
                 "print",

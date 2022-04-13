@@ -10,6 +10,7 @@ Statement -> BlockStatement
              ContinueStatement
              BreakStatement
              ReturnStatement
+             TypeStatement
              
 Declaration -> LexicalDeclaration
                FunctionDeclaration
@@ -40,12 +41,12 @@ Literal -> "NullLiteral"
            "FloatLiteral"
            "StringLiteral"
            "BooleanLiteral"
-ObjectLiteral -> '{' PropertyDefinitionList? '}'
+ObjectLiteral -> '{' PropertyDefinitionList '}'
 PropertyDefinitionList -> (Property ';')*
 Property -> "Ident" ':' Expression
-ArrayLiteral -> '[' ElementList? ']'
+ArrayLiteral -> '[' ElementList ']'
 ElementList -> (Expression ',')*
-                
+             
 IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
 
 WhileStatement -> 'while' '(' Expression ')' Statement
@@ -55,7 +56,17 @@ ContinueStatement -> 'continue'
 BreakStatement -> 'break'
 
 ReturnStatement -> 'return' Expression?
-                       
+
+TypeStatement -> 'type' "Ident" = TypeValue
+TypeValue -> TypeValueBase TypeValueSuffix*
+TypeValueBase -> "Ident"
+                 ObjectTypeBase
+ObjectType -> '{' PropertyTypeList '}'
+PropertyTypeList -> (PropertyType ';')*
+PropertyType -> "Ident" ':' TypeValue
+TypeValueSuffix -> '['']'
+                   '?'
+ 
 LexicalDeclaration -> LetOrConst "Ident" Initialization (',' "Ident" Initialization)*
 LetOrConst -> 'let'
               'const'
@@ -66,11 +77,5 @@ Initializer -> '=' Expression
 
 FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement
 FunctionParameters -> ParameterDeclaration (',' ParameterDeclaration)*
-ParameterDeclaration -> "Ident" ':' TypeIdentifier
-Type -> ':' TypeIdentifier
-TypeIdentifier -> ArrayType
-ArrayType -> PrimitiveType ('[' ']')*
-PrimitiveType -> 'number'
-                 'string'
-                 'boolean'
-                 'object'
+ParameterDeclaration -> "Ident" Type
+Type -> ':' TypeValue

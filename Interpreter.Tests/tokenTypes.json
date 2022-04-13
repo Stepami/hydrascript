@@ -42,14 +42,8 @@
     "whiteSpace": false
   },
   {
-    "tag": "TypeIdentifier",
-    "pattern": "number|string|boolean|any",
-    "priority": 10,
-    "whiteSpace": false
-  },
-  {
     "tag": "Keyword",
-    "pattern": "let|const|function|if|else|while|break|continue|return|as",
+    "pattern": "let|const|function|if|else|while|break|continue|return|as|type",
     "priority": 11,
     "whiteSpace": false
   },
