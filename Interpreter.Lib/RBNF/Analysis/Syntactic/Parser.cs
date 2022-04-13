@@ -721,6 +721,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private ObjectLiteral ObjectLiteral(SymbolTable table)
         {
+            var newTable = new SymbolTable();
+            newTable.AddOpenScope(table);
             Expect("LeftCurl");
             var properties = new List<Property>();
             while (CurrentIs("Ident"))
@@ -729,7 +731,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 var id = new IdentifierReference(idToken.Value)
                 {
                     Segment = idToken.Segment,
-                    SymbolTable = table
+                    SymbolTable = newTable
                 };
                 Expect("Colon");
                 var expr = Expression(table);
@@ -737,7 +739,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 Expect("SemiColon");
             }
             Expect("RightCurl");
-            return new ObjectLiteral(properties);
+            return new ObjectLiteral(properties)
+            {
+                SymbolTable = table
+            };
         }
 
         private ArrayLiteral ArrayLiteral(SymbolTable table)
