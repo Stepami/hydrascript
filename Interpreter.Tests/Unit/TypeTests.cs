@@ -71,5 +71,13 @@ namespace Interpreter.Tests.Unit
             Assert.NotEqual(p3d1, p3d2);
             Assert.NotEqual(p3d2, p2d1);
         }
+
+        [Fact]
+        public void NullTests()
+        {
+            var number = new Type("number");
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            Assert.True(new NullType().Equals(new NullableType(number)));
+        }
     }
 }

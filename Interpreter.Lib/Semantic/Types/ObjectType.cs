@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Interpreter.Lib.Semantic.Types
 {
-    public class ObjectType : Type
+    public class ObjectType : NullableType
     {
         private readonly Dictionary<string, Type> _properties;
 
@@ -25,16 +25,18 @@ namespace Interpreter.Lib.Semantic.Types
 
         public override bool Equals(object obj)
         {
-            if (this == obj) return true;
-            if (obj == null || GetType() != obj.GetType()) return false;
-            var that = (ObjectType) obj;
-            return _properties.Count == that._properties.Count &&
-                   _properties
-                       .Zip(that._properties)
-                       .All(pair =>
-                           pair.First.Key == pair.Second.Key &&
-                           pair.First.Value.Equals(pair.Second.Value)
-                       );
+            if (obj is ObjectType that)
+            {
+                return _properties.Count == that._properties.Count &&
+                       _properties
+                           .Zip(that._properties)
+                           .All(pair =>
+                               pair.First.Key == pair.Second.Key &&
+                               pair.First.Value.Equals(pair.Second.Value)
+                           );
+            }
+
+            return obj is NullType;
         }
 
         public override int GetHashCode() =>

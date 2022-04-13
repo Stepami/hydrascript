@@ -10,7 +10,7 @@ namespace Interpreter.Lib.Semantic.Utils
             new Type("number"),
             new Type("boolean"),
             new Type("string"),
-            new Type("null"),
+            new NullType(),
             new Type("undefined"),
             new Type("object"),
             new Type("void")
@@ -23,6 +23,7 @@ namespace Interpreter.Lib.Semantic.Utils
                 "number" => JavaScriptTypes.Number,
                 "boolean" => JavaScriptTypes.Boolean,
                 "string" => JavaScriptTypes.String,
+                "null" => new NullType(),
                 "any" => new Any(),
                 "object" => JavaScriptTypes.Object,
                 _ => JavaScriptTypes.Undefined
@@ -39,6 +40,8 @@ namespace Interpreter.Lib.Semantic.Utils
                 return "";
             if (type.Equals(JavaScriptTypes.Void))
                 return new Void();
+            if (type.Equals(JavaScriptTypes.Null))
+                return null;
             return new Undefined();
         }
 
