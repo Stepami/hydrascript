@@ -50,9 +50,16 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     throw new IncompatibleTypesOfOperands(Segment, _destinationType, type);
                 }
 
+                if (_destinationType == null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
+                {
+                    throw new CannotDefineType(Segment);
+                }
+
                 SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())
                 {
-                    Type = type
+                    Type = _destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
+                        ? _destinationType
+                        : type
                 });
             }
             else
