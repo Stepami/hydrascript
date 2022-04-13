@@ -79,10 +79,30 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         {
             var instructions = new List<Instruction>();
             var destInstructions = _destination.ToInstructions(start, _destination.Id);
+            var srcInstructions = _source.ToInstructions(start + destInstructions.Count, _destination.Id);
 
             instructions.AddRange(destInstructions);
-            instructions.AddRange(_source.ToInstructions(start + destInstructions.Count, _destination.Id));
+            instructions.AddRange(srcInstructions);
             start += instructions.Count;
+
+            if (_source is MemberExpression member && member.Any())
+            {
+                var access = (member.First() as AccessExpression)?.Tail;
+                var dest = destInstructions.Any()
+                    ? destInstructions.OfType<Simple>().Last().Left
+                    : _destination.Id;
+                var src = srcInstructions.Any()
+                    ? srcInstructions.OfType<Simple>().Last().Left
+                    : member.Id;
+                var instruction = access switch
+                {
+                    DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", start),
+                    IndexAccess => throw new NotImplementedException(),
+                    _ => throw new NotImplementedException()
+                };
+                instructions.Add(instruction);
+                start++;
+            }
             
             var last = instructions.OfType<Simple>().Last();
             if (_source is AssignmentExpression)
@@ -118,7 +138,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     ? destInstructions.OfType<Simple>().Last().Left
                     : _destination.Id;
                 var src = !last.Assignment
-                    ? new Constant(last.Left, last.Left)
+                    ? new Name(last.Left)
                     : last.Source;
                 Instruction instruction = access switch
                 {

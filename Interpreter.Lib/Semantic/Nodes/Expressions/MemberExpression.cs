@@ -57,7 +57,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         {
             if (_accessChain != null && _accessChain.HasNext())
             {
-                return _accessChain.ToInstructions(start, temp);
+                return _accessChain.ToInstructions(start, _id.Id);
             }
 
             return new();
