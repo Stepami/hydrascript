@@ -267,6 +267,22 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 return WithSuffix(new ObjectType(propertyTypes));
             }
 
+            if (CurrentIs("LeftParen"))
+            {
+                Expect("LeftParen");
+                var args = new List<Type>();
+                while (CurrentIs("Ident") || CurrentIs("LeftCurl") || CurrentIs("LeftParen"))
+                {
+                    args.Add(TypeValue(table));
+                    Expect("Comma");
+                }
+                Expect("RightParen");
+                Expect("Assign");
+                Expect("Operator", ">");
+                var returnType = TypeValue(table);
+                return new FunctionType(returnType, args);
+            }
+
             return null;
         }
 
