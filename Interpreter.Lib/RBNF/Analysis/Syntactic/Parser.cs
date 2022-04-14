@@ -225,7 +225,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             var typeWord = Expect("Keyword", "type");
             var ident = Expect("Ident");
             Expect("Assign");
-            var type = TypeValue(table);
+            var type = TypeValue(table, CurrentIs("LeftCurl") ? ident.Value : null);
             
             table.AddType(type, ident.Value);
             
@@ -236,17 +236,23 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             };
         }
 
-        private Type TypeValue(SymbolTable table)
+        private Type TypeValue(SymbolTable table, string typedef = null)
         {
             if (CurrentIs("Ident"))
             {
                 var ident = Expect("Ident");
                 var typeFromTable = table.FindType(ident.Value);
                 if (typeFromTable == null)
+                {
+                    if (typedef == ident.Value)
+                        return new Type(typedef);
+
                     throw new UnknownIdentifierReference(
                         new IdentifierReference(ident.Value)
                             {Segment = ident.Segment}
                     );
+                }
+
                 return WithSuffix(typeFromTable);
             }
 
@@ -254,17 +260,27 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             {
                 Expect("LeftCurl");
                 var propertyTypes = new List<PropertyType>();
+                int recursive = 0;
                 while (CurrentIs("Ident"))
                 {
                     var ident = Expect("Ident");
                     Expect("Colon");
-                    var propType = TypeValue(table);
-                    propertyTypes.Add(new PropertyType(ident.Value, propType));
+                    var propType = TypeValue(table, typedef);
+                    if (typedef == propType.ToString())
+                    {
+                        propertyTypes.Add(new RecursivePropertyType(ident.Value));
+                        recursive++;
+                    }
+                    else 
+                        propertyTypes.Add(new PropertyType(ident.Value, propType));
                     Expect("SemiColon");
                 }
 
                 Expect("RightCurl");
-                return WithSuffix(new ObjectType(propertyTypes));
+                return WithSuffix(recursive == 0
+                    ? new ObjectType(propertyTypes)
+                    : ObjectType.RecursiveFromProperties(propertyTypes.ToArray())
+                );
             }
 
             if (CurrentIs("LeftParen"))

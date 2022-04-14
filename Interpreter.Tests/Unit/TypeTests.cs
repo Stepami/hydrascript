@@ -98,5 +98,20 @@ namespace Interpreter.Tests.Unit
             Assert.Null(TypeUtils.GetDefaultValue(new NullType()));
             Assert.Null(TypeUtils.GetDefaultValue(new ObjectType(new List<PropertyType>())));
         }
+
+        [Fact]
+        public void RecursiveTypeTest()
+        {
+            var number = new Type("number");
+            var linkedListType = ObjectType.RecursiveFromProperties(
+
+                new("data", number),
+                new RecursivePropertyType("next")
+
+            );
+            var wrapper = new ObjectType(new List<PropertyType> {new("data", number)});
+            Assert.True(linkedListType.Equals(linkedListType["next"]));
+            Assert.False(linkedListType.Equals(wrapper));
+        }
     }
 }

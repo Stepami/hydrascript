@@ -27,13 +27,13 @@ namespace Interpreter.Lib.Semantic.Types
         {
             if (obj is ObjectType that)
             {
-                return _properties.Count == that._properties.Count &&
-                       _properties
-                           .Zip(that._properties)
-                           .All(pair =>
-                               pair.First.Key == pair.Second.Key &&
-                               pair.First.Value.Equals(pair.Second.Value)
-                           );
+                return this == that || _properties.Count == that._properties.Count &&
+                    _properties
+                        .Zip(that._properties)
+                        .All(pair =>
+                            pair.First.Key == pair.Second.Key &&
+                            pair.First.Value.Equals(pair.Second.Value)
+                        );
             }
 
             return obj is NullType;
@@ -50,11 +50,27 @@ namespace Interpreter.Lib.Semantic.Types
                 .AppendJoin(
                     "",
                     _properties
-                        .Select(kvp => $"{kvp.Key}: {kvp.Value};")
+                        .Select(kvp => 
+                            $"{kvp.Key}: {(kvp.Value.Equals(this) ? "this" : kvp.Value.ToString())};")
                 )
                 .Append('}')
                 .ToString();
+
+        public static ObjectType RecursiveFromProperties(params PropertyType[] propertyTypes)
+        {
+            var propList = propertyTypes.ToList();
+            var objectType = new ObjectType(propList.Where(x => !x.Recursive));
+            foreach (var prop in propList.Where(x=>x.Recursive))
+            {
+                objectType._properties[prop.Id] = objectType;
+            }
+
+            return objectType;
+        }
     }
 
-    public record PropertyType(string Id, Type Type);
+    public record PropertyType(string Id, Type Type, bool Recursive = false);
+
+    public record RecursivePropertyType(string Id, Type Type = null, bool Recursive = true) :
+        PropertyType(Id, Type, Recursive);
 }
