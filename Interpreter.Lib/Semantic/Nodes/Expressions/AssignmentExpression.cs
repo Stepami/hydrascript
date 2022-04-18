@@ -109,13 +109,13 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 var instruction = access switch
                 {
                     DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", start),
-                    IndexAccess => throw new NotImplementedException(),
+                    IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", start),
                     _ => throw new NotImplementedException()
                 };
                 instructions.Add(instruction);
                 start++;
             }
-            
+
             var last = instructions.OfType<Simple>().Last();
             if (_source is AssignmentExpression)
             {
@@ -155,12 +155,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 Instruction instruction = access switch
                 {
                     DotAccess dot => new DotAssignment(dest, (new Constant(dot.Id, @$"\""{dot.Id}\"""), src), start),
-                    IndexAccess => throw new NotImplementedException(),
+                    IndexAccess index => new IndexAssignment(dest, (index.Expression.ToValue(), src), start),
                     _ => throw new NotImplementedException()
                 };
                 instructions.Add(instruction);
             }
-            
+
             return instructions;
         }
 

@@ -63,6 +63,7 @@ namespace Interpreter.Lib.IR.Instructions
                     "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
                     "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
                     "." => ((Dictionary<string, object>) lValue)[rValue.ToString()!],
+                    "[]" => ((List<object>) lValue)[Convert.ToInt32(rValue)],
                     _ => throw new NotImplementedException()
                 };
             }

@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
+using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
@@ -16,6 +19,8 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             _expression = expression;
             _expression.Parent = this;
         }
+        
+        public PrimaryExpression Expression => _expression as PrimaryExpression;
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
@@ -47,7 +52,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            throw new System.NotImplementedException();
+            if (HasNext())
+            {
+                if (_expression is PrimaryExpression prim)
+                {
+                    var left = "_t" + start;
+                    var nextInstructions = next.ToInstructions(start + 1, left);
+                    nextInstructions.Insert(0,
+                        new Simple(left, (new Name(temp), prim.ToValue()), "[]", start)
+                    );
+                    return nextInstructions;
+                }
+
+                throw new NotImplementedException();
+            }
+
+            return new();
         }
     }
 }

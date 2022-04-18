@@ -17,7 +17,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions
 
         internal override Type NodeCheck()
         {
-            if (!ChildOf<AccessExpression>())
+            if (!ChildOf<DotAccess>())
             {
                 var symbol = SymbolTable.FindSymbol<Symbol>(Id);
                 return symbol switch
