@@ -9,7 +9,7 @@ function sqrt(num: number): number {
 
     lastGuess = guess
     guess = (num / guess + guess) / 2
-    while (abs(lastGuess - guess) > 0.000000000000005)
+    while ((abs(lastGuess - guess)) > 0.000000000000005)
     {
         lastGuess = guess
         guess = (num / guess + guess) / 2

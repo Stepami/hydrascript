@@ -2,14 +2,17 @@ function fact(n: number): number {
     if (n < 2) {
         return n
     }
-    return n * fact(n - 1)
+    let f = fact(n - 1)
+    return n * f
 }
 
 function fib(n: number): number {
     if (n < 2) {
         return n
     }
-    return fib(n - 1) + fib(n - 2)
+    let f1 = fib(n - 1)
+    let f2 = fib(n - 2)
+    return f1 + f2
 }
 
 let n: number

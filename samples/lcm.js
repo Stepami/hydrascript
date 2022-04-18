@@ -12,7 +12,7 @@ function gcd(a: number, b: number): number {
 function lcm(a: number, b: number): number {
     if (a == 0 || b == 0)
         return 0
-    return abs(a * b) / gcd(a, b)
+    return (abs(a * b)) / (gcd(a, b))
 }
 
 let l = lcm(1280, 720)
