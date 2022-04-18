@@ -50,7 +50,7 @@ namespace Interpreter.Lib.Semantic.Types
                 .AppendJoin(
                     "",
                     _properties
-                        .Select(kvp => 
+                        .Select(kvp =>
                             $"{kvp.Key}: {(kvp.Value.Equals(this) ? "this" : kvp.Value.ToString())};")
                 )
                 .Append('}')
@@ -60,7 +60,7 @@ namespace Interpreter.Lib.Semantic.Types
         {
             var propList = propertyTypes.ToList();
             var objectType = new ObjectType(propList.Where(x => !x.Recursive));
-            foreach (var prop in propList.Where(x=>x.Recursive))
+            foreach (var prop in propList.Where(x => x.Recursive))
             {
                 objectType._properties[prop.Id] = objectType;
             }
