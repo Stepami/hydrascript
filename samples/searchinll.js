@@ -9,25 +9,32 @@ let head: node = {
 }
 
 let h1: node = {
-    data: 2;
+    data: 3;
     next: null;
 }
 
 head.next = h1
 
+let h2: node = {
+    data: 2;
+    next: null;
+}
+
+h1.next = h2
+
 function searchEven(n: node): number {
     let h = n
-    let d = -1
     while (h != null) {
-        d = h.data
+        let d = h.data
         print(d as string)
         if (d % 2 == 0) {
             return d
         }
         h = h.next
     }
-    return d
+    return -1
 }
 
 let j = searchEven(head)
+print("found Even:")
 print(j as string)

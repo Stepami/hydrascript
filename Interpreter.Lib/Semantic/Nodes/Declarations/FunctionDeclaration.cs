@@ -46,7 +46,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 
         public void Clear()
         {
-            _statements.SymbolTable.Clear();
+            _statements.GetAllNodes().ForEach(x => x.SymbolTable?.Clear());
             SymbolTable.Clear();
         }
 
