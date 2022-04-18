@@ -516,10 +516,11 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 if (CurrentIs("LeftBracket"))
                 {
                     access = Expect("LeftBracket");
+                    var lb = access.Segment;
                     var expr = Expression(table);
-                    Expect("RightBracket");
+                    var rb = Expect("RightBracket").Segment;
                     accessChain.Add(
-                        new IndexAccess(expr, accessChain.LastOrDefault()) {Segment = access.Segment}
+                        new IndexAccess(expr, accessChain.LastOrDefault()) {Segment = lb + rb}
                     );
                 }
                 else if (CurrentIs("Dot"))

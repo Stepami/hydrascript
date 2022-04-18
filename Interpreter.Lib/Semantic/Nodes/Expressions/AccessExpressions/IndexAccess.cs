@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.Semantic.Utils;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
@@ -13,7 +16,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             _expression = expression;
             _expression.Parent = this;
         }
-        
+
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
             yield return _expression;
@@ -25,7 +28,19 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 
         public override Type Check(Type prev)
         {
-            throw new System.NotImplementedException();
+            if (prev is ArrayType arrayType)
+            {
+                var indexType = _expression.NodeCheck();
+                if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
+                {
+                    var elemType = arrayType.Type;
+                    return HasNext() ? next.Check(elemType) : elemType;
+                }
+
+                throw new ArrayAccessException(Segment, indexType);
+            }
+
+            return null;
         }
 
         protected override string NodeRepresentation() => "[]";
