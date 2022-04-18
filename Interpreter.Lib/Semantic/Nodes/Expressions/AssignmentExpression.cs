@@ -154,7 +154,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     : last.Source;
                 Instruction instruction = access switch
                 {
-                    DotAccess dot => new DotAssignment(dest, (new Name(dot.Id), src), start),
+                    DotAccess dot => new DotAssignment(dest, (new Constant(dot.Id, @$"\""{dot.Id}\"""), src), start),
                     IndexAccess => throw new NotImplementedException(),
                     _ => throw new NotImplementedException()
                 };

@@ -46,7 +46,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
             {
                 if (expr is PrimaryExpression prim)
                 {
-                    instructions.Add(new DotAssignment(temp, (new Name(id), prim.ToValue()), start + i));
+                    instructions.Add(new DotAssignment(temp, (new Constant(id, @$"\""{id}\"""), prim.ToValue()), start + i));
                     i++;
                 }
                 else
@@ -54,7 +54,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
                     var propInstructions = expr.ToInstructions(start + i, "_t" + (start + i));
                     i += propInstructions.Count;
                     var left = propInstructions.OfType<Simple>().Last().Left;
-                    propInstructions.Add(new DotAssignment(temp, (new Name(id), new Name(left)), start + i));
+                    propInstructions.Add(new DotAssignment(temp, (new Constant(id, @$"\""{id}\"""), new Name(left)), start + i));
                     i++;
                     instructions.AddRange(propInstructions);
                 }

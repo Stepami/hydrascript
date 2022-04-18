@@ -15,7 +15,7 @@ namespace Interpreter.Lib.IR.Instructions
         {
             var frame = vm.Frames.Peek();
             var obj = (Dictionary<string, object>) frame[Left];
-            var field = right.left.ToString() ?? string.Empty;
+            var field = (string) right.left.Get(frame) ?? string.Empty;
             obj[field] = right.right.Get(frame);
             return Number + 1;
         }
