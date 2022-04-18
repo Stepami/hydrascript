@@ -59,7 +59,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     throw new WrongReturnType(retStmt.Segment, function.Type.ReturnType, retType);
                 }
 
-                if (node.CanEvaluate)
+                if (node.CanEvaluate && !(node is CallExpression call && call._ident.Id == _ident.Id))
                 {
                     node.NodeCheck();
                 }
