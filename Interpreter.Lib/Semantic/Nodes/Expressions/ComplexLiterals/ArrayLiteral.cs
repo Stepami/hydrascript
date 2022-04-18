@@ -61,7 +61,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
                     var propInstructions = expr.ToInstructions(start + j, "_t" + (start + j));
                     j += propInstructions.Count;
                     var left = propInstructions.OfType<Simple>().Last().Left;
-                    propInstructions.Add(new DotAssignment(temp, (index, new Name(left)), start + j));
+                    propInstructions.Add(new IndexAssignment(temp, (index, new Name(left)), start + j));
                     j++;
                     instructions.AddRange(propInstructions);
                 }
