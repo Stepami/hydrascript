@@ -780,7 +780,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private ArrayLiteral ArrayLiteral(SymbolTable table)
         {
-            Expect("LeftBracket");
+            var lb = Expect("LeftBracket").Segment;
             var expressions = new List<Expression>();
             while (CurrentIs("Ident") || CurrentIsLiteral() ||
                    CurrentIs("LeftParen") || CurrentIsOperator("-") ||
@@ -790,8 +790,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 expressions.Add(Expression(table));
                 Expect("Comma");
             }
-            Expect("RightBracket");
-            return new ArrayLiteral(expressions);
+            var rb = Expect("RightBracket").Segment;
+            return new ArrayLiteral(expressions) {Segment = lb + rb};
         }
     }
 }

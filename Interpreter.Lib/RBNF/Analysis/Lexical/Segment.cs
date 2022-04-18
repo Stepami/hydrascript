@@ -26,5 +26,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
             if (ReferenceEquals(null, obj)) return false;
             return Equals(_start, obj._start) && Equals(_end, obj._end);
         }
+
+        public static Segment operator +(Segment left, Segment right) => 
+            new(left._start, right._end);
     }
 }

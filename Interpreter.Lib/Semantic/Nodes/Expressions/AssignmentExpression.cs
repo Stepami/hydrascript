@@ -45,6 +45,11 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     throw new DeclarationAlreadyExists(_destination);
                 }
 
+                if (_destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
+                {
+                    type = _destinationType;
+                }
+
                 if (_destinationType != null && !_destinationType.Equals(type))
                 {
                     throw new IncompatibleTypesOfOperands(Segment, _destinationType, type);
