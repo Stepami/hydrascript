@@ -54,6 +54,12 @@
     "whiteSpace": false
   },
   {
+    "tag": "Arrow",
+    "pattern": "[=][>]",
+    "priority": 13,
+    "whiteSpace": false
+  },
+  {
     "tag": "Comma",
     "pattern": "[,]",
     "priority": 100,

@@ -293,8 +293,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     Expect("Comma");
                 }
                 Expect("RightParen");
-                Expect("Assign");
-                Expect("Operator", ">");
+                Expect("Arrow");
                 var returnType = TypeValue(table);
                 return new FunctionType(returnType, args);
             }
