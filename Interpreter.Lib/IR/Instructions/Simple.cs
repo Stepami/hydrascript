@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Interpreter.Lib.VM;
 using Interpreter.Lib.VM.Values;
 
@@ -65,6 +66,7 @@ namespace Interpreter.Lib.IR.Instructions
                     "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
                     "." => ((Dictionary<string, object>) lValue)[rValue.ToString()!],
                     "[]" => ((List<object>) lValue)[Convert.ToInt32(rValue)],
+                    "++" => ((List<object>) lValue).Concat((List<object>) rValue).ToList(),
                     _ => throw new NotImplementedException()
                 };
             }

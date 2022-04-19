@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
@@ -33,7 +35,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             var lType = _left.NodeCheck();
             var rType = _right.NodeCheck();
             Type retType = null;
-            if (!lType.Equals(rType))
+            if (_operator != "::" && !lType.Equals(rType))
             {
                 throw new IncompatibleTypesOfOperands(Segment, lType, rType);
             }
@@ -87,6 +89,26 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     else throw new UnsupportedOperation(Segment, lType, _operator);
 
                     break;
+                case "++":
+                    if (lType is ArrayType && rType is ArrayType)
+                    {
+                        retType = lType;
+                    }
+                    else throw new UnsupportedOperation(Segment, lType, _operator);
+
+                    break;
+                case "::":
+                    if (!(lType is ArrayType))
+                    {
+                        throw new UnsupportedOperation(Segment, lType, _operator);
+                    }
+                    if (rType.Equals(TypeUtils.JavaScriptTypes.Number))
+                    {
+                        retType = TypeUtils.JavaScriptTypes.Void;
+                    }
+                    else throw new ArrayAccessException(Segment, rType);
+
+                    break;
             }
 
             return retType;
@@ -99,6 +121,19 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         }
 
         protected override string NodeRepresentation() => _operator;
+
+        public override List<Instruction> ToInstructions(int start)
+        {
+            if (_left is IdentifierReference arr && _right.Primary() && _operator == "::")
+            {
+                return new List<Instruction>
+                {
+                    new RemoveFromArray(start, arr.Id, ((PrimaryExpression) _right).ToValue())
+                };
+            }
+
+            throw new NotImplementedException();
+        }
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {

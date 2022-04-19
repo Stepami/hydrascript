@@ -42,6 +42,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
+            if (Parent is not AssignmentExpression)
+            {
+                temp += start;
+            }
             var instructions = new List<Instruction>
             {
                 new CreateArray(start, temp, _expressions.Count)

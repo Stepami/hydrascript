@@ -655,7 +655,8 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
         private Expression MultiplicativeExpression(SymbolTable table)
         {
             var left = UnaryExpression(table);
-            while (CurrentIsOperator("*") || CurrentIsOperator("/") || CurrentIsOperator("%"))
+            while (CurrentIsOperator("*") || CurrentIsOperator("/") || CurrentIsOperator("%")
+                   || CurrentIsOperator("++") || CurrentIsOperator("::"))
             {
                 var op = Expect("Operator");
                 var right = UnaryExpression(table);
