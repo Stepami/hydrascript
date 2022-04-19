@@ -44,7 +44,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
         {
             if (Parent is not AssignmentExpression)
             {
-                temp += start;
+                temp = "_t" + start;
             }
             var instructions = new List<Instruction>
             {
