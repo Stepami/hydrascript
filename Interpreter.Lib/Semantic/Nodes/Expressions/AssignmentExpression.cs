@@ -40,7 +40,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     throw new ConstWithoutInitializer(_destination);
                 }
 
-                if (SymbolTable.FindSymbol<Symbol>(_destination.Id) != null)
+                if (SymbolTable.ContainsSymbol(_destination.Id))
                 {
                     throw new DeclarationAlreadyExists(_destination);
                 }
