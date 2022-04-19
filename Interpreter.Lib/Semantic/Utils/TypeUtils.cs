@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Utils
@@ -27,6 +28,9 @@ namespace Interpreter.Lib.Semantic.Utils
                 return new Void();
             if (type.Equals(JavaScriptTypes.Null))
                 return null;
+            if (type is ArrayType)
+                return new List<object>();
+            
             return new Undefined();
         }
 
