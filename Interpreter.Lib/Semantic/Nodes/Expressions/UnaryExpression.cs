@@ -3,6 +3,7 @@ using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
@@ -34,6 +35,10 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             else if (eType.Equals(TypeUtils.JavaScriptTypes.Boolean) && _operator == "!")
             {
                 retType = TypeUtils.JavaScriptTypes.Boolean;
+            }
+            else if (eType is ArrayType && _operator == "~")
+            {
+                retType = TypeUtils.JavaScriptTypes.Number;
             }
             else throw new UnsupportedOperation(Segment, eType, _operator);
 

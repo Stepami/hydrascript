@@ -671,7 +671,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
 
         private Expression UnaryExpression(SymbolTable table)
         {
-            if (CurrentIsOperator("-") || CurrentIsOperator("!"))
+            if (CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~"))
             {
                 var op = Expect("Operator");
                 return new UnaryExpression(op.Value, UnaryExpression(table))

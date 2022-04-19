@@ -39,6 +39,7 @@ namespace Interpreter.Lib.IR.Instructions
                 {
                     "-" => -Convert.ToDouble(value),
                     "!" => !Convert.ToBoolean(value),
+                    "~" => ((List<object>) value).Count,
                     "" => value,
                     _ => throw new NotImplementedException()
                 };
