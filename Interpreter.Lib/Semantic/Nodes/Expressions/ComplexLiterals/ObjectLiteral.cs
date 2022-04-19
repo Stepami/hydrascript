@@ -27,7 +27,12 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
                 propertyTypes.Add(new PropertyType(prop.Id.Id, propType));
                 prop.Id.SymbolTable.AddSymbol(new VariableSymbol(prop.Id.Id) {Type = propType});
             });
-            return new ObjectType(propertyTypes);
+            var type = new ObjectType(propertyTypes);
+            SymbolTable.AddSymbol(new VariableSymbol("this", true)
+            {
+                Type = type
+            });
+            return type;
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => 

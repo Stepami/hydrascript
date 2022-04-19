@@ -775,7 +775,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             Expect("RightCurl");
             return new ObjectLiteral(properties)
             {
-                SymbolTable = table
+                SymbolTable = newTable
             };
         }
 
