@@ -32,12 +32,13 @@ function quickSortImpl(values: ints, l: int, r: int) {
     }
 }
 
-function quickSort(values: ints, n: int) {
+function quickSort(values: ints) {
+    let n = ~values
     if (n != 0) {
         quickSortImpl(values, 0, n - 1)
     }
 }
 
 let numbers = [6,2,4,3,7,1,5,]
-quickSort(numbers, 7)
+quickSort(numbers)
 print(numbers as string)
