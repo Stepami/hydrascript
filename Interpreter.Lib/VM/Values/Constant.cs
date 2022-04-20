@@ -14,5 +14,15 @@ namespace Interpreter.Lib.VM.Values
         public object Get(Frame frame) => _value;
 
         public override string ToString() => _representation;
+
+        public bool Equals(IValue other)
+        {
+            if (other is Constant that)
+            {
+                return Equals(_value, that._value);
+            }
+
+            return false;
+        }
     }
 }

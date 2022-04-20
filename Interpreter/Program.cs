@@ -7,6 +7,8 @@ using CliWrap;
 using CommandLine;
 using CommandLine.Text;
 using Interpreter.Lib.IR;
+using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.IR.Optimizers;
 using Interpreter.Lib.RBNF.Analysis.Exceptions;
 using Interpreter.Lib.Semantic.Analysis;
 using Interpreter.Lib.Semantic.Exceptions;
@@ -65,6 +67,8 @@ namespace Interpreter
                         new BasicBlockBuilder(instructions)
                             .GetBasicBlocks()
                     );
+
+                    cfg.OptimizeInstructions(i => new IdentityExpression(i as Simple));
 
                     if (o.Dump)
                     {

@@ -10,8 +10,8 @@ namespace Interpreter.Lib.IR.Instructions
     {
         public string Left { get; set; }
 
-        protected readonly (IValue left, IValue right) right;
-        protected readonly string @operator;
+        protected (IValue left, IValue right) right;
+        protected string @operator;
 
         public Simple(
             string left,
@@ -72,6 +72,22 @@ namespace Interpreter.Lib.IR.Instructions
             }
 
             return Jump();
+        }
+
+        public void ReduceToAssignment()
+        {
+            right = ToStringRepresentation() switch
+            {
+                var s
+                    when s.Contains("+ 0") || s.Contains("- 0") ||
+                         s.Contains("* 1") || s.Contains("/ 1") => (null, right.left),
+                var s
+                    when s.Contains("0 +") || s.Contains("1 *") => (null, right.right),
+                var s
+                    when s.Contains("0 *") || s.Contains("0 *") => (null, new Constant(0, "0")),
+                _ => throw new NotImplementedException()
+            };
+            @operator = "";
         }
 
         protected override string ToStringRepresentation() =>
