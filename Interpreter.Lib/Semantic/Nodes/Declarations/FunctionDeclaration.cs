@@ -29,7 +29,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
         {
             if (_function.Type.Arguments.Count == expressions.Count)
             {
-                expressions.Select((e,i)=>(e,i)).ToList()
+                expressions.Select((e, i) => (e, i)).ToList()
                     .ForEach(pair =>
                     {
                         var (e, i) = pair;
