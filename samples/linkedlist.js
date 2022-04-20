@@ -18,24 +18,24 @@ function makeNode(item: number): node {
 let linkedList: list = {
     head: makeNode(1);
     append => (item: number) {
-    let tail: node = head
-    while ((tail.next) != null) {
-        tail = tail.next
-    }
-    tail.next = makeNode(item)
-};
-getOdd => (): number[] {
-    let result: number[]
-    let n = head
-    while (n != null) {
-        if ((n.data) % 2 != 0) {
-            let i = n.data
-            result = result ++ [i,]
+        let tail: node = head
+        while ((tail.next) != null) {
+            tail = tail.next
         }
-        n = n.next
-    }
-    return result
-};
+        tail.next = makeNode(item)
+    };
+    getOdd => (): number[] {
+        let result: number[]
+        let n = head
+        while (n != null) {
+            if ((n.data) % 2 != 0) {
+                let i = n.data
+                result = result ++ [i,]
+            }
+            n = n.next
+        }
+        return result
+    };
 }
 
 linkedList.append(3)
