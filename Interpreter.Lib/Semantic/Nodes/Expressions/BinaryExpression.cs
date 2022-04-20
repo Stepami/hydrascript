@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
@@ -150,6 +151,21 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             else
             {
                 lInstructions.AddRange(_left.ToInstructions(start, temp));
+                if (_left is MemberExpression member && member.Any())
+                {
+                    var i = start + lInstructions.Count;
+                    var dest = "_t" + i;
+                    var src = lInstructions.Any()
+                        ? lInstructions.OfType<Simple>().Last().Left
+                        : member.Id;
+                    var instruction = member.AccessChain.Tail switch
+                    {
+                        DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", i),
+                        IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", i),
+                        _ => throw new NotImplementedException()
+                    };
+                    lInstructions.Add(instruction);
+                }
                 newRight.left = new Name(lInstructions.OfType<Simple>().Last().Left);
             }
 
@@ -159,12 +175,25 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             }
             else
             {
-                rInstructions.AddRange(_right.ToInstructions(
-                    _left.Primary()
-                        ? start
-                        : lInstructions.Last().Number + 1,
-                    temp
-                ));
+                var c = _left.Primary()
+                    ? start
+                    : lInstructions.Last().Number + 1;
+                rInstructions.AddRange(_right.ToInstructions(c, temp));
+                if (_right is MemberExpression member && member.Any())
+                {
+                    var i = c + rInstructions.Count;
+                    var dest = "_t" + i;
+                    var src = rInstructions.Any()
+                        ? rInstructions.OfType<Simple>().Last().Left
+                        : member.Id;
+                    var instruction = member.AccessChain.Tail switch
+                    {
+                        DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", i),
+                        IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", i),
+                        _ => throw new NotImplementedException()
+                    };
+                    rInstructions.Add(instruction);
+                }
                 newRight.right = new Name(rInstructions.OfType<Simple>().Last().Left);
             }
 

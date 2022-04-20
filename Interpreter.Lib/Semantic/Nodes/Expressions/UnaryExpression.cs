@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
@@ -64,6 +66,21 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             else
             {
                 instructions.AddRange(_expression.ToInstructions(start, temp));
+                if (_expression is MemberExpression member && member.Any())
+                {
+                    var i = start + instructions.Count;
+                    var dest = "_t" + i;
+                    var src = instructions.Any()
+                        ? instructions.OfType<Simple>().Last().Left
+                        : member.Id;
+                    var instruction = member.AccessChain.Tail switch
+                    {
+                        DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", i),
+                        IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", i),
+                        _ => throw new NotImplementedException()
+                    };
+                    instructions.Add(instruction);
+                }
                 right.right = new Name(instructions.OfType<Simple>().Last().Left);
             }
 
