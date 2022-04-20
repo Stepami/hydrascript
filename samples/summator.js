@@ -2,8 +2,8 @@ let summator = {
     x: 1;
     y: 2;
     sum => (): number {
-    return x + y
-};
+        return x + y
+    };
 }
 
 let s = summator.sum()
