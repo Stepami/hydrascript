@@ -11,17 +11,18 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
     public class MemberExpression : Expression
     {
         private readonly IdentifierReference _id;
-        private readonly AccessExpression _accessChain;
+        
+        public AccessExpression AccessChain { get; }
 
         public MemberExpression(IdentifierReference id, AccessExpression accessChain)
         {
             _id = id;
             _id.Parent = this;
             
-            _accessChain = accessChain;
+            AccessChain = accessChain;
             if (accessChain != null)
             {
-                _accessChain.Parent = this;
+                AccessChain.Parent = this;
             }
         }
 
@@ -29,7 +30,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         internal override Type NodeCheck()
         {
-            if (_accessChain == null)
+            if (AccessChain == null)
             {
                 return _id.NodeCheck();
             }
@@ -40,14 +41,14 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 throw new UnknownIdentifierReference(_id);
             }
 
-            return _accessChain.Check(symbol.Type);
+            return AccessChain.Check(symbol.Type);
         }
 
         public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
         {
-            if (_accessChain != null)
+            if (AccessChain != null)
             {
-                yield return _accessChain;
+                yield return AccessChain;
             }
         }
 
@@ -55,9 +56,9 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            if (_accessChain != null && _accessChain.HasNext())
+            if (AccessChain != null && AccessChain.HasNext())
             {
-                return _accessChain.ToInstructions(start, _id.Id);
+                return AccessChain.ToInstructions(start, _id.Id);
             }
 
             return new();

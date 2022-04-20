@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Interpreter.Lib.VM;
 
@@ -12,7 +13,7 @@ namespace Interpreter.Lib.IR.Instructions
             base(left, (null, null), "Call ", number)
         {
             _function = function;
-            _numberOfArguments = numberOfArguments;
+            _numberOfArguments = numberOfArguments + Convert.ToInt32(function.MethodOf != null);
         }
 
         public override int Jump() => _function.Location;
@@ -28,6 +29,15 @@ namespace Interpreter.Lib.IR.Instructions
                 args.Add(vm.Arguments.Pop());
                 frame[args[i].Id] = args[i].Value;
                 i++;
+            }
+
+            if (_function.MethodOf != null)
+            {
+                var obj = (Dictionary<string, object>) frame[_function.MethodOf];
+                foreach (var (key, value) in obj)
+                {
+                    frame[key] = value;
+                }
             }
 
             vm.CallStack.Push(new Call(Number, _function, args, Left));

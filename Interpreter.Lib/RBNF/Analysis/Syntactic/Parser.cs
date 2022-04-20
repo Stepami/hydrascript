@@ -380,7 +380,9 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             }
 
             var functionSymbol =
-                new FunctionSymbol(ident.Value, args, new FunctionType(returnType, args.Select(x => x.Type)));
+                new FunctionSymbol(ident.Value, args,
+                    new FunctionType(returnType, args.Select(x => x.Type))
+                );
             table.AddSymbol(functionSymbol);
 
             return new FunctionDeclaration(functionSymbol, BlockStatement(newTable))
@@ -759,6 +761,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
             newTable.AddOpenScope(table);
             Expect("LeftCurl");
             var properties = new List<Property>();
+            var methods = new List<FunctionDeclaration>();
             while (CurrentIs("Ident"))
             {
                 var idToken = Expect("Ident");
@@ -767,13 +770,53 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                     Segment = idToken.Segment,
                     SymbolTable = newTable
                 };
-                Expect("Colon");
-                var expr = Expression(table);
-                properties.Add(new Property(id, expr));
+                if (CurrentIs("Colon"))
+                {
+                    Expect("Colon");
+                    var expr = Expression(newTable);
+                    properties.Add(new Property(id, expr));
+                }
+                else if (CurrentIs("Arrow"))
+                {
+                    Expect("Arrow");
+                    Expect("LeftParen");
+                    var args = new List<VariableSymbol>();
+                    while (CurrentIs("Ident"))
+                    {
+                        var name = Expect("Ident").Value;
+                        Expect("Colon");
+                        var type = TypeValue(newTable);
+                        args.Add(new VariableSymbol(name) {Type = type});
+                        if (!CurrentIs("RightParen"))
+                        {
+                            Expect("Comma");
+                        }
+                    }
+                    Expect("RightParen");
+                    var returnType = TypeUtils.JavaScriptTypes.Void;
+                    if (CurrentIs("Colon"))
+                    {
+                        Expect("Colon");
+                        returnType = TypeValue(newTable);
+                    }
+
+                    var functionSymbol = new FunctionSymbol(idToken.Value, args,
+                        new FunctionType(returnType, args.Select(a => a.Type))
+                    );
+                    newTable.AddSymbol(functionSymbol);
+                    var bodyTable = new SymbolTable();
+                    bodyTable.AddOpenScope(newTable);
+                    methods.Add(new FunctionDeclaration(functionSymbol, BlockStatement(bodyTable))
+                    {
+                        Segment = idToken.Segment,
+                        SymbolTable = bodyTable
+                    });
+                }
+
                 Expect("SemiColon");
             }
             Expect("RightCurl");
-            return new ObjectLiteral(properties)
+            return new ObjectLiteral(properties, methods)
             {
                 SymbolTable = newTable
             };

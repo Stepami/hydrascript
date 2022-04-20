@@ -6,12 +6,20 @@ namespace Interpreter.Lib.VM
         
         public int Location { get; set; }
 
-        public FunctionInfo(string id, int location = 0)
+        public string MethodOf { get; set; }
+
+        public FunctionInfo(string id, int location = 0, string methodOf = null)
         {
             Id = id;
             Location = location;
+            MethodOf = methodOf;
         }
 
-        public override string ToString() => $"({Location}, {Id})";
+        private string CallId() =>
+            MethodOf == null
+                ? Id
+                : $"{MethodOf}.{Id}";
+
+        public override string ToString() => $"({Location}, {CallId()})";
     }
 }

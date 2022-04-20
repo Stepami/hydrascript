@@ -27,7 +27,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             yield return _expression;
             if (HasNext())
             {
-                yield return next;
+                yield return Next;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
                 if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
                 {
                     var elemType = arrayType.Type;
-                    return HasNext() ? next.Check(elemType) : elemType;
+                    return HasNext() ? Next.Check(elemType) : elemType;
                 }
 
                 throw new ArrayAccessException(Segment, indexType);
@@ -57,7 +57,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
                 if (_expression is PrimaryExpression prim)
                 {
                     var left = "_t" + start;
-                    var nextInstructions = next.ToInstructions(start + 1, left);
+                    var nextInstructions = Next.ToInstructions(start + 1, left);
                     nextInstructions.Insert(0,
                         new Simple(left, (new Name(temp), prim.ToValue()), "[]", start)
                     );

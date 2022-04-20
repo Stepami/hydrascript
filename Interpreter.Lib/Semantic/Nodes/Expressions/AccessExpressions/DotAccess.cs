@@ -27,7 +27,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
                 var fieldType = objectType[_id.Id];
                 if (fieldType != null)
                 {
-                    return HasNext() ? next.Check(fieldType) : fieldType;
+                    return HasNext() ? Next.Check(fieldType) : fieldType;
                 }
 
                 throw new ObjectAccessException(Segment, objectType, _id.Id);
@@ -41,7 +41,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             yield return _id;
             if (HasNext())
             {
-                yield return next;
+                yield return Next;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
             if (HasNext())
             {
                 var left = "_t" + start;
-                var nextInstructions = next.ToInstructions(start + 1, left);
+                var nextInstructions = Next.ToInstructions(start + 1, left);
                 nextInstructions.Insert(0,
                     new Simple(left, (new Name(temp), new Constant(_id.Id, _id.Id)), ".", start)
                 );

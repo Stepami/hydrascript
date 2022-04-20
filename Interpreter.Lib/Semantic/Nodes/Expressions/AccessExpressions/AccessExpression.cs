@@ -4,14 +4,14 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 {
     public abstract class AccessExpression : Expression
     {
-        protected AccessExpression next;
+        public AccessExpression Next { get; private set; }
 
         protected AccessExpression(AccessExpression prev)
         {
             if (prev != null)
             {
                 Parent = prev;
-                prev.next = this;
+                prev.Next = this;
             }
         }
 
@@ -22,7 +22,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
                 var head = this;
                 while (head.HasNext())
                 {
-                    head = head.next;
+                    head = head.Next;
                 }
 
                 return head;
@@ -31,6 +31,6 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions
 
         public abstract Type Check(Type prev);
 
-        public bool HasNext() => next != null;
+        public bool HasNext() => Next != null;
     }
 }

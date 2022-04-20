@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Exceptions;
+using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Nodes.Statements;
 using Interpreter.Lib.Semantic.Symbols;
-using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM.Values;
+using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic.Nodes.Expressions
 {
@@ -25,15 +27,47 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
             _expressions.ForEach(expr => expr.Parent = this);
         }
 
+        private FunctionSymbol GetFunction()
+        {
+            if (_ident.Any())
+            {
+                var table = SymbolTable.FindSymbol<ObjectSymbol>(_ident.Id).Table;
+                var chain = _ident.AccessChain;
+                while (chain.HasNext())
+                {
+                    table = chain switch
+                    {
+                        DotAccess dot => table.FindSymbol<ObjectSymbol>(dot.Id).Table,
+                        IndexAccess => throw new NotImplementedException(),
+                        _ => throw new NotImplementedException()
+                    };
+                    chain = chain.Next;
+                }
+
+                return table.FindSymbol<FunctionSymbol>(((DotAccess) chain).Id);
+            }
+
+            return SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
+        }
+
         internal override Type NodeCheck()
         {
-            IdentifierReference idRef = _ident;
-            idRef.NodeCheck();
-            var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
+            if (_ident.Any())
+            {
+                _ident.NodeCheck();
+            }
+            else
+            {
+                IdentifierReference idRef = _ident;
+                idRef.NodeCheck();
+            }
+
+            var function = GetFunction();
             if (function == null)
             {
                 throw new SymbolIsNotCallable(_ident.Id, Segment);
             }
+
             if (!function.Type.ReturnType.Equals(TypeUtils.JavaScriptTypes.Void))
             {
                 if (!function.Body.HasReturnStatement())
@@ -105,7 +139,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         {
             return _ident.Id switch
             {
-                "print" => Print(start),
+                "print" when !_ident.Any() => Print(start),
                 _ => ToInstructions(start, null)
             };
         }
@@ -113,7 +147,24 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
         public override List<Instruction> ToInstructions(int start, string temp)
         {
             var instructions = new List<Instruction>();
-            var function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
+            FunctionSymbol function;
+            if (!_ident.Any())
+            {
+                function = SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
+            }
+            else
+            {
+                function = GetFunction();
+                instructions.AddRange(_ident.ToInstructions(start, temp));
+                function.CallInfo.MethodOf = instructions.Any()
+                    ? instructions.OfType<Simple>().Last().Left
+                    : _ident.Id;
+                instructions.Add(
+                    new PushParameter(
+                        start + instructions.Count,
+                        "this", new Name(function.CallInfo.MethodOf))
+                );
+            }
             if (function.Body.First().Any())
             {
                 _expressions.Zip(function.Parameters).ToList<(Expression expr, Symbol param)>()

@@ -43,7 +43,11 @@ Literal -> "NullLiteral"
            "BooleanLiteral"
 ObjectLiteral -> '{' PropertyDefinitionList '}'
 PropertyDefinitionList -> (Property ';')*
-Property -> "Ident" ':' Expression
+Property -> FieldProperty
+            MethodProperty
+FieldProperty -> "Ident" ':' Expression
+MethodProperty -> "Ident" '=>' MethodDeclaration
+MethodDeclaration -> '(' FunctionParameters? ')' Type? BlockStatement
 ArrayLiteral -> '[' ElementList ']'
 ElementList -> (Expression ',')*
              
@@ -65,7 +69,7 @@ TypeValueBase -> "Ident"
 ObjectTypeBase -> '{' PropertyTypeList '}'
 PropertyTypeList -> (PropertyType ';')*
 PropertyType -> "Ident" ':' TypeValue
-FunctionTypeBase -> '(' ArgTypeList ')' '=''>' TypeValue
+FunctionTypeBase -> '(' ArgTypeList ')' '=>' TypeValue
 ArgTypeList -> (TypeValue ',')*
 TypeValueSuffix -> '['']'
                    '?'

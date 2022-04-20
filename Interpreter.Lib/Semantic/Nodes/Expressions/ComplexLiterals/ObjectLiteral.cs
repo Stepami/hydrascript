@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.Semantic.Symbols;
 using Interpreter.Lib.Semantic.Types;
@@ -11,11 +12,15 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
     public class ObjectLiteral : Expression
     {
         private readonly List<Property> _properties;
+        private readonly List<FunctionDeclaration> _methods;
 
-        public ObjectLiteral(IEnumerable<Property> properties)
+        public ObjectLiteral(IEnumerable<Property> properties, IEnumerable<FunctionDeclaration> methods)
         {
             _properties = new List<Property>(properties);
             _properties.ForEach(prop => prop.Parent = this);
+
+            _methods = new List<FunctionDeclaration>(methods);
+            _methods.ForEach(m => m.Parent = this);
         }
 
         internal override Type NodeCheck()
@@ -25,7 +30,15 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
             {
                 var propType = prop.Expression.NodeCheck();
                 propertyTypes.Add(new PropertyType(prop.Id.Id, propType));
-                prop.Id.SymbolTable.AddSymbol(new VariableSymbol(prop.Id.Id) {Type = propType});
+                prop.Id.SymbolTable.AddSymbol(propType is ObjectType
+                    ? new ObjectSymbol(prop.Id.Id) {Type = propType, Table = prop.Expression.SymbolTable}
+                    : new VariableSymbol(prop.Id.Id) {Type = propType}
+                );
+            });
+            _methods.ForEach(m =>
+            {
+                var symbol = m.GetSymbol();
+                propertyTypes.Add(new PropertyType(symbol.Id, symbol.Type));
             });
             var type = new ObjectType(propertyTypes);
             SymbolTable.AddSymbol(new VariableSymbol("this", true)
@@ -35,17 +48,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
             return type;
         }
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => 
-            _properties.GetEnumerator();
+        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
+            _properties.Concat<AbstractSyntaxTreeNode>(_methods).GetEnumerator();
 
         protected override string NodeRepresentation() => "{}";
 
         public override List<Instruction> ToInstructions(int start, string temp)
         {
-            var instructions = new List<Instruction>
+            var instructions = new List<Instruction>();
+            _methods.ForEach(method =>
             {
-                new CreateObject(start, temp)
-            };
+                var mInstructions = method.ToInstructions(start);
+                instructions.AddRange(mInstructions);
+                start += mInstructions.Count;
+            });
+            
+            instructions.Add(new CreateObject(start, temp));
             var i = 1;
             foreach (var (id, expr) in _properties)
             {
@@ -64,7 +82,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals
                     instructions.AddRange(propInstructions);
                 }
             }
-            
+
             return instructions;
         }
     }

@@ -6,6 +6,7 @@ using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
@@ -60,12 +61,24 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     throw new CannotDefineType(Segment);
                 }
 
-                SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())
+                var typeOfSymbol = _destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
+                    ? _destinationType
+                    : type;
+                if (typeOfSymbol is ObjectType)
                 {
-                    Type = _destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
-                        ? _destinationType
-                        : type
-                });
+                    SymbolTable.AddSymbol(new ObjectSymbol(id, declaration.Const())
+                    {
+                        Type = typeOfSymbol,
+                        Table = _source.SymbolTable
+                    });
+                }
+                else
+                {
+                    SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())
+                    {
+                        Type = typeOfSymbol
+                    });
+                }
             }
             else
             {
