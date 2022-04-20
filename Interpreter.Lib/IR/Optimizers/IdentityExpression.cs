@@ -17,8 +17,7 @@ namespace Interpreter.Lib.IR.Optimizers
             return s.Contains("+ 0") || s.Contains("0 +") ||
                    s.Contains("* 1") || s.Contains("1 *") ||
                    s.Contains("- 0") || s.Contains("/ 1") ||
-                   s.Contains("-0") || s.Contains("* 0") ||
-                   s.Contains("0 *");
+                   s.Contains("* 0") || s.Contains("0 *");
         }
 
         public void Optimize()

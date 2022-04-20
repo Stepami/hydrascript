@@ -38,12 +38,6 @@ namespace Interpreter.Tests.Unit
                 )
             );
             Assert.False(_optimizer.Test());
-
-            _optimizer = new IdentityExpression(
-                new Simple(
-                    "i", (null, new Constant(0, "0")), "-", 0)
-            );
-            Assert.True(_optimizer.Test());
         }
     }
 }
