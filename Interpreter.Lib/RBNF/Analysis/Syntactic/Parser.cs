@@ -290,7 +290,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                 while (CurrentIs("Ident") || CurrentIs("LeftCurl") || CurrentIs("LeftParen"))
                 {
                     args.Add(TypeValue(table));
-                    Expect("Comma");
+                    if (!CurrentIs("RightParen"))
+                    {
+                        Expect("Comma");
+                    }
                 }
                 Expect("RightParen");
                 Expect("Arrow");
@@ -832,7 +835,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Syntactic
                    CurrentIs("LeftBracket"))
             {
                 expressions.Add(Expression(table));
-                Expect("Comma");
+                if (!CurrentIs("RightBracket"))
+                {
+                    Expect("Comma");
+                }
             }
             var rb = Expect("RightBracket").Segment;
             return new ArrayLiteral(expressions) {Segment = lb + rb};
