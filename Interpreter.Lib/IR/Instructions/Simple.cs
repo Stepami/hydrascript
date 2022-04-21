@@ -76,15 +76,25 @@ namespace Interpreter.Lib.IR.Instructions
 
         public void ReduceToAssignment()
         {
-            right = ToStringRepresentation() switch
+            right = ToStringRepresentation().Split('=')[1].Trim() switch
             {
                 var s
-                    when s.Contains("+ 0") || s.Contains("- 0") ||
-                         s.Contains("* 1") || s.Contains("/ 1") => (null, right.left),
+                    when s.EndsWith("+ 0") || s.EndsWith("- 0") ||
+                         s.EndsWith("* 1") || s.EndsWith("/ 1") => (null, right.left),
                 var s
-                    when s.Contains("0 +") || s.Contains("1 *") => (null, right.right),
+                    when s.StartsWith("0 +") || s.StartsWith("1 *") => (null, right.right),
+                _ => throw new NotImplementedException()
+            };
+            @operator = "";
+        }
+
+        public void ReduceToZero()
+        {
+            right = ToStringRepresentation().Split('=')[1].Trim() switch
+            {
+                "-0" => (null, new Constant(0, "0")),
                 var s
-                    when s.Contains("0 *") || s.Contains("0 *") => (null, new Constant(0, "0")),
+                    when s.EndsWith("* 0") || s.StartsWith("0 *") => (null, new Constant(0, "0")),
                 _ => throw new NotImplementedException()
             };
             @operator = "";
@@ -92,7 +102,7 @@ namespace Interpreter.Lib.IR.Instructions
 
         protected override string ToStringRepresentation() =>
             right.left == null
-                ? $"{Left} = {(@operator == "" ? "" : " " + @operator)}{right.right}"
+                ? $"{Left} = {@operator}{right.right}"
                 : $"{Left} = {right.left} {@operator} {right.right}";
     }
 }

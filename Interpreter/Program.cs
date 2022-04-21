@@ -68,7 +68,10 @@ namespace Interpreter
                             .GetBasicBlocks()
                     );
 
-                    cfg.OptimizeInstructions(i => new IdentityExpression(i as Simple));
+                    cfg.OptimizeInstructions(
+                        i => new IdentityExpression(i as Simple),
+                        i => new ZeroExpression(i as Simple)
+                    );
 
                     if (o.Dump)
                     {
