@@ -68,7 +68,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Declarations
 
                 var body = new List<Instruction>
                 {
-                    new BeginFunction(_function.CallInfo.Location, _function.Id)
+                    new BeginFunction(_function.CallInfo.Location, _function.CallInfo)
                 };
                 body.AddRange(_statements.ToInstructions(_function.CallInfo.Location + 1));
                 if (!_statements.HasReturnStatement())

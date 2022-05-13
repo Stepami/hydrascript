@@ -15,7 +15,7 @@ namespace Interpreter.Lib.VM
             MethodOf = methodOf;
         }
 
-        private string CallId() =>
+        public string CallId() =>
             MethodOf == null
                 ? Id
                 : $"{MethodOf}.{Id}";

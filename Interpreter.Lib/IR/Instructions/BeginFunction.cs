@@ -4,15 +4,15 @@ namespace Interpreter.Lib.IR.Instructions
 {
     public class BeginFunction : Instruction
     {
-        private readonly string _name;
+        private readonly FunctionInfo _function;
         
-        public BeginFunction(int number, string name) : base(number)
+        public BeginFunction(int number, FunctionInfo function) : base(number)
         {
-            _name = name;
+            _function = function;
         }
 
         public override int Execute(VirtualMachine vm) => Number + 1;
 
-        protected override string ToStringRepresentation() => $"BeginFunction {_name}";
+        protected override string ToStringRepresentation() => $"BeginFunction {_function.CallId()}";
     }
 }
