@@ -103,7 +103,7 @@ namespace Interpreter
                     vm.Run();
                 }
                 catch (Exception ex)
-                    when (ex is LexerException || ex is ParserException || ex is SemanticException)
+                    when (ex is LexerException or ParserException or SemanticException)
                 {
                     Console.WriteLine(ex.Message);
                 }
