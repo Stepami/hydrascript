@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
 using Interpreter.Lib.RBNF.Utils;
@@ -40,7 +41,10 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
 
         public override string ToString()
         {
-            return Regex.ToString();
+            return new StringBuilder()
+                .AppendJoin('\n',
+                    Types.Select(x => $"{x.Key} {x.Value.Pattern}")
+                ).ToString();
         }
         
         public IEnumerator<TokenType> GetEnumerator() => Types.Values.GetEnumerator();
