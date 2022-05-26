@@ -17,17 +17,22 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
                 LexerUtils.End,
                 LexerUtils.Error
             });
-            types = types.OrderBy(t => t.Priority).ToList();
+            types = types
+                .OrderBy(t => t.Priority)
+                .ToList();
             
-            Types = types.ToDictionary(x => x.Tag, x => x);
+            Types = types
+                .ToDictionary(x => x.Tag, x => x);
 
-            Regex = new Regex(string.Join(
-                '|',
-                types
-                    .Where(t => !t.EndOfProgram())
-                    .Select(t => t.GetNamedRegex())
-                    .ToList()
-            ));
+            Regex = new Regex(
+                string.Join(
+                    '|',
+                    types
+                        .Where(t => !t.EndOfProgram())
+                        .Select(t => t.GetNamedRegex())
+                        .ToList()
+                )
+            );
         }
 
         private Dictionary<string, TokenType> Types { get; }
