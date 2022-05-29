@@ -148,6 +148,18 @@ let s = v2d as string
 #### Стандартная библиотека
 - Функция `print` c сигнатурой `(string) => void`; осуществляет печать строки на экран
 
+### Требования
+
+- .NET 5 SDK
+
+### Сборка
+После клонирования репозитория идём в папку проекта `Interpreter`.
+
+Там выполняем команду:
+```dotnet publish -r <RUNTIME_IDENTIFIER> -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o <OUTPUT_DIRECTORY>```
+
+Список идентификаторов рантайма лежит [тут](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids)
+
 ### Источники:
 
 1. [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
