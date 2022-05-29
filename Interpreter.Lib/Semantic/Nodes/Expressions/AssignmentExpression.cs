@@ -129,19 +129,22 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 start++;
             }
 
-            var last = instructions.OfType<Simple>().Last();
-            if (_source is AssignmentExpression)
+            var last = instructions.OfType<Simple>().LastOrDefault();
+            if (last != null)
             {
-                instructions.Add(new Simple(
-                    _destination.Id,
-                    (null, new Name(last.Left)),
-                    "", last.Jump()
-                ));
-                start++;
-            }
-            else
-            {
-                last.Left = _destination.Id;
+                if (_source is AssignmentExpression)
+                {
+                    instructions.Add(new Simple(
+                        _destination.Id,
+                        (null, new Name(last.Left)),
+                        "", last.Jump()
+                    ));
+                    start++;
+                }
+                else
+                {
+                    last.Left = _destination.Id;
+                }
             }
 
             if (_destination.Any())
