@@ -160,6 +160,27 @@ let s = v2d as string
 
 Список идентификаторов рантайма лежит [тут](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids)
 
+### Запуск
+
+```
+Interpreter 1.0.0
+Copyright (C) 2022 Interpreter
+
+ERROR(S):
+  Option 'h' is unknown.
+  Required option 'i' is missing.
+
+  -t           (Default: tokenTypes.json) Path to lexer configuration
+
+  -d           (Default: false) Show dump data of interpreter
+
+  -i           Required. Path to input file
+
+  --help       Display this help screen.
+
+  --version    Display version information.
+```
+
 ### Источники:
 
 1. [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
