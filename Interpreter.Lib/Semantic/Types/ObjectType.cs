@@ -34,7 +34,11 @@ namespace Interpreter.Lib.Semantic.Types
                 else switch (property)
                 {
                     case ObjectType objectType:
-                        objectType.ResolveSelfReferences(self);
+                        if (objectType != this)
+                        {
+                            objectType.ResolveSelfReferences(self);
+                        }
+
                         break;
                     default:
                         property.ResolveReference(self, this);
