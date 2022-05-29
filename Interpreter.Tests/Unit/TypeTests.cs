@@ -25,16 +25,6 @@ namespace Interpreter.Tests.Unit
         }
 
         [Fact]
-        public void ObjectTypeStringRepresentationTest()
-        {
-            var number = new Type("number");
-            var point = new ObjectType(new PropertyType[] {new("x", number), new("y", number)});
-            var line = new ObjectType(new PropertyType[] {new("start", point), new("end", point)});
-            
-            Assert.Equal("{start: {x: number;y: number;};end: {x: number;y: number;};}", line.ToString());
-        }
-
-        [Fact]
         public void ObjectTypeEqualityTest()
         {
             var number = new Type("number");
@@ -103,12 +93,14 @@ namespace Interpreter.Tests.Unit
         public void RecursiveTypeTest()
         {
             var number = new Type("number");
-            var linkedListType = ObjectType.RecursiveFromProperties(
-
-                new("data", number),
-                new RecursivePropertyType("next")
-
+            var linkedListType = new ObjectType(
+                new List<PropertyType>
+                {
+                    new("data", number),
+                    new("next", new Type("self"))
+                }
             );
+            linkedListType.ResolveSelfReferences("self");
             var wrapper = new ObjectType(new List<PropertyType> {new("data", number)});
             Assert.True(linkedListType.Equals(linkedListType["next"]));
             Assert.False(linkedListType.Equals(wrapper));

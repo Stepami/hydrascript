@@ -10,9 +10,13 @@ namespace Interpreter.Lib.Semantic.Types
 
         public Type(string name) => _name = name;
 
+        public virtual void ResolveReference(string reference, Type toAssign)
+        {
+        }
+
         public override bool Equals(object obj)
         {
-            if (this == obj) return true;
+            if (ReferenceEquals(this, obj)) return true;
             if (obj == null || GetType() != obj.GetType()) return false;
             var that = (Type) obj;
             return Equals(_name, that._name);
@@ -22,5 +26,11 @@ namespace Interpreter.Lib.Semantic.Types
             _name.GetHashCode();
 
         public override string ToString() => _name;
+
+        public static implicit operator Type(string alias) => new(alias);
+
+        public static bool operator ==(Type left, Type right) => Equals(left, right);
+
+        public static bool operator !=(Type left, Type right) => !(left == right);
     }
 }

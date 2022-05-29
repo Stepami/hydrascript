@@ -7,7 +7,7 @@ namespace Interpreter.Lib.Semantic.Types
 {
     public class FunctionType : Type
     {
-        public Type ReturnType { get; }
+        public Type ReturnType { get; private set; }
         
         public List<Type> Arguments { get; }
 
@@ -17,9 +17,43 @@ namespace Interpreter.Lib.Semantic.Types
             Arguments = new List<Type>(arguments);
         }
 
+        public override void ResolveReference(string reference, Type toAssign)
+        {
+            if (ReturnType.ToString() == reference)
+            {
+                ReturnType = toAssign;
+            } 
+            else switch (ReturnType)
+            {
+                case ObjectType objectType:
+                    objectType.ResolveSelfReferences(reference);
+                    break;
+                default:
+                    ReturnType.ResolveReference(reference, toAssign);
+                    break;
+            }
+
+            for (var i = 0; i < Arguments.Count; i++)
+            {
+                if (Arguments[i].ToString() == reference)
+                {
+                    Arguments[i] = toAssign;
+                }
+                else switch (Arguments[i])
+                {
+                    case ObjectType objectType:
+                        objectType.ResolveSelfReferences(reference);
+                        break;
+                    default:
+                        Arguments[i].ResolveReference(reference, toAssign);
+                        break;
+                }
+            }
+        }
+
         public override bool Equals(object obj)
         {
-            if (this == obj) return true;
+            if (ReferenceEquals(this, obj)) return true;
             if (obj == null || GetType() != obj.GetType()) return false;
             var that = (FunctionType) obj;
             return ReturnType.Equals(that.ReturnType) &&
@@ -30,6 +64,7 @@ namespace Interpreter.Lib.Semantic.Types
 
         public override int GetHashCode() =>
             HashCode.Combine(
+                // ReSharper disable once NonReadonlyMemberInGetHashCode
                 ReturnType,
                 Arguments
                     .Select(arg => arg.GetHashCode())
