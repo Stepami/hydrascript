@@ -163,7 +163,7 @@ let v2dOriginal: vector2 = {
 }
 // мы хотим другой объект такого же типа
 // без повторной реализации методов
-let v2dClone = clone v2dOriginal with {
+let v2dClone = v2dOriginal with {
     x: 3;
     y: 4;
 }
