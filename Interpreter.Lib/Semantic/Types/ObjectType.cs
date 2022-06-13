@@ -8,6 +8,7 @@ namespace Interpreter.Lib.Semantic.Types
     public class ObjectType : NullableType
     {
         private readonly Dictionary<string, Type> _properties;
+        private readonly ObjectTypeToStringSerializer _serializer;
 
         public ObjectType(IEnumerable<PropertyType> properties)
         {
@@ -17,6 +18,7 @@ namespace Interpreter.Lib.Semantic.Types
                     x => x.Id,
                     x => x.Type
                 );
+            _serializer = new ObjectTypeToStringSerializer(this);
         }
 
         public Type this[string id] => _properties.ContainsKey(id)
@@ -68,17 +70,47 @@ namespace Interpreter.Lib.Semantic.Types
                 .Select(kvp => HashCode.Combine(kvp.Key, kvp.Value))
                 .Aggregate(HashCode.Combine);
 
-        public override string ToString() =>
-            new StringBuilder()
-                .Append('{')
-                .AppendJoin(
-                    "",
-                    _properties
-                        .Select(kvp =>
-                            $"{kvp.Key}: {kvp.GetHashCode()};")
-                )
-                .Append('}')
-                .ToString();
+        public override string ToString() => _serializer.Serialize();
+        
+        private class ObjectTypeToStringSerializer
+        {
+            private readonly ObjectType _root;
+            public ObjectTypeToStringSerializer(ObjectType root)
+            {
+                _root = root;
+            }
+
+            private string SerializeRecursive(ObjectType objectType, int depth)
+            {
+                var tabs = new string('\t', depth);
+                var sb = new StringBuilder("{");
+                foreach (var (key, value) in objectType._properties)
+                {
+                    var prop = $"\n{tabs}{key}: ";
+                    // TODO подумать об иерархии наследования
+                    if (value is ObjectType oType)
+                    {
+                        if (ReferenceEquals(oType, _root))
+                        {
+                            prop += "@this";
+                        }
+                        else
+                        {
+                            prop += SerializeRecursive(oType, depth + 1);
+                        }
+                    }
+                    else
+                    {
+                        prop += value.ToString();
+                    }
+
+                    sb.Append(prop).Append(';');
+                }
+                return sb.Append("\n}").ToString();
+            }
+
+            public string Serialize() => SerializeRecursive(_root, 1);
+        }
     }
 
     public record PropertyType(string Id, Type Type);
