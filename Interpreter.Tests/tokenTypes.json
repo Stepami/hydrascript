@@ -43,7 +43,7 @@
   },
   {
     "tag": "Keyword",
-    "pattern": "let|const|function|if|else|while|break|continue|return|as|type",
+    "pattern": "let|const|function|if|else|while|break|continue|return|as|type|with",
     "priority": 11,
     "whiteSpace": false
   },

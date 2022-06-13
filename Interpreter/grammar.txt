@@ -22,11 +22,13 @@ Expression -> AssignExpression
 AssignExpression -> LeftHandSideExpression ('=' AssignExpression)?
 LeftHandSideExpression -> CastExpression
                           CallExpression
+                          WithExpression
 CallExpression -> MemberExpression Arguments*
 Arguments -> '(' ArgumentsList? ')'
 ArgumentsList -> AssignExpression (',' AssignExpression)*
 MemberExpression -> "Ident" ('[' Expression ']' | '.' "Ident" )*
 CastExpression -> ConditionalExpression 'as' TypeIdentifier
+WithExpression -> 'with' ObjectLiteral
 ConditionalExpression -> OrExpression ('?' AssignExpression ':' AssignExpression)?
 OrExpression -> AndExpression ('||' AndExpression)*
 AndExpression -> EqExpression ('&&' EqExpression)*
