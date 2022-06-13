@@ -28,7 +28,7 @@ Arguments -> '(' ArgumentsList? ')'
 ArgumentsList -> AssignExpression (',' AssignExpression)*
 MemberExpression -> "Ident" ('[' Expression ']' | '.' "Ident" )*
 CastExpression -> ConditionalExpression 'as' TypeIdentifier
-WithExpression -> 'with' ObjectLiteral
+WithExpression -> "Ident" 'with' ObjectLiteral
 ConditionalExpression -> OrExpression ('?' AssignExpression ':' AssignExpression)?
 OrExpression -> AndExpression ('||' AndExpression)*
 AndExpression -> EqExpression ('&&' EqExpression)*
