@@ -80,13 +80,12 @@ namespace Interpreter.Lib.Semantic.Types
                 _root = root;
             }
 
-            private string SerializeRecursive(ObjectType objectType, int depth)
+            private string SerializeRecursive(ObjectType objectType)
             {
-                var tabs = new string('\t', depth);
                 var sb = new StringBuilder("{");
                 foreach (var (key, value) in objectType._properties)
                 {
-                    var prop = $"\n{tabs}{key}: ";
+                    var prop = $"{key}: ";
                     // TODO подумать об иерархии наследования
                     if (value is ObjectType oType)
                     {
@@ -96,7 +95,7 @@ namespace Interpreter.Lib.Semantic.Types
                         }
                         else
                         {
-                            prop += SerializeRecursive(oType, depth + 1);
+                            prop += SerializeRecursive(oType);
                         }
                     }
                     else
@@ -106,10 +105,10 @@ namespace Interpreter.Lib.Semantic.Types
 
                     sb.Append(prop).Append(';');
                 }
-                return sb.Append("\n}").ToString();
+                return sb.Append('}').ToString();
             }
 
-            public string Serialize() => SerializeRecursive(_root, 1);
+            public string Serialize() => SerializeRecursive(_root);
         }
     }
 
