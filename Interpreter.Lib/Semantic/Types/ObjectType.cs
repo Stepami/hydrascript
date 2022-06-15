@@ -77,33 +77,37 @@ namespace Interpreter.Lib.Semantic.Types
         private class ObjectTypeToStringSerializer
         {
             private readonly ObjectType _root;
+            
             public ObjectTypeToStringSerializer(ObjectType root)
             {
                 _root = root;
             }
 
+            private string HandleType(Type type) =>
+                type switch
+                {
+                    ObjectType objectType => HandleObjectType(objectType),
+                    _ => type.ToString()
+                };
+
+            private string HandleObjectType(ObjectType objectType) =>
+                ReferenceEquals(objectType, _root)
+                    ? "@this"
+                    : SerializeRecursive(objectType);
+
+            private string HandleFunctionType(FunctionType functionType)
+            {
+                return "";
+            }
+
             private string SerializeRecursive(ObjectType objectType)
             {
                 var sb = new StringBuilder("{");
-                foreach (var (key, value) in objectType._properties)
+                foreach (var key in objectType.Keys)
                 {
+                    var value = objectType[key];
                     var prop = $"{key}: ";
-                    // TODO подумать об иерархии наследования
-                    if (value is ObjectType oType)
-                    {
-                        if (ReferenceEquals(oType, _root))
-                        {
-                            prop += "@this";
-                        }
-                        else
-                        {
-                            prop += SerializeRecursive(oType);
-                        }
-                    }
-                    else
-                    {
-                        prop += value.ToString();
-                    }
+                    prop += HandleType(value);
 
                     sb.Append(prop).Append(';');
                 }

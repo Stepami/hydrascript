@@ -104,6 +104,7 @@ namespace Interpreter.Tests.Unit
             var wrapper = new ObjectType(new List<PropertyType> {new("data", number)});
             Assert.True(linkedListType.Equals(linkedListType["next"]));
             Assert.False(linkedListType.Equals(wrapper));
+            Assert.Contains("@this", linkedListType.ToString());
         }
     }
 }
