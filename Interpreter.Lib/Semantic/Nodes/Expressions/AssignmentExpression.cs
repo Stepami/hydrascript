@@ -66,7 +66,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                     : type;
                 if (typeOfSymbol is ObjectType)
                 {
-                    SymbolTable.AddSymbol(new ObjectSymbol(id, declaration.Const())
+                    SymbolTable.AddSymbol(new ObjectSymbol(id, declaration.Const(), _source.SymbolTable, typeOfSymbol)
                     {
                         Type = typeOfSymbol,
                         Table = _source.SymbolTable
