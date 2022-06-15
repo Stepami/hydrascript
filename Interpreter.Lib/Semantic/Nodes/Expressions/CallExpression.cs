@@ -158,7 +158,7 @@ namespace Interpreter.Lib.Semantic.Nodes.Expressions
                 instructions.AddRange(_ident.ToInstructions(start, temp));
                 function.CallInfo.MethodOf = instructions.Any()
                     ? instructions.OfType<Simple>().Last().Left
-                    : _ident.Id;
+                    : function.CallInfo.MethodOf;
                 instructions.Add(
                     new PushParameter(
                         start + instructions.Count,

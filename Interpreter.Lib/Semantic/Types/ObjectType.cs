@@ -25,6 +25,8 @@ namespace Interpreter.Lib.Semantic.Types
             ? _properties[id]
             : null;
 
+        public IEnumerable<string> Keys => _properties.Keys;
+
         public void ResolveSelfReferences(string self)
         {
             foreach (var (key, property) in _properties)
