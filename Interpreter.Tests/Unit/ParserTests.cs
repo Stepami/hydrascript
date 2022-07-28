@@ -14,7 +14,7 @@ namespace Interpreter.Tests.Unit
         public ParserTests()
         {
             _container = new TestContainer();
-            _query = new LexerQueryModel("tokenTypes.json");
+            _query = new LexerQueryModel();
         }
 
         private Parser GetParser(string text)

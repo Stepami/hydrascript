@@ -25,9 +25,6 @@ namespace Interpreter
         // ReSharper disable once ClassNeverInstantiated.Global
         public class Options
         {
-            [Option('t', Default = "tokenTypes.json", HelpText = "Path to lexer configuration")]
-            public string TokenTypesJsonFilePath { get; set; }
-
             [Option('d', Default = false, HelpText = "Show dump data of interpreter")]
             public bool Dump { get; set; }
 

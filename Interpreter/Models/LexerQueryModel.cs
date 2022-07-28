@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using AutoMapper;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
@@ -13,22 +12,14 @@ namespace Interpreter.Models
 
         public LexerQueryModel()
         {
-            TokenTypes = new List<TokenTypeModel>();
-            Text = "";
-        }
-
-        public LexerQueryModel(string tokenTypesJsonFilePath)
-        {
             TokenTypes = JsonConvert.DeserializeObject<List<TokenTypeModel>>(
-                File.ReadAllText(tokenTypesJsonFilePath)
+                Interpreter.TokenTypes.Json
             );
         }
 
         public string Text { get; set; }
 
-        public Structure GetDomain(IMapper mapper)
-        {
-            return new(mapper.Map<List<TokenType>>(TokenTypes));
-        }
+        public Structure GetDomain(IMapper mapper) =>
+            new(mapper.Map<List<TokenType>>(TokenTypes));
     }
 }

@@ -14,7 +14,7 @@ namespace Interpreter
 
         public LexerQueryModel CreateLexerQuery()
         {
-            var query = new LexerQueryModel(_options.TokenTypesJsonFilePath);
+            var query = new LexerQueryModel();
             var sourceCode = File.ReadAllText(_options.InputFilePath);
             query.Text = sourceCode;
             return query;

@@ -17,10 +17,4 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="tokenTypes.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
