@@ -30,7 +30,7 @@ namespace Interpreter
             }
         }
 
-        public string GetInputFileName() => InputFilePath.Split(' ')[0];
+        public string GetInputFileName() => InputFilePath.Split(".js")[0];
 
         public LexerQueryModel CreateLexerQuery() =>
             new()

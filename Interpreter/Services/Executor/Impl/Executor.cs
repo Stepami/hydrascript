@@ -48,13 +48,16 @@ namespace Interpreter.Services.Executor.Impl
                     i => new IdentityExpression(i as Simple),
                     i => new ZeroExpression(i as Simple)
                 );
-
+                
+                var vm = new VirtualMachine(cfg);
+                vm.Run();
+                
                 if (options.Dump)
                 {
                     var fileName = options.GetInputFileName();
                     File.WriteAllLines(
                         $"{fileName}.tac",
-                        instructions.Select(i => i.ToString())
+                        instructions.OrderBy(i => i).Select(i => i.ToString())
                     );
 
                     File.WriteAllText(
@@ -68,9 +71,6 @@ namespace Interpreter.Services.Executor.Impl
                     var cfgDot = cfg.ToString();
                     File.WriteAllText("cfg.dot", cfgDot);
                 }
-
-                var vm = new VirtualMachine(cfg);
-                vm.Run();
             }
             catch (Exception ex)
                 when (ex is LexerException or ParserException or SemanticException)
