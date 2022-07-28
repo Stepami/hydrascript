@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CliWrap;
 using CommandLine;
 using CommandLine.Text;
 using Interpreter.Lib.IR;
@@ -85,15 +84,9 @@ namespace Interpreter
 
                         var astDot = ast.ToString();
                         await File.WriteAllTextAsync("ast.dot", astDot);
-                        await Cli.Wrap("dot")
-                            .WithArguments("-Tpng ast.dot -o ast.png")
-                            .ExecuteAsync();
 
                         var cfgDot = cfg.ToString();
                         await File.WriteAllTextAsync("cfg.dot", cfgDot);
-                        await Cli.Wrap("dot")
-                            .WithArguments("-Tpng cfg.dot -o cfg.png")
-                            .ExecuteAsync();
                     }
 
                     var vm = new VirtualMachine(cfg);
