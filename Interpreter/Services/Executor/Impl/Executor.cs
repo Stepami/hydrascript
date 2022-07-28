@@ -23,7 +23,7 @@ namespace Interpreter.Services.Executor.Impl
             _parserProvider = parserProvider;
         }
 
-        public void Execute(Program.Options options)
+        public void Execute(Options options)
         {
             try
             {

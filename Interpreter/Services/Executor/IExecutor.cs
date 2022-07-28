@@ -2,6 +2,6 @@ namespace Interpreter.Services.Executor
 {
     public interface IExecutor
     {
-        void Execute(Program.Options options);
+        void Execute(Options options);
     }
 }
