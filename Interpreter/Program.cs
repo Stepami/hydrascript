@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -20,15 +21,25 @@ namespace Interpreter
 {
     public static class Program
     {
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        // ReSharper disable once ClassNeverInstantiated.Global
         public class Options
         {
-            [Option('d', Default = false, HelpText = "Show dump data of interpreter")]
+            [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
+            public string InputFilePath { get; set; }
+
+            [Option('d', "dump", Default = false, HelpText = "Show dump data of interpreter")]
             public bool Dump { get; set; }
 
-            [Option('i', Required = true, HelpText = "Path to input file")]
-            public string InputFilePath { get; set; }
+            [Usage(ApplicationAlias = "Interpreter")]
+            public static IEnumerable<Example> Examples
+            {
+                get
+                {
+                    yield return new Example("Simple interpretation call", 
+                        new Options { InputFilePath = "file.js" });
+                    yield return new Example("Request dump",
+                        new Options { InputFilePath = "file.js", Dump = true });
+                }
+            }
         }
 
         private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();

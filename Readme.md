@@ -165,20 +165,19 @@ let s = v2d as string
 ```
 Interpreter 1.0.0
 Copyright (C) 2022 Interpreter
+USAGE:
+Simple interpretation call:
+  Interpreter file.js
+Request dump:
+  Interpreter --dump file.js
 
-ERROR(S):
-  Option 'h' is unknown.
-  Required option 'i' is missing.
+  -d, --dump                (Default: false) Show dump data of interpreter
 
-  -t           (Default: tokenTypes.json) Path to lexer configuration
+  --help                    Display this help screen.
 
-  -d           (Default: false) Show dump data of interpreter
+  --version                 Display version information.
 
-  -i           Required. Path to input file
-
-  --help       Display this help screen.
-
-  --version    Display version information.
+  InputFilePath (pos. 0)    Required. Path to input file
 ```
 
 ### Источники:
