@@ -1,6 +1,6 @@
 using Interpreter.Lib.RBNF.Analysis.Syntactic;
 using Interpreter.Models;
-using Interpreter.Services;
+using Interpreter.Services.Providers;
 using Interpreter.Tests.TestData;
 using Xunit;
 
@@ -20,8 +20,8 @@ namespace Interpreter.Tests.Unit
         private Parser GetParser(string text)
         {
             _query.Text = text;
-            var lexerCreator = _container.Get<ILexerCreatorService>();
-            var parserCreator = _container.Get<IParserCreatorService>();
+            var lexerCreator = _container.Get<ILexerProvider>();
+            var parserCreator = _container.Get<IParserProvider>();
 
             var lexer = lexerCreator.CreateLexer(_query);
             var parser = parserCreator.CreateParser(lexer);

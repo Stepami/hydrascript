@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
-using Interpreter.Lib.IR;
-using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.IR.Optimizers;
-using Interpreter.Lib.RBNF.Analysis.Exceptions;
-using Interpreter.Lib.Semantic.Analysis;
-using Interpreter.Lib.Semantic.Exceptions;
-using Interpreter.Lib.VM;
 using Microsoft.Extensions.DependencyInjection;
-using Interpreter.Services;
 using Interpreter.MappingProfiles;
+using Interpreter.Models;
+using Interpreter.Services.Executor;
+using Interpreter.Services.Executor.Impl;
+using Interpreter.Services.Providers;
+using Interpreter.Services.Providers.Impl;
 
 namespace Interpreter
 {
     public static class Program
     {
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        [SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
         public class Options
         {
             [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
@@ -40,94 +38,40 @@ namespace Interpreter
                         new Options { InputFilePath = "file.js", Dump = true });
                 }
             }
+
+            public string GetInputFileName() => InputFilePath.Split(' ')[0];
+
+            public LexerQueryModel CreateLexerQuery() =>
+                new()
+                {
+                    Text = File.ReadAllText(InputFilePath)
+                };
         }
 
         private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
         private static IServiceProvider ServiceProvider { get; set; }
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
             ConfigureServices();
 
-            var parserResult = Parser.Default.ParseArguments<Options>(args);
-
-            await parserResult.WithParsedAsync(async o =>
-            {
-                try
-                {
-                    var creator = new QueryCreator(o);
-
-                    var lexer = ServiceProvider.GetService<ILexerCreatorService>()
-                        .CreateLexer(creator.CreateLexerQuery());
-
-                    var parser = ServiceProvider.GetService<IParserCreatorService>()
-                        .CreateParser(lexer);
-
-                    using var ast = parser.TopDownParse();
-
-                    ast.Check(new SemanticAnalyzer(node => node.SemanticCheck()));
-
-                    var instructions = ast.GetInstructions();
-
-                    var cfg = new ControlFlowGraph(
-                        new BasicBlockBuilder(instructions)
-                            .GetBasicBlocks()
-                    );
-
-                    cfg.OptimizeInstructions(
-                        i => new IdentityExpression(i as Simple),
-                        i => new ZeroExpression(i as Simple)
-                    );
-
-                    if (o.Dump)
-                    {
-                        var fileName = o.InputFilePath.Split(".js")[0];
-                        await File.WriteAllLinesAsync(
-                            $"{fileName}.tac",
-                            instructions.Select(i => i.ToString())
-                        );
-
-                        await File.WriteAllTextAsync(
-                            $"{fileName}.tokens",
-                            string.Join('\n', lexer)
-                        );
-
-                        var astDot = ast.ToString();
-                        await File.WriteAllTextAsync("ast.dot", astDot);
-
-                        var cfgDot = cfg.ToString();
-                        await File.WriteAllTextAsync("cfg.dot", cfgDot);
-                    }
-
-                    var vm = new VirtualMachine(cfg);
-                    vm.Run();
-                }
-                catch (Exception ex)
-                    when (ex is LexerException or ParserException or SemanticException)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Internal Interpreter Error");
-                    Console.WriteLine(ex);
-                }
-            });
-            await parserResult.WithNotParsedAsync(_ =>
-            {
-                HelpText.AutoBuild(parserResult);
-                return Task.CompletedTask;
-            });
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(options => ServiceProvider
+                    .GetService<IExecutor>()
+                    .Execute(options))
+                .WithNotParsed(errors => errors.Output());
         }
 
         private static void ConfigureServices()
         {
-            ServiceCollection.AddTransient<ILexerCreatorService, LexerCreatorService>();
-            ServiceCollection.AddTransient<IParserCreatorService, ParserCreatorService>();
+            ServiceCollection.AddTransient<ILexerProvider, LexerProvider>();
+            ServiceCollection.AddTransient<IParserProvider, ParserProvider>();
 
             ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile));
 
+            ServiceCollection.AddSingleton<IExecutor, Executor>();
+            
             ServiceProvider = ServiceCollection.BuildServiceProvider();
         }
     }
