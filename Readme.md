@@ -173,7 +173,7 @@ let v2dClone = v2dOriginal with {
 
 ### Требования
 
-- .NET 5 SDK, dot
+- .NET 5 SDK
 
 ### Сборка
 После клонирования репозитория идём в папку проекта `Interpreter`.
@@ -188,16 +188,19 @@ let v2dClone = v2dOriginal with {
 ```
 Interpreter 1.0.0
 Copyright (C) 2022 Interpreter
+USAGE:
+Simple interpretation call:
+  Interpreter file.js
+Request dump:
+  Interpreter --dump file.js
 
-  -t           (Default: tokenTypes.json) Path to lexer configuration
+  -d, --dump                (Default: false) Show dump data of interpreter
 
-  -d           (Default: false) Show dump data of interpreter
+  --help                    Display this help screen.
 
-  -i           Required. Path to input file
+  --version                 Display version information.
 
-  --help       Display this help screen.
-
-  --version    Display version information.
+  InputFilePath (pos. 0)    Required. Path to input file
 ```
 
 ### Источники:

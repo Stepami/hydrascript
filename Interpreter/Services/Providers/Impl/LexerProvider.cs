@@ -2,13 +2,13 @@ using AutoMapper;
 using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Models;
 
-namespace Interpreter.Services
+namespace Interpreter.Services.Providers.Impl
 {
-    public class LexerCreatorService : ILexerCreatorService
+    public class LexerProvider : ILexerProvider
     {
         private readonly IMapper _mapper;
 
-        public LexerCreatorService(IMapper mapper)
+        public LexerProvider(IMapper mapper)
         {
             _mapper = mapper;
         }
