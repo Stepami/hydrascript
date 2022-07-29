@@ -1,6 +1,6 @@
 using Interpreter.Lib.RBNF.Analysis.Syntactic;
 using Interpreter.Models;
-using Interpreter.Services;
+using Interpreter.Services.Providers;
 using Interpreter.Tests.TestData;
 using Xunit;
 
@@ -14,14 +14,14 @@ namespace Interpreter.Tests.Unit
         public ParserTests()
         {
             _container = new TestContainer();
-            _query = new LexerQueryModel("tokenTypes.json");
+            _query = new LexerQueryModel();
         }
 
         private Parser GetParser(string text)
         {
             _query.Text = text;
-            var lexerCreator = _container.Get<ILexerCreatorService>();
-            var parserCreator = _container.Get<IParserCreatorService>();
+            var lexerCreator = _container.Get<ILexerProvider>();
+            var parserCreator = _container.Get<IParserProvider>();
 
             var lexer = lexerCreator.CreateLexer(_query);
             var parser = parserCreator.CreateParser(lexer);
