@@ -1,6 +1,7 @@
 using System;
 using Interpreter.MappingProfiles;
-using Interpreter.Services;
+using Interpreter.Services.Providers;
+using Interpreter.Services.Providers.Impl;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Interpreter.Tests
@@ -18,8 +19,8 @@ namespace Interpreter.Tests
 
         private void ConfigureServices()
         {
-            ServiceCollection.AddTransient<ILexerCreatorService, LexerCreatorService>();
-            ServiceCollection.AddTransient<IParserCreatorService, ParserCreatorService>();
+            ServiceCollection.AddTransient<ILexerProvider, LexerProvider>();
+            ServiceCollection.AddTransient<IParserProvider, ParserProvider>();
 
             ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile));
 
