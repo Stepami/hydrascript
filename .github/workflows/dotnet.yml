@@ -9,35 +9,44 @@ on:
       - '**'
 
 jobs:
-  setup:
-    name: Setup .NET
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 5.0.x
-  
-  restore:
-    needs: setup
-    name: Restore dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: dotnet restore
-  
   build:
-    needs: restore
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: dotnet build --no-restore
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 5.0.x
+      - name: Cache NuGet packages
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj*') }}
+      - name: Restore dependencies
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Release
   
   test:
     needs: build
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: dotnet test --no-build --verbosity normal
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore NuGet packages from cache
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj*') }}
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal -c Release
