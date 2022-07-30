@@ -29,6 +29,6 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        run: |
-            dotnet test --no-build -c Release --list-tests
-            dotnet test --no-build -v n -c Release
+        run: dotnet test --no-build -v n -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      - name: Code Coverage Report
+        uses: codecov/codecov-action@v1
