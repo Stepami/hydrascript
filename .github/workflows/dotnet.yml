@@ -19,6 +19,11 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 5.0.x
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj*') }}
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -26,8 +31,8 @@ jobs:
       - name: Test
         if: github.event_name == 'pull_request'
         run: |
-          dotnet test --no-build -v n -c Release --collect:"XPlat Code Coverage" --results-directory ./coverage
-          cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+          dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+          mv Interpreter.Tests/coverage.cobertura.xml coverage.cobertura.xml
       - name: Code Coverage Summary Report
         if: github.event_name == 'pull_request'
         uses: irongut/CodeCoverageSummary@v1.3.0
