@@ -23,6 +23,7 @@ jobs:
     name: Restore dependencies
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: dotnet restore
   
   build:
@@ -30,6 +31,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: dotnet build --no-restore
   
   test:
@@ -37,4 +39,5 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: dotnet test --no-build --verbosity normal
