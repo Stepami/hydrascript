@@ -29,12 +29,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        if: github.event_name == 'pull_request'
         run: |
           dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           mv Interpreter.Tests/coverage.cobertura.xml coverage.cobertura.xml
       - name: Code Coverage Summary Report
-        if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
           path: coverage.cobertura.xml
