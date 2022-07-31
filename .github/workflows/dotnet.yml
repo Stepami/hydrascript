@@ -29,13 +29,11 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        run: |
-          dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-          ls
+        run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
       - name: Code Coverage Summary Report
         uses: 5monkeys/cobertura-action@master
         with:
-          path: Interpreter.Tests/coverage.cobertura.xml
+          path: ./Interpreter.Tests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 20
           fail_below_threshold: true
