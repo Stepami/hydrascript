@@ -44,7 +44,7 @@ jobs:
           show_branch: true
           only_changed_files: true
       - name: Code Coverage Summary Report For Master
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
           filename: ./Interpreter.Tests/coverage.cobertura.xml
