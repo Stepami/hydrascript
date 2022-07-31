@@ -30,7 +30,8 @@ jobs:
         run: dotnet build --no-restore -c Release -v n
       - name: Test
         run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-      - name: Code Coverage Summary Report
+      - name: Code Coverage Summary Report For Merge Request
+        if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
           path: ./Interpreter.Tests/coverage.cobertura.xml
@@ -42,6 +43,16 @@ jobs:
           link_missing_lines: true
           show_branch: true
           only_changed_files: true
+      - name: Code Coverage Summary Report For Master
+        if: github.ref == 'refs/heads/master'
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: ./Interpreter.Tests/coverage.cobertura.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_complexity: true
+          thresholds: '20 30'
   
   create-release:
     name: Create release
