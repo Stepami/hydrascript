@@ -7,6 +7,7 @@ using Interpreter.Services.Executor;
 using Interpreter.Services.Executor.Impl;
 using Interpreter.Services.Providers;
 using Interpreter.Services.Providers.Impl;
+using Microsoft.Extensions.Options;
 
 namespace Interpreter
 {
@@ -16,18 +17,19 @@ namespace Interpreter
         private static IServiceProvider ServiceProvider { get; set; }
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private static void Main(string[] args)
-        {
-            ConfigureServices();
-
-            Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(options => ServiceProvider
-                    .GetService<IExecutor>()
-                    .Execute(options))
+        private static void Main(string[] args) =>
+            Parser.Default.ParseArguments<CommandLineSettings>(args)
+                .WithParsed(options =>
+                {
+                    ConfigureServices(options);
+                    ServiceProvider
+                        .GetService<IExecutor>()
+                        .Execute();
+                })
                 .WithNotParsed(errors => errors.Output());
-        }
+        
 
-        private static void ConfigureServices()
+        private static void ConfigureServices(CommandLineSettings settings)
         {
             ServiceCollection.AddTransient<ILexerProvider, LexerProvider>();
             ServiceCollection.AddTransient<IParserProvider, ParserProvider>();
@@ -35,6 +37,8 @@ namespace Interpreter
             ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile));
 
             ServiceCollection.AddSingleton<IExecutor, Executor>();
+
+            ServiceCollection.AddSingleton(_ => Options.Create(settings));
             
             ServiceProvider = ServiceCollection.BuildServiceProvider();
         }
