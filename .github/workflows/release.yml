@@ -49,5 +49,5 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          asset_name: interpreter-${{ matrix.config.rid }}
+          asset_name: interpreter-${{ matrix.config.rid }}.zip
           file: ./output/${{ matrix.config.filename }}
