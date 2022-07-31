@@ -1,3 +1,13 @@
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-30%25-yellow?style=flat)
+
+Package | Line Rate | Branch Rate | Health
+-------- | --------- | ----------- | ------
+Interpreter | 69% | 50% | ✔
+Interpreter.Lib | 26% | 25% | ➖
+**Summary** | **30%** (754 / 2523) | **25%** (263 / 1060) | ➖
+
+_Minimum allowed line rate is `20%`_
+
 # Дипломная работа
 
 ## "Расширенное подмножество ЯП JavaScript"
