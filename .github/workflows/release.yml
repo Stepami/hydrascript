@@ -28,13 +28,13 @@ jobs:
         config: 
           - os: ubuntu-latest
             rid: linux-x64
-            filename: Interpreter
+            type: application/x-pie-executable
           - os: macos-latest
             rid: osx-x64
-            filename: Interpreter
+            type: application/x-mach-binary
           - os: windows-latest
             rid: win-x64
-            filename: Interpreter.exe
+            type: application/x-dosexec
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout
@@ -52,6 +52,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_name: interpreter-${{ matrix.config.rid }}.zip
-          asset_path: ./output/${{ matrix.config.filename }}
-          asset_content_type: application/zip
+          asset_name: interpreter-${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+          asset_path: ./output/Interpreter${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+          asset_content_type: ${{ matrix.config.type }}
+
