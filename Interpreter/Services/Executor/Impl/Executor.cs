@@ -9,6 +9,7 @@ using Interpreter.Lib.Semantic.Analysis;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.VM;
 using Interpreter.Services.Providers;
+using Microsoft.Extensions.Options;
 
 namespace Interpreter.Services.Executor.Impl
 {
@@ -16,19 +17,21 @@ namespace Interpreter.Services.Executor.Impl
     {
         private readonly ILexerProvider _lexerProvider;
         private readonly IParserProvider _parserProvider;
+        private readonly CommandLineSettings _commandLineSettings;
 
-        public Executor(ILexerProvider lexerProvider, IParserProvider parserProvider)
+        public Executor(ILexerProvider lexerProvider, IParserProvider parserProvider, IOptions<CommandLineSettings> optionsProvider)
         {
             _lexerProvider = lexerProvider;
             _parserProvider = parserProvider;
+            _commandLineSettings = optionsProvider.Value;
         }
 
-        public void Execute(Options options)
+        public void Execute()
         {
             try
             {
                 var lexer = _lexerProvider
-                    .CreateLexer(options.CreateLexerQuery());
+                    .CreateLexer(_commandLineSettings.CreateLexerQuery());
 
                 var parser = _parserProvider
                     .CreateParser(lexer);
@@ -52,9 +55,9 @@ namespace Interpreter.Services.Executor.Impl
                 var vm = new VirtualMachine(cfg);
                 vm.Run();
                 
-                if (options.Dump)
+                if (_commandLineSettings.Dump)
                 {
-                    var fileName = options.GetInputFileName();
+                    var fileName = _commandLineSettings.GetInputFileName();
                     File.WriteAllLines(
                         $"{fileName}.tac",
                         instructions.OrderBy(i => i).Select(i => i.ToString())
