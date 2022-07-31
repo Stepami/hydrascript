@@ -1,0 +1,53 @@
+name: Release Workflow
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+[.][0-9]+[.][0-9]+[.]'
+      
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+  upload-release-assets:
+    name: Upload release assets
+    needs: create-release
+    strategy:
+      matrix:
+        config: 
+          - os: ubuntu-latest
+            rid: linux-x64
+            filename: Interpreter
+          - os: macos-latest
+            rid: osx-x64
+            filename: Interpreter
+          - os: windows-latest
+            rid: win-x64
+            filename: Interpreter.exe
+    runs-on: ${{ matrix.config.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 5.0.x
+      - name: Publish
+        run: |
+          mkdir output
+          dotnet publish -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
+      - name: Upload release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_name: interpreter-${{ matrix.config.rid }}
+          file: ./output/${{ matrix.config.filename }}
