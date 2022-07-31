@@ -44,7 +44,7 @@ jobs:
       - name: Publish
         run: |
           mkdir output
-          dotnet publish -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
+          dotnet publish ./Interpreter/Interpreter.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
       - name: Upload release assets
         uses: svenstaro/upload-release-action@v2
         with:
