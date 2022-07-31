@@ -29,7 +29,9 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        run: |
+          dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+          ls
       - name: Code Coverage Summary Report
         uses: 5monkeys/cobertura-action@master
         with:
