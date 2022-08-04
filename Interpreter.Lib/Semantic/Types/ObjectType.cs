@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Interpreter.Lib.Semantic.Types.Visitors;
 using Visitor.NET.Lib.Core;
 
@@ -10,7 +9,7 @@ namespace Interpreter.Lib.Semantic.Types
     public class ObjectType : NullableType
     {
         private readonly Dictionary<string, Type> _properties;
-        private readonly ObjectTypeToStringSerializer _serializer;
+        private readonly ObjectTypePrinter _serializer;
 
         public ObjectType(IEnumerable<PropertyType> properties)
         {
@@ -20,7 +19,7 @@ namespace Interpreter.Lib.Semantic.Types
                     x => x.Id,
                     x => x.Type
                 );
-            _serializer = new ObjectTypeToStringSerializer(this);
+            _serializer = new ObjectTypePrinter(this);
         }
 
         public Type this[string id]
@@ -38,6 +37,9 @@ namespace Interpreter.Lib.Semantic.Types
                 .Visit(this);
 
         public override Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
+        
+        public override string Accept(ObjectTypePrinter visitor) =>
             visitor.Visit(this);
 
         public override bool Equals(object obj)
@@ -61,50 +63,7 @@ namespace Interpreter.Lib.Semantic.Types
                 .Select(kvp => HashCode.Combine(kvp.Key, kvp.Value))
                 .Aggregate(HashCode.Combine);
 
-        public override string ToString() => _serializer.Serialize();
-        
-        private class ObjectTypeToStringSerializer
-        {
-            private readonly ObjectType _root;
-            
-            public ObjectTypeToStringSerializer(ObjectType root)
-            {
-                _root = root;
-            }
-
-            private string HandleType(Type type) =>
-                type switch
-                {
-                    ObjectType objectType => HandleObjectType(objectType),
-                    _ => type.ToString()
-                };
-
-            private string HandleObjectType(ObjectType objectType) =>
-                ReferenceEquals(objectType, _root)
-                    ? "@this"
-                    : SerializeRecursive(objectType);
-
-            private string HandleFunctionType(FunctionType functionType)
-            {
-                return "";
-            }
-
-            private string SerializeRecursive(ObjectType objectType)
-            {
-                var sb = new StringBuilder("{");
-                foreach (var key in objectType.Keys)
-                {
-                    var value = objectType[key];
-                    var prop = $"{key}: ";
-                    prop += HandleType(value);
-
-                    sb.Append(prop).Append(';');
-                }
-                return sb.Append('}').ToString();
-            }
-
-            public string Serialize() => SerializeRecursive(_root);
-        }
+        public override string ToString() => _serializer.Visit(this);
     }
 
     public record PropertyType(string Id, Type Type);

@@ -14,6 +14,9 @@ namespace Interpreter.Lib.Semantic.Types
         
         public override Unit Accept(ReferenceResolver visitor) =>
             visitor.Visit(this);
+        
+        public override string Accept(ObjectTypePrinter visitor) =>
+            visitor.Visit(this);
 
         public override bool Equals(object obj)
         {

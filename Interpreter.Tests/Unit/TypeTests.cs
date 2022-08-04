@@ -131,5 +131,28 @@ namespace Interpreter.Tests.Unit
             Assert.Null(ex);
             Assert.Equal(objectType["next"], objectType);
         }
+
+        [Fact]
+        public void ObjectTypeToStringTest()
+        {
+            var number = new Type("number");
+            var array = new ArrayType(new Type("self"));
+            var method = new FunctionType(number, new List<Type> { new("self") });
+            var linkedListType = new ObjectType(
+                new List<PropertyType>
+                {
+                    new("data", number),
+                    new("wrapped", new ObjectType(new List<PropertyType>
+                    {
+                        new("next", new Type("self"))
+                    })),
+                    new("children", array),
+                    new("compare", method)
+                }
+            );
+            
+            linkedListType.ResolveSelfReferences("self");
+            Assert.Contains("@this", linkedListType.ToString());
+        }
     }
 }
