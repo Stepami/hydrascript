@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Interpreter.Lib.Semantic.Types.Visitors;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.Semantic.Types
 {
     public class FunctionType : Type
     {
-        public Type ReturnType { get; private set; }
+        public Type ReturnType { get; set; }
         
         public List<Type> Arguments { get; }
 
@@ -17,40 +19,12 @@ namespace Interpreter.Lib.Semantic.Types
             Arguments = new List<Type>(arguments);
         }
 
-        public override void ResolveReference(string reference, Type toAssign)
-        {
-            if (ReturnType.ToString() == reference)
-            {
-                ReturnType = toAssign;
-            } 
-            else switch (ReturnType)
-            {
-                case ObjectType objectType:
-                    objectType.ResolveSelfReferences(reference);
-                    break;
-                default:
-                    ReturnType.ResolveReference(reference, toAssign);
-                    break;
-            }
-
-            for (var i = 0; i < Arguments.Count; i++)
-            {
-                if (Arguments[i].ToString() == reference)
-                {
-                    Arguments[i] = toAssign;
-                }
-                else switch (Arguments[i])
-                {
-                    case ObjectType objectType:
-                        objectType.ResolveSelfReferences(reference);
-                        break;
-                    default:
-                        Arguments[i].ResolveReference(reference, toAssign);
-                        break;
-                }
-            }
-        }
-
+        public override Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
+        
+        public override string Accept(ObjectTypePrinter visitor) =>
+            visitor.Visit(this);
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
