@@ -17,40 +17,6 @@ namespace Interpreter.Lib.Semantic.Types
             Arguments = new List<Type>(arguments);
         }
 
-        public override void ResolveReference(string reference, Type toAssign)
-        {
-            if (ReturnType.ToString() == reference)
-            {
-                ReturnType = toAssign;
-            } 
-            else switch (ReturnType)
-            {
-                case ObjectType objectType:
-                    objectType.ResolveSelfReferences(reference);
-                    break;
-                default:
-                    ReturnType.ResolveReference(reference, toAssign);
-                    break;
-            }
-
-            for (var i = 0; i < Arguments.Count; i++)
-            {
-                if (Arguments[i].ToString() == reference)
-                {
-                    Arguments[i] = toAssign;
-                }
-                else switch (Arguments[i])
-                {
-                    case ObjectType objectType:
-                        objectType.ResolveSelfReferences(reference);
-                        break;
-                    default:
-                        Arguments[i].ResolveReference(reference, toAssign);
-                        break;
-                }
-            }
-        }
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;

@@ -97,12 +97,15 @@ namespace Interpreter.Tests.Unit
                 new List<PropertyType>
                 {
                     new("data", number),
-                    new("next", new Type("self"))
+                    new("wrapped", new ObjectType(new List<PropertyType>
+                    {
+                        new("next", new Type("self"))
+                    }))
                 }
             );
             linkedListType.ResolveSelfReferences("self");
             var wrapper = new ObjectType(new List<PropertyType> {new("data", number)});
-            Assert.True(linkedListType.Equals(linkedListType["next"]));
+            Assert.True(linkedListType.Equals(((ObjectType)linkedListType["wrapped"])["next"]));
             Assert.False(linkedListType.Equals(wrapper));
             Assert.Contains("@this", linkedListType.ToString());
         }

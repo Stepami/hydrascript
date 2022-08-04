@@ -2,7 +2,7 @@ namespace Interpreter.Lib.Semantic.Types
 {
     public class NullableType : Type
     {
-        public Type Type { get; private set; }
+        public Type Type { get; set; }
         
         public NullableType(Type type) : base($"{type}?")
         {
@@ -11,23 +11,6 @@ namespace Interpreter.Lib.Semantic.Types
 
         protected NullableType()
         {
-        }
-        
-        public override void ResolveReference(string reference, Type toAssign)
-        {
-            if (Type == reference)
-            {
-                Type = toAssign;
-            }
-            else switch (Type)
-            {
-                case ObjectType objectType:
-                    objectType.ResolveSelfReferences(reference);
-                    break;
-                default:
-                    Type.ResolveReference(reference, toAssign);
-                    break;
-            }
         }
 
         public override bool Equals(object obj)
