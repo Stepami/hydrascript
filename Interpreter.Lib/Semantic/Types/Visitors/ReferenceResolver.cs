@@ -41,7 +41,21 @@ namespace Interpreter.Lib.Semantic.Types.Visitors
 
         public Unit Visit(FunctionType visitable)
         {
-            throw new System.NotImplementedException();
+            if (visitable.ReturnType == _refId)
+                visitable.ReturnType = _reference;
+            else
+                visitable.ReturnType.Accept(this);
+
+            for (var i = 0; i < visitable.Arguments.Count; i++)
+            {
+                var argType = visitable.Arguments[i];
+                if (argType == _refId)
+                    visitable.Arguments[i] = _reference;
+                else
+                    argType.Accept(this);
+            }
+
+            return default;
         }
 
         public Unit Visit(NullableType visitable)

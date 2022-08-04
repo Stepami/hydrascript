@@ -25,8 +25,7 @@ namespace Interpreter.Lib.Semantic.Types
 
         public Type this[string id]
         {
-            get =>
-                _properties.ContainsKey(id)
+            get => _properties.ContainsKey(id)
                     ? _properties[id]
                     : null;
             set => _properties[id] = value;
@@ -37,12 +36,9 @@ namespace Interpreter.Lib.Semantic.Types
         public void ResolveSelfReferences(string self) =>
             new ReferenceResolver(this, self)
                 .Visit(this);
-        
-        public override Unit Accept(ReferenceResolver visitor)
-        {
+
+        public override Unit Accept(ReferenceResolver visitor) =>
             visitor.Visit(this);
-            return default;
-        }
 
         public override bool Equals(object obj)
         {

@@ -1,3 +1,6 @@
+using Interpreter.Lib.Semantic.Types.Visitors;
+using Visitor.NET.Lib.Core;
+
 namespace Interpreter.Lib.Semantic.Types
 {
     public class NullableType : Type
@@ -12,6 +15,9 @@ namespace Interpreter.Lib.Semantic.Types
         protected NullableType()
         {
         }
+        
+        public override Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
 
         public override bool Equals(object obj)
         {

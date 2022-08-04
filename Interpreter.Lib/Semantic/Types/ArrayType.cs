@@ -1,3 +1,6 @@
+using Interpreter.Lib.Semantic.Types.Visitors;
+using Visitor.NET.Lib.Core;
+
 namespace Interpreter.Lib.Semantic.Types
 {
     public class ArrayType : Type
@@ -8,6 +11,9 @@ namespace Interpreter.Lib.Semantic.Types
         {
             Type = type;
         }
+        
+        public override Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
 
         public override bool Equals(object obj)
         {
