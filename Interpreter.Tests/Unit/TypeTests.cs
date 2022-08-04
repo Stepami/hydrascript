@@ -93,6 +93,8 @@ namespace Interpreter.Tests.Unit
         public void RecursiveTypeTest()
         {
             var number = new Type("number");
+            var array = new ArrayType(new Type("self"));
+            var method = new FunctionType(number, new List<Type> { new("self") });
             var linkedListType = new ObjectType(
                 new List<PropertyType>
                 {
@@ -100,14 +102,34 @@ namespace Interpreter.Tests.Unit
                     new("wrapped", new ObjectType(new List<PropertyType>
                     {
                         new("next", new Type("self"))
-                    }))
+                    })),
+                    new("children", array),
+                    new("compare", method)
                 }
             );
+            
             linkedListType.ResolveSelfReferences("self");
-            var wrapper = new ObjectType(new List<PropertyType> {new("data", number)});
-            Assert.True(linkedListType.Equals(((ObjectType)linkedListType["wrapped"])["next"]));
-            Assert.False(linkedListType.Equals(wrapper));
-            Assert.Contains("@this", linkedListType.ToString());
+            
+            Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"])["next"]);
+            Assert.Equal(linkedListType, array.Type);
+            Assert.Equal(linkedListType, method.Arguments[0]);
+        }
+
+        [Fact]
+        public void NonSpecifiedTypesVisitingTest()
+        {
+            var objectType = new ObjectType(
+                new List<PropertyType>
+                {
+                    new("any", new Any()),
+                    new("some", new NullType()),
+                    new("next", new Type("self")),
+                    new("prop", new Type("number"))
+                }
+            );
+            var ex = Record.Exception(() => objectType.ResolveSelfReferences("self"));
+            Assert.Null(ex);
+            Assert.Equal(objectType["next"], objectType);
         }
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Interpreter.Lib.Semantic.Types.Visitors;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.Semantic.Types
 {
@@ -21,36 +23,23 @@ namespace Interpreter.Lib.Semantic.Types
             _serializer = new ObjectTypeToStringSerializer(this);
         }
 
-        public Type this[string id] => _properties.ContainsKey(id)
-            ? _properties[id]
-            : null;
+        public Type this[string id]
+        {
+            get => _properties.ContainsKey(id)
+                    ? _properties[id]
+                    : null;
+            set => _properties[id] = value;
+        }
 
         public IEnumerable<string> Keys => _properties.Keys;
 
-        public void ResolveSelfReferences(string self)
-        {
-            foreach (var (key, property) in _properties)
-            {
-                if (property == self)
-                {
-                    _properties[key] = this;
-                } 
-                else switch (property)
-                {
-                    case ObjectType objectType:
-                        if (objectType != this)
-                        {
-                            objectType.ResolveSelfReferences(self);
-                        }
+        public void ResolveSelfReferences(string self) =>
+            new ReferenceResolver(this, self)
+                .Visit(this);
 
-                        break;
-                    default:
-                        property.ResolveReference(self, this);
-                        break;
-                }
-            }
-        }
-        
+        public override Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
+
         public override bool Equals(object obj)
         {
             if (obj is ObjectType that)
