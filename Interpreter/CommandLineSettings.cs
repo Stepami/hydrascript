@@ -10,7 +10,7 @@ namespace Interpreter
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
-    public class Options
+    public class CommandLineSettings
     {
         [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
         public string InputFilePath { get; set; }
@@ -24,9 +24,9 @@ namespace Interpreter
             get
             {
                 yield return new Example("Simple interpretation call", 
-                    new Options { InputFilePath = "file.js" });
+                    new CommandLineSettings { InputFilePath = "file.js" });
                 yield return new Example("Request dump",
-                    new Options { InputFilePath = "file.js", Dump = true });
+                    new CommandLineSettings { InputFilePath = "file.js", Dump = true });
             }
         }
 

@@ -1,6 +1,11 @@
+using Interpreter.Lib.Semantic.Types.Visitors;
+using Visitor.NET.Lib.Core;
+
 namespace Interpreter.Lib.Semantic.Types
 {
-    public class Type
+    public class Type :
+        IVisitable<ReferenceResolver, Unit>,
+        IVisitable<ObjectTypePrinter, string>
     {
         private readonly string _name;
 
@@ -10,9 +15,11 @@ namespace Interpreter.Lib.Semantic.Types
 
         public Type(string name) => _name = name;
 
-        public virtual void ResolveReference(string reference, Type toAssign)
-        {
-        }
+        public virtual Unit Accept(ReferenceResolver visitor) =>
+            visitor.Visit(this);
+
+        public virtual string Accept(ObjectTypePrinter visitor) =>
+            visitor.Visit(this);
 
         public override bool Equals(object obj)
         {
