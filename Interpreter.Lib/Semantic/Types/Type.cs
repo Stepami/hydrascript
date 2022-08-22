@@ -4,7 +4,7 @@ using Visitor.NET.Lib.Core;
 namespace Interpreter.Lib.Semantic.Types
 {
     public class Type :
-        IVisitable<ReferenceResolver, Unit>,
+        IVisitable<ReferenceResolver>,
         IVisitable<ObjectTypePrinter, string>
     {
         private readonly string _name;

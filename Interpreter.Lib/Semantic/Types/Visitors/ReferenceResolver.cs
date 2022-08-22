@@ -3,11 +3,11 @@ using Visitor.NET.Lib.Core;
 namespace Interpreter.Lib.Semantic.Types.Visitors
 {
     public class ReferenceResolver :
-        IVisitor<Type, Unit>,
-        IVisitor<ArrayType, Unit>,
-        IVisitor<FunctionType, Unit>,
-        IVisitor<NullableType, Unit>, 
-        IVisitor<ObjectType, Unit>
+        IVisitor<Type>,
+        IVisitor<ArrayType>,
+        IVisitor<FunctionType>,
+        IVisitor<NullableType>, 
+        IVisitor<ObjectType>
     {
         private readonly ObjectType _reference;
         private readonly string _refId;
