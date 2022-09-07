@@ -8,8 +8,6 @@ Interpreter.Lib | 28% | ➖
 
 _Minimum allowed line rate is `20%`_
 
-# Дипломная работа
-
 ## "Расширенное подмножество ЯП JavaScript"
 
 ### Вводная информация
