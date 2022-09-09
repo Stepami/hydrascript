@@ -5,6 +5,7 @@ using System.Text;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Analysis;
 using Interpreter.Lib.Semantic.Nodes;
+using Interpreter.Lib.Semantic.Nodes.Visitors;
 
 namespace Interpreter.Lib.Semantic
 {
@@ -17,14 +18,18 @@ namespace Interpreter.Lib.Semantic
             _root = root;
         }
 
-        public void Check(SemanticAnalyzer analyzer) =>
+        public void Check(SemanticAnalyzer analyzer)
+        {
+            _root.Accept(new SemanticChecker());
             GetAllNodes().ToList().ForEach(analyzer.CheckCallback);
+        }
 
         private IEnumerable<AbstractSyntaxTreeNode> GetAllNodes() =>
             _root.GetAllNodes();
 
         public List<Instruction> GetInstructions()
         {
+            var iii = _root.Accept(new InstructionProvider());
             var start = 0;
             var result = new List<Instruction>();
             foreach (var node in _root)
