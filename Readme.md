@@ -158,7 +158,7 @@ let s = v2d as string
 
 ### Требования
 
-- .NET 5 SDK
+- .NET 6 SDK
 
 ### Сборка
 После клонирования репозитория идём в папку проекта `Interpreter`.
@@ -171,7 +171,7 @@ let s = v2d as string
 ### Запуск
 
 ```
-Interpreter 1.0.0
+Interpreter 1.1.2
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:
