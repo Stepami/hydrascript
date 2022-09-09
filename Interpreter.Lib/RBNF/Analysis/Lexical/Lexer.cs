@@ -44,7 +44,7 @@ namespace Interpreter.Lib.RBNF.Analysis.Lexical
                     );
                     var token = new Token(type, segment, value);
 
-                    if (type == LexerUtils.Error) throw new LexerException(token);
+                    if (type.Error()) throw new LexerException(token);
 
                     yield return token;
                 }

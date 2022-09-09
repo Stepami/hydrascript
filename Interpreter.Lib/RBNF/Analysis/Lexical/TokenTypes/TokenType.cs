@@ -6,44 +6,14 @@
         {
         }
 
-        public virtual bool WhiteSpace()
-        {
-            return false;
-        }
+        public virtual bool WhiteSpace() => false;
 
-        public virtual bool EndOfProgram()
-        {
-            return false;
-        }
+        public virtual bool EndOfProgram() => false;
 
-        public virtual bool Error()
-        {
-            return false;
-        }
+        public virtual bool Error() => false;
 
-        public virtual bool NonTerminal()
-        {
-            return false;
-        }
+        public string GetNamedRegex() => $"(?<{Tag}>{Pattern})";
 
-        public virtual bool Terminal()
-        {
-            return false;
-        }
-
-        public virtual bool Epsilon()
-        {
-            return false;
-        }
-
-        public string GetNamedRegex()
-        {
-            return $"(?<{Tag}>{Pattern})";
-        }
-
-        public override string ToString()
-        {
-            return Tag;
-        }
+        public sealed override string ToString() => Tag;
     }
 }
