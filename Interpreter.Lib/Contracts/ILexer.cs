@@ -7,6 +7,6 @@ namespace Interpreter.Lib.Contracts
     {
         Structure Structure { get; }
 
-        IEnumerable<Token> GetTokens(string text);
+        List<Token> GetTokens(string text);
     }
 }
