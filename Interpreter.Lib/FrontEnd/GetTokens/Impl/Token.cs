@@ -10,10 +10,9 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
 
         public string Value { get; }
 
-        public Token(TokenType type, Segment segment, string value) : this(type)
-        {
+        public Token(TokenType type, Segment segment, string value) :
+            this(type) =>
             (Segment, Value) = (segment, value);
-        }
 
         public override string ToString()
         {
