@@ -1,4 +1,4 @@
-using Interpreter.Lib.FrontEnd.GetTokens.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
 
 namespace Interpreter.Lib.FrontEnd.GetTokens
 {

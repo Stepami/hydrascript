@@ -3,30 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens
+namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
 {
-    public class Lexer : IEnumerable<Token>
+    public class Lexer : ILexer, IEnumerable<Token>
     {
         private readonly List<int> _lines = new();
-        private readonly string _source;
+        private string _text = "";
 
         public Structure Structure { get; }
 
-        public Lexer(Structure structure, string source)
-        {
+        public Lexer(Structure structure) => 
             Structure = structure;
-            _source = source;
+
+        public List<Token> GetTokens(string text)
+        {
+            _text = text;
 
             var lineMatches =
-                new Regex(@"(?<NEWLINE>\n)").Matches(source[^1] == '\n'
-                    ? source
-                    : new string(source.Append('\n').ToArray()));
-            foreach (Match match in lineMatches) _lines.Add(match.Groups["NEWLINE"].Index);
+                new Regex(@"(?<NEWLINE>\n)").Matches(text[^1] == '\n'
+                    ? text
+                    : new string(text.Append('\n').ToArray()));
+            foreach (Match match in lineMatches)
+                _lines.Add(match.Groups["NEWLINE"].Index);
+            
+            return this.Where(t => !t.Type.WhiteSpace()).ToList();
         }
 
         public IEnumerator<Token> GetEnumerator()
         {
-            var matches = Structure.Regex.Matches(_source);
+            var matches = Structure.Regex.Matches(_text);
             foreach (Match match in matches)
             {
                 foreach (var type in Structure)

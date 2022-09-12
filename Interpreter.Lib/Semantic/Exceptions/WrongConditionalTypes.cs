@@ -1,4 +1,4 @@
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.Semantic.Types;
 
 namespace Interpreter.Lib.Semantic.Exceptions

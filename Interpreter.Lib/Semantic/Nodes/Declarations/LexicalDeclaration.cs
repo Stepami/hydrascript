@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.Semantic.Nodes.Expressions;
 using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;

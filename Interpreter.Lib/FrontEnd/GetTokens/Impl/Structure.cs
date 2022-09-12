@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.FrontEnd.GetTokens.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens
+namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
 {
     public class Structure : IEnumerable<TokenType>
     {

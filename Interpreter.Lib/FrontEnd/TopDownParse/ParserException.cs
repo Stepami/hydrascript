@@ -1,5 +1,5 @@
 using System;
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse
 {

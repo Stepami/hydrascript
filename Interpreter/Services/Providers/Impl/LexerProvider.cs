@@ -1,5 +1,5 @@
 using AutoMapper;
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Models;
 
 namespace Interpreter.Services.Providers.Impl
@@ -15,9 +15,8 @@ namespace Interpreter.Services.Providers.Impl
 
         public Lexer CreateLexer(LexerQueryModel lexerQuery)
         {
-            var domain = lexerQuery.GetDomain(_mapper);
-            var source = lexerQuery.Text;
-            return new Lexer(domain, source);
+            var domain = lexerQuery.GetStructure(_mapper);
+            return new Lexer(domain);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 
-namespace Interpreter.Lib.Contracts
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public interface ILexer
     {

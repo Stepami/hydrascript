@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.Semantic;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes;
@@ -17,20 +18,16 @@ using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Expression = Interpreter.Lib.Semantic.Nodes.Expressions.Expression;
 
-namespace Interpreter.Lib.FrontEnd.TopDownParse
+namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 {
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public class Parser
+    public class Parser : IParser
     {
-        private readonly IEnumerator<Token> _tokens;
-        private readonly Structure _structure;
+        private TokensStream _tokens;
+        private readonly ILexer _lexer;
 
-        public Parser(Lexer lexer)
-        {
-            _tokens = lexer.Where(t => !t.Type.WhiteSpace()).GetEnumerator();
-            _tokens.MoveNext();
-            _structure = lexer.Structure;
-        }
+        public Parser(ILexer lexer) => 
+            _lexer = lexer;
 
         private Token Expect(string expectedTag, string expectedValue = null)
         {
@@ -49,20 +46,28 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse
             return current;
         }
 
-        private bool CurrentIs(string tag) => _tokens.Current.Type == _structure.FindByTag(tag);
+        private bool CurrentIs(string tag) =>
+            _tokens.Current.Type == _lexer.Structure.FindByTag(tag);
 
-        private bool CurrentIsLiteral() => CurrentIs("NullLiteral") ||
-                                           CurrentIs("IntegerLiteral") ||
-                                           CurrentIs("FloatLiteral") ||
-                                           CurrentIs("StringLiteral") ||
-                                           CurrentIs("BooleanLiteral");
+        private bool CurrentIsLiteral() =>
+            CurrentIs("NullLiteral") ||
+            CurrentIs("IntegerLiteral") ||
+            CurrentIs("FloatLiteral") ||
+            CurrentIs("StringLiteral") ||
+            CurrentIs("BooleanLiteral");
 
-        private bool CurrentIsKeyword(string keyword) => CurrentIs("Keyword") && _tokens.Current.Value == keyword;
+        private bool CurrentIsKeyword(string keyword) =>
+            CurrentIs("Keyword") &&
+            _tokens.Current.Value == keyword;
 
-        private bool CurrentIsOperator(string @operator) => CurrentIs("Operator") && _tokens.Current.Value == @operator;
+        private bool CurrentIsOperator(string @operator) =>
+            CurrentIs("Operator") &&
+            _tokens.Current.Value == @operator;
 
-        public AbstractSyntaxTree TopDownParse()
+        public AbstractSyntaxTree TopDownParse(string text)
         {
+            _tokens = _lexer.GetTokens(text);
+            
             var root = Script(SymbolTableUtils.GetStandardLibrary());
             Expect("EOP");
             return new AbstractSyntaxTree(root);

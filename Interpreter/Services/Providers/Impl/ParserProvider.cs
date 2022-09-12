@@ -1,5 +1,5 @@
-using Interpreter.Lib.FrontEnd.GetTokens;
-using Interpreter.Lib.FrontEnd.TopDownParse;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 
 namespace Interpreter.Services.Providers.Impl
 {

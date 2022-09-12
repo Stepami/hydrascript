@@ -1,4 +1,4 @@
-using Interpreter.Lib.FrontEnd.TopDownParse;
+using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 using Interpreter.Models;
 using Interpreter.Services.Providers;
 using Interpreter.Tests.TestData;
@@ -37,7 +37,7 @@ namespace Interpreter.Tests.Unit
             var ex = Record.Exception(() =>
             {
                 // ReSharper disable once UnusedVariable
-                var ast = parser.TopDownParse();
+                var ast = parser.TopDownParse(text);
             });
             Assert.Null(ex);
         }

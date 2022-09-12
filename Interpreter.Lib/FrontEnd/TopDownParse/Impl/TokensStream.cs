@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 
-namespace Interpreter.Lib.Contracts;
+namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 
 public class TokensStream : IEnumerator<Token>
 {
