@@ -8,8 +8,11 @@ public class TokensStream : IEnumerator<Token>
 {
     private readonly IEnumerator<Token> _inner;
 
-    private TokensStream(IEnumerator<Token> enumerator) => 
+    private TokensStream(IEnumerator<Token> enumerator)
+    {
         _inner = enumerator;
+        _inner.MoveNext();
+    }
 
     public bool MoveNext() => _inner.MoveNext();
 
