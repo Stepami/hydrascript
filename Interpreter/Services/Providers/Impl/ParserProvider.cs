@@ -1,5 +1,5 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Lib.RBNF.Analysis.Syntactic;
+using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.Parse;
 
 namespace Interpreter.Services.Providers.Impl
 {

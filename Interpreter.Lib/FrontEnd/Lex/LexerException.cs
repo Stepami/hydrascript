@@ -1,7 +1,6 @@
 using System;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
 
-namespace Interpreter.Lib.RBNF.Analysis.Exceptions
+namespace Interpreter.Lib.FrontEnd.Lex
 {
     public class LexerException : Exception
     {

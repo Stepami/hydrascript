@@ -1,4 +1,4 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 using Interpreter.Models;
 
 namespace Interpreter.Services.Providers

@@ -1,7 +1,7 @@
 using System;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 
-namespace Interpreter.Lib.RBNF.Analysis.Exceptions
+namespace Interpreter.Lib.FrontEnd.Parse
 {
     public class ParserException : Exception
     {

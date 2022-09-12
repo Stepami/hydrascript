@@ -1,4 +1,4 @@
-using Interpreter.Lib.RBNF.Analysis.Syntactic;
+using Interpreter.Lib.FrontEnd.Parse;
 using Interpreter.Models;
 using Interpreter.Services.Providers;
 using Interpreter.Tests.TestData;

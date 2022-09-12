@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Interpreter.Lib.RBNF.Analysis.Lexical
+namespace Interpreter.Lib.FrontEnd.Lex
 {
     public class Segment : IEquatable<Segment>
     {

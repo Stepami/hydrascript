@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes
+namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
 {
     public record WhiteSpaceType(string Tag = null, string Pattern = null, int Priority = 0)
         : TokenType(Tag, Pattern, Priority)

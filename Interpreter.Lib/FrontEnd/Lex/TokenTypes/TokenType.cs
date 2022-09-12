@@ -1,4 +1,4 @@
-﻿namespace Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes
+﻿namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
 {
     public record TokenType(string Tag, string Pattern, int Priority)
     {

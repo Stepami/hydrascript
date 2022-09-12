@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes
+namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
 {
     internal record ErrorType() : TokenType("ERROR", @"\S+", int.MaxValue)
     {

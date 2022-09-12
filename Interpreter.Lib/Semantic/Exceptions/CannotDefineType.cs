@@ -1,4 +1,4 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 
 namespace Interpreter.Lib.Semantic.Exceptions
 {

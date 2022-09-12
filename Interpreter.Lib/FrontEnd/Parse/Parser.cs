@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.RBNF.Analysis.Exceptions;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 using Interpreter.Lib.Semantic;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.Semantic.Nodes;
@@ -18,7 +17,7 @@ using Interpreter.Lib.Semantic.Types;
 using Interpreter.Lib.Semantic.Utils;
 using Expression = Interpreter.Lib.Semantic.Nodes.Expressions.Expression;
 
-namespace Interpreter.Lib.RBNF.Analysis.Syntactic
+namespace Interpreter.Lib.FrontEnd.Parse
 {
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class Parser

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Statements;

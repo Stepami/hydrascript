@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
+using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
 using Newtonsoft.Json;
 
 namespace Interpreter.Models

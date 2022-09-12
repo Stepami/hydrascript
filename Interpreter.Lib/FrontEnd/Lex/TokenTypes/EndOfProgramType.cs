@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes
+namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
 {
     internal record EndOfProgramType() : TokenType("EOP", "", int.MaxValue - 1)
     {

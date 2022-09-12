@@ -1,4 +1,4 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 using Interpreter.Lib.VM.Values;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 

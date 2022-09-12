@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
+using Interpreter.Lib.FrontEnd.Lex;
 
 namespace Interpreter.Lib.Contracts
 {

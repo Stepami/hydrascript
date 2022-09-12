@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
-using Interpreter.Lib.RBNF.Utils;
+using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
 
-namespace Interpreter.Lib.RBNF.Analysis.Lexical
+namespace Interpreter.Lib.FrontEnd.Lex
 {
     public class Structure : IEnumerable<TokenType>
     {

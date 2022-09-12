@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Interpreter.Lib.FrontEnd.Lex;
 using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.RBNF.Analysis.Lexical;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Types;
 

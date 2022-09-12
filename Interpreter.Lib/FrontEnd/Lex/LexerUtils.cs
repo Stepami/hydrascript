@@ -1,6 +1,6 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical.TokenTypes;
+using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
 
-namespace Interpreter.Lib.RBNF.Utils
+namespace Interpreter.Lib.FrontEnd.Lex
 {
     public static class LexerUtils
     {
