@@ -5,6 +5,6 @@ namespace Interpreter.Lib.Contracts
 {
     public interface IAbstractSyntaxTree
     {
-        List<Instruction> ToInstructions();
+        List<Instruction> GetInstructions();
     }
 }

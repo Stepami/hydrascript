@@ -1,23 +1,19 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.Semantic.Symbols;
 using Type = Interpreter.Lib.Semantic.Types.Type;
 
 namespace Interpreter.Lib.Semantic
 {
-    public class SymbolTable : IDisposable
+    public class SymbolTable
     {
         private readonly Dictionary<string, Symbol> _symbols = new();
         private readonly Dictionary<string, Type> _types = new();
         
         private SymbolTable _openScope;
-        private readonly List<SymbolTable> _subScopes = new();
 
         public void AddOpenScope(SymbolTable table)
         {
             _openScope = table;
-            table._subScopes.Add(this);
         }
 
         public void AddSymbol(Symbol symbol) => _symbols[symbol.Id] = symbol;
@@ -46,26 +42,5 @@ namespace Interpreter.Lib.Semantic
         public bool ContainsSymbol(string id) => _symbols.ContainsKey(id);
 
         public void Clear() => _symbols.Clear();
-
-        private void DeepClean()
-        {
-            Clear();
-            foreach (var child in _subScopes)
-            {
-                child.DeepClean();
-            }
-        }
-
-        [SuppressMessage("ReSharper", "CA1816")]
-        public void Dispose()
-        {
-            var table = _openScope;
-            while (table._openScope != null)
-            {
-                table = table._openScope;
-            }
-
-            table.DeepClean();
-        }
     }
 }

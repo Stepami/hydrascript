@@ -1,9 +1,9 @@
-using Interpreter.Lib.Semantic;
+using Interpreter.Lib.Contracts;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse
 {
     public interface IParser
     {
-        AbstractSyntaxTree TopDownParse(string text);
+        IAbstractSyntaxTree TopDownParse(string text);
     }
 }

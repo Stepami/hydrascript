@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Interpreter.Lib.Contracts;
 using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.Semantic.Analysis;
 using Interpreter.Lib.Semantic.Nodes;
 
 namespace Interpreter.Lib.Semantic
 {
-    public class AbstractSyntaxTree : IDisposable
+    public class AbstractSyntaxTree : IAbstractSyntaxTree
     {
         private readonly AbstractSyntaxTreeNode _root;
 
@@ -17,14 +16,16 @@ namespace Interpreter.Lib.Semantic
             _root = root;
         }
 
-        public void Check(SemanticAnalyzer analyzer) =>
-            GetAllNodes().ToList().ForEach(analyzer.CheckCallback);
+        private void Check() =>
+            GetAllNodes().ToList().ForEach(node => node.SemanticCheck());
 
         private IEnumerable<AbstractSyntaxTreeNode> GetAllNodes() =>
             _root.GetAllNodes();
 
         public List<Instruction> GetInstructions()
         {
+            Check();
+            
             var start = 0;
             var result = new List<Instruction>();
             foreach (var node in _root)
@@ -63,7 +64,5 @@ namespace Interpreter.Lib.Semantic
             });
             return tree.Append("}\n").ToString();
         }
-
-        public void Dispose() => _root.SymbolTable.Dispose();
     }
 }

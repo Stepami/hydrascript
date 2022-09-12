@@ -6,7 +6,6 @@ using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.IR;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.IR.Optimizers;
-using Interpreter.Lib.Semantic.Analysis;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.VM;
 using Interpreter.Services.Providers;
@@ -31,15 +30,10 @@ namespace Interpreter.Services.Executor.Impl
         {
             try
             {
-                var lexer = _lexerProvider
-                    .CreateLexer();
+                var lexer = _lexerProvider.CreateLexer();
+                var parser = _parserProvider.CreateParser(lexer);
 
-                var parser = _parserProvider
-                    .CreateParser(lexer);
-
-                using var ast = parser.TopDownParse(_commandLineSettings.GetText());
-
-                ast.Check(new SemanticAnalyzer(node => node.SemanticCheck()));
+                var ast = parser.TopDownParse(_commandLineSettings.GetText());
 
                 var instructions = ast.GetInstructions();
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Interpreter.Lib.Contracts;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.Semantic;
@@ -62,7 +63,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
             CurrentIs("Operator") &&
             _tokens.Current!.Value == @operator;
 
-        public AbstractSyntaxTree TopDownParse(string text)
+        public IAbstractSyntaxTree TopDownParse(string text)
         {
             _tokens = _lexer.GetTokens(text);
             
