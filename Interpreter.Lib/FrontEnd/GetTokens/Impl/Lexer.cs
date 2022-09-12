@@ -19,6 +19,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
         {
             _text = text;
 
+            _lines.Clear();
             var lineMatches =
                 new Regex(@"(?<NEWLINE>\n)").Matches(text[^1] == '\n'
                     ? text
