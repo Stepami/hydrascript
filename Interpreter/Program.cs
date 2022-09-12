@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Interpreter.MappingProfiles;
@@ -16,14 +15,13 @@ namespace Interpreter
         private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
         private static IServiceProvider ServiceProvider { get; set; }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private static void Main(string[] args) =>
             Parser.Default.ParseArguments<CommandLineSettings>(args)
                 .WithParsed(options =>
                 {
                     ConfigureServices(options);
                     ServiceProvider
-                        .GetService<IExecutor>()
+                        .GetService<IExecutor>()!
                         .Execute();
                 })
                 .WithNotParsed(errors => errors.Output());

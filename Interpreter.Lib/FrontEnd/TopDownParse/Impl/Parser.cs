@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.FrontEnd.GetTokens;
@@ -20,7 +19,6 @@ using Expression = Interpreter.Lib.Semantic.Nodes.Expressions.Expression;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 {
-    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class Parser : IParser
     {
         private TokensStream _tokens;
@@ -34,8 +32,8 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
             var current = _tokens.Current;
 
             if (!CurrentIs(expectedTag))
-                throw new ParserException(_tokens.Current.Segment, expectedTag, _tokens.Current);
-            if (_tokens.Current.Value != (expectedValue ?? _tokens.Current.Value))
+                throw new ParserException(_tokens.Current!.Segment, expectedTag, _tokens.Current);
+            if (_tokens.Current!.Value != (expectedValue ?? _tokens.Current.Value))
                 throw new ParserException(_tokens.Current.Segment, expectedValue, _tokens.Current);
 
             if (CurrentIs(expectedTag) && _tokens.Current.Value == (expectedValue ?? _tokens.Current.Value))
@@ -47,7 +45,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
         }
 
         private bool CurrentIs(string tag) =>
-            _tokens.Current.Type == _lexer.Structure.FindByTag(tag);
+            _tokens.Current!.Type == _lexer.Structure.FindByTag(tag);
 
         private bool CurrentIsLiteral() =>
             CurrentIs("NullLiteral") ||
@@ -58,11 +56,11 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 
         private bool CurrentIsKeyword(string keyword) =>
             CurrentIs("Keyword") &&
-            _tokens.Current.Value == keyword;
+            _tokens.Current!.Value == keyword;
 
         private bool CurrentIsOperator(string @operator) =>
             CurrentIs("Operator") &&
-            _tokens.Current.Value == @operator;
+            _tokens.Current!.Value == @operator;
 
         public AbstractSyntaxTree TopDownParse(string text)
         {
@@ -730,7 +728,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 
         private Literal Literal()
         {
-            var segment = _tokens.Current.Segment;
+            var segment = _tokens.Current!.Segment;
             if (CurrentIs("StringLiteral"))
             {
                 var str = Expect("StringLiteral");
