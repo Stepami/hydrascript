@@ -1,8 +1,8 @@
 using System;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.TokenTypes;
 
-namespace Interpreter.Lib.FrontEnd.Lex
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public class Token : ICloneable, IEquatable<Token>
     {

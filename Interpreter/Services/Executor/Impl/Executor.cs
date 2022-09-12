@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using Interpreter.Lib.FrontEnd.Lex;
-using Interpreter.Lib.FrontEnd.Parse;
+using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.IR;
 using Interpreter.Lib.IR.Instructions;
 using Interpreter.Lib.IR.Optimizers;

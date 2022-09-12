@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Interpreter.Lib.FrontEnd.Lex
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public class Lexer : IEnumerable<Token>
     {

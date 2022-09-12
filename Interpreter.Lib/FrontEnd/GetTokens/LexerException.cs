@@ -1,6 +1,6 @@
 using System;
 
-namespace Interpreter.Lib.FrontEnd.Lex
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public class LexerException : Exception
     {

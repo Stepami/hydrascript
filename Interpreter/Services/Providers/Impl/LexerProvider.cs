@@ -1,5 +1,5 @@
 using AutoMapper;
-using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Models;
 
 namespace Interpreter.Services.Providers.Impl

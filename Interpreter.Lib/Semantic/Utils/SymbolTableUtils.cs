@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.Semantic.Nodes;
 using Interpreter.Lib.Semantic.Nodes.Declarations;
 using Interpreter.Lib.Semantic.Nodes.Statements;

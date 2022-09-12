@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
+namespace Interpreter.Lib.FrontEnd.GetTokens.TokenTypes
 {
     internal record EndOfProgramType() : TokenType("EOP", "", int.MaxValue - 1)
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Interpreter.Lib.FrontEnd.Lex
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public class Coordinates : IEquatable<Coordinates>
     {

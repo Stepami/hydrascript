@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.GetTokens;
 
 namespace Interpreter.Lib.Contracts
 {

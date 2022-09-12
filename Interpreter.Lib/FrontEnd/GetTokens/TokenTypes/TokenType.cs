@@ -1,4 +1,4 @@
-﻿namespace Interpreter.Lib.FrontEnd.Lex.TokenTypes
+﻿namespace Interpreter.Lib.FrontEnd.GetTokens.TokenTypes
 {
     public record TokenType(string Tag, string Pattern, int Priority)
     {

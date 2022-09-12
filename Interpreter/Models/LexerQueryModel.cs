@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using Interpreter.Lib.FrontEnd.Lex;
-using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.TokenTypes;
 using Newtonsoft.Json;
 
 namespace Interpreter.Models

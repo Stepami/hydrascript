@@ -1,7 +1,7 @@
 using System;
-using Interpreter.Lib.FrontEnd.Lex;
+using Interpreter.Lib.FrontEnd.GetTokens;
 
-namespace Interpreter.Lib.FrontEnd.Parse
+namespace Interpreter.Lib.FrontEnd.TopDownParse
 {
     public class ParserException : Exception
     {

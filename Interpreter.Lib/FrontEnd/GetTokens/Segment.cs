@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Interpreter.Lib.FrontEnd.Lex
+namespace Interpreter.Lib.FrontEnd.GetTokens
 {
     public class Segment : IEquatable<Segment>
     {

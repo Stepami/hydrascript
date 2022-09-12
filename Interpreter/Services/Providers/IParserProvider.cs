@@ -1,5 +1,5 @@
-using Interpreter.Lib.FrontEnd.Lex;
-using Interpreter.Lib.FrontEnd.Parse;
+using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.TopDownParse;
 
 namespace Interpreter.Services.Providers
 {

@@ -1,5 +1,5 @@
 using AutoMapper;
-using Interpreter.Lib.FrontEnd.Lex.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.TokenTypes;
 using Interpreter.Models;
 
 namespace Interpreter.MappingProfiles
