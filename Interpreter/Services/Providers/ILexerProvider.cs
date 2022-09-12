@@ -1,10 +1,9 @@
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
-using Interpreter.Models;
+using Interpreter.Lib.FrontEnd.GetTokens;
 
 namespace Interpreter.Services.Providers
 {
     public interface ILexerProvider
     {
-        Lexer CreateLexer(StructureModel structureModel);
+        ILexer CreateLexer();
     }
 }

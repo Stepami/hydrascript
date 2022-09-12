@@ -32,7 +32,7 @@ namespace Interpreter.Services.Executor.Impl
             try
             {
                 var lexer = _lexerProvider
-                    .CreateLexer(_commandLineSettings.StructureModel);
+                    .CreateLexer();
 
                 var parser = _parserProvider
                     .CreateParser(lexer);
