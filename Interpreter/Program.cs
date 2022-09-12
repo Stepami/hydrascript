@@ -7,7 +7,8 @@ using Interpreter.Services.Executor.Impl;
 using Interpreter.Services.Parsing;
 using Interpreter.Services.Parsing.Impl;
 using Interpreter.Services.Providers;
-using Interpreter.Services.Providers.Impl;
+using Interpreter.Services.Providers.Impl.LexerProvider;
+using Interpreter.Services.Providers.Impl.ParserProvider;
 using Microsoft.Extensions.Options;
 
 namespace Interpreter

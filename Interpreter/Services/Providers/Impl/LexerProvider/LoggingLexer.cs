@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
+namespace Interpreter.Services.Providers.Impl.LexerProvider
 {
     public class LoggingLexer : ILexer
     {

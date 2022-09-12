@@ -4,7 +4,7 @@ using System.Linq;
 using Interpreter.Lib.Contracts;
 using Interpreter.Lib.IR.Instructions;
 
-namespace Interpreter.Lib.Semantic
+namespace Interpreter.Services.Providers.Impl.ParserProvider
 {
     public class LoggingAbstractSyntaxTree : IAbstractSyntaxTree
     {

@@ -1,8 +1,8 @@
 using System.IO;
 using Interpreter.Lib.Contracts;
-using Interpreter.Lib.Semantic;
+using Interpreter.Lib.FrontEnd.TopDownParse;
 
-namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
+namespace Interpreter.Services.Providers.Impl.ParserProvider
 {
     public class LoggingParser : IParser
     {

@@ -4,7 +4,7 @@ using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Models;
 using Microsoft.Extensions.Options;
 
-namespace Interpreter.Services.Providers.Impl
+namespace Interpreter.Services.Providers.Impl.LexerProvider
 {
     public class LexerProvider : ILexerProvider
     {

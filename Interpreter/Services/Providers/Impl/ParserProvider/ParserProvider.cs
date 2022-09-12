@@ -1,8 +1,8 @@
 using Interpreter.Lib.FrontEnd.TopDownParse;
-using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
+using Parser = Interpreter.Lib.FrontEnd.TopDownParse.Impl.Parser;
 using Microsoft.Extensions.Options;
 
-namespace Interpreter.Services.Providers.Impl
+namespace Interpreter.Services.Providers.Impl.ParserProvider
 {
     public class ParserProvider : IParserProvider
     {
@@ -14,7 +14,7 @@ namespace Interpreter.Services.Providers.Impl
             _lexerProvider = lexerProvider;
             _settings = options.Value;
         }
-        
+
         public IParser CreateParser()
         {
             var lexer = _lexerProvider.CreateLexer();
