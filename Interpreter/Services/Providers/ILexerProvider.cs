@@ -5,6 +5,6 @@ namespace Interpreter.Services.Providers
 {
     public interface ILexerProvider
     {
-        Lexer CreateLexer(LexerQueryModel lexerQuery);
+        Lexer CreateLexer(StructureModel structureModel);
     }
 }

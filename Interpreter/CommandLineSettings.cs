@@ -32,10 +32,9 @@ namespace Interpreter
 
         public string GetInputFileName() => InputFilePath.Split(".js")[0];
 
-        public LexerQueryModel CreateLexerQuery() =>
-            new()
-            {
-                Text = File.ReadAllText(InputFilePath)
-            };
+        public StructureModel StructureModel { get; } = new();
+
+        public string GetText() =>
+            File.ReadAllText(InputFilePath);
     }
 }

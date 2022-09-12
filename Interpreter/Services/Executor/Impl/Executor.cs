@@ -31,15 +31,13 @@ namespace Interpreter.Services.Executor.Impl
         {
             try
             {
-                var lexerQuery = _commandLineSettings.CreateLexerQuery();
-                
                 var lexer = _lexerProvider
-                    .CreateLexer(lexerQuery);
+                    .CreateLexer(_commandLineSettings.StructureModel);
 
                 var parser = _parserProvider
                     .CreateParser(lexer);
 
-                using var ast = parser.TopDownParse(lexerQuery.Text);
+                using var ast = parser.TopDownParse(_commandLineSettings.GetText());
 
                 ast.Check(new SemanticAnalyzer(node => node.SemanticCheck()));
 

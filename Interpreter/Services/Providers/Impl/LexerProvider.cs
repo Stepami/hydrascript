@@ -13,9 +13,9 @@ namespace Interpreter.Services.Providers.Impl
             _mapper = mapper;
         }
 
-        public Lexer CreateLexer(LexerQueryModel lexerQuery)
+        public Lexer CreateLexer(StructureModel structureModel)
         {
-            var domain = lexerQuery.GetStructure(_mapper);
+            var domain = _mapper.Map<StructureModel, Structure>(structureModel);
             return new Lexer(domain);
         }
     }

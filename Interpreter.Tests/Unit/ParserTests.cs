@@ -9,21 +9,20 @@ namespace Interpreter.Tests.Unit
     public class ParserTests
     {
         private readonly TestContainer _container;
-        private readonly LexerQueryModel _query;
+        private readonly StructureModel _structureModel;
 
         public ParserTests()
         {
             _container = new TestContainer();
-            _query = new LexerQueryModel();
+            _structureModel = new StructureModel();
         }
 
-        private Parser GetParser(string text)
+        private Parser GetParser()
         {
-            _query.Text = text;
             var lexerCreator = _container.Get<ILexerProvider>();
             var parserCreator = _container.Get<IParserProvider>();
 
-            var lexer = lexerCreator.CreateLexer(_query);
+            var lexer = lexerCreator.CreateLexer(_structureModel);
             var parser = parserCreator.CreateParser(lexer);
             return parser;
         }
@@ -32,7 +31,7 @@ namespace Interpreter.Tests.Unit
         [ClassData(typeof(ParserSuccessTestData))]
         public void ParserDoesNotThrowTest(string text)
         {
-            var parser = GetParser(text);
+            var parser = GetParser();
             
             var ex = Record.Exception(() =>
             {

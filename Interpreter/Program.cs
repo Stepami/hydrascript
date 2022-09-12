@@ -34,7 +34,7 @@ namespace Interpreter
             ServiceCollection.AddTransient<ILexerProvider, LexerProvider>();
             ServiceCollection.AddTransient<IParserProvider, ParserProvider>();
 
-            ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile));
+            ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile), typeof(StructureProfile));
 
             ServiceCollection.AddSingleton<IExecutor, Executor>();
 
