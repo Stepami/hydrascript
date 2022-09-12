@@ -3,9 +3,6 @@ using System.IO;
 using System.Linq;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.TopDownParse;
-using Interpreter.Lib.IR;
-using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.IR.Optimizers;
 using Interpreter.Lib.Semantic.Exceptions;
 using Interpreter.Lib.VM;
 using Interpreter.Services.Providers;
@@ -37,18 +34,8 @@ namespace Interpreter.Services.Executor.Impl
 
                 var instructions = ast.GetInstructions();
 
-                var cfg = new ControlFlowGraph(
-                    new BasicBlockBuilder(instructions)
-                        .GetBasicBlocks()
-                );
-
-                cfg.OptimizeInstructions(
-                    i => new IdentityExpression(i as Simple),
-                    i => new ZeroExpression(i as Simple)
-                );
-                
-                var vm = new VirtualMachine(cfg);
-                vm.Run();
+                var vm = new VirtualMachine();
+                vm.Run(instructions);
                 
                 if (_commandLineSettings.Dump)
                 {
@@ -65,9 +52,6 @@ namespace Interpreter.Services.Executor.Impl
 
                     var astDot = ast.ToString();
                     File.WriteAllText("ast.dot", astDot);
-
-                    var cfgDot = cfg.ToString();
-                    File.WriteAllText("cfg.dot", cfgDot);
                 }
             }
             catch (Exception ex)
