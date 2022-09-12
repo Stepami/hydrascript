@@ -58,5 +58,8 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public override string ToString() =>
+            string.Join('\n', this);
     }
 }
