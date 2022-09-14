@@ -6,8 +6,6 @@ namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
     public class WrongArrayLiteralDeclaration : SemanticException
     {
         public WrongArrayLiteralDeclaration(Segment segment, Type type) : 
-            base($"{segment} Wrong array literal declaration: all array elements must be of type {type}")
-        {
-        }
+            base(segment, $"{segment} Wrong array literal declaration: all array elements must be of type {type}") { }
     }
 }
