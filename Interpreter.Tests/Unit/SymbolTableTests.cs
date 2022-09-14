@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Interpreter.Lib.Semantic;
-using Interpreter.Lib.Semantic.Nodes;
-using Interpreter.Lib.Semantic.Symbols;
+using Interpreter.Lib.IR.Ast.Nodes;
+using Interpreter.Lib.IR.CheckSemantics.Variables;
+using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Moq;
 using Xunit;
 

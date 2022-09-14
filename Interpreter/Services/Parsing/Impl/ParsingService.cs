@@ -1,4 +1,4 @@
-using Interpreter.Lib.Contracts;
+using Interpreter.Lib.IR.Ast;
 using Interpreter.Services.Providers;
 
 namespace Interpreter.Services.Parsing.Impl

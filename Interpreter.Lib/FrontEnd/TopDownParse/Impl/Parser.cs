@@ -1,22 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.Contracts;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
-using Interpreter.Lib.Semantic;
-using Interpreter.Lib.Semantic.Exceptions;
-using Interpreter.Lib.Semantic.Nodes;
-using Interpreter.Lib.Semantic.Nodes.Declarations;
-using Interpreter.Lib.Semantic.Nodes.Expressions;
-using Interpreter.Lib.Semantic.Nodes.Expressions.AccessExpressions;
-using Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals;
-using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
-using Interpreter.Lib.Semantic.Nodes.Statements;
-using Interpreter.Lib.Semantic.Symbols;
-using Interpreter.Lib.Semantic.Types;
-using Interpreter.Lib.Semantic.Utils;
-using Expression = Interpreter.Lib.Semantic.Nodes.Expressions.Expression;
+using Interpreter.Lib.IR.Ast;
+using Interpreter.Lib.IR.Ast.Impl;
+using Interpreter.Lib.IR.Ast.Nodes;
+using Interpreter.Lib.IR.Ast.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Nodes.Statements;
+using Interpreter.Lib.IR.CheckSemantics.Exceptions;
+using Interpreter.Lib.IR.CheckSemantics.Types;
+using Interpreter.Lib.IR.CheckSemantics.Variables;
+using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
+using Expression = Interpreter.Lib.IR.Ast.Nodes.Expressions.Expression;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 {

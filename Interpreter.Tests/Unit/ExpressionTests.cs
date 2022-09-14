@@ -1,6 +1,6 @@
-using Interpreter.Lib.Semantic.Nodes.Expressions;
-using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
-using Interpreter.Lib.Semantic.Types;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
 
 namespace Interpreter.Tests.Unit

@@ -1,8 +1,8 @@
 using System;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.TopDownParse;
-using Interpreter.Lib.Semantic.Exceptions;
-using Interpreter.Lib.VM;
+using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Services.Parsing;
 using Microsoft.Extensions.Options;
 

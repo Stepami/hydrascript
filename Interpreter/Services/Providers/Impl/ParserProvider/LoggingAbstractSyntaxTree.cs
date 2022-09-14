@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Interpreter.Lib.Contracts;
-using Interpreter.Lib.IR.Instructions;
+using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.IR.Ast;
 
 namespace Interpreter.Services.Providers.Impl.ParserProvider
 {

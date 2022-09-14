@@ -1,6 +1,6 @@
 using System.IO;
-using Interpreter.Lib.Contracts;
 using Interpreter.Lib.FrontEnd.TopDownParse;
+using Interpreter.Lib.IR.Ast;
 
 namespace Interpreter.Services.Providers.Impl.ParserProvider
 {
