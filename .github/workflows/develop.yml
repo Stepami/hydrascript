@@ -36,7 +36,7 @@ jobs:
         with:
           path: ./Interpreter.Tests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 20
+          minimum_coverage: 80
           fail_below_threshold: true
           show_class_names: true
           show_missing: true
@@ -53,5 +53,5 @@ jobs:
           format: markdown
           hide_branch_rate: true
           hide_complexity: true
-          thresholds: '20 30'
+          thresholds: '80 100'
  
