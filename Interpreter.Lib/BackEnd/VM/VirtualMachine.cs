@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Instructions;
 
-namespace Interpreter.Lib.BackEnd
+namespace Interpreter.Lib.BackEnd.VM
 {
     public class VirtualMachine
     {

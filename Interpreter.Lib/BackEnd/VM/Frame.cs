@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Interpreter.Lib.BackEnd
+namespace Interpreter.Lib.BackEnd.VM
 {
     public class Frame
     {

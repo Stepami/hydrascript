@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Values;
+using Interpreter.Lib.BackEnd.VM;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

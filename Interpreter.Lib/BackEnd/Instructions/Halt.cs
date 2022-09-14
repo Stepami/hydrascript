@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.VM;
+
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public class Halt : Instruction
