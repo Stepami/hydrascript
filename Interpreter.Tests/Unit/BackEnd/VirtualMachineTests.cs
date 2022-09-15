@@ -58,4 +58,40 @@ public class VirtualMachineTests
         _vm.Run(program);
         Assert.Empty(_vm.Frames);
     }
+
+    [Fact]
+    public void VirtualMachineHandlesRecursion()
+    {
+        var halt = new Mock<Halt>(12);
+        halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
+            .Returns(-3).Verifiable();
+        halt.Setup(x => x.End()).Returns(true);
+        var factorial = new FunctionInfo("fact", 1);
+        var program = new List<Instruction>
+        {
+            new Goto(10, 0),
+            new BeginFunction(1, factorial),
+            new Simple("_t2", (new Name("n"), new Constant(2, "2")), "<", 2),
+            new IfNotGoto(new Name("_t2"), 5, 3),
+            new Return(1, 4, new Name("n")),
+            new Simple("_t5", (new Name("n"), new Constant(1, "1")), "-", 5),
+            new PushParameter(6, "n", new Name("_t5")),
+            new CallFunction(factorial, 7, 1, "f"),
+            new Simple("_t8", (new Name("n"), new Name("f")), "*", 8),
+            new Return(1, 9, new Name("_t8")),
+            new PushParameter(10, "n", new Constant(6, "6")),
+            new CallFunction(factorial, 11, 1, "fa6"),
+            halt.Object
+        };
+        
+        _vm.Run(program);
+        Assert.Empty(_vm.CallStack);
+        Assert.Empty(_vm.Arguments);
+        halt.Verify(x => x.Execute(
+            It.Is<VirtualMachine>(
+                vm => Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720
+            )
+        ), Times.Once());
+        _vm.Frames.Pop();
+    }
 }
