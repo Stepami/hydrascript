@@ -5,6 +5,7 @@ namespace Interpreter.Models
     // ReSharper disable once ClassNeverInstantiated.Global
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [ExcludeFromCodeCoverage]
     public record TokenTypeModel
     {
         public string Tag { get; init; }

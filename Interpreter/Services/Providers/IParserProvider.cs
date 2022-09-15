@@ -1,10 +1,9 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Lib.RBNF.Analysis.Syntactic;
+using Interpreter.Lib.FrontEnd.TopDownParse;
 
 namespace Interpreter.Services.Providers
 {
     public interface IParserProvider
     {
-        Parser CreateParser(Lexer lexer);
+        IParser CreateParser();
     }
 }

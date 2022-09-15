@@ -18,7 +18,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Cache NuGet packages
         uses: actions/cache@v3
         with:
@@ -29,14 +29,14 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --filter="Category=Unit"
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
           path: ./Interpreter.Tests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 20
+          minimum_coverage: 80
           fail_below_threshold: true
           show_class_names: true
           show_missing: true
@@ -53,5 +53,5 @@ jobs:
           format: markdown
           hide_branch_rate: true
           hide_complexity: true
-          thresholds: '20 30'
+          thresholds: '80 100'
  
