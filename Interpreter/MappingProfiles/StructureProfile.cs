@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using AutoMapper;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
+using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 using Interpreter.Models;
 
 namespace Interpreter.MappingProfiles

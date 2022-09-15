@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes
+namespace Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes
 {
     internal record ErrorType() : TokenType("ERROR", @"\S+", int.MaxValue)
     {

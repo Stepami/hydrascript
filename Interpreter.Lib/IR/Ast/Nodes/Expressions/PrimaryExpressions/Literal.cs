@@ -1,5 +1,5 @@
 using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions

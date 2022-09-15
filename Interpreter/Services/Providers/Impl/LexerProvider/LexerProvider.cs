@@ -1,5 +1,6 @@
 using AutoMapper;
 using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Models;
 using Microsoft.Extensions.Options;

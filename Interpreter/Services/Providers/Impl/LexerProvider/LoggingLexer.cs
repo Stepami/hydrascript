@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Interpreter.Lib.FrontEnd.GetTokens;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Services.Providers.Impl.LexerProvider
 {

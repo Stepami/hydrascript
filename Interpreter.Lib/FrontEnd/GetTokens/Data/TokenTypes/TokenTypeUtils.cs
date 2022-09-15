@@ -1,8 +1,6 @@
-using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
-
-namespace Interpreter.Lib.FrontEnd.GetTokens
+namespace Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes
 {
-    public static class LexerUtils
+    public static class TokenTypeUtils
     {
         public static readonly TokenType End = new EndOfProgramType();
         public static readonly TokenType Error = new ErrorType();

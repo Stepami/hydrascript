@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;

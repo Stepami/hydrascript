@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
 {

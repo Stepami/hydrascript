@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.FrontEnd.GetTokens;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl;
 using Interpreter.Lib.IR.Ast.Nodes;

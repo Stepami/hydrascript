@@ -1,4 +1,4 @@
-using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
 {

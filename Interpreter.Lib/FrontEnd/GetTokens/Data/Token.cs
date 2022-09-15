@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
+namespace Interpreter.Lib.FrontEnd.GetTokens.Data
 {
     public record Token(TokenType Type)
     {

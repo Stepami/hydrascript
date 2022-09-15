@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Interpreter.Lib.FrontEnd.GetTokens.Impl.TokenTypes;
+using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
+namespace Interpreter.Lib.FrontEnd.GetTokens.Data
 {
     public class Structure : IEnumerable<TokenType>
     {
@@ -13,8 +13,8 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
         {
             types.AddRange(new List<TokenType>
             {
-                LexerUtils.End,
-                LexerUtils.Error
+                TokenTypeUtils.End,
+                TokenTypeUtils.Error
             });
             types = types
                 .OrderBy(t => t.Priority)
@@ -38,10 +38,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
         
         public Regex Regex { get; }
 
-        public TokenType FindByTag(string tag)
-        {
-            return Types[tag];
-        }
+        public TokenType FindByTag(string tag) => Types[tag];
 
         public override string ToString()
         {
