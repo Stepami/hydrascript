@@ -1,6 +1,6 @@
 using Visitor.NET.Lib.Core;
 
-namespace Interpreter.Lib.Semantic.Nodes.Visitors
+namespace Interpreter.Lib.IR.Ast.Visitors
 {
     public class SemanticChecker : IVisitor
     {
