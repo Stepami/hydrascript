@@ -15,7 +15,7 @@ namespace Interpreter.Tests.Unit
         public void PrecedenceTest()
         {
             var fType = new Mock<FunctionType>(new Mock<Type>("").Object, new List<Type>());
-            var funcSymbol = new Mock<FunctionSymbol>("f", new List<Symbol>(), fType.Object);
+            var funcSymbol = new FunctionSymbol("f", new List<Symbol>(), fType.Object);
 
             var lexicalDecl = new LexicalDeclaration(false);
             var stmtItemList = new List<StatementListItem>
@@ -23,7 +23,7 @@ namespace Interpreter.Tests.Unit
                 lexicalDecl
             };
             // ReSharper disable once UnusedVariable
-            var func = new FunctionDeclaration(funcSymbol.Object, new BlockStatement(stmtItemList));
+            var func = new FunctionDeclaration(funcSymbol, new BlockStatement(stmtItemList));
 
             Assert.True(lexicalDecl.ChildOf<FunctionDeclaration>());
         }

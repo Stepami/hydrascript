@@ -6,6 +6,7 @@ using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Moq;
 using Xunit;
+using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Tests.Unit
 {
@@ -15,9 +16,11 @@ namespace Interpreter.Tests.Unit
         public void FindSymbolTest()
         {
             const string id = "ident";
+            var type = new Mock<Type>(id);
 
-            var symbol = new Mock<Symbol>(id);
+            var symbol = new Mock<Symbol>(id, type.Object);
             symbol.Setup(s => s.Id).Returns(id);
+            symbol.Setup(s => s.Type).Returns(type.Object);
 
             var outerScope = new SymbolTable();
             var innerScope = new SymbolTable();
@@ -45,9 +48,11 @@ namespace Interpreter.Tests.Unit
             script.ToList().ForEach(node => node.SymbolTable = table);
 
             const string id = "ident";
+            var type = new Mock<Type>(id);
 
-            var symbol = new Mock<Symbol>(id);
+            var symbol = new Mock<Symbol>(id, type.Object);
             symbol.Setup(s => s.Id).Returns(id);
+            symbol.Setup(s => s.Type).Returns(type.Object);
 
             script.SymbolTable.AddSymbol(symbol.Object);
 
