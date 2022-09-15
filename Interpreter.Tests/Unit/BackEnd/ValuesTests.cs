@@ -10,6 +10,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         {
             var name = new Name("a");
             var constant = new Constant("a", "a");
+            
             Assert.False(name.Equals(constant));
             Assert.False(constant.Equals(name));
         }
@@ -19,8 +20,27 @@ namespace Interpreter.Tests.Unit.BackEnd
         {
             var name = new Name("bbb");
             var constant = new Constant(1, "1.0");
+            
             Assert.Equal("bbb", name.ToString());
             Assert.Equal("1.0", constant.ToString());
+        }
+
+        [Fact]
+        public void NameEqualsCorrect()
+        {
+            var name1 = new Name("name");
+            var name2 = new Name("name");
+            
+            Assert.True(name1.Equals(name2));
+        }
+        
+        [Fact]
+        public void ConstantEqualsCorrect()
+        {
+            var constant1 = new Constant(1, "1");
+            var constant2 = new Constant(1, "1.0");
+            
+            Assert.True(constant1.Equals(constant2));
         }
     }
 }
