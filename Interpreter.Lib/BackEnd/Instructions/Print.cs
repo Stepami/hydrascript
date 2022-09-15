@@ -1,4 +1,3 @@
-using System;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.BackEnd.VM;
 
@@ -15,7 +14,7 @@ namespace Interpreter.Lib.BackEnd.Instructions
 
         public override int Execute(VirtualMachine vm)
         {
-            Console.WriteLine(_value.Get(vm.Frames.Peek()));
+            vm.Writer.WriteLine(_value.Get(vm.Frames.Peek()));
             return Number + 1;
         }
 

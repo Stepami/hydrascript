@@ -1,15 +1,18 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Interpreter.Lib.BackEnd.Instructions;
 
 namespace Interpreter.Lib.BackEnd.VM
 {
-    public class VirtualMachine
+    public record VirtualMachine(
+        Stack<Call> CallStack, Stack<Frame> Frames,
+        Stack<(string Id, object Value)> Arguments,
+        TextWriter Writer
+    )
     {
-        public Stack<Call> CallStack { get; } = new();
-        
-        public Stack<Frame> Frames { get; } = new();
-        
-        public Stack<(string Id, object Value)> Arguments { get; } = new();
+        public VirtualMachine() :
+            this(new(), new(), new(), Console.Out) { }
 
         public void Run(List<Instruction> instructions)
         {
