@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -38,18 +39,19 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Data
         
         public Regex Regex { get; }
 
-        public TokenType FindByTag(string tag) => Types[tag];
+        public TokenType FindByTag(string tag) =>
+            Types[tag];
 
-        public override string ToString()
-        {
-            return new StringBuilder()
+        public override string ToString() =>
+            new StringBuilder()
                 .AppendJoin('\n',
                     Types.Select(x => $"{x.Key} {x.Value.Pattern}")
                 ).ToString();
-        }
-        
-        public IEnumerator<TokenType> GetEnumerator() => Types.Values.GetEnumerator();
 
+        public IEnumerator<TokenType> GetEnumerator() => 
+            Types.Values.GetEnumerator();
+
+        [ExcludeFromCodeCoverage]
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
