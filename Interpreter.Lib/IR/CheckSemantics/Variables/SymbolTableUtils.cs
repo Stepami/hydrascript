@@ -24,10 +24,7 @@ namespace Interpreter.Lib.IR.CheckSemantics.Variables
                 "print",
                 new List<Symbol>
                 {
-                    new VariableSymbol("str")
-                    {
-                        Type = TypeUtils.JavaScriptTypes.String
-                    }
+                    new VariableSymbol("str", TypeUtils.JavaScriptTypes.String)
                 },
                 new FunctionType(TypeUtils.JavaScriptTypes.Void, new[] {TypeUtils.JavaScriptTypes.String})
             );

@@ -63,20 +63,16 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions
                 var typeOfSymbol = _destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
                     ? _destinationType
                     : type;
-                if (typeOfSymbol is ObjectType)
+                if (typeOfSymbol is ObjectType objectTypeOfSymbol)
                 {
-                    SymbolTable.AddSymbol(new ObjectSymbol(id, declaration.Const(), _source.SymbolTable, typeOfSymbol)
+                    SymbolTable.AddSymbol(new ObjectSymbol(id, objectTypeOfSymbol, declaration.Const(), _source.SymbolTable)
                     {
-                        Type = typeOfSymbol,
                         Table = _source.SymbolTable
                     });
                 }
                 else
                 {
-                    SymbolTable.AddSymbol(new VariableSymbol(id, declaration.Const())
-                    {
-                        Type = typeOfSymbol
-                    });
+                    SymbolTable.AddSymbol(new VariableSymbol(id, typeOfSymbol, declaration.Const()));
                 }
             }
             else

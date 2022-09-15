@@ -30,9 +30,9 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals
             {
                 var propType = prop.Expression.NodeCheck();
                 propertyTypes.Add(new PropertyType(prop.Id.Id, propType));
-                prop.Id.SymbolTable.AddSymbol(propType is ObjectType
-                    ? new ObjectSymbol(prop.Id.Id) {Type = propType, Table = prop.Expression.SymbolTable}
-                    : new VariableSymbol(prop.Id.Id) {Type = propType}
+                prop.Id.SymbolTable.AddSymbol(propType is ObjectType objectType
+                    ? new ObjectSymbol(prop.Id.Id, objectType) {Table = prop.Expression.SymbolTable}
+                    : new VariableSymbol(prop.Id.Id, propType)
                 );
             });
             _methods.ForEach(m =>
@@ -41,10 +41,7 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals
                 propertyTypes.Add(new PropertyType(symbol.Id, symbol.Type));
             });
             var type = new ObjectType(propertyTypes);
-            SymbolTable.AddSymbol(new VariableSymbol("this", true)
-            {
-                Type = type
-            });
+            SymbolTable.AddSymbol(new VariableSymbol("this", type, true));
             return type;
         }
 

@@ -8,7 +8,7 @@ namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
 {
     public class FunctionSymbol : Symbol
     {
-        public FunctionType Type { get; }
+        public override FunctionType Type { get; }
         
         public List<Symbol> Parameters { get; }
 
@@ -16,7 +16,8 @@ namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
 
         public FunctionInfo CallInfo { get; }
 
-        public FunctionSymbol(string id, IEnumerable<Symbol> parameters, FunctionType type) : base(id)
+        public FunctionSymbol(string id, IEnumerable<Symbol> parameters, FunctionType type) :
+            base(id, type)
         {
             Parameters = new List<Symbol>(parameters);
             CallInfo = new FunctionInfo(id);

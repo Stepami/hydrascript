@@ -354,10 +354,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
                 var type = TypeValue(table);
-                args.Add(new VariableSymbol(arg)
-                {
-                    Type = type
-                });
+                args.Add(new VariableSymbol(arg, type));
             }
 
             while (CurrentIs("Comma"))
@@ -366,10 +363,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
                 var arg = Expect("Ident").Value;
                 Expect("Colon");
                 var type = TypeValue(table);
-                args.Add(new VariableSymbol(arg)
-                {
-                    Type = type
-                });
+                args.Add(new VariableSymbol(arg, type));
             }
 
             Expect("RightParen");
@@ -788,7 +782,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
                         var name = Expect("Ident").Value;
                         Expect("Colon");
                         var type = TypeValue(newTable);
-                        args.Add(new VariableSymbol(name) {Type = type});
+                        args.Add(new VariableSymbol(name, type));
                         if (!CurrentIs("RightParen"))
                         {
                             Expect("Comma");

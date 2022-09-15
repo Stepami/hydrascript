@@ -4,9 +4,15 @@ namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
 {
     public class ObjectSymbol : VariableSymbol
     {
-        public ObjectSymbol(string id, bool readOnly = false, SymbolTable table = null, Type type = null) : base(id, readOnly)
+        public override ObjectType Type { get; }
+
+        public SymbolTable Table { get; init; }
+        
+        public ObjectSymbol(string id, ObjectType objectType, bool readOnly = false, SymbolTable table = null) :
+            base(id, objectType, readOnly)
         {
-            if (table != null && type is ObjectType objectType)
+            Type = objectType;
+            if (table != null)
             {
                 foreach (var key in objectType.Keys)
                 {
@@ -18,7 +24,5 @@ namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
                 }
             }
         }
-
-        public SymbolTable Table { get; init; }
     }
 }
