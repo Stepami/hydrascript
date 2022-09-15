@@ -97,6 +97,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         {
             var vm = new VirtualMachine();
             vm.Frames.Push(new Frame());
+            
             var createArray = new CreateArray(0, "arr", 6);
             createArray.Execute(vm);
             Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
@@ -104,6 +105,10 @@ namespace Interpreter.Tests.Unit.BackEnd
             var indexAssignment = new IndexAssignment("arr", (new Constant(0, "0"), new Constant(0, "0")), 1);
             indexAssignment.Execute(vm);
             Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
+
+            var removeFromArray = new RemoveFromArray(2, "arr", new Constant(5, "5"));
+            removeFromArray.Execute(vm);
+            Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]).Count);
         }
 
         [Fact]
