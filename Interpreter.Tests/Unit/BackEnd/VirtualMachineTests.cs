@@ -62,10 +62,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         [Fact]
         public void VirtualMachineHandlesRecursion()
         {
-            var halt = new Mock<Halt>(12);
-            halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
-                .Returns(-3).Verifiable();
-            halt.Setup(x => x.End()).Returns(true);
+            var halt = new Mock<Halt>(12).Trackable();
             var factorial = new FunctionInfo("fact", 1);
             var program = new List<Instruction>
             {
@@ -90,6 +87,41 @@ namespace Interpreter.Tests.Unit.BackEnd
             halt.Verify(x => x.Execute(
                 It.Is<VirtualMachine>(
                     vm => Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720
+                )
+            ), Times.Once());
+            _vm.Frames.Pop();
+        }
+
+        [Fact]
+        public void CreateArrayReservesCertainSpaceTest()
+        {
+            var vm = new VirtualMachine();
+            vm.Frames.Push(new Frame());
+            var createArray = new CreateArray(0, "arr", 6);
+            createArray.Execute(vm);
+            Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
+
+            var indexAssignment = new IndexAssignment("arr", (new Constant(0, "0"), new Constant(0, "0")), 1);
+            indexAssignment.Execute(vm);
+            Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
+        }
+
+        [Fact]
+        public void ObjectCreationTest()
+        {
+            var halt = new Mock<Halt>(2).Trackable();
+            var program = new List<Instruction>
+            {
+                new CreateObject(0, "obj"),
+                new DotAssignment("obj", (new Constant("prop", "prop"), new Constant(null, "null")), 1),
+                halt.Object
+            };
+            
+            _vm.Run(program);
+            halt.Verify(x => x.Execute(
+                It.Is<VirtualMachine>(
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+                    vm => ((Dictionary<string, object>)vm.Frames.Peek()["obj"])["prop"] == null
                 )
             ), Times.Once());
             _vm.Frames.Pop();
