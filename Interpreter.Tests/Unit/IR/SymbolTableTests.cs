@@ -8,7 +8,7 @@ using Moq;
 using Xunit;
 using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
-namespace Interpreter.Tests.Unit
+namespace Interpreter.Tests.Unit.IR
 {
     public class SymbolTableTests
     {

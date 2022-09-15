@@ -7,7 +7,7 @@ using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Moq;
 using Xunit;
 
-namespace Interpreter.Tests.Unit
+namespace Interpreter.Tests.Unit.IR
 {
     public class AstNodeTests
     {

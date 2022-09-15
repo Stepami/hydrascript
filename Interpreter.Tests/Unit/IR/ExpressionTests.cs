@@ -3,7 +3,7 @@ using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
 
-namespace Interpreter.Tests.Unit
+namespace Interpreter.Tests.Unit.IR
 {
     public class ExpressionTests
     {

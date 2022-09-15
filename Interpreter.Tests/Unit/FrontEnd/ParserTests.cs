@@ -7,7 +7,7 @@ using Interpreter.Tests.Stubs;
 using Interpreter.Tests.TestData;
 using Xunit;
 
-namespace Interpreter.Tests.Unit
+namespace Interpreter.Tests.Unit.FrontEnd
 {
     public class ParserTests
     {

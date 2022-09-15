@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
 
-namespace Interpreter.Tests.Unit
+namespace Interpreter.Tests.Unit.IR
 {
     public class TypeTests
     {
