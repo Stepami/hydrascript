@@ -22,13 +22,16 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
             _text = text;
 
             _lines.Clear();
-            var lineMatches =
-                new Regex(@"(?<NEWLINE>\n)").Matches(text[^1] == '\n'
-                    ? text
-                    : new string(text.Append('\n').ToArray()));
-            foreach (Match match in lineMatches)
-                _lines.Add(match.Groups["NEWLINE"].Index);
-            
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lineMatches =
+                    new Regex(@"(?<NEWLINE>\n)").Matches(text[^1] == '\n'
+                        ? text
+                        : new string(text.Append('\n').ToArray()));
+                foreach (Match match in lineMatches)
+                    _lines.Add(match.Groups["NEWLINE"].Index);
+            }
+
             return this.Where(t => !t.Type.WhiteSpace()).ToList();
         }
 

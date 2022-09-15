@@ -14,4 +14,16 @@ namespace Interpreter.Tests.TestData
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+
+    public class LexerFailData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[] { "a + v $$$" };
+            yield return new object[] { "kkk &" };
+            yield return new object[] { "|| |" };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 }
