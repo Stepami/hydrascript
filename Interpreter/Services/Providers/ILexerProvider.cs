@@ -1,10 +1,9 @@
-using Interpreter.Lib.RBNF.Analysis.Lexical;
-using Interpreter.Models;
+using Interpreter.Lib.FrontEnd.GetTokens;
 
 namespace Interpreter.Services.Providers
 {
     public interface ILexerProvider
     {
-        Lexer CreateLexer(LexerQueryModel lexerQuery);
+        ILexer CreateLexer();
     }
 }
