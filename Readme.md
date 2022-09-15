@@ -14,7 +14,7 @@ _Minimum allowed line rate is `20%`_
 
 За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 
-[Лексическая структура](Interpreter/tokenTypes.json)
+[Лексическая структура](Interpreter/TokenTypes.cs)
 
 [Грамматика](Interpreter/grammar.txt)
 
