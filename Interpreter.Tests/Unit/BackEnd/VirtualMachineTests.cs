@@ -12,6 +12,13 @@ namespace Interpreter.Tests.Unit.BackEnd;
 
 public class VirtualMachineTests
 {
+    private readonly VirtualMachine _vm;
+
+    public VirtualMachineTests()
+    {
+        _vm = new(new(), new(), new(), TextWriter.Null);
+    }
+    
     [Fact]
     public void CorrectPrintToOutTest()
     {
@@ -31,18 +38,16 @@ public class VirtualMachineTests
     [Fact]
     public void ProgramWithoutHaltWillNotRunTest()
     {
-        var vm = new VirtualMachine();
         var program = new List<Instruction>();
-        Assert.Throws<ArgumentOutOfRangeException>(() => vm.Run(program));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _vm.Run(program));
         
         program.Add(new Halt(0));
-        Assert.Null(Record.Exception(() => vm.Run(program)));
+        Assert.Null(Record.Exception(() => _vm.Run(program)));
     }
 
     [Fact]
     public void VirtualMachineFramesClearedAfterExecutionTest()
     {
-        var vm = new VirtualMachine();
         var program = new List<Instruction>()
         {
             new Simple("a", (new Constant(1, "1"), new Constant(2, "2")), "+", 0),
@@ -50,7 +55,7 @@ public class VirtualMachineTests
             new Halt(2)
         };
         
-        vm.Run(program);
-        Assert.Empty(vm.Frames);
+        _vm.Run(program);
+        Assert.Empty(_vm.Frames);
     }
 }
