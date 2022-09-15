@@ -10,7 +10,7 @@ namespace Interpreter.Lib.BackEnd.Instructions
         public string Left { get; set; }
 
         protected (IValue left, IValue right) right;
-        protected string @operator;
+        protected readonly string @operator;
 
         public Simple(
             string left,
@@ -84,32 +84,6 @@ namespace Interpreter.Lib.BackEnd.Instructions
             }
 
             return Jump();
-        }
-
-        public void ReduceToAssignment()
-        {
-            right = ToStringRepresentation().Split('=')[1].Trim() switch
-            {
-                var s
-                    when s.EndsWith("+ 0") || s.EndsWith("- 0") ||
-                         s.EndsWith("* 1") || s.EndsWith("/ 1") => (null, right.left),
-                var s
-                    when s.StartsWith("0 +") || s.StartsWith("1 *") => (null, right.right),
-                _ => throw new NotImplementedException()
-            };
-            @operator = "";
-        }
-
-        public void ReduceToZero()
-        {
-            right = ToStringRepresentation().Split('=')[1].Trim() switch
-            {
-                "-0" => (null, new Constant(0, "0")),
-                var s
-                    when s.EndsWith("* 0") || s.StartsWith("0 *") => (null, new Constant(0, "0")),
-                _ => throw new NotImplementedException()
-            };
-            @operator = "";
         }
 
         protected override string ToStringRepresentation() =>
