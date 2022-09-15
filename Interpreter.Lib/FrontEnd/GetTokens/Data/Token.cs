@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
 namespace Interpreter.Lib.FrontEnd.GetTokens.Data
 {
+    [ExcludeFromCodeCoverage]
     public record Token(TokenType Type)
     {
         public Segment Segment { get; }
@@ -23,6 +25,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Data
         }
     }
     
+    [ExcludeFromCodeCoverage]
     public record Segment(Coordinates Start, Coordinates End)
     {
         public override string ToString() => $"{Start}-{End}";
@@ -31,6 +34,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Data
             new(left.Start, right.End);
     }
     
+    [ExcludeFromCodeCoverage]
     public record Coordinates(int Line, int Column)
     {
         public Coordinates(int absolutePos, IReadOnlyList<int> system) :
