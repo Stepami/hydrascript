@@ -6,7 +6,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens
     [Serializable]
     public class LexerException : Exception
     {
-        protected LexerException() { }
+        public LexerException() { }
         
         protected LexerException(string message) : base(message) { }
         

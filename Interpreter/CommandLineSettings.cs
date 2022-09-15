@@ -8,15 +8,16 @@ using Interpreter.Models;
 namespace Interpreter
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
+    [ExcludeFromCodeCoverage]
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class CommandLineSettings
     {
         [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
-        public string InputFilePath { get; set; }
+        public virtual string InputFilePath { get; set; }
 
         [Option('d', "dump", Default = false, HelpText = "Show dump data of interpreter")]
-        public bool Dump { get; set; }
+        public virtual bool Dump { get; set; }
 
         [Usage(ApplicationAlias = "Interpreter")]
         public static IEnumerable<Example> Examples
@@ -34,7 +35,7 @@ namespace Interpreter
 
         public StructureModel StructureModel { get; } = new();
 
-        public string GetText() =>
+        public virtual string GetText() =>
             File.ReadAllText(InputFilePath);
     }
 }

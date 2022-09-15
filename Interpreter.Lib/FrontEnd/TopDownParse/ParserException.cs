@@ -6,7 +6,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse
     [Serializable]
     public class ParserException : Exception
     {
-        protected ParserException() { }
+        public ParserException() { }
         
         protected ParserException(string message) : base(message) { }
         

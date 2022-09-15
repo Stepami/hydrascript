@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Interpreter.MappingProfiles;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace Interpreter
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
