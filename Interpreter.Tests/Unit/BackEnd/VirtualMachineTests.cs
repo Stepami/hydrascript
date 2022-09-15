@@ -60,7 +60,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         }
 
         [Fact]
-        public void VirtualMachineHandlesRecursion()
+        public void VirtualMachineHandlesRecursionTest()
         {
             var halt = new Mock<Halt>(12).Trackable();
             var factorial = new FunctionInfo("fact", 1);

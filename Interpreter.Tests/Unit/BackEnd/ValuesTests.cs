@@ -16,7 +16,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         }
 
         [Fact]
-        public void ValueToStringCorrect()
+        public void ValueToStringCorrectTest()
         {
             var name = new Name("bbb");
             var constant = new Constant(1, "1.0");
@@ -26,7 +26,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         }
 
         [Fact]
-        public void NameEqualsCorrect()
+        public void NameEqualsCorrectTest()
         {
             var name1 = new Name("name");
             var name2 = new Name("name");
@@ -35,7 +35,7 @@ namespace Interpreter.Tests.Unit.BackEnd
         }
         
         [Fact]
-        public void ConstantEqualsCorrect()
+        public void ConstantEqualsCorrectTest()
         {
             var constant1 = new Constant(1, "1");
             var constant2 = new Constant(1, "1.0");

@@ -8,7 +8,7 @@ namespace Interpreter.Tests.Unit.FrontEnd
     public class StructureTests
     {
         [Fact]
-        public void StructureToStringCorrectTest()
+        public void ToStringCorrectTest()
         {
             var tokenTypes = new List<TokenType>
             {
