@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.BackEnd.Values;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -36,6 +37,7 @@ namespace Interpreter.Lib.BackEnd.Instructions
 
         protected override string ToStringRepresentation() => $"{Left} = {right.right} as string";
         
+        [ExcludeFromCodeCoverage]
         private class DoubleValueConverter : JsonConverter<double>
         {
             public override bool CanRead => false;
