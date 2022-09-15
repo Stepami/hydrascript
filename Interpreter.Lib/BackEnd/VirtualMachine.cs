@@ -26,6 +26,8 @@ namespace Interpreter.Lib.BackEnd
                 var jump = instruction.Execute(this);
                 address = jump;
             }
+
+            instructions[address].Execute(this);
         }
     }
     
