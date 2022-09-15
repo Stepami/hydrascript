@@ -1,5 +1,3 @@
-using Interpreter.Lib.BackEnd.VM;
-
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public class BeginFunction : Instruction

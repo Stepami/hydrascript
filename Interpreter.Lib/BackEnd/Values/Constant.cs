@@ -1,5 +1,3 @@
-using Interpreter.Lib.BackEnd.VM;
-
 namespace Interpreter.Lib.BackEnd.Values
 {
     public class Constant : IValue
