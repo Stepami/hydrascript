@@ -51,7 +51,7 @@ jobs:
         with:
           filename: ./Interpreter.Tests/coverage.cobertura.xml
           badge: true
-          fail_below_min: true
+          fail_below_min: false
           format: markdown
           hide_branch_rate: true
           hide_complexity: true
