@@ -1,5 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace Interpreter.Tests
@@ -13,5 +14,9 @@ namespace Interpreter.Tests
             halt.Setup(x => x.End()).Returns(true);
             return halt;
         }
+
+        public static IOptions<CommandLineSettings> ToOptions
+            (this Mock<CommandLineSettings> commandLineSettings) =>
+            Options.Create(commandLineSettings.Object);
     }
 }
