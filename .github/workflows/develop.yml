@@ -31,7 +31,7 @@ jobs:
       - name: Test
         run: |
           dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --filter="Category=Unit"
-          mkdir ejss-coverage-report
+          mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
@@ -60,9 +60,10 @@ jobs:
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
         with:
           reports: './Interpreter.Tests/coverage.cobertura.xml' 
-          targetdir: './ejss-coverage-report' 
+          targetdir: './coverage-report' 
       - name: Upload coverage report artifact
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v2.2.3
         with:
           name: CoverageReport   
-          path: ejss-coverage-report
+          path: coverage-report
