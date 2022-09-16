@@ -1,12 +1,12 @@
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-32%25-success?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-41%25-critical?style=flat)
 
 Package | Line Rate | Health
 -------- | --------- | ------
-Interpreter | 68% | ✔
-Interpreter.Lib | 28% | ➖
-**Summary** | **32%** (813 / 2556) | ✔
+Interpreter.Lib | 39% | ❌
+Interpreter | 100% | ✔
+**Summary** | **41%** (883 / 2150) | ❌
 
-_Minimum allowed line rate is `20%`_
+_Minimum allowed line rate is `80%`_
 
 ## "Расширенное подмножество ЯП JavaScript"
 
@@ -19,6 +19,9 @@ _Minimum allowed line rate is `20%`_
 [Грамматика](Interpreter/grammar.txt)
 
 [Рабочие примеры](samples)
+
+### Цель проекта
+Реализовать JavaScript с объектами и статической структурной типизацией, избавившись от таких понятий, как `constructor`, `class`, `interface`
 
 ### Конструкции языка
 
@@ -171,7 +174,7 @@ let s = v2d as string
 ### Запуск
 
 ```
-Interpreter 1.1.2
+Interpreter 1.1.3
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:

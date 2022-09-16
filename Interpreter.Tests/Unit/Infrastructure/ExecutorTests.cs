@@ -8,7 +8,6 @@ using Interpreter.Lib.IR.Ast;
 using Interpreter.Services.Executor.Impl;
 using Interpreter.Services.Parsing;
 using Interpreter.Tests.Stubs;
-using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -38,7 +37,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
             _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
                 .Returns(ast.Object);
 
-            var executor = new Executor(_parsingService.Object, Options.Create(_settings.Object));
+            var executor = new Executor(_parsingService.Object, _settings.ToOptions());
             Assert.Null(Record.Exception(() => executor.Execute()));
         }
 
@@ -52,7 +51,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
             _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
                 .Returns(ast.Object);
 
-            var executor = new Executor(_parsingService.Object, Options.Create(_settings.Object));
+            var executor = new Executor(_parsingService.Object, _settings.ToOptions());
             Assert.Null(Record.Exception(() => executor.Execute()));
         }
         
@@ -62,7 +61,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
             _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
                 .Throws<LexerException>();
 
-            var executor = new Executor(_parsingService.Object, Options.Create(_settings.Object));
+            var executor = new Executor(_parsingService.Object, _settings.ToOptions());
             Assert.Null(Record.Exception(() => executor.Execute()));
         }
         
@@ -72,7 +71,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
             _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
                 .Throws<ParserException>();
 
-            var executor = new Executor(_parsingService.Object, Options.Create(_settings.Object));
+            var executor = new Executor(_parsingService.Object, _settings.ToOptions());
             Assert.Null(Record.Exception(() => executor.Execute()));
         }
         
@@ -90,7 +89,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
             _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
                 .Returns(ast.Object);
 
-            var executor = new Executor(_parsingService.Object, Options.Create(_settings.Object));
+            var executor = new Executor(_parsingService.Object, _settings.ToOptions());
             Assert.Null(Record.Exception(() => executor.Execute()));
         }
     }

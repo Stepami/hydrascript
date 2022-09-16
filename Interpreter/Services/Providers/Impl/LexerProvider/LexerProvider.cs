@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using AutoMapper;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
@@ -23,7 +24,7 @@ namespace Interpreter.Services.Providers.Impl.LexerProvider
             var domain = _mapper.Map<StructureModel, Structure>(_settings.StructureModel);
             var lexer = new Lexer(domain);
             return _settings.Dump
-                ? new LoggingLexer(lexer, _settings.GetInputFileName())
+                ? new LoggingLexer(lexer, _settings.GetInputFileName(), new FileSystem())
                 : lexer;
         }
     }
