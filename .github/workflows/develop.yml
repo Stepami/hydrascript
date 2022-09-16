@@ -29,7 +29,9 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release -v n
       - name: Test
-        run: dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --filter="Category=Unit"
+        run: |
+          dotnet test -c Release --no-build -v n /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --filter="Category=Unit"
+          mkdir ejss-coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
@@ -54,4 +56,13 @@ jobs:
           hide_branch_rate: true
           hide_complexity: true
           thresholds: '80 100'
- 
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
+        with:
+          reports: './Interpreter.Tests/coverage.cobertura.xml' 
+          targetdir: './ejss-coverage-report' 
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: CoverageReport   
+          path: ejss-coverage-report
