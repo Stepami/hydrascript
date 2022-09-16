@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
@@ -18,6 +19,7 @@ namespace Interpreter.Services.Providers.Impl.LexerProvider
             _fileSystem = fileSystem;
         }
 
+        [ExcludeFromCodeCoverage]
         public Structure Structure => _lexer.Structure;
     
         public List<Token> GetTokens(string text)
