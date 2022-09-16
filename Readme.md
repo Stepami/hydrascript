@@ -1,10 +1,10 @@
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-40%25-critical?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-41%25-critical?style=flat)
 
 Package | Line Rate | Health
 -------- | --------- | ------
 Interpreter.Lib | 39% | ❌
-Interpreter | 74% | ❌
-**Summary** | **40%** (860 / 2148) | ❌
+Interpreter | 100% | ✔
+**Summary** | **41%** (883 / 2150) | ❌
 
 _Minimum allowed line rate is `80%`_
 
