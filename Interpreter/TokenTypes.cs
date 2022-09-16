@@ -2,7 +2,7 @@ namespace Interpreter
 {
     public static class TokenTypes
     {
-        public static readonly string Json = @"[
+        public const string Json = @"[
         {
           ""tag"": ""Comment"",
           ""pattern"": ""[\/]{2}.*"",

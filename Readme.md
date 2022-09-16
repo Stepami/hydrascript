@@ -1,4 +1,12 @@
-# Дипломная работа
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-41%25-critical?style=flat)
+
+Package | Line Rate | Health
+-------- | --------- | ------
+Interpreter.Lib | 39% | ❌
+Interpreter | 100% | ✔
+**Summary** | **41%** (883 / 2150) | ❌
+
+_Minimum allowed line rate is `80%`_
 
 ## "Расширенное подмножество ЯП JavaScript"
 
@@ -6,11 +14,14 @@
 
 За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 
-[Лексическая структура](Interpreter/tokenTypes.json)
+[Лексическая структура](Interpreter/TokenTypes.cs)
 
 [Грамматика](Interpreter/grammar.txt)
 
 [Рабочие примеры](samples)
+
+### Цель проекта
+Реализовать JavaScript с объектами и статической структурной типизацией, избавившись от таких понятий, как `constructor`, `class`, `interface`
 
 ### Конструкции языка
 
@@ -173,7 +184,7 @@ let v2dClone = v2dOriginal with {
 
 ### Требования
 
-- .NET 5 SDK
+- .NET 6 SDK
 
 ### Сборка
 После клонирования репозитория идём в папку проекта `Interpreter`.
@@ -186,7 +197,7 @@ let v2dClone = v2dOriginal with {
 ### Запуск
 
 ```
-Interpreter 1.0.0
+Interpreter 1.1.3
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:

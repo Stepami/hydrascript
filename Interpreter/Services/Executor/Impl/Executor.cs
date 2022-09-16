@@ -1,76 +1,33 @@
 using System;
-using System.IO;
-using System.Linq;
-using Interpreter.Lib.IR;
-using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.IR.Optimizers;
-using Interpreter.Lib.RBNF.Analysis.Exceptions;
-using Interpreter.Lib.Semantic.Analysis;
-using Interpreter.Lib.Semantic.Exceptions;
-using Interpreter.Lib.VM;
-using Interpreter.Services.Providers;
+using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.TopDownParse;
+using Interpreter.Lib.IR.CheckSemantics.Exceptions;
+using Interpreter.Services.Parsing;
+using Microsoft.Extensions.Options;
 
 namespace Interpreter.Services.Executor.Impl
 {
     public class Executor : IExecutor
     {
-        private readonly ILexerProvider _lexerProvider;
-        private readonly IParserProvider _parserProvider;
+        private readonly IParsingService _parsingService;
+        private readonly CommandLineSettings _commandLineSettings;
 
-        public Executor(ILexerProvider lexerProvider, IParserProvider parserProvider)
+        public Executor(IParsingService parsingService, IOptions<CommandLineSettings> options)
         {
-            _lexerProvider = lexerProvider;
-            _parserProvider = parserProvider;
+            _parsingService = parsingService;
+            _commandLineSettings = options.Value;
         }
 
-        public void Execute(Options options)
+        public void Execute()
         {
             try
             {
-                var lexer = _lexerProvider
-                    .CreateLexer(options.CreateLexerQuery());
-
-                var parser = _parserProvider
-                    .CreateParser(lexer);
-
-                using var ast = parser.TopDownParse();
-
-                ast.Check(new SemanticAnalyzer(node => node.SemanticCheck()));
-
+                var ast = _parsingService.Parse(_commandLineSettings.GetText());
                 var instructions = ast.GetInstructions();
 
-                var cfg = new ControlFlowGraph(
-                    new BasicBlockBuilder(instructions)
-                        .GetBasicBlocks()
-                );
-
-                cfg.OptimizeInstructions(
-                    i => new IdentityExpression(i as Simple),
-                    i => new ZeroExpression(i as Simple)
-                );
-                
-                var vm = new VirtualMachine(cfg);
-                vm.Run();
-                
-                if (options.Dump)
-                {
-                    var fileName = options.GetInputFileName();
-                    File.WriteAllLines(
-                        $"{fileName}.tac",
-                        instructions.OrderBy(i => i).Select(i => i.ToString())
-                    );
-
-                    File.WriteAllText(
-                        $"{fileName}.tokens",
-                        string.Join('\n', lexer)
-                    );
-
-                    var astDot = ast.ToString();
-                    File.WriteAllText("ast.dot", astDot);
-
-                    var cfgDot = cfg.ToString();
-                    File.WriteAllText("cfg.dot", cfgDot);
-                }
+                var vm = new VirtualMachine();
+                vm.Run(instructions);
             }
             catch (Exception ex)
                 when (ex is LexerException or ParserException or SemanticException)
