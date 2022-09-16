@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Interpreter.Lib.IR.Instructions;
-using Interpreter.Lib.Semantic.Nodes.Expressions.ComplexLiterals;
-using Interpreter.Lib.Semantic.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 
-namespace Interpreter.Lib.Semantic.Nodes.Expressions
+namespace Interpreter.Lib.IR.Ast.Nodes.Expressions
 {
     public class WithExpression : Expression
     {
