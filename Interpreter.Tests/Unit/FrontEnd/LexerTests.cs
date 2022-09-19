@@ -1,9 +1,7 @@
 using System.Linq;
 using Interpreter.Lib.FrontEnd.GetTokens;
-using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
-using Interpreter.Models;
-using Interpreter.Tests.Stubs;
+using Interpreter.Services.Providers.Impl.StructureProvider;
 using Interpreter.Tests.TestData;
 using Xunit;
 
@@ -15,8 +13,7 @@ namespace Interpreter.Tests.Unit.FrontEnd
 
         public LexerTests()
         {
-            var mapper = new MapperStub();
-            _lexer = new Lexer(mapper.Map<StructureModel, Structure>(new()));
+            _lexer = new Lexer(new StructureProvider().CreateStructure());
         }
 
         [Theory]
