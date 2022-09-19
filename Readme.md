@@ -174,7 +174,7 @@ let s = v2d as string
 ### Запуск
 
 ```
-Interpreter 1.1.3
+Interpreter 1.1.4
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:
