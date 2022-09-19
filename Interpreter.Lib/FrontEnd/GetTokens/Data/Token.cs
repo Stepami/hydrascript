@@ -20,7 +20,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Data
         {
             var displayValue = Value;
             if (displayValue != null) displayValue = Regex.Replace(Value, "\"", "\\\"");
-            if (Type.WhiteSpace()) displayValue = "";
+            if (Type.CanIgnore()) displayValue = "";
             return $"{Type} {Segment}: {displayValue}";
         }
     }

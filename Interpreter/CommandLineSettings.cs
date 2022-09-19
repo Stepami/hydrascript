@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using CommandLine;
 using CommandLine.Text;
-using Interpreter.Models;
 
 namespace Interpreter
 {
@@ -31,9 +30,8 @@ namespace Interpreter
             }
         }
 
-        public string GetInputFileName() => InputFilePath.Split(".js")[0];
-
-        public StructureModel StructureModel { get; } = new();
+        public string GetInputFileName() =>
+            InputFilePath.Split(".js")[0];
 
         public virtual string GetText() =>
             File.ReadAllText(InputFilePath);

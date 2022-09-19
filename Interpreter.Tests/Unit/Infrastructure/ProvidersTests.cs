@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Interpreter.Lib.FrontEnd.GetTokens;
+using Interpreter.Lib.FrontEnd.GetTokens.Data;
+using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 using Interpreter.Services.Providers;
 using Interpreter.Services.Providers.Impl.LexerProvider;
 using Interpreter.Services.Providers.Impl.ParserProvider;
-using Interpreter.Tests.Stubs;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -19,6 +21,10 @@ namespace Interpreter.Tests.Unit.Infrastructure
         [InlineData(typeof(LoggingLexer), true)]
         public void CertainLexerProvidedTest(Type lexerType, bool dump)
         {
+            var structureProvider = new Mock<IStructureProvider>();
+            structureProvider.Setup(x => x.CreateStructure())
+                .Returns(new Structure(new List<TokenType>()));
+
             var options = new Mock<IOptions<CommandLineSettings>>();
             options.Setup(x => x.Value)
                 .Returns(new CommandLineSettings
@@ -27,7 +33,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
                     InputFilePath = "file.js"
                 });
             
-            var lexerProvider = new LexerProvider(new MapperStub(), options.Object);
+            var lexerProvider = new LexerProvider(structureProvider.Object, options.Object);
             var lexer = lexerProvider.CreateLexer();
             
             Assert.IsType(lexerType, lexer);

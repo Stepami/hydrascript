@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
-using Interpreter.MappingProfiles;
 using Interpreter.Services.Executor;
 using Interpreter.Services.Executor.Impl;
 using Interpreter.Services.Parsing;
@@ -10,6 +9,7 @@ using Interpreter.Services.Parsing.Impl;
 using Interpreter.Services.Providers;
 using Interpreter.Services.Providers.Impl.LexerProvider;
 using Interpreter.Services.Providers.Impl.ParserProvider;
+using Interpreter.Services.Providers.Impl.StructureProvider;
 using Microsoft.Extensions.Options;
 
 namespace Interpreter
@@ -34,11 +34,10 @@ namespace Interpreter
 
         private static void ConfigureServices(CommandLineSettings settings)
         {
+            ServiceCollection.AddSingleton<IStructureProvider, StructureProvider>();
             ServiceCollection.AddSingleton<ILexerProvider, LexerProvider>();
             ServiceCollection.AddSingleton<IParserProvider, ParserProvider>();
             ServiceCollection.AddSingleton<IParsingService, ParsingService>();
-
-            ServiceCollection.AddAutoMapper(typeof(TokenTypeProfile), typeof(StructureProfile));
 
             ServiceCollection.AddSingleton<IExecutor, Executor>();
 

@@ -33,7 +33,7 @@ namespace Interpreter.Lib.FrontEnd.GetTokens.Impl
                     _lines.Add(match.Groups["NEWLINE"].Index);
             }
 
-            return this.Where(t => !t.Type.WhiteSpace()).ToList();
+            return this.Where(t => !t.Type.CanIgnore()).ToList();
         }
 
         public IEnumerator<Token> GetEnumerator()

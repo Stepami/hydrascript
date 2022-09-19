@@ -2,11 +2,7 @@
 {
     public record TokenType(string Tag, string Pattern, int Priority)
     {
-        public TokenType() : this(null, null, 0)
-        {
-        }
-
-        public virtual bool WhiteSpace() => false;
+        public virtual bool CanIgnore() => false;
 
         public virtual bool EndOfProgram() => false;
 

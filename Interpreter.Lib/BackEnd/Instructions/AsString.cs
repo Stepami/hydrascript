@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Interpreter.Lib.BackEnd.Values;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Interpreter.Lib.BackEnd.Instructions
 {
@@ -17,18 +16,15 @@ namespace Interpreter.Lib.BackEnd.Instructions
         public override int Execute(VirtualMachine vm)
         {
             var frame = vm.Frames.Peek();
-            frame[Left] = JsonConvert.SerializeObject(
+            frame[Left] = JsonSerializer.Serialize(
                 right.right.Get(frame),
-                new JsonSerializerSettings
+                new JsonSerializerOptions
                 {
-                    Formatting = Formatting.Indented,
-                    FloatFormatHandling = FloatFormatHandling.Symbol,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Converters = new List<JsonConverter>
-                    {
-                        new DoubleValueConverter()
-                    }
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    Converters = { new DoubleValueWriteConverter() },
+                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals
                 }
             );
 
@@ -38,20 +34,21 @@ namespace Interpreter.Lib.BackEnd.Instructions
         protected override string ToStringRepresentation() => $"{Left} = {right.right} as string";
         
         [ExcludeFromCodeCoverage]
-        private class DoubleValueConverter : JsonConverter<double>
+        private class DoubleValueWriteConverter : JsonConverter<double>
         {
-            public override bool CanRead => false;
+            public override double Read(ref Utf8JsonReader reader,
+                Type typeToConvert, JsonSerializerOptions options) =>
+                throw new NotImplementedException();
 
-            public override void WriteJson(JsonWriter writer, double value, JsonSerializer serializer) =>
+            public override void Write(Utf8JsonWriter writer, 
+                double value, JsonSerializerOptions options)
+            {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                writer.WriteRawValue(value == Math.Truncate(value)
-                    ? JsonConvert.ToString(Convert.ToInt64(value))
-                    : JsonConvert.ToString(value));
-
-            public override double ReadJson(JsonReader reader, Type objectType,
-                double existingValue, bool hasExistingValue,
-                JsonSerializer serializer) =>
-                throw new NotImplementedException("CanRead is false, so reading is unnecessary");
+                if (value == Math.Truncate(value))
+                    writer.WriteNumberValue(Convert.ToInt64(value));
+                else
+                    writer.WriteNumberValue(value);
+            }
         }
     }
 }
