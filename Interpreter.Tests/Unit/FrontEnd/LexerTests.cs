@@ -38,5 +38,15 @@ namespace Interpreter.Tests.Unit.FrontEnd
         [Fact]
         public void EmptyTextTest() => 
             Assert.NotEmpty(_lexer.GetTokens(""));
+
+        [Fact]
+        public void GetTokensSkipIgnorableTypesTest()
+        {
+            const string text = @"
+                let x = 1 // int
+            ";
+            var tokens = _lexer.GetTokens(text);
+            Assert.DoesNotContain(_lexer.Structure.FindByTag("Comment"), tokens.Select(x => x.Type));
+        }
     }
 }
