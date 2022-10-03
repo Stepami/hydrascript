@@ -75,7 +75,7 @@ namespace Interpreter.Lib.IR.Ast.Nodes
 
         protected abstract string NodeRepresentation();
 
-        public abstract List<Instruction> Accept(InstructionProvider visitor);
+        public virtual List<Instruction> Accept(InstructionProvider visitor)=>new();
 
         public override string ToString() => $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
     }
