@@ -35,7 +35,7 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions
             var type = _source.NodeCheck();
             if (Parent is LexicalDeclaration declaration)
             {
-                if (declaration.Const() && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
+                if (declaration.Readonly && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
                 {
                     throw new ConstWithoutInitializer(_destination);
                 }
@@ -65,14 +65,14 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions
                     : type;
                 if (typeOfSymbol is ObjectType objectTypeOfSymbol)
                 {
-                    SymbolTable.AddSymbol(new ObjectSymbol(id, objectTypeOfSymbol, declaration.Const(), _source.SymbolTable)
+                    SymbolTable.AddSymbol(new ObjectSymbol(id, objectTypeOfSymbol, declaration.Readonly, _source.SymbolTable)
                     {
                         Table = _source.SymbolTable
                     });
                 }
                 else
                 {
-                    SymbolTable.AddSymbol(new VariableSymbol(id, typeOfSymbol, declaration.Const()));
+                    SymbolTable.AddSymbol(new VariableSymbol(id, typeOfSymbol, declaration.Readonly));
                 }
             }
             else

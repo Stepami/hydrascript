@@ -3,16 +3,19 @@ using System.Linq;
 using System.Text;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes;
+using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Impl
 {
     public class AbstractSyntaxTree : IAbstractSyntaxTree
     {
         private readonly AbstractSyntaxTreeNode _root;
+        private readonly InstructionProvider _instructionProvider;
 
         public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
         {
             _root = root;
+            _instructionProvider = new();
         }
 
         private void Check() =>
@@ -23,8 +26,9 @@ namespace Interpreter.Lib.IR.Ast.Impl
 
         public List<Instruction> GetInstructions()
         {
-            Check();
-            
+            //Check();
+
+            var newResult = _root.Accept(_instructionProvider);
             var start = 0;
             var result = new List<Instruction>();
             foreach (var node in _root)

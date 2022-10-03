@@ -1,19 +1,25 @@
 using System.Collections.Generic;
+using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Nodes
 {
     public class ScriptBody : AbstractSyntaxTreeNode
     {
-        private readonly List<StatementListItem> _statementList;
+        public List<StatementListItem> StatementList { get; }
 
         public ScriptBody(IEnumerable<StatementListItem> statementList)
         {
-            _statementList = new List<StatementListItem>(statementList);
-            _statementList.ForEach(item => item.Parent = this);
+            StatementList = new List<StatementListItem>(statementList);
+            StatementList.ForEach(item => item.Parent = this);
         }
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => _statementList.GetEnumerator();
+        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
+            StatementList.GetEnumerator();
 
         protected override string NodeRepresentation() => "Script";
+
+        public override List<Instruction> Accept(InstructionProvider visitor) =>
+            visitor.Visit(this);
     }
 }

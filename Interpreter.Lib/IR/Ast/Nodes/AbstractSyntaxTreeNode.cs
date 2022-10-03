@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Nodes
 {
-    public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNode>
+    public abstract class AbstractSyntaxTreeNode :
+        IEnumerable<AbstractSyntaxTreeNode>,
+        IVisitable<InstructionProvider, List<Instruction>>
     {
         public AbstractSyntaxTreeNode Parent { get; set; }
         
@@ -70,6 +74,8 @@ namespace Interpreter.Lib.IR.Ast.Nodes
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         protected abstract string NodeRepresentation();
+
+        public abstract List<Instruction> Accept(InstructionProvider visitor);
 
         public override string ToString() => $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
     }

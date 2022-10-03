@@ -411,10 +411,19 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
         private void AddToDeclaration(LexicalDeclaration declaration, SymbolTable table)
         {
             var ident = Expect("Ident");
+            var identRef = new IdentifierReference(ident.Value)
+            {
+                SymbolTable = table, 
+                Segment = ident.Segment
+            };
+            AssignmentExpression assignment = null;
             if (CurrentIs("Assign"))
             {
                 var assignSegment = Expect("Assign").Segment;
-                declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), assignSegment);
+                var expression = Expression(table);
+                assignment = new AssignmentExpression(
+                    new MemberExpression(identRef, null), expression
+                ) { Segment = assignSegment };
             }
             else if (CurrentIs("Colon"))
             {
@@ -423,21 +432,23 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
                 if (CurrentIs("Assign"))
                 {
                     var assignSegment = Expect("Assign").Segment;
-                    declaration.AddAssignment(ident.Value, ident.Segment, Expression(table), assignSegment, type);
+                    var expression = Expression(table);
+                    assignment = new AssignmentExpression(
+                        new MemberExpression(identRef, null),
+                        expression, type) { Segment = assignSegment };
                 }
                 else
                 {
-                    declaration.AddAssignment(
-                        ident.Value,
-                        ident.Segment,
-                        new Literal(
-                            type,
-                            TypeUtils.GetDefaultValue(type),
-                            label: TypeUtils.GetDefaultValue(type) == null ? "null" : null
-                        )
+                    var expression = new Literal(
+                        type, TypeUtils.GetDefaultValue(type),
+                        label: TypeUtils.GetDefaultValue(type) == null ? "null" : null
                     );
+                    assignment = new AssignmentExpression(
+                        new MemberExpression(identRef, null),
+                        expression, type);
                 }
             }
+            declaration.AddAssignment(assignment);
         }
 
         private Expression Expression(SymbolTable table)
