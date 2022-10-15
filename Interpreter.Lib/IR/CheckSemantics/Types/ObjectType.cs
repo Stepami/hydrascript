@@ -32,6 +32,10 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
 
         public IEnumerable<string> Keys => _properties.Keys;
 
+        public bool IsRecursive(string reference) =>
+            new RecursionChecker(reference)
+                .Visit(this);
+        
         public void ResolveSelfReferences(string self) =>
             new ReferenceResolver(this, self)
                 .Visit(this);

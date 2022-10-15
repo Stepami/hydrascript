@@ -234,7 +234,7 @@ namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl
             }
             var type = TypeValue(table);
 
-            if (type is ObjectType objectType)
+            if (type is ObjectType objectType && objectType.IsRecursive(ident.Value))
             {
                 objectType.ResolveSelfReferences(ident.Value);
             }
