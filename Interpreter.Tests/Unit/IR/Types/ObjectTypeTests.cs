@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
+using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Tests.Unit.IR.Types
 {
@@ -126,10 +128,7 @@ namespace Interpreter.Tests.Unit.IR.Types
                     new("data", new Type("number")),
                     new("next", new Type("self"))
                 }
-            )
-            {
-                Recursive = true
-            };
+            ) { Recursive = true };
             nodeType.ResolveSelfReferences("self");
 
             var linkedListType = new ObjectType(
@@ -140,9 +139,11 @@ namespace Interpreter.Tests.Unit.IR.Types
                             new Type("void"),
                             new List<Type> { nodeType }
                         )
-                    )
+                    ),
+                    new("copy", new FunctionType(new Type("self"), Array.Empty<Type>()))
                 }
-            );
+            ) { Recursive = true };
+            linkedListType.ResolveSelfReferences("self");
 
             Assert.Contains("head: head;", linkedListType.ToString());
         }
