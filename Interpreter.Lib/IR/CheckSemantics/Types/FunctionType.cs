@@ -42,7 +42,7 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
                 ReturnType,
                 Arguments
                     .Select(arg => arg.GetHashCode())
-                    .Aggregate(HashCode.Combine)
+                    .Aggregate(36, HashCode.Combine)
             );
 
         public override string ToString() =>

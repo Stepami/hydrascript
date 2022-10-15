@@ -32,10 +32,6 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
 
         public IEnumerable<string> Keys => _properties.Keys;
 
-        public bool IsRecursive(string reference) =>
-            new RecursionChecker(reference)
-                .Visit(this);
-        
         public void ResolveSelfReferences(string self) =>
             new ReferenceResolver(this, self)
                 .Visit(this);
@@ -64,8 +60,8 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
 
         public override int GetHashCode() =>
             _properties
-                .Select(kvp => HashCode.Combine(kvp.Key, kvp.Value))
-                .Aggregate(HashCode.Combine);
+                .Select(kvp => HashCode.Combine(kvp.Key, 1))
+                .Aggregate(36, HashCode.Combine);
 
         public override string ToString() => _serializer.Visit(this);
     }

@@ -28,7 +28,9 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types.Visitors
                 var prop = $"{key}: ";
                 prop += type.Equals(_reference)
                     ? "@this"
-                    : type.Accept(this);
+                    : type.Recursive
+                        ? key
+                        : type.Accept(this);
                 sb.Append(prop).Append(';');
             }
 

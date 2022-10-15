@@ -15,6 +15,8 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
 
         public Type(string name) => _name = name;
 
+        public bool Recursive { get; set; }
+
         public virtual Unit Accept(ReferenceResolver visitor) =>
             visitor.Visit(this);
 
