@@ -25,6 +25,9 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
         public override string Accept(ObjectTypePrinter visitor) =>
             visitor.Visit(this);
         
+        public override int Accept(ObjectTypeHasher visitor) =>
+            visitor.Visit(this);
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
