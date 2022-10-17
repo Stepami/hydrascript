@@ -1,10 +1,10 @@
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-41%25-critical?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-42%25-critical?style=flat)
 
 Package | Line Rate | Health
 -------- | --------- | ------
-Interpreter.Lib | 39% | ❌
+Interpreter.Lib | 40% | ❌
 Interpreter | 100% | ✔
-**Summary** | **41%** (883 / 2150) | ❌
+**Summary** | **42%** (925 / 2173) | ❌
 
 _Minimum allowed line rate is `80%`_
 
@@ -174,7 +174,7 @@ let s = v2d as string
 ### Запуск
 
 ```
-Interpreter 1.1.4
+Interpreter 1.1.5
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:

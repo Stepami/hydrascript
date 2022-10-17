@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreter.Lib.IR.CheckSemantics.Types.Visitors;
@@ -9,6 +8,7 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
     public class ObjectType : NullableType
     {
         private readonly Dictionary<string, Type> _properties;
+        private readonly ObjectTypeHasher _hasher;
         private readonly ObjectTypePrinter _serializer;
 
         public ObjectType(IEnumerable<PropertyType> properties)
@@ -19,6 +19,7 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
                     x => x.Id,
                     x => x.Type
                 );
+            _hasher = new ObjectTypeHasher(this);
             _serializer = new ObjectTypePrinter(this);
         }
 
@@ -41,6 +42,9 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
         
         public override string Accept(ObjectTypePrinter visitor) =>
             visitor.Visit(this);
+        
+        public override int Accept(ObjectTypeHasher visitor) =>
+            visitor.Visit(this);
 
         public override bool Equals(object obj)
         {
@@ -59,11 +63,10 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types
         }
 
         public override int GetHashCode() =>
-            _properties
-                .Select(kvp => HashCode.Combine(kvp.Key, kvp.Value))
-                .Aggregate(HashCode.Combine);
+            _hasher.Visit(this);
 
-        public override string ToString() => _serializer.Visit(this);
+        public override string ToString() =>
+            _serializer.Visit(this);
     }
 
     public record PropertyType(string Id, Type Type);

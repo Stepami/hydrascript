@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types.Visitors
@@ -11,15 +12,21 @@ namespace Interpreter.Lib.IR.CheckSemantics.Types.Visitors
     {
         private readonly ObjectType _reference;
         private readonly string _refId;
+        private readonly HashSet<Type> _visited;
 
         public ReferenceResolver(ObjectType reference, string refId)
         {
             _reference = reference;
             _refId = refId;
+            _visited = new();
         }
         
         public Unit Visit(ObjectType visitable)
         {
+            if (_visited.Contains(visitable))
+                return default;
+            _visited.Add(visitable);
+            
             foreach (var key in visitable.Keys)
                 if (_refId == visitable[key])
                     visitable[key] = _reference;
