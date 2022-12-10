@@ -2,8 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-
         <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <CollectCoverage>true</CollectCoverage>
+        <CoverletOutputFormat>cobertura</CoverletOutputFormat>
     </PropertyGroup>
 
     <ItemGroup>
