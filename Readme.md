@@ -2,7 +2,7 @@
 
 Package | Line Rate | Health
 -------- | --------- | ------
-Interpreter.Lib | 41% | ❌
+Interpreter.Lib | 40% | ❌
 Interpreter | 100% | ✔
 **Summary** | **43%** (925 / 2173) | ❌
 
@@ -161,7 +161,7 @@ let s = v2d as string
 
 ### Требования
 
-- .NET 6 SDK
+- .NET 7 SDK
 
 ### Сборка
 После клонирования репозитория идём в папку проекта `Interpreter`.
