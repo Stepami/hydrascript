@@ -1,7 +1,6 @@
-namespace Interpreter.Lib.IR.Ast.Nodes.Declarations
+namespace Interpreter.Lib.IR.Ast.Nodes.Declarations;
+
+public abstract class Declaration : StatementListItem
 {
-    public abstract class Declaration : StatementListItem
-    {
-        public override bool IsDeclaration() => true;
-    }
+    public override bool IsDeclaration() => true;
 }

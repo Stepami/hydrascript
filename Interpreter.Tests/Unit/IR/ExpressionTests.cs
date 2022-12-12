@@ -1,24 +1,22 @@
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
 
-namespace Interpreter.Tests.Unit.IR
+namespace Interpreter.Tests.Unit.IR;
+
+public class ExpressionTests
 {
-    public class ExpressionTests
+    [Fact]
+    public void BinaryExpressionTest()
     {
-        [Fact]
-        public void BinaryExpressionTest()
-        {
-            var number = new Type("number");
+        var number = new Type("number");
             
-            var left = new Literal(number, 0);
-            var right = new Literal(number, 1);
+        var left = new Literal(number, 0);
+        var right = new Literal(number, 1);
 
-            var binExpr = new BinaryExpression(left, "-", right);
+        var binExpr = new BinaryExpression(left, "-", right);
 
-            var ex = Record.Exception(() => binExpr.SemanticCheck());
-            Assert.Null(ex);
-        }
+        var ex = Record.Exception(() => binExpr.SemanticCheck());
+        Assert.Null(ex);
     }
 }

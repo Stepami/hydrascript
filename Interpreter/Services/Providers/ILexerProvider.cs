@@ -1,9 +1,8 @@
 using Interpreter.Lib.FrontEnd.GetTokens;
 
-namespace Interpreter.Services.Providers
+namespace Interpreter.Services.Providers;
+
+public interface ILexerProvider
 {
-    public interface ILexerProvider
-    {
-        ILexer CreateLexer();
-    }
+    ILexer CreateLexer();
 }

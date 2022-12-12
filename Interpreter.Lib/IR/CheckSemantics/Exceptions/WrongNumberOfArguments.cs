@@ -1,10 +1,9 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
+namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
+
+public class WrongNumberOfArguments : SemanticException
 {
-    public class WrongNumberOfArguments : SemanticException
-    {
-        public WrongNumberOfArguments(Segment segment, int expected, int actual) :
-            base(segment, $"Wrong number of arguments: expected {expected}, actual {actual}") { }
-    }
+    public WrongNumberOfArguments(Segment segment, int expected, int actual) :
+        base(segment, $"Wrong number of arguments: expected {expected}, actual {actual}") { }
 }
