@@ -9,86 +9,85 @@ using Interpreter.Services.Providers.Impl.ParserProvider;
 using Moq;
 using Xunit;
 
-namespace Interpreter.Tests.Unit.Infrastructure
+namespace Interpreter.Tests.Unit.Infrastructure;
+
+public class LoggingEntitiesTests
 {
-    public class LoggingEntitiesTests
+    private readonly Mock<IFile> _file;
+    private readonly Mock<IFileSystem> _fileSystem;
+
+    public LoggingEntitiesTests()
     {
-        private readonly Mock<IFile> _file;
-        private readonly Mock<IFileSystem> _fileSystem;
+        _file = new Mock<IFile>();
 
-        public LoggingEntitiesTests()
-        {
-            _file = new Mock<IFile>();
+        _fileSystem = new Mock<IFileSystem>();
+        _fileSystem.Setup(x => x.File)
+            .Returns(_file.Object);
+    }
 
-            _fileSystem = new Mock<IFileSystem>();
-            _fileSystem.Setup(x => x.File)
-                .Returns(_file.Object);
-        }
+    [Fact]
+    public void CorrectFileNameProducedByLexerTest()
+    {
+        var lexer = new Mock<ILexer>();
+        lexer.Setup(x => x.GetTokens(It.IsAny<string>()))
+            .Returns(new List<Token>());
+        lexer.Setup(x => x.ToString())
+            .Returns("lexer");
 
-        [Fact]
-        public void CorrectFileNameProducedByLexerTest()
-        {
-            var lexer = new Mock<ILexer>();
-            lexer.Setup(x => x.GetTokens(It.IsAny<string>()))
-                .Returns(new List<Token>());
-            lexer.Setup(x => x.ToString())
-                .Returns("lexer");
+        _file.Setup(x => x.WriteAllText(
+            It.IsAny<string>(), It.IsAny<string>()
+        )).Verifiable();
 
-            _file.Setup(x => x.WriteAllText(
-                It.IsAny<string>(), It.IsAny<string>()
-            )).Verifiable();
+        var loggingLexer = new LoggingLexer(lexer.Object, "file", _fileSystem.Object);
+        loggingLexer.GetTokens("");
 
-            var loggingLexer = new LoggingLexer(lexer.Object, "file", _fileSystem.Object);
-            loggingLexer.GetTokens("");
-
-            _file.Verify(x => x.WriteAllText(
-                It.Is<string>(p => p == "file.tokens"), It.Is<string>(c => c == "lexer")
-            ), Times.Once());
-        }
+        _file.Verify(x => x.WriteAllText(
+            It.Is<string>(p => p == "file.tokens"), It.Is<string>(c => c == "lexer")
+        ), Times.Once());
+    }
         
-        [Fact]
-        public void CorrectTreeWrittenAndLoggingTreeProducedTest()
-        {
-            var ast = new Mock<IAbstractSyntaxTree>();
-            ast.Setup(x => x.ToString())
-                .Returns("digraph ast { }");
+    [Fact]
+    public void CorrectTreeWrittenAndLoggingTreeProducedTest()
+    {
+        var ast = new Mock<IAbstractSyntaxTree>();
+        ast.Setup(x => x.ToString())
+            .Returns("digraph ast { }");
             
-            var parser = new Mock<IParser>();
-            parser.Setup(x => x.TopDownParse(It.IsAny<string>()))
-                .Returns(ast.Object);
+        var parser = new Mock<IParser>();
+        parser.Setup(x => x.TopDownParse(It.IsAny<string>()))
+            .Returns(ast.Object);
 
-            _file.Setup(x => x.WriteAllText(
-                It.IsAny<string>(), It.IsAny<string>()
-            )).Verifiable();
+        _file.Setup(x => x.WriteAllText(
+            It.IsAny<string>(), It.IsAny<string>()
+        )).Verifiable();
 
-            var loggingParser = new LoggingParser(parser.Object, "file", _fileSystem.Object);
-            var parsed = loggingParser.TopDownParse("");
+        var loggingParser = new LoggingParser(parser.Object, "file", _fileSystem.Object);
+        var parsed = loggingParser.TopDownParse("");
 
-            _file.Verify(x => x.WriteAllText(
-                It.Is<string>(p => p == "ast.dot"),
-                It.Is<string>(c => c == "digraph ast { }")
-            ), Times.Once());
-            Assert.IsType<LoggingAbstractSyntaxTree>(parsed);
-        }
+        _file.Verify(x => x.WriteAllText(
+            It.Is<string>(p => p == "ast.dot"),
+            It.Is<string>(c => c == "digraph ast { }")
+        ), Times.Once());
+        Assert.IsType<LoggingAbstractSyntaxTree>(parsed);
+    }
 
-        [Fact]
-        public void CorrectFileNameProducedByTreeTest()
-        {
-            var ast = new Mock<IAbstractSyntaxTree>();
-            ast.Setup(x => x.GetInstructions())
-                .Returns(new List<Instruction> { new Halt(0) });
+    [Fact]
+    public void CorrectFileNameProducedByTreeTest()
+    {
+        var ast = new Mock<IAbstractSyntaxTree>();
+        ast.Setup(x => x.GetInstructions())
+            .Returns(new List<Instruction> { new Halt(0) });
 
-            _file.Setup(x => x.WriteAllLines(
-                It.IsAny<string>(), It.IsAny<IEnumerable<string>>()
-            )).Verifiable();
+        _file.Setup(x => x.WriteAllLines(
+            It.IsAny<string>(), It.IsAny<IEnumerable<string>>()
+        )).Verifiable();
 
-            var loggingTree = new LoggingAbstractSyntaxTree(ast.Object, "file", _fileSystem.Object);
-            loggingTree.GetInstructions();
+        var loggingTree = new LoggingAbstractSyntaxTree(ast.Object, "file", _fileSystem.Object);
+        loggingTree.GetInstructions();
 
-            _file.Verify(x => x.WriteAllLines(
-                It.Is<string>(p => p == "file.tac"),
-                It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "0: End" }))
-            ), Times.Once());
-        }
+        _file.Verify(x => x.WriteAllLines(
+            It.Is<string>(p => p == "file.tac"),
+            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "0: End" }))
+        ), Times.Once());
     }
 }

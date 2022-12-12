@@ -1,10 +1,9 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
+namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
+
+public class SymbolIsNotCallable: SemanticException
 {
-    public class SymbolIsNotCallable: SemanticException
-    {
-        public SymbolIsNotCallable(string symbol, Segment segment) : 
-            base(segment, $"Symbol is not callable: {symbol}") { }
-    }
+    public SymbolIsNotCallable(string symbol, Segment segment) : 
+        base(segment, $"Symbol is not callable: {symbol}") { }
 }

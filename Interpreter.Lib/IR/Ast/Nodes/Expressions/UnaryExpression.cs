@@ -5,86 +5,85 @@ using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
-namespace Interpreter.Lib.IR.Ast.Nodes.Expressions
+namespace Interpreter.Lib.IR.Ast.Nodes.Expressions;
+
+public class UnaryExpression : Expression
 {
-    public class UnaryExpression : Expression
+    private readonly string _operator;
+
+    private readonly Expression _expression;
+
+    public UnaryExpression(string @operator, Expression expression)
     {
-        private readonly string _operator;
+        _operator = @operator;
 
-        private readonly Expression _expression;
+        _expression = expression;
+        _expression.Parent = this;
+    }
 
-        public UnaryExpression(string @operator, Expression expression)
+    internal override Type NodeCheck()
+    {
+        var eType = _expression.NodeCheck();
+        Type retType;
+        if (eType.Equals(TypeUtils.JavaScriptTypes.Number) && _operator == "-")
         {
-            _operator = @operator;
-
-            _expression = expression;
-            _expression.Parent = this;
+            retType = TypeUtils.JavaScriptTypes.Number;
         }
-
-        internal override Type NodeCheck()
+        else if (eType.Equals(TypeUtils.JavaScriptTypes.Boolean) && _operator == "!")
         {
-            var eType = _expression.NodeCheck();
-            Type retType;
-            if (eType.Equals(TypeUtils.JavaScriptTypes.Number) && _operator == "-")
-            {
-                retType = TypeUtils.JavaScriptTypes.Number;
-            }
-            else if (eType.Equals(TypeUtils.JavaScriptTypes.Boolean) && _operator == "!")
-            {
-                retType = TypeUtils.JavaScriptTypes.Boolean;
-            }
-            else if (eType is ArrayType && _operator == "~")
-            {
-                retType = TypeUtils.JavaScriptTypes.Number;
-            }
-            else throw new UnsupportedOperation(Segment, eType, _operator);
-
-            return retType;
+            retType = TypeUtils.JavaScriptTypes.Boolean;
         }
-
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
+        else if (eType is ArrayType && _operator == "~")
         {
-            yield return _expression;
+            retType = TypeUtils.JavaScriptTypes.Number;
         }
+        else throw new UnsupportedOperation(Segment, eType, _operator);
 
-        protected override string NodeRepresentation() => _operator;
+        return retType;
+    }
 
-        public override List<Instruction> ToInstructions(int start, string temp)
+    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
+    {
+        yield return _expression;
+    }
+
+    protected override string NodeRepresentation() => _operator;
+
+    public override List<Instruction> ToInstructions(int start, string temp)
+    {
+        var instructions = new List<Instruction>();
+
+        (IValue left, IValue right) right = (null, null);
+        if (_expression.Primary())
         {
-            var instructions = new List<Instruction>();
-
-            (IValue left, IValue right) right = (null, null);
-            if (_expression.Primary())
+            right.right = ((PrimaryExpression) _expression).ToValue();
+        }
+        else
+        {
+            instructions.AddRange(_expression.ToInstructions(start, temp));
+            if (_expression is MemberExpression member && member.Any())
             {
-                right.right = ((PrimaryExpression) _expression).ToValue();
-            }
-            else
-            {
-                instructions.AddRange(_expression.ToInstructions(start, temp));
-                if (_expression is MemberExpression member && member.Any())
+                var i = start + instructions.Count;
+                var dest = "_t" + i;
+                var src = instructions.Any()
+                    ? instructions.OfType<Simple>().Last().Left
+                    : member.Id;
+                var instruction = member.AccessChain.Tail switch
                 {
-                    var i = start + instructions.Count;
-                    var dest = "_t" + i;
-                    var src = instructions.Any()
-                        ? instructions.OfType<Simple>().Last().Left
-                        : member.Id;
-                    var instruction = member.AccessChain.Tail switch
-                    {
-                        DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", i),
-                        IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", i),
-                        _ => throw new NotImplementedException()
-                    };
-                    instructions.Add(instruction);
-                }
-                right.right = new Name(instructions.OfType<Simple>().Last().Left);
+                    DotAccess dot => new Simple(dest, (new Name(src), new Constant(dot.Id, dot.Id)), ".", i),
+                    IndexAccess index => new Simple(dest, (new Name(src), index.Expression.ToValue()), "[]", i),
+                    _ => throw new NotImplementedException()
+                };
+                instructions.Add(instruction);
             }
-
-            var number = instructions.Any() ? instructions.Last().Number + 1 : start;
-
-            instructions.Add(new Simple(
-                temp + number, right, _operator, number
-            ));
-            return instructions;
+            right.right = new Name(instructions.OfType<Simple>().Last().Left);
         }
+
+        var number = instructions.Any() ? instructions.Last().Number + 1 : start;
+
+        instructions.Add(new Simple(
+            temp + number, right, _operator, number
+        ));
+        return instructions;
     }
 }
