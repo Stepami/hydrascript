@@ -1,5 +1,3 @@
-using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
-
 namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
 {
     public class VariableSymbol : Symbol

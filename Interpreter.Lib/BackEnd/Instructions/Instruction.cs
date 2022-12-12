@@ -1,5 +1,3 @@
-using System;
-
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public abstract class Instruction : IComparable<Instruction>

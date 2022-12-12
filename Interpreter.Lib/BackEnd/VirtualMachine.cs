@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Interpreter.Lib.BackEnd.Instructions;
 
 namespace Interpreter.Lib.BackEnd

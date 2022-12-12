@@ -1,5 +1,3 @@
-using System;
-
 namespace Interpreter.Lib.BackEnd.Values
 {
     public interface IValue : IEquatable<IValue>

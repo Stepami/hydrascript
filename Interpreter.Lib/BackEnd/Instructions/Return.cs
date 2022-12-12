@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions

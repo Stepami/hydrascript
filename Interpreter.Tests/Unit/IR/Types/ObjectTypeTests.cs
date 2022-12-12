@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
-using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Tests.Unit.IR.Types
 {

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 using Xunit;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Interpreter.Lib.IR.CheckSemantics.Types.Visitors;
 using Visitor.NET.Lib.Core;
 

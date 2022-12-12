@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Interpreter.Lib.IR.CheckSemantics.Types;
-
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements
 {
     public class TypeStatement : Statement

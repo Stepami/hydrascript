@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
-using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Variables
 {

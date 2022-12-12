@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
@@ -11,6 +9,7 @@ using Interpreter.Services.Providers.Impl.ParserProvider;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
+using SystemType = System.Type;
 
 namespace Interpreter.Tests.Unit.Infrastructure
 {
@@ -19,7 +18,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
         [Theory]
         [InlineData(typeof(Lexer), false)]
         [InlineData(typeof(LoggingLexer), true)]
-        public void CertainLexerProvidedTest(Type lexerType, bool dump)
+        public void CertainLexerProvidedTest(SystemType lexerType, bool dump)
         {
             var structureProvider = new Mock<IStructureProvider>();
             structureProvider.Setup(x => x.CreateStructure())
@@ -42,7 +41,7 @@ namespace Interpreter.Tests.Unit.Infrastructure
         [Theory]
         [InlineData(typeof(Parser), false)]
         [InlineData(typeof(LoggingParser), true)]
-        public void CertainParserProvidedTest(Type parserType, bool dump)
+        public void CertainParserProvidedTest(SystemType parserType, bool dump)
         {
             var options = new Mock<IOptions<CommandLineSettings>>();
             options.Setup(x => x.Value)

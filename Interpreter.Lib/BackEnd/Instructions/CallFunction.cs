@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public class CallFunction : Simple

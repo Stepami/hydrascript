@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions

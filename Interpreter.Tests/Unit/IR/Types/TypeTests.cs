@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Xunit;
 

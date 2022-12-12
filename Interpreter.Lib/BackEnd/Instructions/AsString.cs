@@ -1,8 +1,8 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Interpreter.Lib.BackEnd.Values;
+using SystemType = System.Type;
 
 namespace Interpreter.Lib.BackEnd.Instructions
 {
@@ -37,7 +37,7 @@ namespace Interpreter.Lib.BackEnd.Instructions
         private class DoubleValueWriteConverter : JsonConverter<double>
         {
             public override double Read(ref Utf8JsonReader reader,
-                Type typeToConvert, JsonSerializerOptions options) =>
+                SystemType typeToConvert, JsonSerializerOptions options) =>
                 throw new NotImplementedException();
 
             public override void Write(Utf8JsonWriter writer, 

@@ -1,5 +1,3 @@
-using Interpreter.Lib.IR.CheckSemantics.Types;
-
 namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols
 {
     public abstract class Symbol

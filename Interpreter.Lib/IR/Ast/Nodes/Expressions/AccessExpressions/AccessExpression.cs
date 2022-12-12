@@ -1,5 +1,3 @@
-using Interpreter.Lib.IR.CheckSemantics.Types;
-
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions
 {
     public abstract class AccessExpression : Expression

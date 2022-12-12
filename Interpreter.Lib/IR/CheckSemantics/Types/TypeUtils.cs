@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Interpreter.Lib.IR.CheckSemantics.Types
 {
     public static class TypeUtils
