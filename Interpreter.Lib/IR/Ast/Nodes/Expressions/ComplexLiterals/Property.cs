@@ -33,6 +33,6 @@ public class Property : Expression
 
     public override List<Instruction> ToInstructions(int start, string temp)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

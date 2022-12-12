@@ -1,5 +1,4 @@
 using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
