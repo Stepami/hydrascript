@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Interpreter.Lib.BackEnd.Instructions;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements

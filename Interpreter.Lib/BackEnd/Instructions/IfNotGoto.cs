@@ -1,4 +1,3 @@
-using System;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions

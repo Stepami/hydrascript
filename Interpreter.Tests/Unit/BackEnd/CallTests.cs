@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd;
 using Xunit;
 

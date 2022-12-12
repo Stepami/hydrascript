@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;

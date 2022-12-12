@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types.Visitors

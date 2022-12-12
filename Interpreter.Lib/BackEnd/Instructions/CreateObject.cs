@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public class CreateObject : Instruction

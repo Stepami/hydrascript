@@ -2,7 +2,6 @@ using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
-using Type = Interpreter.Lib.IR.CheckSemantics.Types.Type;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions
 {

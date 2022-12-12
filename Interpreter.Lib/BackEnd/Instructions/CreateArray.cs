@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Interpreter.Lib.BackEnd.Instructions
 {
     public class CreateArray : Instruction

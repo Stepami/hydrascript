@@ -1,4 +1,3 @@
-using System;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.FrontEnd.GetTokens

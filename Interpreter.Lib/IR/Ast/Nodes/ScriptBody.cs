@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Interpreter.Lib.IR.Ast.Nodes
 {
     public class ScriptBody : AbstractSyntaxTreeNode

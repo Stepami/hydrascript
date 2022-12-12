@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Declarations
 {

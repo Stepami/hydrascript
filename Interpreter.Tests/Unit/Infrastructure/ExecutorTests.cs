@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens;

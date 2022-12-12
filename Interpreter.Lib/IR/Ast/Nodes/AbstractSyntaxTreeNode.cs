@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 
 namespace Interpreter.Lib.IR.Ast.Nodes
