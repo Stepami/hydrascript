@@ -1,9 +1,8 @@
 using Interpreter.Lib.IR.Ast;
 
-namespace Interpreter.Lib.FrontEnd.TopDownParse
+namespace Interpreter.Lib.FrontEnd.TopDownParse;
+
+public interface IParser
 {
-    public interface IParser
-    {
-        IAbstractSyntaxTree TopDownParse(string text);
-    }
+    IAbstractSyntaxTree TopDownParse(string text);
 }

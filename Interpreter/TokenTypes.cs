@@ -1,9 +1,9 @@
-namespace Interpreter
+namespace Interpreter;
+
+public static class TokenTypes
 {
-    public static class TokenTypes
-    {
-      public const string Json =
-        """
+  public const string Json =
+    """
         [
           {
             "tag": "Comment",
@@ -118,5 +118,4 @@ namespace Interpreter
           }
         ]
         """;
-    }
 }

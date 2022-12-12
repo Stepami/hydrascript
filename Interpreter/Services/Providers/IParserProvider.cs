@@ -1,9 +1,8 @@
 using Interpreter.Lib.FrontEnd.TopDownParse;
 
-namespace Interpreter.Services.Providers
+namespace Interpreter.Services.Providers;
+
+public interface IParserProvider
 {
-    public interface IParserProvider
-    {
-        IParser CreateParser();
-    }
+    IParser CreateParser();
 }

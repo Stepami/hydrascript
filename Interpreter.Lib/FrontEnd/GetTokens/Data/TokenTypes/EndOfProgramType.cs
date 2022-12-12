@@ -1,7 +1,6 @@
-namespace Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes
+namespace Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
+
+internal record EndOfProgramType() : TokenType("EOP", "", int.MaxValue - 1)
 {
-    internal record EndOfProgramType() : TokenType("EOP", "", int.MaxValue - 1)
-    {
-        public override bool EndOfProgram() => true;
-    }
+    public override bool EndOfProgram() => true;
 }
