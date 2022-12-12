@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.BackEnd;
+namespace Interpreter.Lib.BackEnd.Addresses;
 
 public interface IAddress
 {
