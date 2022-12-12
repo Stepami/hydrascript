@@ -11,55 +11,54 @@ using Moq;
 using Xunit;
 using SystemType = System.Type;
 
-namespace Interpreter.Tests.Unit.Infrastructure
+namespace Interpreter.Tests.Unit.Infrastructure;
+
+public class ProvidersTests
 {
-    public class ProvidersTests
+    [Theory]
+    [InlineData(typeof(Lexer), false)]
+    [InlineData(typeof(LoggingLexer), true)]
+    public void CertainLexerProvidedTest(SystemType lexerType, bool dump)
     {
-        [Theory]
-        [InlineData(typeof(Lexer), false)]
-        [InlineData(typeof(LoggingLexer), true)]
-        public void CertainLexerProvidedTest(SystemType lexerType, bool dump)
-        {
-            var structureProvider = new Mock<IStructureProvider>();
-            structureProvider.Setup(x => x.CreateStructure())
-                .Returns(new Structure(new List<TokenType>()));
+        var structureProvider = new Mock<IStructureProvider>();
+        structureProvider.Setup(x => x.CreateStructure())
+            .Returns(new Structure(new List<TokenType>()));
 
-            var options = new Mock<IOptions<CommandLineSettings>>();
-            options.Setup(x => x.Value)
-                .Returns(new CommandLineSettings
-                {
-                    Dump = dump,
-                    InputFilePath = "file.js"
-                });
+        var options = new Mock<IOptions<CommandLineSettings>>();
+        options.Setup(x => x.Value)
+            .Returns(new CommandLineSettings
+            {
+                Dump = dump,
+                InputFilePath = "file.js"
+            });
             
-            var lexerProvider = new LexerProvider(structureProvider.Object, options.Object);
-            var lexer = lexerProvider.CreateLexer();
+        var lexerProvider = new LexerProvider(structureProvider.Object, options.Object);
+        var lexer = lexerProvider.CreateLexer();
             
-            Assert.IsType(lexerType, lexer);
-        }
+        Assert.IsType(lexerType, lexer);
+    }
         
-        [Theory]
-        [InlineData(typeof(Parser), false)]
-        [InlineData(typeof(LoggingParser), true)]
-        public void CertainParserProvidedTest(SystemType parserType, bool dump)
-        {
-            var options = new Mock<IOptions<CommandLineSettings>>();
-            options.Setup(x => x.Value)
-                .Returns(new CommandLineSettings
-                {
-                    Dump = dump,
-                    InputFilePath = "file.js"
-                });
+    [Theory]
+    [InlineData(typeof(Parser), false)]
+    [InlineData(typeof(LoggingParser), true)]
+    public void CertainParserProvidedTest(SystemType parserType, bool dump)
+    {
+        var options = new Mock<IOptions<CommandLineSettings>>();
+        options.Setup(x => x.Value)
+            .Returns(new CommandLineSettings
+            {
+                Dump = dump,
+                InputFilePath = "file.js"
+            });
 
-            var lexer = new Mock<ILexer>();
-            var lexerProvider = new Mock<ILexerProvider>();
-            lexerProvider.Setup(x => x.CreateLexer())
-                .Returns(lexer.Object);
+        var lexer = new Mock<ILexer>();
+        var lexerProvider = new Mock<ILexerProvider>();
+        lexerProvider.Setup(x => x.CreateLexer())
+            .Returns(lexer.Object);
 
-            var parserProvider = new ParserProvider(lexerProvider.Object, options.Object);
-            var parser = parserProvider.CreateParser();
+        var parserProvider = new ParserProvider(lexerProvider.Object, options.Object);
+        var parser = parserProvider.CreateParser();
             
-            Assert.IsType(parserType, parser);
-        }
+        Assert.IsType(parserType, parser);
     }
 }

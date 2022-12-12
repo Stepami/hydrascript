@@ -4,66 +4,65 @@ using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
-namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions
+namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
+
+public class IndexAccess : AccessExpression
 {
-    public class IndexAccess : AccessExpression
+    private readonly Expression _expression;
+
+    public IndexAccess(Expression expression, AccessExpression prev = null) : base(prev)
     {
-        private readonly Expression _expression;
-
-        public IndexAccess(Expression expression, AccessExpression prev = null) : base(prev)
-        {
-            _expression = expression;
-            _expression.Parent = this;
-        }
+        _expression = expression;
+        _expression.Parent = this;
+    }
         
-        public PrimaryExpression Expression => _expression as PrimaryExpression;
+    public PrimaryExpression Expression => _expression as PrimaryExpression;
 
-        public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
+    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
+    {
+        yield return _expression;
+        if (HasNext())
         {
-            yield return _expression;
-            if (HasNext())
-            {
-                yield return Next;
-            }
+            yield return Next;
         }
+    }
 
-        public override Type Check(Type prev)
+    public override Type Check(Type prev)
+    {
+        if (prev is ArrayType arrayType)
         {
-            if (prev is ArrayType arrayType)
+            var indexType = _expression.NodeCheck();
+            if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
             {
-                var indexType = _expression.NodeCheck();
-                if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
-                {
-                    var elemType = arrayType.Type;
-                    return HasNext() ? Next.Check(elemType) : elemType;
-                }
-
-                throw new ArrayAccessException(Segment, indexType);
+                var elemType = arrayType.Type;
+                return HasNext() ? Next.Check(elemType) : elemType;
             }
 
-            return null;
+            throw new ArrayAccessException(Segment, indexType);
         }
 
-        protected override string NodeRepresentation() => "[]";
+        return null;
+    }
 
-        public override List<Instruction> ToInstructions(int start, string temp)
+    protected override string NodeRepresentation() => "[]";
+
+    public override List<Instruction> ToInstructions(int start, string temp)
+    {
+        if (HasNext())
         {
-            if (HasNext())
+            if (_expression is PrimaryExpression prim)
             {
-                if (_expression is PrimaryExpression prim)
-                {
-                    var left = "_t" + start;
-                    var nextInstructions = Next.ToInstructions(start + 1, left);
-                    nextInstructions.Insert(0,
-                        new Simple(left, (new Name(temp), prim.ToValue()), "[]", start)
-                    );
-                    return nextInstructions;
-                }
-
-                throw new NotImplementedException();
+                var left = "_t" + start;
+                var nextInstructions = Next.ToInstructions(start + 1, left);
+                nextInstructions.Insert(0,
+                    new Simple(left, (new Name(temp), prim.ToValue()), "[]", start)
+                );
+                return nextInstructions;
             }
 
-            return new();
+            throw new NotImplementedException();
         }
+
+        return new();
     }
 }

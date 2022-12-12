@@ -6,25 +6,24 @@ using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Moq;
 using Xunit;
 
-namespace Interpreter.Tests.Unit.IR
+namespace Interpreter.Tests.Unit.IR;
+
+public class AstNodeTests
 {
-    public class AstNodeTests
+    [Fact]
+    public void PrecedenceTest()
     {
-        [Fact]
-        public void PrecedenceTest()
+        var fType = new Mock<FunctionType>(new Mock<Type>("").Object, new List<Type>());
+        var funcSymbol = new FunctionSymbol("f", new List<Symbol>(), fType.Object);
+
+        var lexicalDecl = new LexicalDeclaration(false);
+        var stmtItemList = new List<StatementListItem>
         {
-            var fType = new Mock<FunctionType>(new Mock<Type>("").Object, new List<Type>());
-            var funcSymbol = new FunctionSymbol("f", new List<Symbol>(), fType.Object);
+            lexicalDecl
+        };
+        // ReSharper disable once UnusedVariable
+        var func = new FunctionDeclaration(funcSymbol, new BlockStatement(stmtItemList));
 
-            var lexicalDecl = new LexicalDeclaration(false);
-            var stmtItemList = new List<StatementListItem>
-            {
-                lexicalDecl
-            };
-            // ReSharper disable once UnusedVariable
-            var func = new FunctionDeclaration(funcSymbol, new BlockStatement(stmtItemList));
-
-            Assert.True(lexicalDecl.ChildOf<FunctionDeclaration>());
-        }
+        Assert.True(lexicalDecl.ChildOf<FunctionDeclaration>());
     }
 }

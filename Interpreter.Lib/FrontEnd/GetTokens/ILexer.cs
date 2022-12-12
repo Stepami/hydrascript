@@ -1,11 +1,10 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens
-{
-    public interface ILexer
-    {
-        Structure Structure { get; }
+namespace Interpreter.Lib.FrontEnd.GetTokens;
 
-        List<Token> GetTokens(string text);
-    }
+public interface ILexer
+{
+    Structure Structure { get; }
+
+    List<Token> GetTokens(string text);
 }
