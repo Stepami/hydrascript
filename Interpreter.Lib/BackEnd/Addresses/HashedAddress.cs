@@ -1,17 +1,17 @@
 namespace Interpreter.Lib.BackEnd.Addresses;
 
-public class SimpleAddress : IAddress
+public class HashedAddress : IAddress
 {
     private readonly int _seed1, _seed2;
     
     public IAddress Next { get; set; }
 
-    public SimpleAddress(int seed1, int seed2) =>
+    public HashedAddress(int seed1, int seed2) =>
         (_seed1, _seed2) = (seed1, seed2);
 
     public bool Equals(IAddress other)
     {
-        if (other is SimpleAddress simple)
+        if (other is HashedAddress simple)
             return _seed1 == simple._seed1 &&
                    _seed2 == simple._seed2;
 

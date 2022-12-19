@@ -16,7 +16,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public void Add(Instruction instruction, string label = null)
     {
         IAddress newAddress = label is null
-            ? new SimpleAddress(_addresses.Count, instruction.GetHashCode())
+            ? new HashedAddress(_addresses.Count, instruction.GetHashCode())
             : new Label(label);
         instruction.Address = newAddress;
 
