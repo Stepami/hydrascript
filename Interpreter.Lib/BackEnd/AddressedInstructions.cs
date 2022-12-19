@@ -1,9 +1,10 @@
+using System.Collections;
 using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 
 namespace Interpreter.Lib.BackEnd;
 
-public class AddressedInstructions
+public class AddressedInstructions : IEnumerable<Instruction>
 {
     private readonly LinkedList<IAddress> _addresses = new();
     private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode = new();
@@ -36,4 +37,11 @@ public class AddressedInstructions
             Add(instruction, strAddress!.StartsWith("address") ? null : strAddress);
         }
     }
+
+    public IEnumerator<Instruction> GetEnumerator() =>
+        _addresses.Select(address => this[address])
+            .GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 }
