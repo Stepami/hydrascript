@@ -1,8 +1,12 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public abstract class Instruction : IComparable<Instruction>
 {
     public int Number { get; }
+    
+    public IAddress Address { get; }
 
     protected Instruction(int number) => 
         Number = number;

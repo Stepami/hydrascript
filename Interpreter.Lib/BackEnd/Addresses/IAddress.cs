@@ -1,8 +1,8 @@
 namespace Interpreter.Lib.BackEnd.Addresses;
 
-public interface IAddress
+public interface IAddress : IEquatable<IAddress>
 {
-    IAddress Next();
-    
-    void Unlink();
+    IAddress Next { get; set; }
+
+    int GetHashCode();
 }

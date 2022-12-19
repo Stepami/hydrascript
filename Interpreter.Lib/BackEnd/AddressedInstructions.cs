@@ -18,13 +18,13 @@ public class AddressedInstructions
 
     public void Add(Instruction instruction, string label = null)
     {
-        // сгенерировать адрес
-            
-        // вставить адрес в конец списка (список->новый адрес)
-            
-        // полученный узел списка связать с инструкцией
-        _instructions.Add(null!, instruction);
-        LinkedListNode<IAddress> node;
-        LinkedList<IAddress> linkedList;
+        IAddress newAddress = label is null
+            ? new SimpleAddress(_addresses.Count, instruction.GetHashCode())
+            : new Label(label);
+        
+        var newNode = _addresses.AddLast(newAddress);
+        
+        _addressToNode.Add(newAddress, newNode);
+        _instructions.Add(newNode, instruction);
     }
 }
