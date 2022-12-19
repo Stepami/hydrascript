@@ -27,4 +27,13 @@ public class AddressedInstructions
         _addressToNode.Add(newAddress, newNode);
         _instructions.Add(newNode, instruction);
     }
+
+    public void AddRange(IEnumerable<Instruction> instructions)
+    {
+        foreach (var instruction in instructions)
+        {
+            var strAddress = instruction.Address.ToString();
+            Add(instruction, strAddress!.StartsWith("address") ? null : strAddress);
+        }
+    }
 }
