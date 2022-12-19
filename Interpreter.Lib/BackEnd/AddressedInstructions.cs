@@ -5,16 +5,12 @@ namespace Interpreter.Lib.BackEnd;
 
 public class AddressedInstructions
 {
-    private readonly LinkedList<IAddress> _addresses;
-    private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode;
-    private readonly Dictionary<LinkedListNode<IAddress>, Instruction> _instructions;
+    private readonly LinkedList<IAddress> _addresses = new();
+    private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode = new();
+    private readonly Dictionary<LinkedListNode<IAddress>, Instruction> _instructions = new();
 
-    public AddressedInstructions()
-    {
-        _addresses = new();
-        _addressToNode = new();
-        _instructions = new();
-    }
+    public Instruction this[IAddress address] =>
+        _instructions[_addressToNode[address]];
 
     public void Add(Instruction instruction, string label = null)
     {
