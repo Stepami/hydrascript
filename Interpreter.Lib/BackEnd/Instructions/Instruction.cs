@@ -6,7 +6,7 @@ public abstract class Instruction : IComparable<Instruction>
 {
     public int Number { get; }
     
-    public IAddress Address { get; }
+    public IAddress Address { get; set; }
 
     protected Instruction(int number) => 
         Number = number;

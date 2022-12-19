@@ -18,6 +18,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         IAddress newAddress = label is null
             ? new SimpleAddress(_addresses.Count, instruction.GetHashCode())
             : new Label(label);
+        instruction.Address = newAddress;
 
         var last = _addresses.Last;
         if (last is not null)
