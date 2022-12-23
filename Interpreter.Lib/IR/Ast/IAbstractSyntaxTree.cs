@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Interpreter.Lib.BackEnd.Instructions;
 
-namespace Interpreter.Lib.IR.Ast
+namespace Interpreter.Lib.IR.Ast;
+
+public interface IAbstractSyntaxTree
 {
-    public interface IAbstractSyntaxTree
-    {
-        List<Instruction> GetInstructions();
-    }
+    List<Instruction> GetInstructions();
 }

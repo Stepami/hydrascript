@@ -1,17 +1,16 @@
-namespace Interpreter.Lib.IR.CheckSemantics.Types
+namespace Interpreter.Lib.IR.CheckSemantics.Types;
+
+public class NullType : Type
 {
-    public class NullType : Type
+    public NullType() : base("null")
     {
-        public NullType() : base("null")
-        {
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is NullableType or NullType;
-        }
-
-        public override int GetHashCode() =>
-            "null".GetHashCode();
     }
+
+    public override bool Equals(object obj)
+    {
+        return obj is NullableType or NullType;
+    }
+
+    public override int GetHashCode() =>
+        "null".GetHashCode();
 }

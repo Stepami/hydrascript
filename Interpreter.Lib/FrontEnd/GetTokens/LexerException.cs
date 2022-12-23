@@ -1,18 +1,16 @@
-using System;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Lib.FrontEnd.GetTokens
+namespace Interpreter.Lib.FrontEnd.GetTokens;
+
+[Serializable]
+public class LexerException : Exception
 {
-    [Serializable]
-    public class LexerException : Exception
-    {
-        public LexerException() { }
+    public LexerException() { }
         
-        protected LexerException(string message) : base(message) { }
+    protected LexerException(string message) : base(message) { }
         
-        protected LexerException(string message, Exception inner) : base(message, inner) { }
+    protected LexerException(string message, Exception inner) : base(message, inner) { }
         
-        public LexerException(Token token) :
-            base($"Unknown token {token}") { }
-    }
+    public LexerException(Token token) :
+        base($"Unknown token {token}") { }
 }
