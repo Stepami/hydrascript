@@ -40,4 +40,30 @@ public class AddressedInstructionsTests
         Assert.Null(Record.Exception(() => _collection.Remove(instructions[1])));
         Assert.Null(instructions[0].Address.Next);
     }
+
+    [Fact]
+    public void GetEnumeratorTests()
+    {
+        _collection.Add(1.ToInstructionMock().Object);
+        
+        var collectionToAdd = new AddressedInstructions
+        {
+            2.ToInstructionMock().Object,
+            3.ToInstructionMock().Object,
+            4.ToInstructionMock().Object
+        };
+        
+        _collection.AddRange(collectionToAdd);
+        
+        _collection.Add(5.ToInstructionMock().Object);
+
+        Assert.Collection(
+            _collection.Select(x => x.ToString()),
+            x => Assert.Equal("1", x),
+            x => Assert.Equal("2", x),
+            x => Assert.Equal("3", x),
+            x => Assert.Equal("4", x),
+            x => Assert.Equal("5", x)
+        );
+    }
 }
