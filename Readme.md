@@ -1,10 +1,10 @@
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-42%25-critical?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-43%25-critical?style=flat)
 
 Package | Line Rate | Health
 -------- | --------- | ------
 Interpreter.Lib | 40% | ❌
 Interpreter | 100% | ✔
-**Summary** | **42%** (925 / 2173) | ❌
+**Summary** | **43%** (925 / 2173) | ❌
 
 _Minimum allowed line rate is `80%`_
 
@@ -184,7 +184,7 @@ let v2dClone = v2dOriginal with {
 
 ### Требования
 
-- .NET 6 SDK
+- .NET 7 SDK
 
 ### Сборка
 После клонирования репозитория идём в папку проекта `Interpreter`.
@@ -197,7 +197,7 @@ let v2dClone = v2dOriginal with {
 ### Запуск
 
 ```
-Interpreter 1.1.5
+Interpreter 1.2.6
 Copyright (C) 2022 Interpreter
 USAGE:
 Simple interpretation call:

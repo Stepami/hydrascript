@@ -1,28 +1,27 @@
-namespace Interpreter.Lib.BackEnd.Values
+namespace Interpreter.Lib.BackEnd.Values;
+
+public class Constant : IValue
 {
-    public class Constant : IValue
+    private readonly object _value;
+    private readonly string _representation;
+
+    public Constant(object value, string representation)
     {
-        private readonly object _value;
-        private readonly string _representation;
+        _value = value;
+        _representation = representation;
+    }
 
-        public Constant(object value, string representation)
+    public object Get(Frame frame) => _value;
+
+    public override string ToString() => _representation;
+
+    public bool Equals(IValue other)
+    {
+        if (other is Constant that)
         {
-            _value = value;
-            _representation = representation;
+            return Equals(_value, that._value);
         }
 
-        public object Get(Frame frame) => _value;
-
-        public override string ToString() => _representation;
-
-        public bool Equals(IValue other)
-        {
-            if (other is Constant that)
-            {
-                return Equals(_value, that._value);
-            }
-
-            return false;
-        }
+        return false;
     }
 }

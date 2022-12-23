@@ -1,7 +1,6 @@
-namespace Interpreter.Services.Executor
+namespace Interpreter.Services.Executor;
+
+public interface IExecutor
 {
-    public interface IExecutor
-    {
-        void Execute();
-    }
+    void Execute();
 }

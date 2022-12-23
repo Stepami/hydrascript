@@ -1,18 +1,16 @@
-using System;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
+namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
+
+[Serializable]
+public abstract class SemanticException : Exception
 {
-    [Serializable]
-    public abstract class SemanticException : Exception
-    {
-        protected SemanticException() { }
+    protected SemanticException() { }
         
-        protected SemanticException(string message) : base(message) { }
+    protected SemanticException(string message) : base(message) { }
         
-        protected SemanticException(string message, Exception inner) : base(message, inner) { }
+    protected SemanticException(string message, Exception inner) : base(message, inner) { }
         
-        protected SemanticException(Segment segment, string message) :
-            base($"{segment} {message}") { }
-    }
+    protected SemanticException(Segment segment, string message) :
+        base($"{segment} {message}") { }
 }

@@ -1,9 +1,8 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Services.Providers
+namespace Interpreter.Services.Providers;
+
+public interface IStructureProvider
 {
-    public interface IStructureProvider
-    {
-        Structure CreateStructure();
-    }
+    Structure CreateStructure();
 }

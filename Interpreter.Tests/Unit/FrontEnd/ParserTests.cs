@@ -5,30 +5,29 @@ using Interpreter.Services.Providers.Impl.StructureProvider;
 using Interpreter.Tests.TestData;
 using Xunit;
 
-namespace Interpreter.Tests.Unit.FrontEnd
+namespace Interpreter.Tests.Unit.FrontEnd;
+
+public class ParserTests
 {
-    public class ParserTests
+    private readonly IParser _parser;
+
+    public ParserTests()
     {
-        private readonly IParser _parser;
+        _parser = new Parser(new Lexer(
+            new StructureProvider()
+                .CreateStructure()
+        ));
+    }
 
-        public ParserTests()
+    [Theory]
+    [ClassData(typeof(ParserSuccessTestData))]
+    public void ParserDoesNotThrowTest(string text)
+    {
+        var ex = Record.Exception(() =>
         {
-            _parser = new Parser(new Lexer(
-                new StructureProvider()
-                    .CreateStructure()
-            ));
-        }
-
-        [Theory]
-        [ClassData(typeof(ParserSuccessTestData))]
-        public void ParserDoesNotThrowTest(string text)
-        {
-            var ex = Record.Exception(() =>
-            {
-                // ReSharper disable once UnusedVariable
-                var ast = _parser.TopDownParse(text);
-            });
-            Assert.Null(ex);
-        }
+            // ReSharper disable once UnusedVariable
+            var ast = _parser.TopDownParse(text);
+        });
+        Assert.Null(ex);
     }
 }

@@ -1,13 +1,12 @@
-namespace Interpreter.Lib.IR.CheckSemantics.Types
+namespace Interpreter.Lib.IR.CheckSemantics.Types;
+
+public class Any : Type
 {
-    public class Any : Type
+    public Any() : base("any")
     {
-        public Any() : base("any")
-        {
-        }
-
-        public override bool Equals(object obj) => true;
-
-        public override int GetHashCode() => "any".GetHashCode();
     }
+
+    public override bool Equals(object obj) => true;
+
+    public override int GetHashCode() => "any".GetHashCode();
 }

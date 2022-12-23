@@ -1,9 +1,8 @@
 using Interpreter.Lib.IR.Ast;
 
-namespace Interpreter.Services.Parsing
+namespace Interpreter.Services.Parsing;
+
+public interface IParsingService
 {
-    public interface IParsingService
-    {
-        IAbstractSyntaxTree Parse(string text);
-    }
+    IAbstractSyntaxTree Parse(string text);
 }

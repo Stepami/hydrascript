@@ -1,11 +1,9 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Exceptions
+namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
+
+public class UnsupportedOperation : SemanticException
 {
-    public class UnsupportedOperation : SemanticException
-    {
-        public UnsupportedOperation(Segment segment, Type type, string @operator) :
-            base(segment, $"Type {type} does not support operation {@operator}") { }
-    }
+    public UnsupportedOperation(Segment segment, Type type, string @operator) :
+        base(segment, $"Type {type} does not support operation {@operator}") { }
 }
