@@ -1,4 +1,4 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Visitors;
 
@@ -28,6 +28,6 @@ public class LexicalDeclaration : Declaration
     protected override string NodeRepresentation() =>
         Readonly ? "const" : "let";
 
-    public override List<Instruction> Accept(InstructionProvider visitor) =>
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }

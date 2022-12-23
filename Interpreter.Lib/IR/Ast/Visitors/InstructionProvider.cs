@@ -1,4 +1,4 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
 using Visitor.NET.Lib.Core;
@@ -6,12 +6,12 @@ using Visitor.NET.Lib.Core;
 namespace Interpreter.Lib.IR.Ast.Visitors;
 
 public class InstructionProvider :
-    IVisitor<ScriptBody, List<Instruction>>,
-    IVisitor<LexicalDeclaration, List<Instruction>>
+    IVisitor<ScriptBody, AddressedInstructions>,
+    IVisitor<LexicalDeclaration, AddressedInstructions>
 {
-    public List<Instruction> Visit(ScriptBody visitable)
+    public AddressedInstructions Visit(ScriptBody visitable)
     {
-        var result = new List<Instruction>();
+        var result = new AddressedInstructions();
         foreach (var listItem in visitable.StatementList)
         {
             result.AddRange(listItem.Accept(this));
@@ -20,9 +20,9 @@ public class InstructionProvider :
         return result;
     }
 
-    public List<Instruction> Visit(LexicalDeclaration visitable)
+    public AddressedInstructions Visit(LexicalDeclaration visitable)
     {
-        var result = new List<Instruction>();
+        var result = new AddressedInstructions();
         foreach (var assignment in visitable.Assignments)
         {
             result.AddRange(assignment.Accept(this));

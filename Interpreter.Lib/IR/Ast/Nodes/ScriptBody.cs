@@ -1,4 +1,4 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Nodes;
@@ -18,6 +18,6 @@ public class ScriptBody : AbstractSyntaxTreeNode
 
     protected override string NodeRepresentation() => "Script";
 
-    public override List<Instruction> Accept(InstructionProvider visitor) =>
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }

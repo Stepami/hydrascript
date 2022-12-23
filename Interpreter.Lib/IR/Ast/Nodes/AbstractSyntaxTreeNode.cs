@@ -1,4 +1,5 @@
 using System.Collections;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
@@ -10,7 +11,7 @@ namespace Interpreter.Lib.IR.Ast.Nodes;
 
 public abstract class AbstractSyntaxTreeNode :
     IEnumerable<AbstractSyntaxTreeNode>,
-    IVisitable<InstructionProvider, List<Instruction>>
+    IVisitable<InstructionProvider, AddressedInstructions>
 {
     public AbstractSyntaxTreeNode Parent { get; set; }
         
@@ -73,7 +74,7 @@ public abstract class AbstractSyntaxTreeNode :
 
     protected abstract string NodeRepresentation();
 
-    public virtual List<Instruction> Accept(InstructionProvider visitor)=>new();
+    public virtual AddressedInstructions Accept(InstructionProvider visitor)=>new();
 
     public override string ToString() => $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
 }
