@@ -44,6 +44,22 @@ public class AddressedInstructions : IEnumerable<Instruction>
         }
     }
 
+    public void Remove(Instruction instruction)
+    {
+        var address = instruction.Address;
+        var nodeToRemove = _addressToNode[address];
+        
+        var prev = nodeToRemove.Previous;
+        if (prev is not null)
+        {
+            prev.Value.Next = nodeToRemove.Next?.Value;
+        }
+
+        _addressToNode.Remove(address);
+        _instructions.Remove(nodeToRemove);
+        _addresses.Remove(nodeToRemove);
+    }
+
     public IEnumerator<Instruction> GetEnumerator() =>
         _addresses.Select(address => this[address])
             .GetEnumerator();
