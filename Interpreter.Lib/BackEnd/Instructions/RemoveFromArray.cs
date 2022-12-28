@@ -21,6 +21,6 @@ public class RemoveFromArray : Instruction
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() =>
+    protected override string ToStringInternal() =>
         $"RemoveFrom {_id} at {_index}";
 }

@@ -18,6 +18,6 @@ public class IndexAssignment : Simple
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() =>
+    protected override string ToStringInternal() =>
         $"{Left}[{right.left}] = {right.right}";
 }

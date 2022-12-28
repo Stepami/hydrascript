@@ -18,5 +18,5 @@ public class CreateArray : Instruction
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() => $"array {_id} = [{_size}]";
+    protected override string ToStringInternal() => $"array {_id} = [{_size}]";
 }

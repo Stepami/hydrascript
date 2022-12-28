@@ -14,5 +14,5 @@ public class Halt : Instruction
         return -3;
     }
 
-    protected override string ToStringRepresentation() => "End";
+    protected override string ToStringInternal() => "End";
 }

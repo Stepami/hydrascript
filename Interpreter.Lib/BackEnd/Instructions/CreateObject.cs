@@ -16,5 +16,5 @@ public class CreateObject : Instruction
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() => $"object {_id} = {{}}";
+    protected override string ToStringInternal() => $"object {_id} = {{}}";
 }

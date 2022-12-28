@@ -22,5 +22,5 @@ public class IfNotGoto : Goto
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() => $"IfNot {_test} Goto {Jump()}";
+    protected override string ToStringInternal() => $"IfNot {_test} Goto {Jump()}";
 }

@@ -83,7 +83,7 @@ public class Simple : Instruction
         return Jump();
     }
 
-    protected override string ToStringRepresentation() =>
+    protected override string ToStringInternal() =>
         right.left == null
             ? $"{Left} = {@operator}{right.right}"
             : $"{Left} = {right.left} {@operator} {right.right}";

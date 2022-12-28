@@ -17,5 +17,5 @@ public class Print : Instruction
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() => $"Print {_value}";
+    protected override string ToStringInternal() => $"Print {_value}";
 }

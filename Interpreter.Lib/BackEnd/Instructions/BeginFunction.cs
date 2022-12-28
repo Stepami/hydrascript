@@ -11,5 +11,5 @@ public class BeginFunction : Instruction
 
     public override int Execute(VirtualMachine vm) => Number + 1;
 
-    protected override string ToStringRepresentation() => $"BeginFunction {_function.CallId()}";
+    protected override string ToStringInternal() => $"BeginFunction {_function.CallId()}";
 }

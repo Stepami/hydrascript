@@ -35,8 +35,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
             result.AddRange(instructions);
             start += instructions.Count;
         }
-
-        result.Sort();
+        
         result.Add(new Halt(result.Count));
 
         var calls = result.OfType<CallFunction>().GroupBy(i => i.Jump());

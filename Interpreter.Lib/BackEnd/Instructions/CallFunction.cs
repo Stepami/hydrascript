@@ -41,7 +41,7 @@ public class CallFunction : Simple
         return _function.Location;
     }
 
-    protected override string ToStringRepresentation() => Left == null
+    protected override string ToStringInternal() => Left == null
         ? $"Call {_function}, {_numberOfArguments}"
         : $"{Left} = Call {_function}, {_numberOfArguments}";
 }

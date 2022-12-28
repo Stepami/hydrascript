@@ -23,5 +23,5 @@ public class PushParameter : Instruction
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() => $"PushParameter {_parameter} = {_value}";
+    protected override string ToStringInternal() => $"PushParameter {_parameter} = {_value}";
 }

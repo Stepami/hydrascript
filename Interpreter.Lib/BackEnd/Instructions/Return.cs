@@ -34,5 +34,5 @@ public class Return : Instruction, IEnumerable<int>
         
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    protected override string ToStringRepresentation() => $"Return{(_value != null ? $" {_value}" : "")}";
+    protected override string ToStringInternal() => $"Return{(_value != null ? $" {_value}" : "")}";
 }

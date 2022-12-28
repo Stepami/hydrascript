@@ -31,7 +31,7 @@ public class AsString : Simple
         return Jump();
     }
 
-    protected override string ToStringRepresentation() => $"{Left} = {right.right} as string";
+    protected override string ToStringInternal() => $"{Left} = {right.right} as string";
         
     [ExcludeFromCodeCoverage]
     private class DoubleValueWriteConverter : JsonConverter<double>

@@ -15,5 +15,5 @@ public class Goto : Instruction
 
     public void SetJump(int newJump) => jump = newJump;
 
-    protected override string ToStringRepresentation() => $"Goto {Jump()}";
+    protected override string ToStringInternal() => $"Goto {Jump()}";
 }

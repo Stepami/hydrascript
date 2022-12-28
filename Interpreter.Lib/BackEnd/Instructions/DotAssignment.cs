@@ -18,6 +18,6 @@ public class DotAssignment : Simple
         return Number + 1;
     }
 
-    protected override string ToStringRepresentation() =>
+    protected override string ToStringInternal() =>
         $"{Left}{@operator}{right.left} = {right.right}";
 }
