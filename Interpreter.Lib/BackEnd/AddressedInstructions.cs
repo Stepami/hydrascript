@@ -13,6 +13,9 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public Instruction this[IAddress address] =>
         _instructions[_addressToNode[address]];
 
+    public IAddress Start =>
+        _addresses.First?.Value;
+
     public void Add(Instruction instruction, string label = null)
     {
         IAddress newAddress = label is null

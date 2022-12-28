@@ -8,7 +8,7 @@ public abstract class Instruction
 
     public virtual bool End() => false;
 
-    public abstract int Execute(VirtualMachine vm);
+    public abstract IAddress Execute(VirtualMachine vm);
 
     protected abstract string ToStringInternal();
 

@@ -1,5 +1,3 @@
-using Interpreter.Lib.BackEnd.Instructions;
-
 namespace Interpreter.Lib.BackEnd;
 
 public record VirtualMachine(
@@ -11,11 +9,11 @@ public record VirtualMachine(
     public VirtualMachine() :
         this(new(), new(), new(), Console.Out) { }
 
-    public void Run(List<Instruction> instructions)
+    public void Run(AddressedInstructions instructions)
     {
         Frames.Push(new Frame());
 
-        var address = 0;
+        var address = instructions.Start;
         while (!instructions[address].End())
         {
             var instruction = instructions[address];
