@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class CreateArray : Instruction
@@ -8,11 +10,11 @@ public class CreateArray : Instruction
     public CreateArray(string id, int size) =>
         (_id, _size) = (id, size);
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         frame[_id] = new object[_size].ToList();
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

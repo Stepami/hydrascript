@@ -1,22 +1,23 @@
 using System.Collections;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
 
-public class Return : Instruction, IEnumerable<int>
+public class Return : Instruction, IEnumerable<IAddress>
 {
     private readonly IValue _value;
-    private readonly List<int> _callers = new();
+    private readonly List<IAddress> _callers = new();
 
-    public int FunctionStart { get; }
+    public IAddress FunctionStart { get; }
 
-    public Return(int functionStart, IValue value = null) =>
+    public Return(IAddress functionStart, IValue value = null) =>
         (FunctionStart, _value) = (functionStart, value);
 
-    public void AddCaller(int caller) =>
+    public void AddCaller(IAddress caller) =>
         _callers.Add(caller);
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Pop();
         var call = vm.CallStack.Pop();
@@ -28,7 +29,7 @@ public class Return : Instruction, IEnumerable<int>
         return frame.ReturnAddress;
     }
 
-    public IEnumerator<int> GetEnumerator() =>
+    public IEnumerator<IAddress> GetEnumerator() =>
         _callers.GetEnumerator();
         
     IEnumerator IEnumerable.GetEnumerator() =>

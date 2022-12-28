@@ -1,3 +1,4 @@
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
@@ -10,12 +11,12 @@ public class RemoveFromArray : Instruction
     public RemoveFromArray(string id, IValue index) =>
         (_id, _index) = (id, index);
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         var list = (List<object>) frame[_id];
         list.RemoveAt(Convert.ToInt32(_index.Get(frame)));
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

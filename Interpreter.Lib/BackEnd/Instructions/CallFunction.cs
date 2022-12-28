@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class CallFunction : Simple
@@ -12,9 +14,9 @@ public class CallFunction : Simple
         _numberOfArguments = numberOfArguments + Convert.ToInt32(function.MethodOf != null);
     }
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
-        var frame = new Frame(0 + 1, vm.Frames.Peek());
+        var frame = new Frame(Address.Next, vm.Frames.Peek());
 
         var i = 0;
         var args = new List<(string Id, object Value)>();
@@ -34,7 +36,7 @@ public class CallFunction : Simple
             }
         }
 
-        vm.CallStack.Push(new Call(0, _function, args, Left));
+        vm.CallStack.Push(new Call(Address, _function, args, Left));
         vm.Frames.Push(frame);
         return _function.Location;
     }

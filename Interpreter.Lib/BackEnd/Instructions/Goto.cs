@@ -1,16 +1,20 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class Goto : Instruction
 {
-    protected int jump;
+    protected Label jump;
         
-    public Goto(int jump) =>
+    public Goto(Label jump) =>
         this.jump = jump;
 
-    public override int Execute(VirtualMachine vm) => 0;
-
-    public void SetJump(int newJump) => jump = newJump;
+    public override IAddress Execute(VirtualMachine vm) =>
+        jump;
+    
+    public void SetJump(Label newJump) =>
+        jump = newJump;
 
     protected override string ToStringInternal() =>
-        $"Goto {0}";
+        $"Goto {Address}";
 }

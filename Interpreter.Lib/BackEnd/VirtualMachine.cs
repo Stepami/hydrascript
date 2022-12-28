@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd;
 
 public record VirtualMachine(
@@ -11,7 +13,7 @@ public record VirtualMachine(
 
     public void Run(AddressedInstructions instructions)
     {
-        Frames.Push(new Frame());
+        Frames.Push(new Frame(instructions.Start));
 
         var address = instructions.Start;
         while (!instructions[address].End())
@@ -26,7 +28,7 @@ public record VirtualMachine(
 }
     
 public record Call(
-    int From, FunctionInfo To, 
+    IAddress From, FunctionInfo To, 
     List<(string Id, object Value)> Parameters,
     string Where = null)
 {
@@ -34,9 +36,9 @@ public record Call(
         $"{From} => {To.Location}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
 }
     
-public record FunctionInfo(string Id, int Location = 0, string MethodOf = null)
+public record FunctionInfo(string Id, IAddress Location, string MethodOf = null)
 {
-    public int Location { get; set; } = Location;
+    public IAddress Location { get; set; } = Location;
 
     public string MethodOf { get; set; } = MethodOf;
 
@@ -54,18 +56,15 @@ public class Frame
     private readonly Dictionary<string, object> _variables = new();
     private readonly Frame _parentFrame;
 
-    public int ReturnAddress { get; }
+    public IAddress ReturnAddress { get; }
 
-    public Frame(int returnAddress = 0, Frame parentFrame = null)
-    {
-        ReturnAddress = returnAddress;
-        _parentFrame = parentFrame;
-    }
+    public Frame(IAddress returnAddress, Frame parentFrame = null) =>
+        (ReturnAddress, _parentFrame) = (returnAddress, parentFrame);
 
     public object this[string id]
     {
-        get => _variables.ContainsKey(id)
-            ? _variables[id]
+        get => _variables.TryGetValue(id, out var value)
+            ? value
             : _parentFrame?[id];
         set => _variables[id] = value;
     }

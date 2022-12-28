@@ -1,3 +1,4 @@
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
@@ -7,13 +8,13 @@ public class DotAssignment : Simple
     public DotAssignment(string left, (IValue left, IValue right) right) : 
         base(left, right, ".") { }
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         var obj = (Dictionary<string, object>) frame[Left];
         var field = (string) right.left.Get(frame) ?? string.Empty;
         obj[field] = right.right.Get(frame);
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

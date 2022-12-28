@@ -1,3 +1,4 @@
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
@@ -10,10 +11,10 @@ public class PushParameter : Instruction
     public PushParameter(string parameter, IValue value) =>
         (_parameter, _value) = (parameter, value);
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         vm.Arguments.Push((_parameter, _value.Get(vm.Frames.Peek())));
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

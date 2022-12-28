@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 using SystemType = System.Type;
 
@@ -11,7 +12,7 @@ public class AsString : Simple
     public AsString(string left, IValue right) :
         base(left, (null, right), "") { }
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         frame[Left] = JsonSerializer.Serialize(
@@ -26,7 +27,7 @@ public class AsString : Simple
             }
         );
 
-        return 0;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

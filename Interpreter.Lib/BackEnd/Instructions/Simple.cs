@@ -1,3 +1,4 @@
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
@@ -18,11 +19,12 @@ public class Simple : Instruction
         this.@operator = @operator;
     }
 
-    public IValue Source => right.right;
+    public IValue Source =>
+        right.right;
 
     public bool Assignment => @operator == "";
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         if (right.left == null)
@@ -76,7 +78,7 @@ public class Simple : Instruction
             }
         }
 
-        return 0;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() => right.left == null

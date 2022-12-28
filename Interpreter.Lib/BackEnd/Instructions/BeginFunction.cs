@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class BeginFunction : Instruction
@@ -7,7 +9,8 @@ public class BeginFunction : Instruction
     public BeginFunction(FunctionInfo function) =>
         _function = function;
 
-    public override int Execute(VirtualMachine vm) => 0 + 1;
+    public override IAddress Execute(VirtualMachine vm) =>
+        Address.Next;
 
     protected override string ToStringInternal() =>
         $"BeginFunction {_function.CallId()}";

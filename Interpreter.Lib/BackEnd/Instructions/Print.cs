@@ -1,3 +1,4 @@
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
@@ -9,10 +10,10 @@ public class Print : Instruction
     public Print(IValue value) =>
         _value = value;
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         vm.Writer.WriteLine(_value.Get(vm.Frames.Peek()));
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>

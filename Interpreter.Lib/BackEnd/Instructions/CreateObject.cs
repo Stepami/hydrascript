@@ -1,3 +1,5 @@
+using Interpreter.Lib.BackEnd.Addresses;
+
 namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class CreateObject : Instruction
@@ -7,11 +9,11 @@ public class CreateObject : Instruction
     public CreateObject(string id) =>
         _id = id;
 
-    public override int Execute(VirtualMachine vm)
+    public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
         frame[_id] = new Dictionary<string, object>();
-        return 0 + 1;
+        return Address.Next;
     }
 
     protected override string ToStringInternal() =>
