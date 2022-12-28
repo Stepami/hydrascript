@@ -9,13 +9,9 @@ public class Simple : Instruction
     protected (IValue left, IValue right) right;
     protected readonly string @operator;
 
-    public Simple(
-        string left,
+    public Simple(string left,
         (IValue left, IValue right) right,
-        string @operator,
-        int number
-    ) :
-        base(number)
+        string @operator)
     {
         Left = left;
         this.right = right;
@@ -80,11 +76,10 @@ public class Simple : Instruction
             }
         }
 
-        return Jump();
+        return 0;
     }
 
-    protected override string ToStringInternal() =>
-        right.left == null
-            ? $"{Left} = {@operator}{right.right}"
-            : $"{Left} = {right.left} {@operator} {right.right}";
+    protected override string ToStringInternal() => right.left == null
+        ? $"{Left} = {@operator}{right.right}"
+        : $"{Left} = {right.left} {@operator} {right.right}";
 }

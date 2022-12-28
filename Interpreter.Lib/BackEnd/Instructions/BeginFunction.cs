@@ -4,12 +4,11 @@ public class BeginFunction : Instruction
 {
     private readonly FunctionInfo _function;
         
-    public BeginFunction(int number, FunctionInfo function) : base(number)
-    {
+    public BeginFunction(FunctionInfo function) =>
         _function = function;
-    }
 
-    public override int Execute(VirtualMachine vm) => Number + 1;
+    public override int Execute(VirtualMachine vm) => 0 + 1;
 
-    protected override string ToStringInternal() => $"BeginFunction {_function.CallId()}";
+    protected override string ToStringInternal() =>
+        $"BeginFunction {_function.CallId()}";
 }

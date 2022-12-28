@@ -8,10 +8,8 @@ namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class AsString : Simple
 {
-    public AsString(string left, IValue right, int number) :
-        base(left, (null, right), "", number)
-    {
-    }
+    public AsString(string left, IValue right) :
+        base(left, (null, right), "") { }
 
     public override int Execute(VirtualMachine vm)
     {
@@ -28,10 +26,11 @@ public class AsString : Simple
             }
         );
 
-        return Jump();
+        return 0;
     }
 
-    protected override string ToStringInternal() => $"{Left} = {right.right} as string";
+    protected override string ToStringInternal() =>
+        $"{Left} = {right.right} as string";
         
     [ExcludeFromCodeCoverage]
     private class DoubleValueWriteConverter : JsonConverter<double>

@@ -9,14 +9,12 @@ public class Return : Instruction, IEnumerable<int>
     private readonly List<int> _callers = new();
 
     public int FunctionStart { get; }
-        
-    public Return(int functionStart, int number, IValue value = null) : base(number)
-    {
-        _value = value;
-        FunctionStart = functionStart;
-    }
 
-    public void AddCaller(int caller) => _callers.Add(caller);
+    public Return(int functionStart, IValue value = null) =>
+        (FunctionStart, _value) = (functionStart, value);
+
+    public void AddCaller(int caller) =>
+        _callers.Add(caller);
 
     public override int Execute(VirtualMachine vm)
     {
@@ -30,9 +28,12 @@ public class Return : Instruction, IEnumerable<int>
         return frame.ReturnAddress;
     }
 
-    public IEnumerator<int> GetEnumerator() => _callers.GetEnumerator();
+    public IEnumerator<int> GetEnumerator() =>
+        _callers.GetEnumerator();
         
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 
-    protected override string ToStringInternal() => $"Return{(_value != null ? $" {_value}" : "")}";
+    protected override string ToStringInternal() =>
+        $"Return{(_value != null ? $" {_value}" : "")}";
 }

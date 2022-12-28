@@ -5,18 +5,16 @@ public class CallFunction : Simple
     private readonly FunctionInfo _function;
     private readonly int _numberOfArguments;
         
-    public CallFunction(FunctionInfo function, int number, int numberOfArguments, string left = null) :
-        base(left, (null, null), "Call ", number)
+    public CallFunction(FunctionInfo function, int numberOfArguments, string left = null) :
+        base(left, (null, null), "Call ")
     {
         _function = function;
         _numberOfArguments = numberOfArguments + Convert.ToInt32(function.MethodOf != null);
     }
 
-    public override int Jump() => _function.Location;
-
     public override int Execute(VirtualMachine vm)
     {
-        var frame = new Frame(Number + 1, vm.Frames.Peek());
+        var frame = new Frame(0 + 1, vm.Frames.Peek());
 
         var i = 0;
         var args = new List<(string Id, object Value)>();
@@ -36,7 +34,7 @@ public class CallFunction : Simple
             }
         }
 
-        vm.CallStack.Push(new Call(Number, _function, args, Left));
+        vm.CallStack.Push(new Call(0, _function, args, Left));
         vm.Frames.Push(frame);
         return _function.Location;
     }
