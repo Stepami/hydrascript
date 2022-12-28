@@ -34,13 +34,10 @@ public class AddressedInstructions : IEnumerable<Instruction>
     {
         foreach (var instruction in instructions)
         {
-            var strAddress = instruction.Address?.ToString();
-            Add(instruction,
-                strAddress != null &&
-                strAddress.StartsWith("address")
-                    ? null
-                    : strAddress
-            );
+            var address = instruction.Address;
+            Add(instruction, address?.IsLabel() ?? false
+                ? address.ToString()
+                : null);
         }
     }
 

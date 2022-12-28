@@ -9,6 +9,8 @@ public class Label : IAddress
     
     public IAddress Next { get; set; }
 
+    public bool IsLabel() => true;
+
     public bool Equals(IAddress other)
     {
         if (other is Label label)
