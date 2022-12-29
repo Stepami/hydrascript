@@ -37,20 +37,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
         }
         
         result.Add(new Halt(result.Count));
-
-        var calls = result.OfType<CallFunction>().GroupBy(i => i.Jump());
-        foreach (var call in calls)
-        {
-            var returns = result.OfType<Return>()
-                .Where(r => r.FunctionStart == call.Key);
-            foreach (var ret in returns)
-            {
-                foreach (var caller in call)
-                {
-                    ret.AddCaller(caller.Number + 1);
-                }
-            }
-        }
+        
         return result;
     }
 

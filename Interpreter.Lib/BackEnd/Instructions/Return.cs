@@ -4,18 +4,12 @@ using Interpreter.Lib.BackEnd.Values;
 
 namespace Interpreter.Lib.BackEnd.Instructions;
 
-public class Return : Instruction, IEnumerable<IAddress>
+public class Return : Instruction
 {
     private readonly IValue _value;
-    private readonly List<IAddress> _callers = new();
 
-    public IAddress FunctionStart { get; }
-
-    public Return(IAddress functionStart, IValue value = null) =>
-        (FunctionStart, _value) = (functionStart, value);
-
-    public void AddCaller(IAddress caller) =>
-        _callers.Add(caller);
+    public Return(IValue value = null) =>
+        _value = value;
 
     public override IAddress Execute(VirtualMachine vm)
     {
@@ -28,12 +22,6 @@ public class Return : Instruction, IEnumerable<IAddress>
 
         return frame.ReturnAddress;
     }
-
-    public IEnumerator<IAddress> GetEnumerator() =>
-        _callers.GetEnumerator();
-        
-    IEnumerator IEnumerable.GetEnumerator() =>
-        GetEnumerator();
 
     protected override string ToStringInternal() =>
         $"Return{(_value != null ? $" {_value}" : "")}";
