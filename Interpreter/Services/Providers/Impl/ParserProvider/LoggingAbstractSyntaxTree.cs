@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast;
 
@@ -17,7 +18,7 @@ public class LoggingAbstractSyntaxTree : IAbstractSyntaxTree
         _fileSystem = fileSystem;
     }
     
-    public List<Instruction> GetInstructions()
+    public AddressedInstructions GetInstructions()
     {
         var instructions = _ast.GetInstructions();
         _fileSystem.File.WriteAllLines(

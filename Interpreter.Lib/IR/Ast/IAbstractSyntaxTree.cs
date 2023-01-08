@@ -1,8 +1,8 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 
 namespace Interpreter.Lib.IR.Ast;
 
 public interface IAbstractSyntaxTree
 {
-    List<Instruction> GetInstructions();
+    AddressedInstructions GetInstructions();
 }

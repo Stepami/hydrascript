@@ -1,4 +1,5 @@
 using System.Text;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Visitors;
@@ -22,13 +23,13 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     private IEnumerable<AbstractSyntaxTreeNode> GetAllNodes() =>
         _root.GetAllNodes();
 
-    public List<Instruction> GetInstructions()
+    public AddressedInstructions GetInstructions()
     {
         //Check();
 
         var newResult = _root.Accept(_instructionProvider);
         var start = 0;
-        var result = new List<Instruction>();
+        var result = new AddressedInstructions();
         foreach (var node in _root)
         {
             var instructions = node.ToInstructions(start);
@@ -36,7 +37,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
             start += instructions.Count;
         }
         
-        result.Add(new Halt(result.Count));
+        result.Add(new Halt());
         
         return result;
     }
