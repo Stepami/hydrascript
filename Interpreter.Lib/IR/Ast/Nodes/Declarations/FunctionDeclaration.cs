@@ -21,7 +21,10 @@ public class FunctionDeclaration : Declaration
         _statements.Parent = this;
     }
 
-    public bool HasReturnStatement() => _statements.HasReturnStatement();
+    public bool HasReturnStatement() =>
+        _statements.GetAllNodes()
+            .OfType<ReturnStatement>()
+            .Any();
 
     public void SetArguments(CallExpression call, List<Expression> expressions)
     {
@@ -69,7 +72,7 @@ public class FunctionDeclaration : Declaration
                 new BeginFunction(_function.CallInfo.Location, _function.CallInfo)
             };
             body.AddRange(_statements.ToInstructions(_function.CallInfo.Location + 1));
-            if (!_statements.HasReturnStatement())
+            if (!HasReturnStatement())
             {
                 body.Add(new Return(_function.CallInfo.Location, body.Last().Number + 1));
             }

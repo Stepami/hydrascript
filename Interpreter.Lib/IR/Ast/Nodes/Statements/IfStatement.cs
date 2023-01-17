@@ -29,29 +29,6 @@ public class IfStatement : Statement
         CanEvaluate = true;
     }
 
-    public bool HasReturnStatement()
-    {
-        var thenResult = _then is ReturnStatement;
-        if (!thenResult)
-        {
-            if (_then is BlockStatement block)
-            {
-                thenResult = block.HasReturnStatement();
-            }
-        }
-
-        var elseResult = _else == null || _else is ReturnStatement;
-        if (!elseResult)
-        {
-            if (_else is BlockStatement block)
-            {
-                elseResult = block.HasReturnStatement();
-            }
-        }
-
-        return thenResult && elseResult;
-    }
-
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         yield return _test;

@@ -13,20 +13,6 @@ public class BlockStatement : Statement
         StatementList.ForEach(item => item.Parent = this);
     }
 
-    public bool HasReturnStatement()
-    {
-        var has = StatementList.Any(item => item is ReturnStatement);
-        if (!has)
-        {
-            has = StatementList
-                .Where(item => item.IsStatement())
-                .OfType<IfStatement>()
-                .Any(ifStmt => ifStmt.HasReturnStatement());
-        }
-
-        return has;
-    }
-
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
         StatementList.GetEnumerator();
 
