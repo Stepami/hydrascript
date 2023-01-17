@@ -1,23 +1,24 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
 public class BlockStatement : Statement
 {
-    private readonly List<StatementListItem> _statementList;
+    public List<StatementListItem> StatementList { get; }
 
     public BlockStatement(IEnumerable<StatementListItem> statementList)
     {
-        _statementList = new List<StatementListItem>(statementList);
-        _statementList.ForEach(item => item.Parent = this);
+        StatementList = new List<StatementListItem>(statementList);
+        StatementList.ForEach(item => item.Parent = this);
     }
 
     public bool HasReturnStatement()
     {
-        var has = _statementList.Any(item => item is ReturnStatement);
+        var has = StatementList.Any(item => item is ReturnStatement);
         if (!has)
         {
-            has = _statementList
+            has = StatementList
                 .Where(item => item.IsStatement())
                 .OfType<IfStatement>()
                 .Any(ifStmt => ifStmt.HasReturnStatement());
@@ -26,26 +27,11 @@ public class BlockStatement : Statement
         return has;
     }
 
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() => _statementList.GetEnumerator();
+    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
+        StatementList.GetEnumerator();
 
     protected override string NodeRepresentation() => "{}";
 
-    public override List<Instruction> ToInstructions(int start)
-    {
-        var blockInstructions = new List<Instruction>();
-        var offset = start;
-        foreach (var item in _statementList)
-        {
-            var itemInstructions = item.ToInstructions(offset);
-            blockInstructions.AddRange(itemInstructions);
-            if (item is ReturnStatement)
-            {
-                break;
-            }
-
-            offset += itemInstructions.Count;
-        }
-
-        return blockInstructions;
-    }
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
 }

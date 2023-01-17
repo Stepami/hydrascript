@@ -74,7 +74,7 @@ public abstract class AbstractSyntaxTreeNode :
 
     protected abstract string NodeRepresentation();
 
-    public virtual AddressedInstructions Accept(InstructionProvider visitor)=>new();
+    public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     public override string ToString() => $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
 }
