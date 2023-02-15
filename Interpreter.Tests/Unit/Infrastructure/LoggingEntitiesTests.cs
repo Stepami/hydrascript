@@ -4,8 +4,8 @@ using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.IR.Ast;
-using Interpreter.Services.Providers.Impl.LexerProvider;
-using Interpreter.Services.Providers.Impl.ParserProvider;
+using Interpreter.Services.Providers.LexerProvider.Impl;
+using Interpreter.Services.Providers.ParserProvider.Impl;
 using Moq;
 using Xunit;
 

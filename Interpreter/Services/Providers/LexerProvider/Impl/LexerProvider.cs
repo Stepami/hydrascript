@@ -1,9 +1,10 @@
 using System.IO.Abstractions;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
+using Interpreter.Services.Providers.StructureProvider;
 using Microsoft.Extensions.Options;
 
-namespace Interpreter.Services.Providers.Impl.LexerProvider;
+namespace Interpreter.Services.Providers.LexerProvider.Impl;
 
 public class LexerProvider : ILexerProvider
 {

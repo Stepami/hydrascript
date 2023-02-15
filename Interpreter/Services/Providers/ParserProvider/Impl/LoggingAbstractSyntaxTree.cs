@@ -1,9 +1,8 @@
 using System.IO.Abstractions;
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast;
 
-namespace Interpreter.Services.Providers.Impl.ParserProvider;
+namespace Interpreter.Services.Providers.ParserProvider.Impl;
 
 public class LoggingAbstractSyntaxTree : IAbstractSyntaxTree
 {

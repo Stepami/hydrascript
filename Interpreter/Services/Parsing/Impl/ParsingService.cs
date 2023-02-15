@@ -1,5 +1,5 @@
 using Interpreter.Lib.IR.Ast;
-using Interpreter.Services.Providers;
+using Interpreter.Services.Providers.ParserProvider;
 
 namespace Interpreter.Services.Parsing.Impl;
 

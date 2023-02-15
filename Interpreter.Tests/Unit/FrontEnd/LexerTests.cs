@@ -1,6 +1,6 @@
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
-using Interpreter.Services.Providers.Impl.StructureProvider;
+using Interpreter.Services.Providers.StructureProvider.Impl;
 using Interpreter.Tests.TestData;
 using Xunit;
 

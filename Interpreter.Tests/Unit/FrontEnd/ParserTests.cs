@@ -1,7 +1,7 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Impl;
 using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
-using Interpreter.Services.Providers.Impl.StructureProvider;
+using Interpreter.Services.Providers.StructureProvider.Impl;
 using Interpreter.Tests.TestData;
 using Xunit;
 

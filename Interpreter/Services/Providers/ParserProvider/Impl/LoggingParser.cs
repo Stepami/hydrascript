@@ -2,7 +2,7 @@ using System.IO.Abstractions;
 using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.IR.Ast;
 
-namespace Interpreter.Services.Providers.Impl.ParserProvider;
+namespace Interpreter.Services.Providers.ParserProvider.Impl;
 
 public class LoggingParser : IParser
 {

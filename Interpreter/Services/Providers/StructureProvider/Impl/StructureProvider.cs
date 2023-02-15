@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
-namespace Interpreter.Services.Providers.Impl.StructureProvider;
+namespace Interpreter.Services.Providers.StructureProvider.Impl;
 
 public class StructureProvider : IStructureProvider
 {

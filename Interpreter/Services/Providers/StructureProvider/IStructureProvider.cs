@@ -1,6 +1,6 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
-namespace Interpreter.Services.Providers;
+namespace Interpreter.Services.Providers.StructureProvider;
 
 public interface IStructureProvider
 {

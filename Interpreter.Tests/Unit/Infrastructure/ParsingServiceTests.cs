@@ -1,7 +1,7 @@
 using Interpreter.Lib.FrontEnd.TopDownParse;
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Services.Parsing.Impl;
-using Interpreter.Services.Providers;
+using Interpreter.Services.Providers.ParserProvider;
 using Moq;
 using Xunit;
 

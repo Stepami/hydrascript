@@ -1,9 +1,10 @@
 using System.IO.Abstractions;
 using Interpreter.Lib.FrontEnd.TopDownParse;
-using Parser = Interpreter.Lib.FrontEnd.TopDownParse.Impl.Parser;
+using Interpreter.Services.Providers.LexerProvider;
 using Microsoft.Extensions.Options;
+using Parser = Interpreter.Lib.FrontEnd.TopDownParse.Impl.Parser;
 
-namespace Interpreter.Services.Providers.Impl.ParserProvider;
+namespace Interpreter.Services.Providers.ParserProvider.Impl;
 
 public class ParserProvider : IParserProvider
 {
