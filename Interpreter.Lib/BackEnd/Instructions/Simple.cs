@@ -20,13 +20,13 @@ public class Simple : Instruction
     }
 
     public Simple(IValue value) : this(
-        left: string.Empty,
+        left: null,
         right: (null, value),
         @operator: string.Empty
     ) { }
     
     public Simple(string unaryOperator, IValue value) : this(
-        left: string.Empty,
+        left: null,
         right: (null, value),
         @operator: unaryOperator
     ) { }
