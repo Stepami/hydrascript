@@ -24,6 +24,12 @@ public class Simple : Instruction
         right: (null, value),
         @operator: string.Empty
     ) { }
+    
+    public Simple(string unaryOperator, IValue value) : this(
+        left: string.Empty,
+        right: (null, value),
+        @operator: unaryOperator
+    ) { }
 
     public IValue Source =>
         right.right;

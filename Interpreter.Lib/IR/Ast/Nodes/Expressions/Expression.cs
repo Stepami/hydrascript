@@ -14,8 +14,6 @@ public abstract class Expression : AbstractSyntaxTreeNode,
     }
 
     public bool Primary() => !this.Any();
-
-    public virtual List<Instruction> ToInstructions(int start, string temp) => new();
     
     public abstract AddressedInstructions Accept(ExpressionInstructionProvider visitor);
 
