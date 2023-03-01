@@ -13,5 +13,5 @@ public abstract class Instruction
     protected abstract string ToStringInternal();
 
     public override string ToString() =>
-        $"{(Address?.IsLabel() ?? false ? $"{Address}: " : "")}{ToStringInternal()}";
+        $"{Address}{ToStringInternal()}";
 }

@@ -26,6 +26,5 @@ public class HashedAddress : IAddress
         return HashCode.Combine(i1, i2);
     }
 
-    public override string ToString() =>
-        $"address{{{GetHashCode()}}}";
+    public override string ToString() => "\t";
 }

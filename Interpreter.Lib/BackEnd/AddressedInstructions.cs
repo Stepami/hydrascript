@@ -38,9 +38,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         foreach (var instruction in instructions)
         {
             var address = instruction.Address;
-            Add(instruction, address?.IsLabel() ?? false
-                ? address.ToString()
-                : null);
+            Add(instruction, address is Label label ? label.Name : null);
         }
     }
 

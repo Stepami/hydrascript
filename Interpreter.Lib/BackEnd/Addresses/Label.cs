@@ -2,10 +2,10 @@ namespace Interpreter.Lib.BackEnd.Addresses;
 
 public class Label : IAddress
 {
-    private readonly string _name;
+    public string Name { get; }
 
     public Label(string name) =>
-        _name = name;
+        Name = name;
     
     public IAddress Next { get; set; }
 
@@ -14,13 +14,13 @@ public class Label : IAddress
     public bool Equals(IAddress other)
     {
         if (other is Label label)
-            return _name == label._name;
+            return Name == label.Name;
 
         return false;
     }
 
     public override int GetHashCode() =>
-        _name.GetHashCode();
+        Name.GetHashCode();
 
-    public override string ToString() => _name;
+    public override string ToString() => $"{Name}: ";
 }
