@@ -2,26 +2,25 @@ namespace Interpreter.Lib.BackEnd.Addresses;
 
 public class HashedAddress : IAddress
 {
-    private readonly int _seed1, _seed2;
+    private readonly int _seed;
     
     public IAddress Next { get; set; }
 
-    public HashedAddress(int seed1, int seed2) =>
-        (_seed1, _seed2) = (seed1, seed2);
+    public HashedAddress(int seed) =>
+        _seed = seed;
 
     public bool Equals(IAddress other)
     {
-        if (other is HashedAddress simple)
-            return _seed1 == simple._seed1 &&
-                   _seed2 == simple._seed2;
+        if (other is HashedAddress hashed)
+            return _seed == hashed._seed;
 
         return false;
     }
 
     public override int GetHashCode()
     {
-        var i1 = _seed1 ^ 17;
-        var i2 = 31 * _seed2 + i1;
+        var i1 = _seed ^ 17;
+        var i2 = 31 * _seed + i1;
 
         return HashCode.Combine(i1, i2);
     }
