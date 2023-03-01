@@ -1,5 +1,5 @@
 using System.Collections;
-using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;

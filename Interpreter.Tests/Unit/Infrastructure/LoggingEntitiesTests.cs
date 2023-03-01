@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
@@ -76,7 +77,7 @@ public class LoggingEntitiesTests
     {
         var ast = new Mock<IAbstractSyntaxTree>();
         ast.Setup(x => x.GetInstructions())
-            .Returns(new List<Instruction> { new Halt(0) });
+            .Returns(new AddressedInstructions { new Halt() });
 
         _file.Setup(x => x.WriteAllLines(
             It.IsAny<string>(), It.IsAny<IEnumerable<string>>()
@@ -87,7 +88,7 @@ public class LoggingEntitiesTests
 
         _file.Verify(x => x.WriteAllLines(
             It.Is<string>(p => p == "file.tac"),
-            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "0: End" }))
+            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "End" }))
         ), Times.Once());
     }
 }

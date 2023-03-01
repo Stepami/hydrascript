@@ -16,5 +16,5 @@ public class Goto : Instruction
         jump = newJump;
 
     protected override string ToStringInternal() =>
-        $"Goto {Address}";
+        $"Goto {jump.Name}";
 }

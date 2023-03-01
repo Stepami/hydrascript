@@ -1,29 +1,26 @@
-using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
+using Interpreter.Tests.Helpers;
 using Xunit;
 
 namespace Interpreter.Tests.Unit.BackEnd;
 
 public class AddressedInstructionsTests
 {
-    private readonly AddressedInstructions _collection = new();
-    
     [Fact]
     public void EnumerationPreservedAfterRemovalTest()
     {
         var instructions = new List<Instruction>
         {
-            new AsString("s", new Constant(2, "2"), 0),
-            new Print(1, new Name("s")),
-            new Halt(2)
-        };
+            new AsString("s", new Constant(2, "2")),
+            new Print(new Name("s")),
+            new Halt()
+        }.ToAddressedInstructions();
+
+        instructions.Remove(instructions[instructions.Start.Next]);
         
-        _collection.AddRange(instructions);
-        
-        _collection.Remove(instructions[1]);
-        
-        Assert.Same(instructions[2], _collection[instructions[0].Address.Next]);
+        Assert.Same(instructions.Last(), instructions[instructions.Start.Next]);
     }
     
     [Fact]
@@ -31,20 +28,19 @@ public class AddressedInstructionsTests
     {
         var instructions = new List<Instruction>
         {
-            new AsString("s", new Constant(2, "2"), 0),
-            new Halt(2)
-        };
-        
-        instructions.ForEach(instruction => _collection.Add(instruction));
-        
-        Assert.Null(Record.Exception(() => _collection.Remove(instructions[1])));
-        Assert.Null(instructions[0].Address.Next);
+            new AsString("s", new Constant(2, "2")),
+            new Halt()
+        }.ToAddressedInstructions();
+
+        Assert.Null(Record.Exception(() => instructions.Remove(instructions.Last())));
+        Assert.Null(instructions.Start.Next);
     }
 
     [Fact]
     public void GetEnumeratorTests()
     {
-        _collection.Add(1.ToInstructionMock().Object);
+        AddressedInstructions collection = new();
+        collection.Add(1.ToInstructionMock().Object);
         
         var collectionToAdd = new AddressedInstructions
         {
@@ -53,12 +49,12 @@ public class AddressedInstructionsTests
             4.ToInstructionMock().Object
         };
         
-        _collection.AddRange(collectionToAdd);
+        collection.AddRange(collectionToAdd);
         
-        _collection.Add(5.ToInstructionMock().Object);
+        collection.Add(5.ToInstructionMock().Object);
 
         Assert.Collection(
-            _collection.Select(x => x.ToString()),
+            collection.Select(x => x.ToString()),
             x => Assert.Equal("1", x),
             x => Assert.Equal("2", x),
             x => Assert.Equal("3", x),

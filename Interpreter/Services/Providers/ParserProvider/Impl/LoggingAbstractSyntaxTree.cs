@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.IR.Ast;
 
 namespace Interpreter.Services.Providers.ParserProvider.Impl;

@@ -36,9 +36,9 @@ public record Call(
         $"{From} => {To.Location}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
 }
     
-public record FunctionInfo(string Id, IAddress Location, string MethodOf = null)
+public record FunctionInfo(string Id, string MethodOf = null)
 {
-    public IAddress Location { get; set; } = Location;
+    public IAddress Location => new Label(CallId());
 
     public string MethodOf { get; set; } = MethodOf;
 
@@ -48,7 +48,9 @@ public record FunctionInfo(string Id, IAddress Location, string MethodOf = null)
             : $"{MethodOf}.{Id}";
 
     public override string ToString() =>
-        $"({Location}, {CallId()})";
+        MethodOf == null
+            ? Id
+            : $"{MethodOf}.{Id}";
 }
     
 public class Frame

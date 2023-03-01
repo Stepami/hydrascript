@@ -37,7 +37,7 @@ public class Simple : Instruction
     public bool Assignment => @operator == "";
 
     protected override void OnSetOfAddress(IAddress address) =>
-        Left = $"_t{address.GetHashCode()}";
+        Left ??= $"_t{address.GetHashCode()}";
 
     public override IAddress Execute(VirtualMachine vm)
     {

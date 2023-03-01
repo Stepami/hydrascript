@@ -1,16 +1,17 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace Interpreter.Tests;
+namespace Interpreter.Tests.Helpers;
 
 public static class MockExtensions
 {
     public static Mock<Halt> Trackable(this Mock<Halt> halt)
     {
         halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
-            .Returns(-3).Verifiable();
+            .Returns(new HashedAddress(seed: 0)).Verifiable();
         halt.Setup(x => x.End()).Returns(true);
         return halt;
     }
@@ -21,10 +22,13 @@ public static class MockExtensions
 
     public static Mock<Instruction> ToInstructionMock(this int number)
     {
-        var result = new Mock<Instruction>(MockBehavior.Default, number)
+        var result = new Mock<Instruction>(MockBehavior.Default)
         {
             CallBase = true
         };
+        
+        result.Setup(x => x.Address)
+            .Returns(new HashedAddress(number));
 
         result.Setup(x => x.ToString())
             .Returns(number.ToString());
