@@ -19,10 +19,15 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public void Add(Instruction instruction, string label = null)
     {
         IAddress newAddress = label is null
-            ? new HashedAddress(_addresses.Count, instruction.GetHashCode())
+            ? new HashedAddress(seed: instruction.GetHashCode())
             : new Label(label);
         instruction.Address = newAddress;
 
+        AddWithAddress(instruction, newAddress);
+    }
+
+    private void AddWithAddress(Instruction instruction, IAddress newAddress)
+    {
         var last = _addresses.Last;
         if (last is not null)
             last.Value.Next = newAddress;
@@ -36,10 +41,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public void AddRange(IEnumerable<Instruction> instructions)
     {
         foreach (var instruction in instructions)
-        {
-            var address = instruction.Address;
-            Add(instruction, address is Label label ? label.Name : null);
-        }
+            AddWithAddress(instruction, instruction.Address);
     }
 
     public void Remove(Instruction instruction)
