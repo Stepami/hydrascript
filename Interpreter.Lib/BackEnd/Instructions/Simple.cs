@@ -19,10 +19,19 @@ public class Simple : Instruction
         this.@operator = @operator;
     }
 
+    public Simple(IValue value) : this(
+        left: string.Empty,
+        right: (null, value),
+        @operator: string.Empty
+    ) { }
+
     public IValue Source =>
         right.right;
 
     public bool Assignment => @operator == "";
+
+    protected override void OnSetOfAddress(IAddress address) =>
+        Left = $"_t{address.GetHashCode()}";
 
     public override IAddress Execute(VirtualMachine vm)
     {

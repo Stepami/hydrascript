@@ -4,11 +4,23 @@ namespace Interpreter.Lib.BackEnd.Instructions;
 
 public abstract class Instruction
 {
-    public IAddress Address { get; set; }
+    private IAddress _address;
 
-    public virtual bool End() => false;
+    public IAddress Address
+    {
+        get => _address;
+        set
+        {
+            OnSetOfAddress(value);
+            _address = value;
+        }
+    }
+    
+    protected virtual void OnSetOfAddress(IAddress address) { }
 
     public abstract IAddress Execute(VirtualMachine vm);
+    
+    public virtual bool End() => false;
 
     protected abstract string ToStringInternal();
 

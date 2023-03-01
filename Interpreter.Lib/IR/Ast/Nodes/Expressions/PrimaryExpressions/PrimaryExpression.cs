@@ -1,5 +1,6 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Values;
+using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 
@@ -11,10 +12,7 @@ public abstract class PrimaryExpression : Expression
     }
 
     public abstract IValue ToValue();
-        
-    public override List<Instruction> ToInstructions(int start, string temp) =>
-        new()
-        {
-            new Simple(temp, (null, ToValue()), "", start)
-        };
+
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
+        visitor.Visit(this);
 }

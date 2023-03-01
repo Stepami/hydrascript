@@ -11,6 +11,8 @@ public class InstructionProvider :
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>
 {
+    private readonly ExpressionInstructionProvider _expressionVisitor = new();
+    
     public AddressedInstructions Visit(ScriptBody visitable)
     {
         var result = new AddressedInstructions();
@@ -27,7 +29,7 @@ public class InstructionProvider :
         var result = new AddressedInstructions();
         foreach (var assignment in visitable.Assignments)
         {
-            result.AddRange(assignment.Accept(this));
+            result.AddRange(assignment.Accept(_expressionVisitor));
         }
 
         return result;
