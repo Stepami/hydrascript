@@ -1,7 +1,8 @@
 using System.Collections;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 
-namespace Interpreter.Lib.BackEnd.Addresses;
+namespace Interpreter.Lib.BackEnd;
 
 public class AddressedInstructions : IEnumerable<Instruction>
 {
