@@ -1,5 +1,4 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Tests.Helpers;
