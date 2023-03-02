@@ -9,7 +9,8 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 
 public class ExpressionInstructionProvider :
     IVisitor<PrimaryExpression, AddressedInstructions>,
-    IVisitor<UnaryExpression, AddressedInstructions>
+    IVisitor<UnaryExpression, AddressedInstructions>,
+    IVisitor<BinaryExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
@@ -21,5 +22,25 @@ public class ExpressionInstructionProvider :
         instructions.Add(new Simple(visitable.Operator, new Name(last.Left)));
         
         return instructions;
+    }
+
+    public AddressedInstructions Visit(BinaryExpression visitable)
+    {
+        if (visitable.Left is IdentifierReference arr &&
+            visitable.Right is PrimaryExpression primary &&
+            visitable.Operator == "::")
+            return new AddressedInstructions { new RemoveFromArray(arr.Id, primary.ToValue()) };
+
+        var result = new AddressedInstructions();
+        
+        result.AddRange(visitable.Left.Accept(this));
+        var left = new Name(result.OfType<Simple>().Last().Left);
+        
+        result.AddRange(visitable.Right.Accept(this));
+        var right = new Name(result.OfType<Simple>().Last().Left);
+        
+        result.Add(new Simple(left, visitable.Operator, right));
+
+        return result;
     }
 }

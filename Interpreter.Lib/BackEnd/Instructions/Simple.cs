@@ -30,6 +30,12 @@ public class Simple : Instruction
         right: (null, value),
         @operator: unaryOperator
     ) { }
+    
+    public Simple(IValue leftValue, string binaryOperator, IValue rightValue) : this(
+        left: null,
+        right: (leftValue, rightValue),
+        @operator: binaryOperator
+    ) { }
 
     public IValue Source =>
         right.right;
