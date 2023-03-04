@@ -13,7 +13,7 @@ public class AddressedInstructionsTests
     {
         var instructions = new List<Instruction>
         {
-            new AsString(new Constant(2, "2"))
+            new AsString(new Constant(2))
             {
                 Left = "s"
             },
@@ -31,7 +31,7 @@ public class AddressedInstructionsTests
     {
         var instructions = new List<Instruction>
         {
-            new AsString(new Constant(2, "2")),
+            new AsString(new Constant(2)),
             new Halt()
         }.ToAddressedInstructions();
 

@@ -11,6 +11,9 @@ public class Constant : IValue
         _representation = representation;
     }
 
+    public Constant(object value) :
+        this(value, value.ToString()) { }
+
     public object Get(Frame frame) => _value;
 
     public override string ToString() => _representation;

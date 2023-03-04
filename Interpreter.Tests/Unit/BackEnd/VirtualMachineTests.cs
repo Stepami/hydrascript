@@ -26,7 +26,7 @@ public class VirtualMachineTests
             .Verifiable();
 
         var vm = new VirtualMachine(new(), new Stack<Frame>(new[] { new Frame(new HashedAddress(0)) }), new(), writer.Object);
-        var print = new Print(new Constant(223, "223"));
+        var print = new Print(new Constant(223));
 
         print.Execute(vm);
         writer.Verify(x => x.WriteLine(
@@ -49,7 +49,7 @@ public class VirtualMachineTests
     {
         var program = new List<Instruction>
         {
-            new Simple("a", (new Constant(1, "1"), new Constant(2, "2")), "+"),
+            new Simple("a", (new Constant(1), new Constant(2)), "+"),
             new AsString(new Name("a"))
             {
                 Left = "s"
@@ -70,15 +70,15 @@ public class VirtualMachineTests
         {
             new Goto(new Label("10")),
             new BeginFunction(factorial),
-            new Simple("_t2", (new Name("n"), new Constant(2, "2")), "<"),
+            new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
-            new Simple("_t5", (new Name("n"), new Constant(1, "1")), "-") { Address = new Label("5") },
+            new Simple("_t5", (new Name("n"), new Constant(1)), "-") { Address = new Label("5") },
             new PushParameter("n", new Name("_t5")),
             new CallFunction(factorial, 1, "f"),
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
-            new PushParameter("n", new Constant(6, "6")) { Address = new Label("10") },
+            new PushParameter("n", new Constant(6)) { Address = new Label("10") },
             new CallFunction(factorial, 1,  "fa6"),
             halt.Object
         }.ToAddressedInstructions();
@@ -104,11 +104,11 @@ public class VirtualMachineTests
         createArray.Execute(vm);
         Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
 
-        var indexAssignment = new IndexAssignment("arr", (new Constant(0, "0"), new Constant(0, "0")));
+        var indexAssignment = new IndexAssignment("arr", (new Constant(0), new Constant(0)));
         indexAssignment.Execute(vm);
         Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
 
-        var removeFromArray = new RemoveFromArray("arr", new Constant(5, "5"));
+        var removeFromArray = new RemoveFromArray("arr", new Constant(5));
         removeFromArray.Execute(vm);
         Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]).Count);
     }
@@ -120,7 +120,7 @@ public class VirtualMachineTests
         var program = new List<Instruction>
         {
             new CreateObject("obj"),
-            new DotAssignment("obj", (new Constant("prop", "prop"), new Constant(null, "null"))),
+            new DotAssignment("obj", (new Constant("prop"), new Constant(null, "null"))),
             halt.Object
         }.ToAddressedInstructions();
             

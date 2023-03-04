@@ -45,7 +45,7 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new DotAssignment("obj", (new Constant("prop", "prop"), new Constant(3, "3"))),
+            new DotAssignment("obj", (new Constant("prop"), new Constant(3))),
             "obj.prop = 3"
         };
         yield return new object[]
@@ -65,7 +65,7 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new IndexAssignment("arr", (new Constant(1, "1"), new Constant(1, "1"))),
+            new IndexAssignment("arr", (new Constant(1), new Constant(1))),
             "arr[1] = 1"
         };
         yield return new object[]
@@ -80,7 +80,7 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new RemoveFromArray("arr", new Constant(0, "0")),
+            new RemoveFromArray("arr", new Constant(0)),
             "RemoveFrom arr at 0"
         };
         yield return new object[]

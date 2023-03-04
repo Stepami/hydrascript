@@ -9,7 +9,7 @@ public class ValuesTests
     public void ConstantNotEqualToNameTest()
     {
         var name = new Name("a");
-        var constant = new Constant("a", "a");
+        var constant = new Constant("a");
             
         Assert.False(name.Equals(constant));
         Assert.False(constant.Equals(name));
@@ -37,7 +37,7 @@ public class ValuesTests
     [Fact]
     public void ConstantEqualsCorrectTest()
     {
-        var constant1 = new Constant(1, "1");
+        var constant1 = new Constant(1);
         var constant2 = new Constant(1, "1.0");
             
         Assert.True(constant1.Equals(constant2));
