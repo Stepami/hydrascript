@@ -10,18 +10,19 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 public class ExpressionInstructionProvider :
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<UnaryExpression, AddressedInstructions>,
-    IVisitor<BinaryExpression, AddressedInstructions>
+    IVisitor<BinaryExpression, AddressedInstructions>,
+    IVisitor<CastAsExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
 
     public AddressedInstructions Visit(UnaryExpression visitable)
     {
-        var instructions = visitable.Expression.Accept(this);
-        var last = instructions.OfType<Simple>().Last();
-        instructions.Add(new Simple(visitable.Operator, new Name(last.Left)));
+        var result = visitable.Expression.Accept(this);
+        var last = new Name(result.OfType<Simple>().Last().Left);
+        result.Add(new Simple(visitable.Operator, last));
         
-        return instructions;
+        return result;
     }
 
     public AddressedInstructions Visit(BinaryExpression visitable)
@@ -29,7 +30,10 @@ public class ExpressionInstructionProvider :
         if (visitable.Left is IdentifierReference arr &&
             visitable.Right is PrimaryExpression primary &&
             visitable.Operator == "::")
-            return new AddressedInstructions { new RemoveFromArray(arr.Id, primary.ToValue()) };
+            return new AddressedInstructions
+            {
+                new RemoveFromArray(arr.Id, primary.ToValue())
+            };
 
         var result = new AddressedInstructions();
         
@@ -41,6 +45,15 @@ public class ExpressionInstructionProvider :
         
         result.Add(new Simple(left, visitable.Operator, right));
 
+        return result;
+    }
+
+    public AddressedInstructions Visit(CastAsExpression visitable)
+    {
+        var result = visitable.Expression.Accept(this);
+        var last = new Name(result.OfType<Simple>().Last().Left);
+        result.Add(new AsString(last));
+        
         return result;
     }
 }

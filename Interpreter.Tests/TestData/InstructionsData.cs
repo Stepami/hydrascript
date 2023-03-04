@@ -12,7 +12,10 @@ public class InstructionsData : IEnumerable<object[]>
     {
         yield return new object[]
         {
-            new AsString("str", new Name("num")),
+            new AsString(new Name("num"))
+            {
+                Left = "str"
+            },
             "str = num as string"
         };
         yield return new object[]

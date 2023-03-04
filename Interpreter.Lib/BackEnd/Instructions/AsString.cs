@@ -9,8 +9,8 @@ namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class AsString : Simple
 {
-    public AsString(string left, IValue right) :
-        base(left, (null, right), "") { }
+    public AsString(IValue value) :
+        base(value) { }
 
     public override IAddress Execute(VirtualMachine vm)
     {

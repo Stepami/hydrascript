@@ -50,7 +50,10 @@ public class VirtualMachineTests
         var program = new List<Instruction>
         {
             new Simple("a", (new Constant(1, "1"), new Constant(2, "2")), "+"),
-            new AsString("b", new Name("a")),
+            new AsString(new Name("a"))
+            {
+                Left = "s"
+            },
             new Halt()
         }.ToAddressedInstructions();
         
