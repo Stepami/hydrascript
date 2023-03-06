@@ -65,7 +65,7 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new IndexAssignment("arr", (new Constant(1), new Constant(1))),
+            new IndexAssignment("arr", new Constant(1), new Constant(1)),
             "arr[1] = 1"
         };
         yield return new object[]

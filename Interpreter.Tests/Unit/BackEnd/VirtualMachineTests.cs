@@ -104,7 +104,7 @@ public class VirtualMachineTests
         createArray.Execute(vm);
         Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
 
-        var indexAssignment = new IndexAssignment("arr", (new Constant(0), new Constant(0)));
+        var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0));
         indexAssignment.Execute(vm);
         Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
 

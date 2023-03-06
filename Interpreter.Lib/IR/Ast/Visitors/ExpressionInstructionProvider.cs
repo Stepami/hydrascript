@@ -2,6 +2,7 @@ using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Visitor.NET.Lib.Core;
 
@@ -9,12 +10,42 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 
 public class ExpressionInstructionProvider :
     IVisitor<PrimaryExpression, AddressedInstructions>,
+    IVisitor<ArrayLiteral, AddressedInstructions>,
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
     IVisitor<CastAsExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
+
+    public AddressedInstructions Visit(ArrayLiteral visitable)
+    {
+        var arraySize = visitable.Expressions.Count;
+
+        var arrayName = visitable.Parent is AssignmentExpression assignment
+            ? assignment.Destination.Id
+            : null;
+        var createArray = new CreateArray(arrayName, arraySize);
+
+        var result = new AddressedInstructions { createArray };
+
+        for (var i = 0; i < arraySize; i++)
+        {
+            var expression = visitable.Expressions[i];
+            var index = new Constant(i);
+            
+            if (expression is PrimaryExpression primary)
+                result.Add(new IndexAssignment(arrayName, index, primary.ToValue()));
+            else
+            {
+                result.AddRange(expression.Accept(this));
+                var last = new Name(result.OfType<Simple>().Last().Left);
+                result.Add(new IndexAssignment(arrayName, index, last));
+            }
+        }
+
+        return result;
+    }
 
     public AddressedInstructions Visit(UnaryExpression visitable)
     {
@@ -42,9 +73,7 @@ public class ExpressionInstructionProvider :
         IValue left, right;
 
         if (visitable.Left is PrimaryExpression primaryLeft)
-        {
             left = primaryLeft.ToValue();
-        }
         else
         {
             result.AddRange(visitable.Left.Accept(this));
@@ -52,9 +81,7 @@ public class ExpressionInstructionProvider :
         }
 
         if (visitable.Right is PrimaryExpression primaryRight)
-        {
             right = primaryRight.ToValue();
-        }
         else
         {
             result.AddRange(visitable.Right.Accept(this));

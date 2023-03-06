@@ -5,8 +5,8 @@ namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class IndexAssignment : Simple
 {
-    public IndexAssignment(string left, (IValue left, IValue right) right) : 
-        base(left, right, "[]") { }
+    public IndexAssignment(string array, IValue index, IValue value) : 
+        base(left: array, right: (index, value), "[]") { }
 
     public override IAddress Execute(VirtualMachine vm)
     {
