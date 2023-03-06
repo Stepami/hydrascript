@@ -1,3 +1,6 @@
+using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Visitors;
+
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
 public class TypeStatement : Statement
@@ -18,4 +21,6 @@ public class TypeStatement : Statement
 
     protected override string NodeRepresentation() =>
         $"type {_typeId} = {_typeValue}";
+
+    public override AddressedInstructions Accept(InstructionProvider visitor) => new();
 }
