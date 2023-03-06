@@ -11,7 +11,8 @@ public class InstructionProvider :
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
-    IVisitor<InsideLoopStatement, AddressedInstructions>
+    IVisitor<InsideLoopStatement, AddressedInstructions>,
+    IVisitor<ExpressionStatement, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -62,4 +63,7 @@ public class InstructionProvider :
 
         return new() { new Goto(jumpType) };
     }
+
+    public AddressedInstructions Visit(ExpressionStatement visitable) =>
+        visitable.Expression.Accept(_expressionVisitor);
 }
