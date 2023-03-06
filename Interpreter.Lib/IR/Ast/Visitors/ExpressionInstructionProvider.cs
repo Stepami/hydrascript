@@ -18,6 +18,9 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(UnaryExpression visitable)
     {
+        if (visitable.Expression is PrimaryExpression primary)
+            return new() { new Simple(visitable.Operator, primary.ToValue()) };
+        
         var result = visitable.Expression.Accept(this);
         var last = new Name(result.OfType<Simple>().Last().Left);
         result.Add(new Simple(visitable.Operator, last));
@@ -36,13 +39,28 @@ public class ExpressionInstructionProvider :
             };
 
         var result = new AddressedInstructions();
-        
-        result.AddRange(visitable.Left.Accept(this));
-        var left = new Name(result.OfType<Simple>().Last().Left);
-        
-        result.AddRange(visitable.Right.Accept(this));
-        var right = new Name(result.OfType<Simple>().Last().Left);
-        
+        IValue left, right;
+
+        if (visitable.Left is PrimaryExpression primaryLeft)
+        {
+            left = primaryLeft.ToValue();
+        }
+        else
+        {
+            result.AddRange(visitable.Left.Accept(this));
+            left = new Name(result.OfType<Simple>().Last().Left);
+        }
+
+        if (visitable.Right is PrimaryExpression primaryRight)
+        {
+            right = primaryRight.ToValue();
+        }
+        else
+        {
+            result.AddRange(visitable.Right.Accept(this));
+            right = new Name(result.OfType<Simple>().Last().Left);
+        }
+
         result.Add(new Simple(left, visitable.Operator, right));
 
         return result;
@@ -50,6 +68,9 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(CastAsExpression visitable)
     {
+        if (visitable.Expression is PrimaryExpression primary)
+            return new() { new AsString(primary.ToValue()) };
+        
         var result = visitable.Expression.Accept(this);
         var last = new Name(result.OfType<Simple>().Last().Left);
         result.Add(new AsString(last));
