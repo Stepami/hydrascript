@@ -1,5 +1,6 @@
-using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 
@@ -22,7 +23,7 @@ public class Property : Expression
         id = Id.Id;
         expr = Expression;
     }
-        
+   
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         yield return Id;
@@ -31,8 +32,6 @@ public class Property : Expression
 
     protected override string NodeRepresentation() => ":";
 
-    public List<Instruction> ToInstructions(int start, string temp)
-    {
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
         throw new NotImplementedException();
-    }
 }
