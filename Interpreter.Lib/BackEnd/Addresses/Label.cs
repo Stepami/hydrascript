@@ -9,8 +9,6 @@ public class Label : IAddress
     
     public IAddress Next { get; set; }
 
-    public bool IsLabel() => true;
-
     public bool Equals(IAddress other)
     {
         if (other is Label label)
@@ -22,5 +20,6 @@ public class Label : IAddress
     public override int GetHashCode() =>
         Name.GetHashCode();
 
-    public override string ToString() => $"{Name}: ";
+    public override string ToString() =>
+        $"{Name}:\n\t";
 }
