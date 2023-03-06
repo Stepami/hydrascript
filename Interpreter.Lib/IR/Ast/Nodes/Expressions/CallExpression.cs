@@ -131,7 +131,7 @@ public class CallExpression : Expression
         return instructions;
     }
 
-    public override List<Instruction> ToInstructions(int start)
+    public List<Instruction> ToInstructions(int start)
     {
         return _ident.Id switch
         {
@@ -140,7 +140,7 @@ public class CallExpression : Expression
         };
     }
 
-    public override List<Instruction> ToInstructions(int start, string temp)
+    public List<Instruction> ToInstructions(int start, string temp)
     {
         var instructions = new List<Instruction>();
         FunctionSymbol function;

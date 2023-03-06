@@ -41,7 +41,7 @@ public class WhileStatement : Statement
 
     protected override string NodeRepresentation() => "while";
 
-    public override List<Instruction> ToInstructions(int start)
+    public List<Instruction> ToInstructions(int start)
     {
         var instructions = new List<Instruction>();
         IValue ifNotTest;

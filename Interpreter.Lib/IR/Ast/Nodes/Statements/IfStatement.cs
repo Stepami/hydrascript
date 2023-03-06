@@ -52,7 +52,7 @@ public class IfStatement : Statement
 
     protected override string NodeRepresentation() => "if";
 
-    public override List<Instruction> ToInstructions(int start)
+    public List<Instruction> ToInstructions(int start)
     {
         var instructions = new List<Instruction>();
         if (_then.Any() && (_else == null || _else.Any()))

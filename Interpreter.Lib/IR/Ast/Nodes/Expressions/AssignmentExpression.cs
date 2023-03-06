@@ -91,7 +91,7 @@ public class AssignmentExpression : Expression
         return type;
     }
 
-    public override List<Instruction> ToInstructions(int start)
+    public List<Instruction> ToInstructions(int start)
     {
         var instructions = new List<Instruction>();
         var destInstructions = Destination.ToInstructions(start, Destination.Id);
@@ -179,5 +179,5 @@ public class AssignmentExpression : Expression
 
     protected override string NodeRepresentation() => "=";
 
-    public override List<Instruction> ToInstructions(int start, string temp) => ToInstructions(start);
+    public List<Instruction> ToInstructions(int start, string temp) => ToInstructions(start);
 }

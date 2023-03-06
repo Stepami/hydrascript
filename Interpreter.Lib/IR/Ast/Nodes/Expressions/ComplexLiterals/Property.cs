@@ -31,7 +31,7 @@ public class Property : Expression
 
     protected override string NodeRepresentation() => ":";
 
-    public override List<Instruction> ToInstructions(int start, string temp)
+    public List<Instruction> ToInstructions(int start, string temp)
     {
         throw new NotImplementedException();
     }

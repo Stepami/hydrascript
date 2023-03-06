@@ -52,7 +52,7 @@ public class MemberExpression : Expression
 
     protected override string NodeRepresentation() => Id;
 
-    public override List<Instruction> ToInstructions(int start, string temp)
+    public List<Instruction> ToInstructions(int start, string temp)
     {
         if (AccessChain != null && AccessChain.HasNext())
         {

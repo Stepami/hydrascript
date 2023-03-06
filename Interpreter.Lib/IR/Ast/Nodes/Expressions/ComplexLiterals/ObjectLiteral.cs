@@ -48,7 +48,7 @@ public class ObjectLiteral : Expression
 
     protected override string NodeRepresentation() => "{}";
 
-    public override List<Instruction> ToInstructions(int start, string temp)
+    public List<Instruction> ToInstructions(int start, string temp)
     {
         var instructions = new List<Instruction>();
         _methods.ForEach(method =>

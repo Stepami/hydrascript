@@ -60,7 +60,7 @@ public class FunctionDeclaration : Declaration
 
     protected override string NodeRepresentation() => $"function {_function.Id}";
 
-    public override List<Instruction> ToInstructions(int start)
+    public List<Instruction> ToInstructions(int start)
     {
         var instructions = new List<Instruction>();
         if (_statements.Any())

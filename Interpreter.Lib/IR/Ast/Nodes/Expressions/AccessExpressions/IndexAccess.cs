@@ -46,7 +46,7 @@ public class IndexAccess : AccessExpression
 
     protected override string NodeRepresentation() => "[]";
 
-    public override List<Instruction> ToInstructions(int start, string temp)
+    public List<Instruction> ToInstructions(int start, string temp)
     {
         if (HasNext())
         {
