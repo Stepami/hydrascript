@@ -66,15 +66,15 @@ public class WhileStatement : Statement
 
             loopBody
                 .OfType<Goto>()
-                .Where(g => g.Jump() < 0)
+                .Where(g => g.JumpType is not null)
                 .ToList()
                 .ForEach(j =>
                 {
-                    if (j.Jump() == -1)
+                    if (j.JumpType == InsideLoopStatementType.Break)
                     {
                         j.SetJump(loopBody.Last().Number + 2);
                     }
-                    else if (j.Jump() == -2)
+                    else if (j.JumpType == InsideLoopStatementType.Continue)
                     {
                         j.SetJump(start);
                     }

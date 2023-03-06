@@ -1,4 +1,5 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;
@@ -9,7 +10,8 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 public class InstructionProvider :
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
-    IVisitor<BlockStatement, AddressedInstructions>
+    IVisitor<BlockStatement, AddressedInstructions>,
+    IVisitor<InsideLoopStatement, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -45,5 +47,19 @@ public class InstructionProvider :
         }
 
         return result;
+    }
+
+    public AddressedInstructions Visit(InsideLoopStatement visitable)
+    {
+        var jumpType = visitable.Keyword switch
+        {
+            InsideLoopStatement.Break => InsideLoopStatementType.Break,
+            InsideLoopStatement.Continue => InsideLoopStatementType.Continue,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(visitable.Keyword), visitable.Keyword,
+                "Unsupported keyword inside loop")
+        };
+
+        return new() { new Goto(jumpType) };
     }
 }

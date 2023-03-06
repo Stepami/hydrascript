@@ -1,19 +1,27 @@
+using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
-public abstract class InsideLoopStatement : Statement
+public class InsideLoopStatement : Statement
 {
-    protected InsideLoopStatement()
+    public const string Break = "break";
+    public const string Continue = "continue";
+
+    public string Keyword { get; }
+
+    public InsideLoopStatement(string keyword)
     {
         CanEvaluate = true;
+        Keyword = keyword;
     }
-        
+
     internal override Type NodeCheck()
     {
         if (!ChildOf<WhileStatement>())
         {
-            throw new OutsideOfLoop(Segment, NodeRepresentation());
+            throw new OutsideOfLoop(Segment, keyword: NodeRepresentation());
         }
         return null;
     }
@@ -22,4 +30,9 @@ public abstract class InsideLoopStatement : Statement
     {
         yield break;
     }
+
+    protected override string NodeRepresentation() => Keyword;
+
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
 }
