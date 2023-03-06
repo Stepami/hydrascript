@@ -1,7 +1,9 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;
 using Visitor.NET.Lib.Core;
 
@@ -12,7 +14,8 @@ public class InstructionProvider :
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
     IVisitor<InsideLoopStatement, AddressedInstructions>,
-    IVisitor<ExpressionStatement, AddressedInstructions>
+    IVisitor<ExpressionStatement, AddressedInstructions>,
+    IVisitor<ReturnStatement, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -66,4 +69,21 @@ public class InstructionProvider :
 
     public AddressedInstructions Visit(ExpressionStatement visitable) =>
         visitable.Expression.Accept(_expressionVisitor);
+
+    public AddressedInstructions Visit(ReturnStatement visitable)
+    {
+        switch (visitable.Expression)
+        {
+            case null:
+                return new() { new Return() };
+            case PrimaryExpression primary:
+                return new() { new Return(primary.ToValue()) };
+        }
+
+        var result = visitable.Expression.Accept(_expressionVisitor);
+        var last = new Name(result.OfType<Simple>().Last().Left);
+        result.Add(new Return(last));
+
+        return result;
+    }
 }

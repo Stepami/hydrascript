@@ -1,24 +1,22 @@
-using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.BackEnd.Values;
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
-using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
 public class ReturnStatement : Statement
 {
-    private readonly Expression _expression;
+    public Expression Expression { get; }
 
     public ReturnStatement(Expression expression = null)
     {
-        _expression = expression;
+        Expression = expression;
         CanEvaluate = true;
         if (expression != null)
         {
-            _expression.Parent = this;
+            Expression.Parent = this;
         }
     }
 
@@ -29,63 +27,21 @@ public class ReturnStatement : Statement
             throw new ReturnOutsideFunction(Segment);
         }
 
-        return _expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
+        return Expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        if (_expression == null)
+        if (Expression == null)
         {
             yield break;
         }
 
-        yield return _expression;
+        yield return Expression;
     }
 
     protected override string NodeRepresentation() => "return";
 
-    private FunctionSymbol GetCallee()
-    {
-        var parent = Parent;
-        while (parent != null)
-        {
-            if (parent is FunctionDeclaration declaration)
-            {
-                return declaration.GetSymbol();
-            }
-
-            parent = parent.Parent;
-        }
-
-        return null;
-    }
-
-    public override List<Instruction> ToInstructions(int start)
-    {
-        var instructions = new List<Instruction>();
-        if (_expression == null)
-        {
-            instructions.Add(new Return(GetCallee().CallInfo.Location, start));
-        }
-        else
-        {
-            if (_expression.Primary())
-            {
-                instructions.Add(new Return(
-                    GetCallee().CallInfo.Location, start, ((PrimaryExpression) _expression).ToValue())
-                );
-            }
-            else
-            {
-                var eInstructions = _expression.ToInstructions(start, "_t");
-                var last = eInstructions.OfType<Simple>().Last();
-                instructions.AddRange(eInstructions);
-                instructions.Add(new Return(
-                    GetCallee().CallInfo.Location, last.Number + 1, new Name(last.Left)
-                ));
-            }
-        }
-
-        return instructions;
-    }
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
 }
