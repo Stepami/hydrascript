@@ -21,7 +21,7 @@ public class InstructionsData : IEnumerable<object[]>
         yield return new object[]
         {
             new BeginFunction(new FunctionInfo("func")),
-            "func: BeginFunction func"
+            "Start_func: BeginFunction func"
         };
         yield return new object[]
         {
@@ -45,8 +45,13 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new DotAssignment("obj", (new Constant("prop"), new Constant(3))),
+            new DotAssignment("obj", new Constant("prop"), new Constant(3)),
             "obj.prop = 3"
+        };
+        yield return new object[]
+        {
+            new EndFunction(new FunctionInfo("func")),
+            "End_func: EndFunction func"
         };
         yield return new object[]
         {

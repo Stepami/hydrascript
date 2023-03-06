@@ -5,8 +5,8 @@ namespace Interpreter.Lib.BackEnd.Instructions;
 
 public class DotAssignment : Simple
 {
-    public DotAssignment(string left, (IValue left, IValue right) right) : 
-        base(left, right, ".") { }
+    public DotAssignment(string @object, IValue property, IValue value) :
+        base(left: @object, (property, value), ".") { }
 
     public override IAddress Execute(VirtualMachine vm)
     {
@@ -18,5 +18,5 @@ public class DotAssignment : Simple
     }
 
     protected override string ToStringInternal() =>
-        $"{Left}{@operator}{right.left} = {right.right}";
+        $"{Left}.{right.left} = {right.right}";
 }

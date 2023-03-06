@@ -9,6 +9,9 @@ public class Property : Expression
     public IdentifierReference Id { get; }
     public Expression Expression { get; }
 
+    public ObjectLiteral Object =>
+        Parent as ObjectLiteral;
+
     public Property(IdentifierReference id, Expression expression)
     {
         Id = id;
@@ -33,5 +36,5 @@ public class Property : Expression
     protected override string NodeRepresentation() => ":";
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        throw new NotImplementedException();
+        visitor.Visit(this);
 }

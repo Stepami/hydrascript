@@ -33,24 +33,25 @@ public record Call(
     string Where = null)
 {
     public override string ToString() =>
-        $"{From} => {To.Location}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
+        $"{From} => {To.Start}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
 }
     
 public record FunctionInfo(string Id, string MethodOf = null)
 {
-    public IAddress Location => new Label(CallId());
+    public Label Start =>
+        new($"Start_{this}");
+
+    public Label End =>
+        new($"End_{this}");
 
     public string MethodOf { get; set; } = MethodOf;
 
-    public string CallId() =>
+    private string CallId() =>
         MethodOf == null
             ? Id
             : $"{MethodOf}.{Id}";
 
-    public override string ToString() =>
-        MethodOf == null
-            ? Id
-            : $"{MethodOf}.{Id}";
+    public override string ToString() => CallId();
 }
     
 public class Frame

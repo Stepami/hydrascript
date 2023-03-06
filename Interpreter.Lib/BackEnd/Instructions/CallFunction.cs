@@ -38,7 +38,7 @@ public class CallFunction : Simple
 
         vm.CallStack.Push(new Call(Address, _function, args, Left));
         vm.Frames.Push(frame);
-        return _function.Location;
+        return _function.Start;
     }
 
     protected override string ToStringInternal() => Left == null

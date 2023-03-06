@@ -11,6 +11,7 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 public class ExpressionInstructionProvider :
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
+    IVisitor<Property, AddressedInstructions>,
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
     IVisitor<CastAsExpression, AddressedInstructions>
@@ -45,6 +46,27 @@ public class ExpressionInstructionProvider :
         }
 
         return result;
+    }
+    
+    public AddressedInstructions Visit(Property visitable)
+    {
+        var objectId = visitable.Object.Parent
+            is AssignmentExpression assignment
+            ? assignment.Destination.Id
+            : null;
+
+        var (id, expression) = visitable;
+        var propertyId = new Constant(id, @$"\""{id}\""");
+
+        if (expression is PrimaryExpression primary)
+            return new AddressedInstructions
+                { new DotAssignment(objectId, propertyId, primary.ToValue()) };
+
+        var instructions = expression.Accept(this);
+        var last = new Name(instructions.OfType<Simple>().Last().Left);
+        instructions.Add(new DotAssignment(objectId, propertyId, last));
+
+        return instructions;
     }
 
     public AddressedInstructions Visit(UnaryExpression visitable)

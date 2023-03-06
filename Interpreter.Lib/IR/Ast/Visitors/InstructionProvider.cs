@@ -3,6 +3,8 @@ using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;
 using Visitor.NET.Lib.Core;
@@ -15,7 +17,9 @@ public class InstructionProvider :
     IVisitor<BlockStatement, AddressedInstructions>,
     IVisitor<InsideLoopStatement, AddressedInstructions>,
     IVisitor<ExpressionStatement, AddressedInstructions>,
-    IVisitor<ReturnStatement, AddressedInstructions>
+    IVisitor<ReturnStatement, AddressedInstructions>,
+    IVisitor<ObjectLiteral, AddressedInstructions>,
+    IVisitor<FunctionDeclaration, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -84,6 +88,55 @@ public class InstructionProvider :
         var last = new Name(result.OfType<Simple>().Last().Left);
         result.Add(new Return(last));
 
+        return result;
+    }
+
+    public AddressedInstructions Visit(ObjectLiteral visitable)
+    {
+        var objectId = visitable.Parent is AssignmentExpression assignment
+            ? assignment.Destination.Id
+            : null;
+        var createObject = new CreateObject(objectId);
+
+        var result = new AddressedInstructions { createObject };
+
+        result.AddRange(visitable.Methods
+            .SelectMany(method =>
+                method.Accept(this)
+            )
+        );
+
+        result.AddRange(visitable.Properties
+            .SelectMany(property =>
+                property.Accept(_expressionVisitor)
+            )
+        );
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(FunctionDeclaration visitable)
+    {
+        if (!visitable.Any())
+            return new();
+        
+        var objectId = visitable.Object?.Parent is AssignmentExpression assignment
+            ? assignment.Destination.Id
+            : null;
+        var functionInfo = new FunctionInfo(visitable.Name, objectId);
+
+        var result = new AddressedInstructions
+        {
+            new Goto(functionInfo.End),
+            { new BeginFunction(functionInfo), functionInfo.Start.Name }
+        };
+        
+        result.AddRange(visitable.Statements.Accept(this));
+        if (!visitable.HasReturnStatement())
+            result.Add(new Return());
+
+        result.Add(new EndFunction(functionInfo));
+        
         return result;
     }
 }

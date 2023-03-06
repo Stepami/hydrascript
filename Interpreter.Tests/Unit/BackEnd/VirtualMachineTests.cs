@@ -120,7 +120,7 @@ public class VirtualMachineTests
         var program = new List<Instruction>
         {
             new CreateObject("obj"),
-            new DotAssignment("obj", (new Constant("prop"), new Constant(null, "null"))),
+            new DotAssignment("obj", new Constant("prop"), new Constant(null, "null")),
             halt.Object
         }.ToAddressedInstructions();
             

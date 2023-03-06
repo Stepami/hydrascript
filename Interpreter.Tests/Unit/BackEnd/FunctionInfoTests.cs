@@ -9,5 +9,5 @@ public class FunctionInfoTests
     [InlineData("func", null, "func")]
     [InlineData("func", "obj", "obj.func")]
     public void CallIdCorrectTest(string id, string methodOf, string expected) =>
-        Assert.Equal(expected, new FunctionInfo(id, methodOf).CallId());
+        Assert.Equal(expected, new FunctionInfo(id, methodOf).ToString());
 }
