@@ -16,5 +16,6 @@ public abstract class Expression : AbstractSyntaxTreeNode,
     
     public abstract AddressedInstructions Accept(ExpressionInstructionProvider visitor);
 
-    public override AddressedInstructions Accept(InstructionProvider visitor) => new();
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        throw new NotImplementedException();
 }

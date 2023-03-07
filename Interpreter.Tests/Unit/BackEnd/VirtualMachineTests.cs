@@ -68,8 +68,9 @@ public class VirtualMachineTests
         var factorial = new FunctionInfo("fact");
         var program = new List<Instruction>
         {
-            new Goto(new Label("10")),
-            new BeginFunction(factorial),
+            new Goto(factorial.End),
+            new BeginBlock(BlockType.Function, blockId: factorial.ToString())
+                { Address = factorial.Start },
             new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
@@ -78,8 +79,10 @@ public class VirtualMachineTests
             new CallFunction(factorial, 1, "f"),
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
-            new PushParameter("n", new Constant(6)) { Address = new Label("10") },
-            new CallFunction(factorial, 1,  "fa6"),
+            new EndBlock(BlockType.Function, blockId: factorial.ToString())
+                { Address = factorial.End },
+            new PushParameter("n", new Constant(6)),
+            new CallFunction(factorial, 1, "fa6"),
             halt.Object
         }.ToAddressedInstructions();
         

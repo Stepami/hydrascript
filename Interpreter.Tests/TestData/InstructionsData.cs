@@ -20,8 +20,11 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new BeginFunction(new FunctionInfo("func")),
-            "Start_func: BeginFunction func"
+            new BeginBlock(BlockType.Function, blockId: "func")
+            {
+                Address = new Label("Start_func")
+            },
+            "Start_func:\n\tBeginFunction func"
         };
         yield return new object[]
         {
@@ -50,8 +53,11 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new EndFunction(new FunctionInfo("func")),
-            "End_func: EndFunction func"
+            new EndBlock(BlockType.Function, blockId: "func")
+            {
+                Address = new Label("End_func")
+            },
+            "End_func:\n\tEndFunction func"
         };
         yield return new object[]
         {

@@ -1,4 +1,5 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes;
@@ -19,7 +20,8 @@ public class InstructionProvider :
     IVisitor<ExpressionStatement, AddressedInstructions>,
     IVisitor<ReturnStatement, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
-    IVisitor<FunctionDeclaration, AddressedInstructions>
+    IVisitor<FunctionDeclaration, AddressedInstructions>,
+    IVisitor<WhileStatement, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -128,15 +130,59 @@ public class InstructionProvider :
         var result = new AddressedInstructions
         {
             new Goto(functionInfo.End),
-            { new BeginFunction(functionInfo), functionInfo.Start.Name }
+            {
+                new BeginBlock(BlockType.Function, blockId: functionInfo.ToString()),
+                functionInfo.Start.Name
+            }
         };
         
         result.AddRange(visitable.Statements.Accept(this));
         if (!visitable.HasReturnStatement())
             result.Add(new Return());
 
-        result.Add(new EndFunction(functionInfo));
+        result.Add(new EndBlock(BlockType.Function, blockId: functionInfo.ToString()));
         
+        return result;
+    }
+
+    public AddressedInstructions Visit(WhileStatement visitable)
+    {
+        var blockId = $"while_{visitable.GetHashCode()}";
+        var startBlockLabel = new Label($"Start_{blockId}");
+        var endBlockLabel = new Label($"End_{blockId}");
+        
+        var result = new AddressedInstructions
+        {
+            { new BeginBlock(BlockType.Loop, blockId), startBlockLabel.Name }
+        };
+
+        if (visitable.Condition is PrimaryExpression primary)
+            result.Add(new IfNotGoto(primary.ToValue(), endBlockLabel));
+        else
+        {
+            var instructions = visitable.Condition.Accept(_expressionVisitor);
+            var last = new Name(instructions.OfType<Simple>().Last().Left);
+            result.Add(new IfNotGoto(last, endBlockLabel));
+        }
+        
+        result.AddRange(visitable.Statement.Accept(this));
+        result.OfType<Goto>().Where(g => g.JumpType is not null)
+            .ToList().ForEach(g =>
+            {
+                switch (g.JumpType)
+                {
+                    case InsideLoopStatementType.Break:
+                        g.SetJump(endBlockLabel);
+                        break;
+                    case InsideLoopStatementType.Continue:
+                        g.SetJump(startBlockLabel);
+                        break;
+                }
+            });
+        result.Add(new Goto(startBlockLabel));
+
+        result.Add(new EndBlock(BlockType.Loop, blockId), endBlockLabel.Name);
+
         return result;
     }
 }
