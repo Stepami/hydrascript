@@ -27,16 +27,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     {
         //Check();
 
-        var newResult = _root.Accept(_instructionProvider);
-        var start = 0;
-        var result = new AddressedInstructions();
-        foreach (var node in _root)
-        {
-            var instructions = node.ToInstructions(start);
-            result.AddRange(instructions);
-            start += instructions.Count;
-        }
-        
+        var result = _root.Accept(_instructionProvider);
         result.Add(new Halt());
         
         return result;

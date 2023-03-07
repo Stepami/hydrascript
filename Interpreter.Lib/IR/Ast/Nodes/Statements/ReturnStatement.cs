@@ -14,7 +14,7 @@ public class ReturnStatement : Statement
     {
         Expression = expression;
         CanEvaluate = true;
-        if (expression != null)
+        if (expression is not null)
         {
             Expression.Parent = this;
         }
@@ -32,7 +32,7 @@ public class ReturnStatement : Statement
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        if (Expression == null)
+        if (Expression is null)
         {
             yield break;
         }

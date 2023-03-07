@@ -21,7 +21,8 @@ public class InstructionProvider :
     IVisitor<ReturnStatement, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
     IVisitor<FunctionDeclaration, AddressedInstructions>,
-    IVisitor<WhileStatement, AddressedInstructions>
+    IVisitor<WhileStatement, AddressedInstructions>,
+    IVisitor<IfStatement, AddressedInstructions>
 {
     private readonly ExpressionInstructionProvider _expressionVisitor = new();
     
@@ -182,6 +183,44 @@ public class InstructionProvider :
         result.Add(new Goto(startBlockLabel));
 
         result.Add(new EndBlock(BlockType.Loop, blockId), endBlockLabel.Name);
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(IfStatement visitable)
+    {
+        if (visitable.Empty())
+            return new();
+
+        var blockId = $"if_else_{visitable.GetHashCode()}";
+        var startBlockLabel = new Label($"Start_{blockId}");
+        var endBlockLabel = new Label($"End_{blockId}");
+        
+        var result = new AddressedInstructions();
+        
+        if (visitable.Test is PrimaryExpression primary)
+            result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
+        else
+        {
+            var instructions = visitable.Test.Accept(_expressionVisitor);
+            var last = new Name(instructions.OfType<Simple>().Last().Left);
+            result.Add(new IfNotGoto(last,
+                visitable.Else is null
+                    ? endBlockLabel
+                    : startBlockLabel)
+            );
+        }
+        
+        result.AddRange(visitable.Then.Accept(this));
+        if (visitable.Else is not null)
+        {
+            result.Add(new Goto(endBlockLabel));
+
+            result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
+            result.AddRange(visitable.Else.Accept(this));
+        }
+
+        result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 
         return result;
     }

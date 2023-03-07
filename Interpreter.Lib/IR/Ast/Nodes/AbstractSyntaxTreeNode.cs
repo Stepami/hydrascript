@@ -66,15 +66,17 @@ public abstract class AbstractSyntaxTreeNode :
 
     internal virtual Type NodeCheck() => null;
 
-    public virtual List<Instruction> ToInstructions(int start) => new ();
+    public List<Instruction> ToInstructions(int start) => new();
 
     public abstract IEnumerator<AbstractSyntaxTreeNode> GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 
     protected abstract string NodeRepresentation();
 
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
-    public override string ToString() => $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
+    public override string ToString() =>
+        $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
 }

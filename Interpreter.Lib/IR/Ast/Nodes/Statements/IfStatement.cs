@@ -1,6 +1,5 @@
-using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
@@ -8,40 +7,43 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Statements;
 
 public class IfStatement : Statement
 {
-    private readonly Expression _test;
-    private readonly Statement _then;
-    private readonly Statement _else;
+    public Expression Test { get; }
+    public Statement Then { get; }
+    public Statement Else { get; }
 
     public IfStatement(Expression test, Statement then, Statement @else = null)
     {
-        _test = test;
-        _test.Parent = this;
+        Test = test;
+        Test.Parent = this;
 
-        _then = then;
-        _then.Parent = this;
+        Then = then;
+        Then.Parent = this;
 
-        if (@else != null)
+        if (@else is not null)
         {
-            _else = @else;
-            _else.Parent = this;
+            Else = @else;
+            Else.Parent = this;
         }
 
         CanEvaluate = true;
     }
 
+    public bool Empty() =>
+        !Then.Any() && (Else is null || !Else.Any());
+
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        yield return _test;
-        yield return _then;
-        if (_else != null)
+        yield return Test;
+        yield return Then;
+        if (Else is not null)
         {
-            yield return _else;
+            yield return Else;
         }
     }
 
     internal override Type NodeCheck()
     {
-        var testType = _test.NodeCheck();
+        var testType = Test.NodeCheck();
         if (!testType.Equals(TypeUtils.JavaScriptTypes.Boolean))
         {
             throw new NotBooleanTestExpression(Segment, testType);
@@ -52,51 +54,6 @@ public class IfStatement : Statement
 
     protected override string NodeRepresentation() => "if";
 
-    public List<Instruction> ToInstructions(int start)
-    {
-        var instructions = new List<Instruction>();
-        if (_then.Any() && (_else == null || _else.Any()))
-        {
-            IValue ifNotTest;
-            if (!_test.Primary())
-            {
-                var testInstructions = _test.ToInstructions(start, "_t");
-                ifNotTest = new Name(testInstructions.OfType<Simple>().Last().Left);
-                instructions.AddRange(testInstructions);
-            }
-            else
-            {
-                ifNotTest = ((PrimaryExpression) _test).ToValue();
-            }
-
-            var tOffset = start + instructions.Count + 1;
-            var thenInstructions = _then.ToInstructions(tOffset);
-
-            var eOffset = thenInstructions.Any()
-                ? thenInstructions.Last().Number + 2
-                : tOffset + 1;
-            var elseInstructions = _else?.ToInstructions(eOffset);
-
-            instructions.Add(
-                new IfNotGoto(
-                    ifNotTest, elseInstructions?.First().Number ?? eOffset - 1, tOffset - 1
-                )
-            );
-
-            instructions.AddRange(thenInstructions);
-
-            if (elseInstructions != null)
-            {
-                instructions.Add(
-                    new Goto(
-                        elseInstructions.Last().Number + 1,
-                        eOffset - 1
-                    )
-                );
-                instructions.AddRange(elseInstructions);
-            }
-        }
-
-        return instructions;
-    }
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
 }
