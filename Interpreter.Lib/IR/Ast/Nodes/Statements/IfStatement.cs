@@ -29,7 +29,10 @@ public class IfStatement : Statement
     }
 
     public bool Empty() =>
-        !Then.Any() && (Else is null || !Else.Any());
+        !Then.Any() && !HasElseBlock();
+
+    public bool HasElseBlock() =>
+        Else is not null && Else.Any();
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {

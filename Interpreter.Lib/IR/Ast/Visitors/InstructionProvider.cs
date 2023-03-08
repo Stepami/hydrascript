@@ -205,14 +205,14 @@ public class InstructionProvider :
             var instructions = visitable.Test.Accept(_expressionVisitor);
             var last = new Name(instructions.OfType<Simple>().Last().Left);
             result.Add(new IfNotGoto(last,
-                visitable.Else is null
+                visitable.HasElseBlock()
                     ? endBlockLabel
                     : startBlockLabel)
             );
         }
         
         result.AddRange(visitable.Then.Accept(this));
-        if (visitable.Else is not null)
+        if (visitable.HasElseBlock())
         {
             result.Add(new Goto(endBlockLabel));
 
