@@ -1,4 +1,5 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
@@ -14,7 +15,8 @@ public class ExpressionInstructionProvider :
     IVisitor<Property, AddressedInstructions>,
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
-    IVisitor<CastAsExpression, AddressedInstructions>
+    IVisitor<CastAsExpression, AddressedInstructions>,
+    IVisitor<ConditionalExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
@@ -124,6 +126,33 @@ public class ExpressionInstructionProvider :
         var last = new Name(result.OfType<Simple>().Last().Left);
         result.Add(new AsString(last));
         
+        return result;
+    }
+
+    public AddressedInstructions Visit(ConditionalExpression visitable)
+    {
+        var blockId = $"cond_{visitable.GetHashCode()}";
+        var startBlockLabel = new Label($"Start_{blockId}");
+        var endBlockLabel = new Label($"End_{blockId}");
+        
+        var result = new AddressedInstructions();
+
+        if (visitable.Test is PrimaryExpression primary)
+            result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
+        else
+        {
+            result.AddRange(visitable.Test.Accept(this));
+            var last = new Name(result.OfType<Simple>().Last().Left);
+            result.Add(new IfNotGoto(last, startBlockLabel));
+        }
+
+        result.AddRange(visitable.Consequent.Accept(this));
+        result.Add(new Goto(endBlockLabel));
+        
+        result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
+        result.AddRange(visitable.Alternate.Accept(this));
+        result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
+
         return result;
     }
 }

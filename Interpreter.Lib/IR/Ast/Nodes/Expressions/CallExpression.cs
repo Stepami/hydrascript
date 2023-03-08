@@ -115,7 +115,7 @@ public class CallExpression : Expression
     {
         var instructions = new List<Instruction>();
         var expression = _expressions.First();
-        if (!expression.Primary())
+        if (expression is not PrimaryExpression primaryExpression)
         {
             instructions.AddRange(expression.ToInstructions(start, "_t"));
             instructions.Add(new Print(
@@ -125,7 +125,7 @@ public class CallExpression : Expression
         }
         else
         {
-            instructions.Add(new Print(start, ((PrimaryExpression) expression).ToValue()));
+            instructions.Add(new Print(start, primaryExpression.ToValue()));
         }
 
         return instructions;
@@ -167,12 +167,12 @@ public class CallExpression : Expression
                 .ForEach(item =>
                 {
                     var (expr, symbol) = item;
-                    var paramInstructions = expr.Primary()
+                    var paramInstructions = expr is PrimaryExpression
                         ? new List<Instruction>()
                         : expr.ToInstructions(start, "_t");
                     var pushNumber = start + instructions.Count + paramInstructions.Count;
-                    var pushValue = expr.Primary()
-                        ? ((PrimaryExpression) expr).ToValue()
+                    var pushValue = expr is PrimaryExpression expression
+                        ? expression.ToValue()
                         : new Name(paramInstructions.OfType<Simple>().Last().Left);
                     paramInstructions.Add(
                         new PushParameter(pushNumber, symbol.Id, pushValue)

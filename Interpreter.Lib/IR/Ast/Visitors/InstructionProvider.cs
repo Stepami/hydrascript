@@ -161,8 +161,8 @@ public class InstructionProvider :
             result.Add(new IfNotGoto(primary.ToValue(), endBlockLabel));
         else
         {
-            var instructions = visitable.Condition.Accept(_expressionVisitor);
-            var last = new Name(instructions.OfType<Simple>().Last().Left);
+            result.AddRange(visitable.Condition.Accept(_expressionVisitor));
+            var last = new Name(result.OfType<Simple>().Last().Left);
             result.Add(new IfNotGoto(last, endBlockLabel));
         }
         
@@ -202,8 +202,8 @@ public class InstructionProvider :
             result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
         else
         {
-            var instructions = visitable.Test.Accept(_expressionVisitor);
-            var last = new Name(instructions.OfType<Simple>().Last().Left);
+            result.AddRange(visitable.Test.Accept(_expressionVisitor));
+            var last = new Name(result.OfType<Simple>().Last().Left);
             result.Add(new IfNotGoto(last,
                 visitable.HasElseBlock()
                     ? endBlockLabel

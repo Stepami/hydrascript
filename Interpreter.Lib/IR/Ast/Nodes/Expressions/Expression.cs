@@ -12,8 +12,6 @@ public abstract class Expression : AbstractSyntaxTreeNode,
         CanEvaluate = true;
     }
 
-    public bool Primary() => !this.Any();
-    
     public abstract AddressedInstructions Accept(ExpressionInstructionProvider visitor);
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
