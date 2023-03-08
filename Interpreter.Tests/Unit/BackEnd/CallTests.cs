@@ -15,7 +15,7 @@ public class CallTests
                 ("arg", 1)
             }
         );
-        const string expected = "9 => 0: func(arg: 1)";
+        const string expected = "9:\n\t => Start_func:\n\t: func(arg: 1)";
         Assert.Equal(expected, call.ToString());
     }
 }

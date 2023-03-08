@@ -27,8 +27,8 @@ public static class MockExtensions
             CallBase = true
         };
         
-        result.Setup(x => x.Address)
-            .Returns(new HashedAddress(number));
+        result.Setup(x => x.GetHashCode())
+            .Returns(number);
 
         result.Setup(x => x.ToString())
             .Returns(number.ToString());

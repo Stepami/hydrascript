@@ -88,7 +88,7 @@ public class LoggingEntitiesTests
 
         _file.Verify(x => x.WriteAllLines(
             It.Is<string>(p => p == "file.tac"),
-            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "End" }))
+            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "\tEnd" }))
         ), Times.Once());
     }
 }

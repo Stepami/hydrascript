@@ -29,12 +29,12 @@ public class InstructionsData : IEnumerable<object[]>
         yield return new object[]
         {
             new CallFunction(new FunctionInfo("func"), 2),
-            "2: Call func, 0"
+            "Call func, 2"
         };
         yield return new object[]
         {
             new CallFunction(new FunctionInfo("func"), 2, "ret"),
-            "2: ret = Call func, 0"
+            "ret = Call func, 2"
         };
         yield return new object[]
         {

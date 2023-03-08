@@ -77,7 +77,7 @@ public class ExecutorTests
     [Fact]
     public void InternalInterpreterErrorCaughtTest()
     {
-        var instruction = new Mock<Instruction>(MockBehavior.Default, 0);
+        var instruction = new Mock<Instruction>();
         instruction.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
             .Throws<NullReferenceException>();
             

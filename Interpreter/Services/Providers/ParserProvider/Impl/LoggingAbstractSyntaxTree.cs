@@ -22,7 +22,7 @@ public class LoggingAbstractSyntaxTree : IAbstractSyntaxTree
         var instructions = _ast.GetInstructions();
         _fileSystem.File.WriteAllLines(
             $"{_fileName}.tac",
-            instructions.OrderBy(i => i).Select(i => i.ToString())
+            instructions.Select(i => i.ToString())
         );
         return instructions;
     }

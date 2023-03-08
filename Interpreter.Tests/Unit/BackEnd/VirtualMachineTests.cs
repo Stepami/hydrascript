@@ -26,7 +26,10 @@ public class VirtualMachineTests
             .Verifiable();
 
         var vm = new VirtualMachine(new(), new Stack<Frame>(new[] { new Frame(new HashedAddress(0)) }), new(), writer.Object);
-        var print = new Print(new Constant(223));
+        var print = new Print(new Constant(223))
+        {
+            Address = new HashedAddress(1)
+        };
 
         print.Execute(vm);
         writer.Verify(x => x.WriteLine(
@@ -38,7 +41,7 @@ public class VirtualMachineTests
     public void ProgramWithoutHaltWillNotRunTest()
     {
         var program = new AddressedInstructions();
-        Assert.Throws<ArgumentOutOfRangeException>(() => _vm.Run(program));
+        Assert.Throws<ArgumentNullException>(() => _vm.Run(program));
         
         program.Add(new Halt());
         Assert.Null(Record.Exception(() => _vm.Run(program)));
@@ -64,27 +67,25 @@ public class VirtualMachineTests
     [Fact]
     public void VirtualMachineHandlesRecursionTest()
     {
-        var halt = new Mock<Halt>(12).Trackable();
+        var halt = new Mock<Halt>().Trackable();
         var factorial = new FunctionInfo("fact");
-        var program = new List<Instruction>
+        var program = new AddressedInstructions
         {
             new Goto(factorial.End),
-            new BeginBlock(BlockType.Function, blockId: factorial.ToString())
-                { Address = factorial.Start },
+            { new BeginBlock(BlockType.Function, blockId: factorial.ToString()), factorial.Start.Name },
             new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
-            new Simple("_t5", (new Name("n"), new Constant(1)), "-") { Address = new Label("5") },
+            { new Simple("_t5", (new Name("n"), new Constant(1)), "-"), "5" },
             new PushParameter("n", new Name("_t5")),
             new CallFunction(factorial, 1, "f"),
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
-            new EndBlock(BlockType.Function, blockId: factorial.ToString())
-                { Address = factorial.End },
+            { new EndBlock(BlockType.Function, blockId: factorial.ToString()), factorial.End.Name },
             new PushParameter("n", new Constant(6)),
             new CallFunction(factorial, 1, "fa6"),
             halt.Object
-        }.ToAddressedInstructions();
+        };
         
         _vm.Run(program);
         Assert.Empty(_vm.CallStack);
@@ -103,15 +104,24 @@ public class VirtualMachineTests
         var vm = new VirtualMachine();
         vm.Frames.Push(new Frame(new HashedAddress(0)));
             
-        var createArray = new CreateArray("arr", 6);
+        var createArray = new CreateArray("arr", 6)
+        {
+            Address = new HashedAddress(1)
+        };
         createArray.Execute(vm);
         Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
 
-        var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0));
+        var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0))
+        {
+            Address = new HashedAddress(2)
+        };
         indexAssignment.Execute(vm);
         Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
 
-        var removeFromArray = new RemoveFromArray("arr", new Constant(5));
+        var removeFromArray = new RemoveFromArray("arr", new Constant(5))
+        {
+            Address = new HashedAddress(3)
+        };
         removeFromArray.Execute(vm);
         Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]).Count);
     }
@@ -119,7 +129,7 @@ public class VirtualMachineTests
     [Fact]
     public void ObjectCreationTest()
     {
-        var halt = new Mock<Halt>(2).Trackable();
+        var halt = new Mock<Halt>().Trackable();
         var program = new List<Instruction>
         {
             new CreateObject("obj"),
@@ -130,8 +140,7 @@ public class VirtualMachineTests
         _vm.Run(program);
         halt.Verify(x => x.Execute(
             It.Is<VirtualMachine>(
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                vm => ((Dictionary<string, object>)vm.Frames.Peek()["obj"])["prop"] == null
+                vm => ((Dictionary<string, object?>)vm.Frames.Peek()["obj"])["prop"] == null
             )
         ), Times.Once());
         _vm.Frames.Pop();

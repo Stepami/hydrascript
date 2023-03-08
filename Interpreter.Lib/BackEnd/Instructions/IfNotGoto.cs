@@ -20,5 +20,5 @@ public class IfNotGoto : Goto
     }
 
     protected override string ToStringInternal() =>
-        $"IfNot {_test} Goto {jump}";
+        $"IfNot {_test} Goto {jump.Name}";
 }

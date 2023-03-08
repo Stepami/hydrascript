@@ -8,7 +8,7 @@ public static class ListExtensions
     public static AddressedInstructions ToAddressedInstructions(this List<Instruction> instructions)
     {
         var result = new AddressedInstructions();
-        result.AddRange(instructions);
+        instructions.ForEach(x => result.Add(x));
         return result;
     }
 }
