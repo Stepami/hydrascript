@@ -8,7 +8,7 @@ public class Simple : Instruction
     public string Left { get; set; }
 
     protected (IValue left, IValue right) right;
-    protected readonly string @operator;
+    private readonly string _operator;
 
     public Simple(string left,
         (IValue left, IValue right) right,
@@ -16,7 +16,7 @@ public class Simple : Instruction
     {
         Left = left;
         this.right = right;
-        this.@operator = @operator;
+        _operator = @operator;
     }
 
     public Simple(IValue value) : this(
@@ -37,11 +37,6 @@ public class Simple : Instruction
         @operator: binaryOperator
     ) { }
 
-    public IValue Source =>
-        right.right;
-
-    public bool Assignment => @operator == "";
-
     protected override void OnSetOfAddress(IAddress address) =>
         Left ??= $"_t{address.GetHashCode()}";
 
@@ -51,7 +46,7 @@ public class Simple : Instruction
         if (right.left == null)
         {
             var value = right.right.Get(frame);
-            frame[Left] = @operator switch
+            frame[Left] = _operator switch
             {
                 "-" => -Convert.ToDouble(value),
                 "!" => !Convert.ToBoolean(value),
@@ -63,7 +58,7 @@ public class Simple : Instruction
         else
         {
             object lValue = right.left.Get(frame), rValue = right.right.Get(frame);
-            frame[Left] = @operator switch
+            frame[Left] = _operator switch
             {
                 "+" when lValue is string => lValue.ToString() + rValue,
                 "+" => Convert.ToDouble(lValue) + Convert.ToDouble(rValue),
@@ -103,6 +98,6 @@ public class Simple : Instruction
     }
 
     protected override string ToStringInternal() => right.left == null
-        ? $"{Left} = {@operator}{right.right}"
-        : $"{Left} = {right.left} {@operator} {right.right}";
+        ? $"{Left} = {_operator}{right.right}"
+        : $"{Left} = {right.left} {_operator} {right.right}";
 }

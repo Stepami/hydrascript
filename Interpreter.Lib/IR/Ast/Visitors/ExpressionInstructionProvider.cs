@@ -16,7 +16,8 @@ public class ExpressionInstructionProvider :
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
     IVisitor<CastAsExpression, AddressedInstructions>,
-    IVisitor<ConditionalExpression, AddressedInstructions>
+    IVisitor<ConditionalExpression, AddressedInstructions>,
+    IVisitor<AssignmentExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
@@ -147,12 +148,23 @@ public class ExpressionInstructionProvider :
         }
 
         result.AddRange(visitable.Consequent.Accept(this));
+        var temp = result.OfType<Simple>().Last().Left;
         result.Add(new Goto(endBlockLabel));
         
         result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
         result.AddRange(visitable.Alternate.Accept(this));
+        result.OfType<Simple>().Last().Left = temp;
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 
+        result.Add(new Simple(new Name(temp)));
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(AssignmentExpression visitable)
+    {
+        var result = visitable.Source.Accept(this);
+        result.OfType<Simple>().Last().Left = visitable.Destination.Id;
         return result;
     }
 }
