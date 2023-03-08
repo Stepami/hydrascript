@@ -1,6 +1,8 @@
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
@@ -52,7 +54,7 @@ public class MemberExpression : Expression
 
     protected override string NodeRepresentation() => Id;
 
-    public List<Instruction> ToInstructions(int start, string temp)
+    /*public List<Instruction> ToInstructions(int start, string temp)
     {
         if (AccessChain != null && AccessChain.HasNext())
         {
@@ -60,11 +62,16 @@ public class MemberExpression : Expression
         }
 
         return new();
-    }
+    }*/
 
     public static implicit operator IdentifierReference(MemberExpression member) => 
         member._id;
         
     public static explicit operator MemberExpression(IdentifierReference idRef) =>
         new (idRef, null);
+
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
+    {
+        throw new NotImplementedException();
+    }
 }

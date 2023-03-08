@@ -1,6 +1,8 @@
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
@@ -46,7 +48,7 @@ public class IndexAccess : AccessExpression
 
     protected override string NodeRepresentation() => "[]";
 
-    public List<Instruction> ToInstructions(int start, string temp)
+    /*public List<Instruction> ToInstructions(int start, string temp)
     {
         if (HasNext())
         {
@@ -64,5 +66,10 @@ public class IndexAccess : AccessExpression
         }
 
         return new();
+    }*/
+
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
+    {
+        throw new NotImplementedException();
     }
 }

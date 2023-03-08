@@ -1,8 +1,10 @@
+using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;
+using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
@@ -111,7 +113,7 @@ public class CallExpression : Expression
 
     protected override string NodeRepresentation() => "()";
 
-    private List<Instruction> Print(int start)
+    /*private List<Instruction> Print(int start)
     {
         var instructions = new List<Instruction>();
         var expression = _expressions.First();
@@ -191,5 +193,10 @@ public class CallExpression : Expression
         }
 
         return instructions;
+    }*/
+
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
+    {
+        throw new NotImplementedException();
     }
 }
