@@ -7,18 +7,18 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 
 public class IdentifierReference : PrimaryExpression
 {
-    public string Id { get; }
+    public string Name { get; }
 
-    public IdentifierReference(string id)
+    public IdentifierReference(string name)
     {
-        Id = id;
+        Name = name;
     }
 
     internal override Type NodeCheck()
     {
         if (!ChildOf<DotAccess>())
         {
-            var symbol = SymbolTable.FindSymbol<Symbol>(Id);
+            var symbol = SymbolTable.FindSymbol<Symbol>(Name);
             return symbol switch
             {
                 VariableSymbol v => v.Type,
@@ -30,7 +30,10 @@ public class IdentifierReference : PrimaryExpression
         return null;
     }
 
-    protected override string NodeRepresentation() => Id;
+    protected override string NodeRepresentation() => Name;
 
-    public override IValue ToValue() => new Name(Id);
+    public override IValue ToValue() => new Name(Name);
+
+    public static implicit operator string(IdentifierReference identifierReference) =>
+        identifierReference.Name;
 }

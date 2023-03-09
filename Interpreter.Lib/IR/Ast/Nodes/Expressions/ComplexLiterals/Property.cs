@@ -23,7 +23,7 @@ public class Property : Expression
 
     public void Deconstruct(out string id, out Expression expr)
     {
-        id = Id.Id;
+        id = Id.Name;
         expr = Expression;
     }
    

@@ -11,26 +11,29 @@ using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions;
 
-public class CallExpression : Expression
+public class CallExpression : LeftHandSideExpression
 {
-    private readonly MemberExpression _ident;
+    private readonly MemberExpression _member;
     private readonly List<Expression> _expressions;
 
-    public CallExpression(MemberExpression ident, IEnumerable<Expression> expressions)
+    public CallExpression(MemberExpression member, IEnumerable<Expression> expressions)
     {
-        _ident = ident;
-        _ident.Parent = this;
+        _member = member;
+        _member.Parent = this;
 
         _expressions = new List<Expression>(expressions);
         _expressions.ForEach(expr => expr.Parent = this);
     }
+    
+    public override IdentifierReference Id =>
+        _member.Id;
 
     private FunctionSymbol GetFunction()
     {
-        if (_ident.Any())
+        if (_member.Any())
         {
-            var table = SymbolTable.FindSymbol<ObjectSymbol>(_ident.Id).Table;
-            var chain = _ident.AccessChain;
+            var table = SymbolTable.FindSymbol<ObjectSymbol>(_member.Id).Table;
+            var chain = _member.AccessChain;
             while (chain.HasNext())
             {
                 table = chain switch
@@ -45,25 +48,25 @@ public class CallExpression : Expression
             return table.FindSymbol<FunctionSymbol>(((DotAccess) chain).Id);
         }
 
-        return SymbolTable.FindSymbol<FunctionSymbol>(_ident.Id);
+        return SymbolTable.FindSymbol<FunctionSymbol>(_member.Id);
     }
 
     internal override Type NodeCheck()
     {
-        if (_ident.Any())
+        if (_member.Any())
         {
-            _ident.NodeCheck();
+            _member.NodeCheck();
         }
         else
         {
-            IdentifierReference idRef = _ident;
+            IdentifierReference idRef = _member.Id;
             idRef.NodeCheck();
         }
 
         var function = GetFunction();
         if (function == null)
         {
-            throw new SymbolIsNotCallable(_ident.Id, Segment);
+            throw new SymbolIsNotCallable(_member.Id, Segment);
         }
 
         if (!function.Type.ReturnType.Equals(TypeUtils.JavaScriptTypes.Void))
@@ -91,7 +94,7 @@ public class CallExpression : Expression
                 throw new WrongReturnType(retStmt.Segment, function.Type.ReturnType, retType);
             }
 
-            if (node.CanEvaluate && !(node is CallExpression call && call._ident.Id == _ident.Id))
+            if (node.CanEvaluate && !(node is CallExpression call && call._member.Id == _member.Id))
             {
                 node.NodeCheck();
             }
@@ -105,7 +108,7 @@ public class CallExpression : Expression
     {
         var nodes = new List<AbstractSyntaxTreeNode>
         {
-            _ident
+            _member
         };
         nodes.AddRange(_expressions);
         return nodes.GetEnumerator();

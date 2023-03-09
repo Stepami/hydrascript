@@ -18,23 +18,29 @@ Declaration -> LexicalDeclaration
 BlockStatement -> '{' StatementList '}'
 
 ExpressionStatement -> Expression
-Expression -> AssignExpression
-AssignExpression -> LeftHandSideExpression ('=' AssignExpression)?
-LeftHandSideExpression -> CastExpression
+Expression -> CastExpression   
+              AssignmentExpression
+
+CastExpression -> ConditionalExpression 'as' 'string'
+
+AssignmentExpression -> LeftHandSideExpression '=' Expression
+
+LeftHandSideExpression -> MemberExpression
                           CallExpression
-CallExpression -> MemberExpression Arguments*
-Arguments -> '(' ArgumentsList? ')'
-ArgumentsList -> AssignExpression (',' AssignExpression)*
-MemberExpression -> "Ident" ('[' Expression ']' | '.' "Ident" )*
-CastExpression -> ConditionalExpression 'as' TypeIdentifier
-ConditionalExpression -> OrExpression ('?' AssignExpression ':' AssignExpression)?
+CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
+MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
+
+Arguments -> '(' (Expression ',')* ')'
+
+ConditionalExpression -> OrExpression ('?' Expression ':' Expression)?
 OrExpression -> AndExpression ('||' AndExpression)*
 AndExpression -> EqExpression ('&&' EqExpression)*
 EqExpression -> RelExpression (('=='|'!=') RelExpression)*
 RelExpression -> AddExpression (('<'|'>'|'<='|'>=') AddExpression)*
 AddExpression -> MulExpression (('+'|'-') MulExpression)*
-MulExpression -> UnaryExpression (('*'|'/'|'%') UnaryExpression)*
-UnaryExpression -> PrimaryExpression | ('-'|'!') UnaryExpression
+MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
+UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
+
 PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
 Literal -> "NullLiteral"
            "IntegerLiteral"
