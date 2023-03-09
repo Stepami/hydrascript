@@ -105,7 +105,7 @@ public class Parser : IParser
     private Statement Statement(SymbolTable table)
     {
         if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-            CurrentIsOperator("!"))
+            CurrentIsOperator("!") || CurrentIsOperator("~"))
         {
             return ExpressionStatement(table);
         }
@@ -177,8 +177,9 @@ public class Parser : IParser
     private ReturnStatement ReturnStatement(SymbolTable table)
     {
         var ret = Expect("Keyword", "return");
-        if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-            CurrentIsOperator("!") || CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen")||
+            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
+            CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
         {
             return new ReturnStatement(Expression(table))
             {
@@ -452,42 +453,19 @@ public class Parser : IParser
 
     private Expression Expression(SymbolTable table)
     {
-        return AssignmentExpression(table);
-    }
-
-    private Expression AssignmentExpression(SymbolTable table)
-    {
-        var lhs = LeftHandSideExpression(table);
-        if (CurrentIs("Assign") && !(lhs is CallExpression))
+        var expr = CastExpression(table);
+        if (expr is LeftHandSideExpression lhs)
         {
             var assign = Expect("Assign");
-            var member = lhs is IdentifierReference reference
-                ? (MemberExpression) reference
-                : (MemberExpression) lhs;
-            return new AssignmentExpression(member, AssignmentExpression(table))
+            return new AssignmentExpression(lhs, Expression(table))
                 {SymbolTable = table, Segment = assign.Segment};
         }
-
-        return lhs;
-    }
-
-    private Expression LeftHandSideExpression(SymbolTable table)
-    {
-        var expr = CastExpression(table);
-        if (expr is IdentifierReference identRef)
-        {
-            if (CurrentIs("LeftParen") || CurrentIs("LeftBracket") || CurrentIs("Dot"))
-            {
-                return CallExpression(identRef, table);
-            }
-        }
-
         return expr;
     }
 
-    private Expression CallExpression(IdentifierReference identRef, SymbolTable table)
+    private Expression CallExpression(SymbolTable table)
     {
-        var member = MemberExpression(identRef, table);
+        var member = MemberExpression(table);
         if (CurrentIs("LeftParen"))
         {
             var lp = Expect("LeftParen");
@@ -504,7 +482,7 @@ public class Parser : IParser
             }
 
             Expect("RightParen");
-            return new CallExpression(member, expressions)
+            return new CallExpression(member as MemberExpression, expressions)
             {
                 SymbolTable = table,
                 Segment = lp.Segment
@@ -514,8 +492,13 @@ public class Parser : IParser
         return member;
     }
 
-    private MemberExpression MemberExpression(IdentifierReference identRef, SymbolTable table)
+    private Expression MemberExpression(SymbolTable table)
     {
+        var primary = PrimaryExpression(table);
+        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot"))
+            return primary;
+        
+        var identRef = primary as IdentifierReference;
         var accessChain = new List<AccessExpression>();
         while (CurrentIs("LeftBracket") || CurrentIs("Dot"))
         {
@@ -570,9 +553,9 @@ public class Parser : IParser
         if (CurrentIs("QuestionMark"))
         {
             Expect("QuestionMark");
-            var consequent = AssignmentExpression(table);
+            var consequent = Expression(table);
             Expect("Colon");
-            var alternate = AssignmentExpression(table);
+            var alternate = Expression(table);
             return new ConditionalExpression(test, consequent, alternate);
         }
 
@@ -688,7 +671,12 @@ public class Parser : IParser
             };
         }
 
-        return PrimaryExpression(table);
+        return LeftHandSideExpression(table);
+    }
+    
+    private Expression LeftHandSideExpression(SymbolTable table)
+    {
+        return CallExpression(table);
     }
 
     private Expression PrimaryExpression(SymbolTable table)

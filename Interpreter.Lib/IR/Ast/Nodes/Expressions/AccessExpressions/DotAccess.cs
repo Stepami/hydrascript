@@ -18,19 +18,19 @@ public class DotAccess : AccessExpression
         _id.Parent = this;
     }
 
-    public string Id => _id.Id;
+    public string Id => _id.Name;
 
     public override Type Check(Type prev)
     {
         if (prev is ObjectType objectType)
         {
-            var fieldType = objectType[_id.Id];
+            var fieldType = objectType[_id.Name];
             if (fieldType != null)
             {
                 return HasNext() ? Next.Check(fieldType) : fieldType;
             }
 
-            throw new ObjectAccessException(Segment, objectType, _id.Id);
+            throw new ObjectAccessException(Segment, objectType, _id.Name);
         }
 
         return null;

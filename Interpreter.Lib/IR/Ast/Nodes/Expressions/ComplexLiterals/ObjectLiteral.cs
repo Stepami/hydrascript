@@ -26,10 +26,10 @@ public class ObjectLiteral : ComplexLiteral
         Properties.ForEach(prop =>
         {
             var propType = prop.Expression.NodeCheck();
-            propertyTypes.Add(new PropertyType(prop.Id.Id, propType));
+            propertyTypes.Add(new PropertyType(prop.Id.Name, propType));
             prop.Id.SymbolTable.AddSymbol(propType is ObjectType objectType
-                ? new ObjectSymbol(prop.Id.Id, objectType) {Table = prop.Expression.SymbolTable}
-                : new VariableSymbol(prop.Id.Id, propType)
+                ? new ObjectSymbol(prop.Id.Name, objectType) {Table = prop.Expression.SymbolTable}
+                : new VariableSymbol(prop.Id.Name, propType)
             );
         });
         Methods.ForEach(m =>

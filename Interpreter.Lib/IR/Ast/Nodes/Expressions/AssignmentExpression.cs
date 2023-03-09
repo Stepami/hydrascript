@@ -9,14 +9,14 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions;
 
 public class AssignmentExpression : Expression
 {
-    public MemberExpression Destination { get; }
+    public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
     private readonly Type _destinationType;
 
-    public AssignmentExpression(MemberExpression destination, Expression source, Type destinationType = null)
+    public AssignmentExpression(LeftHandSideExpression lhs, Expression source, Type destinationType = null)
     {
-        Destination = destination;
-        destination.Parent = this;
+        Destination = lhs;
+        lhs.Parent = this;
 
         Source = source;
         source.Parent = this;
@@ -32,12 +32,12 @@ public class AssignmentExpression : Expression
         {
             if (declaration.Readonly && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
             {
-                throw new ConstWithoutInitializer(Destination);
+                throw new ConstWithoutInitializer(Destination.Id);
             }
 
             if (SymbolTable.ContainsSymbol(Destination.Id))
             {
-                throw new DeclarationAlreadyExists(Destination);
+                throw new DeclarationAlreadyExists(Destination.Id);
             }
 
             if (_destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
@@ -77,7 +77,7 @@ public class AssignmentExpression : Expression
             {
                 if (symbol.ReadOnly)
                 {
-                    throw new AssignmentToConst(Destination);
+                    throw new AssignmentToConst(Destination.Id);
                 }
 
                 if (!Destination.NodeCheck().Equals(type))

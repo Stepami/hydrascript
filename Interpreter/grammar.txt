@@ -23,12 +23,12 @@ Expression -> CastExpression
 
 CastExpression -> ConditionalExpression 'as' 'string'
 
-AssignmentExpression -> LeftHandSideExpression ('=' Expression)?
+AssignmentExpression -> LeftHandSideExpression '=' Expression
 
 LeftHandSideExpression -> MemberExpression
                           CallExpression
 CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
-MemberExpression -> PrimaryExpression ('[' Expression ']' | '.' 'Ident')*
+MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
 
 Arguments -> '(' (Expression ',')* ')'
 
@@ -41,7 +41,7 @@ AddExpression -> MulExpression (('+'|'-') MulExpression)*
 MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
 UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
 
-PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral | 'this'
+PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
 Literal -> "NullLiteral"
            "IntegerLiteral"
            "FloatLiteral"

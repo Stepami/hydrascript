@@ -86,7 +86,7 @@ public class ExpressionInstructionProvider :
             visitable.Operator == "::")
             return new AddressedInstructions
             {
-                new RemoveFromArray(arr.Id, primary.ToValue())
+                new RemoveFromArray(arr.Name, primary.ToValue())
             };
 
         var result = new AddressedInstructions();
