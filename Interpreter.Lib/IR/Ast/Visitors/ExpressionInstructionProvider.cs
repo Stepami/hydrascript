@@ -26,9 +26,7 @@ public class ExpressionInstructionProvider :
     {
         var arraySize = visitable.Expressions.Count;
 
-        var arrayName = visitable.Parent is AssignmentExpression assignment
-            ? assignment.Destination.Id
-            : null;
+        var arrayName = visitable.Id;
         var createArray = new CreateArray(arrayName, arraySize);
 
         var result = new AddressedInstructions { createArray };
@@ -53,10 +51,7 @@ public class ExpressionInstructionProvider :
     
     public AddressedInstructions Visit(Property visitable)
     {
-        var objectId = visitable.Object.Parent
-            is AssignmentExpression assignment
-            ? assignment.Destination.Id
-            : null;
+        var objectId = visitable.Object.Id;
 
         var (id, expression) = visitable;
         var propertyId = new Constant(id, @$"\""{id}\""");

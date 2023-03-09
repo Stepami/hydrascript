@@ -5,7 +5,7 @@ using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 
-public class ArrayLiteral : Expression
+public class ArrayLiteral : ComplexLiteral
 {
     public List<Expression> Expressions { get; }
 

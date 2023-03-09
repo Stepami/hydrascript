@@ -6,7 +6,7 @@ using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 
-public class ObjectLiteral : Expression
+public class ObjectLiteral : ComplexLiteral
 {
     public List<Property> Properties { get; }
     public List<FunctionDeclaration> Methods { get; }
@@ -51,5 +51,5 @@ public class ObjectLiteral : Expression
         visitor.Visit(this);
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        throw new NotImplementedException();
+        new InstructionProvider().Visit(this);
 }

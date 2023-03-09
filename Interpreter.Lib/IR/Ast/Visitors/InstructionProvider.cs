@@ -4,7 +4,6 @@ using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;
@@ -96,9 +95,7 @@ public class InstructionProvider :
 
     public AddressedInstructions Visit(ObjectLiteral visitable)
     {
-        var objectId = visitable.Parent is AssignmentExpression assignment
-            ? assignment.Destination.Id
-            : null;
+        var objectId = visitable.Id;
         var createObject = new CreateObject(objectId);
 
         var result = new AddressedInstructions { createObject };
@@ -123,9 +120,7 @@ public class InstructionProvider :
         if (!visitable.Any())
             return new();
         
-        var objectId = visitable.Object?.Parent is AssignmentExpression assignment
-            ? assignment.Destination.Id
-            : null;
+        var objectId = visitable.Object?.Id;
         var functionInfo = new FunctionInfo(visitable.Name, objectId);
 
         var result = new AddressedInstructions
