@@ -159,6 +159,11 @@ public class ExpressionInstructionProvider :
     public AddressedInstructions Visit(AssignmentExpression visitable)
     {
         var result = visitable.Source.Accept(this);
+        if (visitable.Source is AssignmentExpression)
+        {
+            var last = new Name(result.OfType<Simple>().Last().Left);
+            result.Add(new Simple(last));
+        }
         result.OfType<Simple>().Last().Left = visitable.Destination.Id;
         return result;
     }
