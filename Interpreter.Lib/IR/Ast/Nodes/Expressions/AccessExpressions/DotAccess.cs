@@ -1,6 +1,4 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
@@ -10,27 +8,25 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 
 public class DotAccess : AccessExpression
 {
-    private readonly IdentifierReference _id;
+    public IdentifierReference Property { get; }
 
-    public DotAccess(IdentifierReference id, AccessExpression prev = null) : base(prev)
+    public DotAccess(IdentifierReference property, AccessExpression prev = null) : base(prev)
     {
-        _id = id;
-        _id.Parent = this;
+        Property = property;
+        Property.Parent = this;
     }
-
-    public string Id => _id.Name;
 
     public override Type Check(Type prev)
     {
         if (prev is ObjectType objectType)
         {
-            var fieldType = objectType[_id.Name];
+            var fieldType = objectType[Property.Name];
             if (fieldType != null)
             {
                 return HasNext() ? Next.Check(fieldType) : fieldType;
             }
 
-            throw new ObjectAccessException(Segment, objectType, _id.Name);
+            throw new ObjectAccessException(Segment, objectType, Property.Name);
         }
 
         return null;
@@ -38,7 +34,7 @@ public class DotAccess : AccessExpression
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        yield return _id;
+        yield return Property;
         if (HasNext())
         {
             yield return Next;
@@ -47,23 +43,6 @@ public class DotAccess : AccessExpression
 
     protected override string NodeRepresentation() => ".";
 
-    /*public List<Instruction> ToInstructions(int start, string temp)
-    {
-        if (HasNext())
-        {
-            var left = "_t" + start;
-            var nextInstructions = Next.ToInstructions(start + 1, left);
-            nextInstructions.Insert(0,
-                new Simple(left, (new Name(temp), new Constant(_id.Id, _id.Id)), ".", start)
-            );
-            return nextInstructions;
-        }
-
-        return new();
-    }*/
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
-    {
-        throw new NotImplementedException();
-    }
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
+        visitor.Visit(this);
 }

@@ -38,7 +38,7 @@ public class Simple : Instruction
     ) { }
 
     protected override void OnSetOfAddress(IAddress address) =>
-        Left ??= $"_t{address.GetHashCode()}";
+        Left ??= $"_t{unchecked((uint)address.GetHashCode())}";
 
     public override IAddress Execute(VirtualMachine vm)
     {

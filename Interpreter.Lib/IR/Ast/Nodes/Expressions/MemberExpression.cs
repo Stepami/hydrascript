@@ -1,5 +1,4 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
@@ -11,23 +10,30 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions;
 public class MemberExpression : LeftHandSideExpression
 {
     private readonly IdentifierReference _identifierReference;
-        
-    public AccessExpression AccessChain { get; }
 
-    public MemberExpression(IdentifierReference identifierReference, AccessExpression accessChain)
+    public AccessExpression AccessChain { get; }
+    public AccessExpression Tail { get; }
+
+    public MemberExpression(IdentifierReference identifierReference,
+        AccessExpression accessChain = null, AccessExpression tail = null)
     {
         _identifierReference = identifierReference;
         _identifierReference.Parent = this;
             
         AccessChain = accessChain;
-        if (accessChain != null)
+        if (accessChain is not null)
         {
             AccessChain.Parent = this;
         }
+
+        Tail = tail;
     }
 
     public override IdentifierReference Id =>
         _identifierReference;
+
+    public override bool Empty() =>
+        AccessChain is null;
 
     internal override Type NodeCheck()
     {
@@ -47,7 +53,7 @@ public class MemberExpression : LeftHandSideExpression
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        if (AccessChain != null)
+        if (AccessChain is not null)
         {
             yield return AccessChain;
         }
@@ -55,18 +61,6 @@ public class MemberExpression : LeftHandSideExpression
 
     protected override string NodeRepresentation() => Id;
 
-    /*public List<Instruction> ToInstructions(int start, string temp)
-    {
-        if (AccessChain != null && AccessChain.HasNext())
-        {
-            return AccessChain.ToInstructions(start, _id.Id);
-        }
-
-        return new();
-    }*/
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
-    {
-        throw new NotImplementedException();
-    }
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
+        visitor.Visit(this);
 }

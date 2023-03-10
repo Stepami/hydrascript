@@ -422,7 +422,7 @@ public class Parser : IParser
             var assignSegment = Expect("Assign").Segment;
             var expression = Expression(table);
             assignment = new AssignmentExpression(
-                new MemberExpression(identRef, null), expression
+                new MemberExpression(identRef), expression
             ) { Segment = assignSegment };
         }
         else if (CurrentIs("Colon"))
@@ -434,8 +434,9 @@ public class Parser : IParser
                 var assignSegment = Expect("Assign").Segment;
                 var expression = Expression(table);
                 assignment = new AssignmentExpression(
-                    new MemberExpression(identRef, null),
-                    expression, type) { Segment = assignSegment };
+                    new MemberExpression(identRef),
+                    expression, type
+                ) { Segment = assignSegment };
             }
             else
             {
@@ -444,7 +445,7 @@ public class Parser : IParser
                     label: TypeUtils.GetDefaultValue(type) == null ? "null" : null
                 );
                 assignment = new AssignmentExpression(
-                    new MemberExpression(identRef, null),
+                    new MemberExpression(identRef),
                     expression, type);
             }
         }
@@ -454,7 +455,7 @@ public class Parser : IParser
     private Expression Expression(SymbolTable table)
     {
         var expr = CastExpression(table);
-        if (expr is LeftHandSideExpression lhs)
+        if (expr is LeftHandSideExpression lhs && CurrentIs("Assign"))
         {
             var assign = Expect("Assign");
             return new AssignmentExpression(lhs, Expression(table))
@@ -528,7 +529,7 @@ public class Parser : IParser
             }
         }
  
-        return new MemberExpression(identRef, accessChain.FirstOrDefault())
+        return new MemberExpression(identRef, accessChain.FirstOrDefault(), accessChain.LastOrDefault())
         {
             SymbolTable = table
         };

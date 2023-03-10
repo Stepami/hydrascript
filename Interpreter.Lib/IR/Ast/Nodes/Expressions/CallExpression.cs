@@ -28,6 +28,9 @@ public class CallExpression : LeftHandSideExpression
     public override IdentifierReference Id =>
         _member.Id;
 
+    public override bool Empty() =>
+        _member.Empty();
+
     private FunctionSymbol GetFunction()
     {
         if (_member.Any())
@@ -38,14 +41,14 @@ public class CallExpression : LeftHandSideExpression
             {
                 table = chain switch
                 {
-                    DotAccess dot => table.FindSymbol<ObjectSymbol>(dot.Id).Table,
+                    DotAccess dot => table.FindSymbol<ObjectSymbol>(dot.Property).Table,
                     IndexAccess => throw new NotImplementedException(),
                     _ => throw new NotImplementedException()
                 };
                 chain = chain.Next;
             }
 
-            return table.FindSymbol<FunctionSymbol>(((DotAccess) chain).Id);
+            return table.FindSymbol<FunctionSymbol>(((DotAccess) chain).Property);
         }
 
         return SymbolTable.FindSymbol<FunctionSymbol>(_member.Id);

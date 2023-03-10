@@ -5,4 +5,6 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions;
 public abstract class LeftHandSideExpression : Expression
 {
     public abstract IdentifierReference Id { get; }
+
+    public abstract bool Empty();
 }

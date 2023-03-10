@@ -1,7 +1,4 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
@@ -10,19 +7,17 @@ namespace Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 
 public class IndexAccess : AccessExpression
 {
-    private readonly Expression _expression;
+    public Expression Index { get; }
 
-    public IndexAccess(Expression expression, AccessExpression prev = null) : base(prev)
+    public IndexAccess(Expression index, AccessExpression prev = null) : base(prev)
     {
-        _expression = expression;
-        _expression.Parent = this;
+        Index = index;
+        Index.Parent = this;
     }
-        
-    public PrimaryExpression Expression => _expression as PrimaryExpression;
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
-        yield return _expression;
+        yield return Index;
         if (HasNext())
         {
             yield return Next;
@@ -33,7 +28,7 @@ public class IndexAccess : AccessExpression
     {
         if (prev is ArrayType arrayType)
         {
-            var indexType = _expression.NodeCheck();
+            var indexType = Index.NodeCheck();
             if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
             {
                 var elemType = arrayType.Type;
@@ -48,28 +43,6 @@ public class IndexAccess : AccessExpression
 
     protected override string NodeRepresentation() => "[]";
 
-    /*public List<Instruction> ToInstructions(int start, string temp)
-    {
-        if (HasNext())
-        {
-            if (_expression is PrimaryExpression prim)
-            {
-                var left = "_t" + start;
-                var nextInstructions = Next.ToInstructions(start + 1, left);
-                nextInstructions.Insert(0,
-                    new Simple(left, (new Name(temp), prim.ToValue()), "[]", start)
-                );
-                return nextInstructions;
-            }
-
-            throw new NotImplementedException();
-        }
-
-        return new();
-    }*/
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
-    {
-        throw new NotImplementedException();
-    }
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
+        visitor.Visit(this);
 }

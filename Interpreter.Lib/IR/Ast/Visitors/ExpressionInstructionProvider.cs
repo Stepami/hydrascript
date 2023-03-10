@@ -3,6 +3,7 @@ using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Visitor.NET.Lib.Core;
@@ -17,7 +18,10 @@ public class ExpressionInstructionProvider :
     IVisitor<BinaryExpression, AddressedInstructions>,
     IVisitor<CastAsExpression, AddressedInstructions>,
     IVisitor<ConditionalExpression, AddressedInstructions>,
-    IVisitor<AssignmentExpression, AddressedInstructions>
+    IVisitor<AssignmentExpression, AddressedInstructions>,
+    IVisitor<MemberExpression, AddressedInstructions>,
+    IVisitor<DotAccess, AddressedInstructions>,
+    IVisitor<IndexAccess, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
@@ -164,7 +168,63 @@ public class ExpressionInstructionProvider :
             var last = new Name(result.OfType<Simple>().Last().Left);
             result.Add(new Simple(last));
         }
-        result.OfType<Simple>().Last().Left = visitable.Destination.Id;
+
+        if (visitable.Destination.Empty())
+            result.OfType<Simple>().Last().Left = visitable.Destination.Id;
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(MemberExpression visitable)
+    {
+        if (visitable.Empty())
+            return new AddressedInstructions();
+
+        return visitable.Tail.Accept(this);
+    }
+
+    public AddressedInstructions Visit(DotAccess visitable)
+    {
+        const string dot = "."; 
+        var right = new Constant(visitable.Property.Name);
+
+        if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
+            return new AddressedInstructions
+            {
+                new Simple(new Name(lhs.Id), dot, right)
+            };
+        
+        var result = visitable.Prev.Accept(this);
+        var left = new Name(result.OfType<Simple>().Last().Left);
+        result.Add(new Simple(left, dot, right));
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(IndexAccess visitable)
+    {
+        var result = new AddressedInstructions();
+        
+        const string index = "[]";
+        IValue right;
+
+        if (visitable.Index is PrimaryExpression primary)
+            right = primary.ToValue();
+        else
+        {
+            result.AddRange(visitable.Index.Accept(this));
+            right = new Name(result.OfType<Simple>().Last().Left);
+        }
+
+        if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
+            result.Add(new Simple(new Name(lhs.Id), index, right));
+        else
+        {
+            result.AddRange(visitable.Prev.Accept(this));
+            var left = new Name(result.OfType<Simple>().Last().Left);
+            result.Add(new Simple(left, index, right));
+        }
+        
         return result;
     }
 }

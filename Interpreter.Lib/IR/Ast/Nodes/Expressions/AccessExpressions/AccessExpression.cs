@@ -4,30 +4,23 @@ public abstract class AccessExpression : Expression
 {
     public AccessExpression Next { get; private set; }
 
+    public AccessExpression Prev =>
+        Parent as AccessExpression;
+
     protected AccessExpression(AccessExpression prev)
     {
-        if (prev != null)
+        if (prev is not null)
         {
             Parent = prev;
             prev.Next = this;
         }
     }
 
-    public AccessExpression Tail
-    {
-        get
-        {
-            var head = this;
-            while (head.HasNext())
-            {
-                head = head.Next;
-            }
-
-            return head;
-        }
-    }
-
     public abstract Type Check(Type prev);
 
-    public bool HasNext() => Next != null;
+    public bool HasNext() =>
+        Next is not null;
+
+    public bool HasPrev() =>
+        Prev is not null;
 }
