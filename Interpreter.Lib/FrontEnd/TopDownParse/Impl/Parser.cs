@@ -496,9 +496,10 @@ public class Parser : IParser
     private Expression MemberExpression(SymbolTable table)
     {
         var primary = PrimaryExpression(table);
-        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot"))
+
+        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot") && !CurrentIs("Assign"))
             return primary;
-        
+
         var identRef = primary as IdentifierReference;
         var accessChain = new List<AccessExpression>();
         while (CurrentIs("LeftBracket") || CurrentIs("Dot"))
