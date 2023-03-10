@@ -1,7 +1,7 @@
 using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 
-namespace Interpreter.Lib.BackEnd.Instructions;
+namespace Interpreter.Lib.BackEnd.Instructions.WithJump;
 
 public class IfNotGoto : Goto
 {

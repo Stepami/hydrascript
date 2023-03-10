@@ -1,5 +1,6 @@
 using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd.Instructions.WithJump;
 using Interpreter.Tests.TestData;
 using Xunit;
 

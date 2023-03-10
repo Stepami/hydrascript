@@ -1,9 +1,10 @@
 using Interpreter.Lib.BackEnd.Addresses;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
 using Interpreter.Lib.BackEnd.Values;
 
-namespace Interpreter.Lib.BackEnd.Instructions;
+namespace Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
 
-public class IndexAssignment : Simple
+public class IndexAssignment : Simple, IWriteToComplexData
 {
     public IndexAssignment(string array, IValue index, IValue value) : 
         base(left: array, right: (index, value), "[]") { }
@@ -16,6 +17,9 @@ public class IndexAssignment : Simple
         obj[index] = right.right.Get(frame);
         return Address.Next;
     }
+
+    public Simple ToSimple() =>
+        new IndexRead(new Name(Left), right.left);
 
     protected override string ToStringInternal() =>
         $"{Left}[{right.left}] = {right.right}";

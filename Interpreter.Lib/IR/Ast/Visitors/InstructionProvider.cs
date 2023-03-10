@@ -1,6 +1,9 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
+using Interpreter.Lib.BackEnd.Instructions.WithJump;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;

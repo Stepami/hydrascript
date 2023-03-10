@@ -1,6 +1,4 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
-using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Nodes.Statements;

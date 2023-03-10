@@ -1,6 +1,11 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Instructions;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
+using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
+using Interpreter.Lib.BackEnd.Instructions.WithJump;
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
@@ -58,7 +63,7 @@ public class ExpressionInstructionProvider :
         var objectId = visitable.Object.Id;
 
         var (id, expression) = visitable;
-        var propertyId = new Constant(id, @$"\""{id}\""");
+        var propertyId = new Constant(id);
 
         if (expression is PrimaryExpression primary)
             return new AddressedInstructions
@@ -165,12 +170,22 @@ public class ExpressionInstructionProvider :
         var result = visitable.Source.Accept(this);
         if (visitable.Source is AssignmentExpression)
         {
-            var last = new Name(result.OfType<Simple>().Last().Left);
-            result.Add(new Simple(last));
+            var last = result.OfType<Simple>().Last();
+            if (last is IWriteToComplexData assignment)
+                result.Add(assignment.ToSimple());
+            else
+                result.Add(new Simple(new Name(last.Left)));
         }
 
         if (visitable.Destination.Empty())
             result.OfType<Simple>().Last().Left = visitable.Destination.Id;
+        else
+        {
+            var last = new Name(result.OfType<Simple>().Last().Left);
+            result.AddRange(visitable.Destination.Accept(this));
+            var lastRead = result.OfType<IReadFromComplexData>().Last();
+            result.Replace(lastRead.ToInstruction(), lastRead.ToAssignment(last));
+        }
 
         return result;
     }
@@ -182,18 +197,17 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(DotAccess visitable)
     {
-        const string dot = "."; 
         var right = new Constant(visitable.Property.Name);
 
         if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
             return new AddressedInstructions
             {
-                new Simple(new Name(lhs.Id), dot, right)
+                new DotRead(new Name(lhs.Id), right)
             };
         
         var result = visitable.Prev.Accept(this);
         var left = new Name(result.OfType<Simple>().Last().Left);
-        result.Add(new Simple(left, dot, right));
+        result.Add(new DotRead(left, right));
 
         return result;
     }
@@ -202,7 +216,6 @@ public class ExpressionInstructionProvider :
     {
         var result = new AddressedInstructions();
         
-        const string index = "[]";
         IValue right;
 
         if (visitable.Index is PrimaryExpression primary)
@@ -214,12 +227,12 @@ public class ExpressionInstructionProvider :
         }
 
         if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
-            result.Add(new Simple(new Name(lhs.Id), index, right));
+            result.Add(new IndexRead(new Name(lhs.Id), right));
         else
         {
             result.AddRange(visitable.Prev.Accept(this));
             var left = new Name(result.OfType<Simple>().Last().Left);
-            result.Add(new Simple(left, index, right));
+            result.Add(new IndexRead(left, right));
         }
         
         return result;

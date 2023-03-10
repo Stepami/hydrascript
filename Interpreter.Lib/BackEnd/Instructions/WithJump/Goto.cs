@@ -1,6 +1,6 @@
 using Interpreter.Lib.BackEnd.Addresses;
 
-namespace Interpreter.Lib.BackEnd.Instructions;
+namespace Interpreter.Lib.BackEnd.Instructions.WithJump;
 
 public class Goto : Instruction
 {

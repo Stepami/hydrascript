@@ -5,7 +5,7 @@ using Interpreter.Lib.BackEnd.Addresses;
 using Interpreter.Lib.BackEnd.Values;
 using SystemType = System.Type;
 
-namespace Interpreter.Lib.BackEnd.Instructions;
+namespace Interpreter.Lib.BackEnd.Instructions.WithAssignment;
 
 public class AsString : Simple
 {
