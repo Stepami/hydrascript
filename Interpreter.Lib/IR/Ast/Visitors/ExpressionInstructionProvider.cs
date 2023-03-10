@@ -175,13 +175,10 @@ public class ExpressionInstructionProvider :
         return result;
     }
 
-    public AddressedInstructions Visit(MemberExpression visitable)
-    {
-        if (visitable.Empty())
-            return new AddressedInstructions();
-
-        return visitable.Tail.Accept(this);
-    }
+    public AddressedInstructions Visit(MemberExpression visitable) =>
+        visitable.Empty()
+            ? new AddressedInstructions()
+            : visitable.Tail.Accept(this);
 
     public AddressedInstructions Visit(DotAccess visitable)
     {
