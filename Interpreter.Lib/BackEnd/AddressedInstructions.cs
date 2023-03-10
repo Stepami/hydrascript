@@ -10,8 +10,11 @@ public class AddressedInstructions : IEnumerable<Instruction>
     private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode = new();
     private readonly Dictionary<LinkedListNode<IAddress>, Instruction> _instructions = new();
 
-    public Instruction this[IAddress address] =>
-        _instructions[_addressToNode[address]];
+    public Instruction this[IAddress address]
+    {
+        get => _instructions[_addressToNode[address]];
+        private set => _instructions[_addressToNode[address]] = value;
+    }
 
     public IAddress Start =>
         _addresses.First?.Value;
@@ -24,6 +27,14 @@ public class AddressedInstructions : IEnumerable<Instruction>
         instruction.Address = newAddress;
 
         AddWithAddress(instruction, newAddress);
+    }
+
+    public void Replace(Instruction old, Instruction @new)
+    {
+        var address = old.Address;
+        @new.Address = address;
+
+        this[address] = @new;
     }
 
     private void AddWithAddress(Instruction instruction, IAddress newAddress)
