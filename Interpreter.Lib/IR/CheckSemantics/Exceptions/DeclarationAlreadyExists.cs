@@ -1,4 +1,4 @@
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
 

@@ -1,4 +1,4 @@
-using Interpreter.Lib.IR.Ast.Nodes;
+using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Moq;

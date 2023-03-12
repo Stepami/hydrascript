@@ -1,5 +1,5 @@
-using Interpreter.Lib.IR.Ast.Nodes.Expressions;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Xunit;
 
 namespace Interpreter.Tests.Unit.IR;

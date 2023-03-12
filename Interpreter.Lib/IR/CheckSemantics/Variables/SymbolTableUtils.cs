@@ -1,7 +1,7 @@
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
-using Interpreter.Lib.IR.Ast.Nodes;
-using Interpreter.Lib.IR.Ast.Nodes.Declarations;
-using Interpreter.Lib.IR.Ast.Nodes.Statements;
+using Interpreter.Lib.IR.Ast.Impl.Nodes;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 

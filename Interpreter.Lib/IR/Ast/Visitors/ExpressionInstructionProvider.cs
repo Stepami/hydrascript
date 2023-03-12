@@ -7,10 +7,10 @@ using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
 using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
 using Interpreter.Lib.BackEnd.Instructions.WithJump;
 using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.AccessExpressions;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Visitors;

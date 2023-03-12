@@ -1,6 +1,6 @@
 using System.Text;
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.IR.Ast.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;

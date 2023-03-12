@@ -5,11 +5,11 @@ using Interpreter.Lib.BackEnd.Instructions.WithAssignment;
 using Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 using Interpreter.Lib.BackEnd.Instructions.WithJump;
 using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.Ast.Nodes;
-using Interpreter.Lib.IR.Ast.Nodes.Declarations;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.ComplexLiterals;
-using Interpreter.Lib.IR.Ast.Nodes.Expressions.PrimaryExpressions;
-using Interpreter.Lib.IR.Ast.Nodes.Statements;
+using Interpreter.Lib.IR.Ast.Impl.Nodes;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Visitors;
