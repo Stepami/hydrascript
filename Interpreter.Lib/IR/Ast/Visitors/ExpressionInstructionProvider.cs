@@ -26,7 +26,8 @@ public class ExpressionInstructionProvider :
     IVisitor<AssignmentExpression, AddressedInstructions>,
     IVisitor<MemberExpression, AddressedInstructions>,
     IVisitor<DotAccess, AddressedInstructions>,
-    IVisitor<IndexAccess, AddressedInstructions>
+    IVisitor<IndexAccess, AddressedInstructions>,
+    IVisitor<CallExpression, AddressedInstructions>
 {
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         new() { new Simple(visitable.ToValue()) };
@@ -236,5 +237,10 @@ public class ExpressionInstructionProvider :
         }
         
         return result;
+    }
+
+    public AddressedInstructions Visit(CallExpression visitable)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -117,7 +117,7 @@ public class CallExpression : LeftHandSideExpression
 
     protected override string NodeRepresentation() => "()";
 
-    /*private List<Instruction> Print(int start)
+    private List<Instruction> Print(int start)
     {
         var instructions = new List<Instruction>();
         var expression = _expressions.First();
@@ -197,10 +197,8 @@ public class CallExpression : LeftHandSideExpression
         }
 
         return instructions;
-    }*/
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor)
-    {
-        throw new NotImplementedException();
     }
+
+    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
+        visitor.Visit(this);
 }

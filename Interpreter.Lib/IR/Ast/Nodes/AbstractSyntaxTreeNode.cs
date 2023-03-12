@@ -1,6 +1,5 @@
 using System.Collections;
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
@@ -65,8 +64,6 @@ public abstract class AbstractSyntaxTreeNode :
     }
 
     internal virtual Type NodeCheck() => null;
-
-    public List<Instruction> ToInstructions(int start) => new();
 
     public abstract IEnumerator<AbstractSyntaxTreeNode> GetEnumerator();
 
