@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Interpreter.Lib.FrontEnd.GetTokens;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
@@ -497,7 +498,8 @@ public class Parser : IParser
     {
         var primary = PrimaryExpression(table);
 
-        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot") && !CurrentIs("Assign"))
+        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot") &&
+            !CurrentIs("Assign") && !CurrentIs("LeftParen"))
             return primary;
 
         var identRef = primary as IdentifierReference;
@@ -744,7 +746,7 @@ public class Parser : IParser
             "IntegerLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,
                 double.Parse(Expect("IntegerLiteral").Value), segment),
             "FloatLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,
-                double.Parse(Expect("FloatLiteral").Value), segment),
+                double.Parse(Expect("FloatLiteral").Value, CultureInfo.InvariantCulture), segment),
             "BooleanLiteral" => new Literal(TypeUtils.JavaScriptTypes.Boolean,
                 bool.Parse(Expect("BooleanLiteral").Value), segment),
             _ => new Literal(TypeUtils.JavaScriptTypes.Undefined, new TypeUtils.Undefined())
