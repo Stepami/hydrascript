@@ -472,7 +472,9 @@ public class Parser : IParser
         {
             var lp = Expect("LeftParen");
             var expressions = new List<Expression>();
-            if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-"))
+            if (CurrentIs("Ident") || CurrentIsLiteral() ||
+                CurrentIs("LeftParen") || CurrentIsOperator("-") ||
+                CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
             {
                 expressions.Add(Expression(table));
             }
