@@ -241,6 +241,20 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(CallExpression visitable)
     {
+        if (visitable.Id.Name == "print" && visitable.Member.Empty())
+        {
+            var param = visitable.Parameters[0];
+            
+            if (param is PrimaryExpression prim)
+                return new AddressedInstructions { new Print(prim.ToValue()) };
+            
+            var result = param.Accept(this);
+            var last = new Name(result.OfType<Simple>().Last().Left);
+            result.Add(new Print(last));
+            
+            return result;
+        }
+
         throw new NotImplementedException();
     }
 }
