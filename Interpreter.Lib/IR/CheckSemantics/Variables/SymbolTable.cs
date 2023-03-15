@@ -14,7 +14,8 @@ public class SymbolTable
         _openScope = table;
     }
 
-    public void AddSymbol(Symbol symbol) => _symbols[symbol.Id] = symbol;
+    public void AddSymbol(Symbol symbol) =>
+        _symbols[symbol.Id] = symbol;
 
     public void AddType(Type type, string typeId = null) =>
         _types[typeId ?? type.ToString()] = type;
@@ -22,7 +23,9 @@ public class SymbolTable
     public Type FindType(string typeId)
     {
         var hasInsideTheScope = _types.TryGetValue(typeId, out var type);
-        return !hasInsideTheScope ? _openScope?.FindType(typeId) : type;
+        return !hasInsideTheScope
+            ? _openScope?.FindType(typeId)
+            : type;
     }
 
     /// <summary>
@@ -31,13 +34,16 @@ public class SymbolTable
     public T FindSymbol<T>(string id) where T : Symbol
     {
         var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
-        return !hasInsideTheScope ? _openScope?.FindSymbol<T>(id) : symbol as T;
+        return !hasInsideTheScope
+            ? _openScope?.FindSymbol<T>(id)
+            : symbol as T;
     }
 
     /// <summary>
     /// Проверяет наличие собственного символа
     /// </summary>
-    public bool ContainsSymbol(string id) => _symbols.ContainsKey(id);
+    public bool ContainsSymbol(string id) =>
+        _symbols.ContainsKey(id);
 
     public void Clear() => _symbols.Clear();
 }
