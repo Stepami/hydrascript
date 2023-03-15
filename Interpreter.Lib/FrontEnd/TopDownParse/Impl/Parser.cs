@@ -474,6 +474,7 @@ public class Parser : IParser
             var expressions = new List<Expression>();
             if (CurrentIs("Ident") || CurrentIsLiteral() ||
                 CurrentIs("LeftParen") || CurrentIsOperator("-") ||
+                CurrentIsOperator("!") || CurrentIsOperator("~") ||
                 CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
             {
                 expressions.Add(Expression(table));
@@ -828,8 +829,8 @@ public class Parser : IParser
         var expressions = new List<Expression>();
         while (CurrentIs("Ident") || CurrentIsLiteral() ||
                CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-               CurrentIsOperator("!") || CurrentIs("LeftCurl") ||
-               CurrentIs("LeftBracket"))
+               CurrentIsOperator("!") || CurrentIsOperator("~") ||
+               CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
         {
             expressions.Add(Expression(table));
             if (!CurrentIs("RightBracket"))
