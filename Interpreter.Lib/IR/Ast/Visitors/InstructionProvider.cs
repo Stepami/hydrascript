@@ -36,6 +36,8 @@ public class InstructionProvider :
             result.AddRange(item.Accept(this));
         }
 
+        result.Add(new Halt());
+        
         return result;
     }
 

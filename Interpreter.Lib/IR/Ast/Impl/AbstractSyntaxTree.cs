@@ -1,6 +1,5 @@
 using System.Text;
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.BackEnd.Instructions;
 using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Impl;
@@ -27,7 +26,6 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
         //Check();
 
         var result = _root.Accept(_instructionProvider);
-        result.Add(new Halt());
         
         return result;
     }
