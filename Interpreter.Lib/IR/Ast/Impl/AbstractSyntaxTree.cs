@@ -7,11 +7,13 @@ namespace Interpreter.Lib.IR.Ast.Impl;
 public class AbstractSyntaxTree : IAbstractSyntaxTree
 {
     private readonly AbstractSyntaxTreeNode _root;
+    private readonly SemanticChecker _semanticChecker;
     private readonly InstructionProvider _instructionProvider;
 
     public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
     {
         _root = root;
+        _semanticChecker = new();
         _instructionProvider = new();
     }
 
@@ -23,11 +25,8 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
 
     public AddressedInstructions GetInstructions()
     {
-        //Check();
-
-        var result = _root.Accept(_instructionProvider);
-        
-        return result;
+        _root.Accept(_semanticChecker);
+        return _root.Accept(_instructionProvider);
     }
 
     public override string ToString()
