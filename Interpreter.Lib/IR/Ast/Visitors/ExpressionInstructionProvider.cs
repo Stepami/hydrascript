@@ -241,7 +241,7 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(CallExpression visitable)
     {
-        if (visitable.Id.Name == "print" && visitable.Member.Empty())
+        if (visitable.Id.Name is "print" && visitable.Empty())
         {
             var param = visitable.Parameters[0];
             
