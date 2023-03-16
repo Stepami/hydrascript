@@ -6,12 +6,12 @@ public class Goto : Instruction
 {
     protected Label jump;
 
-    public InsideLoopStatementType? JumpType { get; }
+    public InsideStatementType? JumpType { get; }
         
     public Goto(Label jump) =>
         this.jump = jump;
 
-    public Goto(InsideLoopStatementType jumpType) =>
+    public Goto(InsideStatementType jumpType) =>
         JumpType = jumpType;
 
     public override IAddress Execute(VirtualMachine vm) =>
@@ -24,7 +24,7 @@ public class Goto : Instruction
         $"Goto {jump.Name}";
 }
 
-public enum InsideLoopStatementType
+public enum InsideStatementType
 {
     Break,
     Continue

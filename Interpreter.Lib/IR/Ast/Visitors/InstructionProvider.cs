@@ -68,8 +68,8 @@ public class InstructionProvider :
     {
         var jumpType = visitable.Keyword switch
         {
-            InsideLoopStatement.Break => InsideLoopStatementType.Break,
-            InsideLoopStatement.Continue => InsideLoopStatementType.Continue,
+            InsideLoopStatement.Break => InsideStatementType.Break,
+            InsideLoopStatement.Continue => InsideStatementType.Continue,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(visitable.Keyword), visitable.Keyword,
                 "Unsupported keyword inside loop")
@@ -172,10 +172,10 @@ public class InstructionProvider :
             {
                 switch (g.JumpType)
                 {
-                    case InsideLoopStatementType.Break:
+                    case InsideStatementType.Break:
                         g.SetJump(endBlockLabel);
                         break;
-                    case InsideLoopStatementType.Continue:
+                    case InsideStatementType.Continue:
                         g.SetJump(startBlockLabel);
                         break;
                 }
@@ -220,7 +220,7 @@ public class InstructionProvider :
             result.AddRange(visitable.Else.Accept(this));
         }
 
-        result.OfType<Goto>().Where(g => g.JumpType is InsideLoopStatementType.Break)
+        result.OfType<Goto>().Where(g => g.JumpType is InsideStatementType.Break)
             .ToList().ForEach(g=> g.SetJump(endBlockLabel));
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
