@@ -220,6 +220,9 @@ public class InstructionProvider :
             result.AddRange(visitable.Else.Accept(this));
         }
 
+        result.OfType<Goto>().Where(g => g.JumpType is InsideLoopStatementType.Break)
+            .ToList().ForEach(g=> g.SetJump(endBlockLabel));
+
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 
         return result;
