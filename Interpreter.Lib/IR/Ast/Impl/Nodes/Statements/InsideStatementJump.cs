@@ -4,14 +4,14 @@ using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
-public class InsideLoopStatement : Statement
+public class InsideStatementJump : Statement
 {
     public const string Break = "break";
     public const string Continue = "continue";
 
     public string Keyword { get; }
 
-    public InsideLoopStatement(string keyword)
+    public InsideStatementJump(string keyword)
     {
         CanEvaluate = true;
         Keyword = keyword;

@@ -123,7 +123,7 @@ public class Parser : IParser
 
         if (CurrentIsKeyword("break"))
         {
-            return new InsideLoopStatement(InsideLoopStatement.Break)
+            return new InsideStatementJump(InsideStatementJump.Break)
             {
                 Segment = Expect("Keyword", "break").Segment
             };
@@ -131,7 +131,7 @@ public class Parser : IParser
 
         if (CurrentIsKeyword("continue"))
         {
-            return new InsideLoopStatement(InsideLoopStatement.Continue)
+            return new InsideStatementJump(InsideStatementJump.Continue)
             {
                 Segment = Expect("Keyword", "continue").Segment
             };

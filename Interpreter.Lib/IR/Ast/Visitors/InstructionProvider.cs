@@ -18,7 +18,7 @@ public class InstructionProvider :
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
-    IVisitor<InsideLoopStatement, AddressedInstructions>,
+    IVisitor<InsideStatementJump, AddressedInstructions>,
     IVisitor<ExpressionStatement, AddressedInstructions>,
     IVisitor<ReturnStatement, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
@@ -64,12 +64,12 @@ public class InstructionProvider :
         return result;
     }
 
-    public AddressedInstructions Visit(InsideLoopStatement visitable)
+    public AddressedInstructions Visit(InsideStatementJump visitable)
     {
         var jumpType = visitable.Keyword switch
         {
-            InsideLoopStatement.Break => InsideStatementType.Break,
-            InsideLoopStatement.Continue => InsideStatementType.Continue,
+            InsideStatementJump.Break => InsideStatementJumpType.Break,
+            InsideStatementJump.Continue => InsideStatementJumpType.Continue,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(visitable.Keyword), visitable.Keyword,
                 "Unsupported keyword inside loop")
@@ -172,10 +172,10 @@ public class InstructionProvider :
             {
                 switch (g.JumpType)
                 {
-                    case InsideStatementType.Break:
+                    case InsideStatementJumpType.Break:
                         g.SetJump(endBlockLabel);
                         break;
-                    case InsideStatementType.Continue:
+                    case InsideStatementJumpType.Continue:
                         g.SetJump(startBlockLabel);
                         break;
                 }
@@ -220,7 +220,7 @@ public class InstructionProvider :
             result.AddRange(visitable.Else.Accept(this));
         }
 
-        result.OfType<Goto>().Where(g => g.JumpType is InsideStatementType.Break)
+        result.OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
             .ToList().ForEach(g=> g.SetJump(endBlockLabel));
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
