@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse;
 
-[Serializable]
+[Serializable, ExcludeFromCodeCoverage]
 public class ParserException : Exception
 {
     public ParserException() { }

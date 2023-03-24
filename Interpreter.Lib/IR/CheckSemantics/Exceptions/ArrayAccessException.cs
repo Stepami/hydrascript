@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
 
+[ExcludeFromCodeCoverage]
 public class ArrayAccessException : SemanticException
 {
     public ArrayAccessException(Segment segment, Type type) :

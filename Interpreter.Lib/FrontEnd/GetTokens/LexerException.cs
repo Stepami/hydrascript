@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.FrontEnd.GetTokens;
 
-[Serializable]
+[Serializable, ExcludeFromCodeCoverage]
 public class LexerException : Exception
 {
     public LexerException() { }

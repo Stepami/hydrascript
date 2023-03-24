@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
 
-[Serializable]
+[Serializable, ExcludeFromCodeCoverage]
 public abstract class SemanticException : Exception
 {
     protected SemanticException() { }
