@@ -1,8 +1,5 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
@@ -20,16 +17,6 @@ public class ReturnStatement : Statement
         }
     }
 
-    internal override Type NodeCheck()
-    {
-        if (!ChildOf<FunctionDeclaration>())
-        {
-            throw new ReturnOutsideFunction(Segment);
-        }
-
-        return Expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
-    }
-
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         if (Expression is null)
@@ -43,5 +30,8 @@ public class ReturnStatement : Statement
     protected override string NodeRepresentation() => "return";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);
 }

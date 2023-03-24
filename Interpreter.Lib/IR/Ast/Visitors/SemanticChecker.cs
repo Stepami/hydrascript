@@ -1,3 +1,4 @@
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
@@ -8,7 +9,8 @@ namespace Interpreter.Lib.IR.Ast.Visitors;
 public class SemanticChecker :
     IVisitor<WhileStatement, Type>,
     IVisitor<IfStatement, Type>,
-    IVisitor<InsideStatementJump, Type>
+    IVisitor<InsideStatementJump, Type>,
+    IVisitor<ReturnStatement, Type>
 {
     public Type Visit(WhileStatement visitable)
     {
@@ -47,5 +49,15 @@ public class SemanticChecker :
         }
 
         return default;
+    }
+
+    public Type Visit(ReturnStatement visitable)
+    {
+        if (!visitable.ChildOf<FunctionDeclaration>())
+        {
+            throw new ReturnOutsideFunction(visitable.Segment);
+        }
+
+        return visitable.Expression?.NodeCheck() ?? TypeUtils.JavaScriptTypes.Void;
     }
 }
