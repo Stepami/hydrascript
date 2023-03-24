@@ -17,9 +17,6 @@ public class CastAsExpression : Expression
         _cast = cast;
     }
 
-    internal override Type NodeCheck() => 
-        TypeUtils.JavaScriptTypes.String;
-
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         yield return Expression;
@@ -29,4 +26,7 @@ public class CastAsExpression : Expression
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
         visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
+        TypeUtils.JavaScriptTypes.String;
 }

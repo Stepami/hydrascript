@@ -1,7 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
@@ -27,19 +25,11 @@ public class WhileStatement : Statement
         yield return Statement;
     }
 
-    internal override Type NodeCheck()
-    {
-        var condType = Condition.NodeCheck();
-        if (!condType.Equals(TypeUtils.JavaScriptTypes.Boolean))
-        {
-            throw new NotBooleanTestExpression(Segment, condType);
-        }
-
-        return condType;
-    }
-
     protected override string NodeRepresentation() => "while";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);
 }

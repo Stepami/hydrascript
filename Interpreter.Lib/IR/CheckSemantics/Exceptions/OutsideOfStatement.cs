@@ -7,5 +7,5 @@ namespace Interpreter.Lib.IR.CheckSemantics.Exceptions;
 public class OutsideOfStatement : SemanticException
 {
     public OutsideOfStatement(Segment segment, string keyword, string statement) :
-        base(segment, $"\"{keyword}\" outside of statement {statement}") { }
+        base(segment, $"Jump \"{keyword}\" outside of statement \"{statement}\"") { }
 }

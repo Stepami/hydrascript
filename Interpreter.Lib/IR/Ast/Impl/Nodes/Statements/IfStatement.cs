@@ -1,7 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
@@ -44,19 +42,11 @@ public class IfStatement : Statement
         }
     }
 
-    internal override Type NodeCheck()
-    {
-        var testType = Test.NodeCheck();
-        if (!testType.Equals(TypeUtils.JavaScriptTypes.Boolean))
-        {
-            throw new NotBooleanTestExpression(Segment, testType);
-        }
-
-        return testType;
-    }
-
     protected override string NodeRepresentation() => "if";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);
 }
