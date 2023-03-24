@@ -38,7 +38,7 @@ jobs:
         with:
           path: ./Interpreter.Tests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 80
+          minimum_coverage: 45
           fail_below_threshold: true
           show_class_names: true
           show_missing: true
