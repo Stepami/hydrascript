@@ -1,7 +1,7 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 
-namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
+namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 public class TypeDeclaration : Declaration
 {
