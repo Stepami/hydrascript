@@ -3,12 +3,12 @@ using Interpreter.Lib.IR.Ast.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
-public class TypeStatement : Statement
+public class TypeDeclaration : Declaration
 {
     private readonly string _typeId;
     private readonly Type _typeValue;
 
-    public TypeStatement(string typeId, Type typeValue)
+    public TypeDeclaration(string typeId, Type typeValue)
     {
         _typeId = typeId;
         _typeValue = typeValue;

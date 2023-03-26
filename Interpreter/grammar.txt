@@ -10,10 +10,10 @@ Statement -> BlockStatement
              ContinueStatement
              BreakStatement
              ReturnStatement
-             TypeStatement
              
 Declaration -> LexicalDeclaration
                FunctionDeclaration
+               TypeDeclaration
                
 BlockStatement -> '{' StatementList '}'
 
@@ -67,7 +67,7 @@ BreakStatement -> 'break'
 
 ReturnStatement -> 'return' Expression?
 
-TypeStatement -> 'type' "Ident" = TypeValue
+TypeDeclaration -> 'type' "Ident" = TypeValue
 TypeValue -> TypeValueBase TypeValueSuffix*
 TypeValueBase -> "Ident"
                  FunctionTypeBase

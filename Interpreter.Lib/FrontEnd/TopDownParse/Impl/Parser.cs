@@ -96,7 +96,8 @@ public class Parser : IParser
 
     private StatementListItem StatementListItem(SymbolTable table)
     {
-        if (CurrentIsKeyword("function") || CurrentIsKeyword("let") || CurrentIsKeyword("const"))
+        if (CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
+            CurrentIsKeyword("const") || CurrentIsKeyword("type"))
         {
             return Declaration(table);
         }
@@ -146,11 +147,6 @@ public class Parser : IParser
         if (CurrentIsKeyword("while"))
         {
             return WhileStatement(table);
-        }
-
-        if (CurrentIsKeyword("type"))
-        {
-            return TypeStatement(table);
         }
 
         return null;
@@ -223,7 +219,7 @@ public class Parser : IParser
         return new WhileStatement(expr, stmt) {SymbolTable = table, Segment = token.Segment};
     }
 
-    private TypeStatement TypeStatement(SymbolTable table)
+    private TypeDeclaration TypeDeclaration(SymbolTable table)
     {
         var typeWord = Expect("Keyword", "type");
         var ident = Expect("Ident");
@@ -242,7 +238,7 @@ public class Parser : IParser
         }
         table.AddType(type, ident.Value);
             
-        return new TypeStatement(ident.Value, type)
+        return new TypeDeclaration(ident.Value, type)
         {
             Segment = typeWord.Segment,
             SymbolTable = table
@@ -336,6 +332,11 @@ public class Parser : IParser
         if (CurrentIsKeyword("let") || CurrentIsKeyword("const"))
         {
             return LexicalDeclaration(table);
+        }
+        
+        if (CurrentIsKeyword("type"))
+        {
+            return TypeDeclaration(table);
         }
 
         return null;
