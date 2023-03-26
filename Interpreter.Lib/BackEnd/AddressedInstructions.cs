@@ -22,7 +22,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public void Add(Instruction instruction, string label = null)
     {
         IAddress newAddress = label is null
-            ? new HashedAddress(seed: instruction.GetHashCode())
+            ? new HashAddress(seed: instruction.GetHashCode())
             : new Label(label);
         instruction.Address = newAddress;
 

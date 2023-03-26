@@ -29,10 +29,10 @@ public class VirtualMachineTests
         writer.Setup(x => x.WriteLine(It.IsAny<object?>()))
             .Verifiable();
 
-        var vm = new VirtualMachine(new(), new Stack<Frame>(new[] { new Frame(new HashedAddress(0)) }), new(), writer.Object);
+        var vm = new VirtualMachine(new(), new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }), new(), writer.Object);
         var print = new Print(new Constant(223))
         {
-            Address = new HashedAddress(1)
+            Address = new HashAddress(1)
         };
 
         print.Execute(vm);
@@ -106,25 +106,25 @@ public class VirtualMachineTests
     public void CreateArrayReservesCertainSpaceTest()
     {
         var vm = new VirtualMachine();
-        vm.Frames.Push(new Frame(new HashedAddress(0)));
+        vm.Frames.Push(new Frame(new HashAddress(0)));
             
         var createArray = new CreateArray("arr", 6)
         {
-            Address = new HashedAddress(1)
+            Address = new HashAddress(1)
         };
         createArray.Execute(vm);
         Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
 
         var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0))
         {
-            Address = new HashedAddress(2)
+            Address = new HashAddress(2)
         };
         indexAssignment.Execute(vm);
         Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
 
         var removeFromArray = new RemoveFromArray("arr", new Constant(5))
         {
-            Address = new HashedAddress(3)
+            Address = new HashAddress(3)
         };
         removeFromArray.Execute(vm);
         Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]).Count);

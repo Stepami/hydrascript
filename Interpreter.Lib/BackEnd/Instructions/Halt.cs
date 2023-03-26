@@ -9,7 +9,7 @@ public class Halt : Instruction
     public override IAddress Execute(VirtualMachine vm)
     {
         vm.Frames.Pop();
-        return new HashedAddress(seed: 0);
+        return new HashAddress(seed: 0);
     }
 
     protected override string ToStringInternal() => "End";

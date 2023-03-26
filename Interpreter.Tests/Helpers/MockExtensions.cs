@@ -11,7 +11,7 @@ public static class MockExtensions
     public static Mock<Halt> Trackable(this Mock<Halt> halt)
     {
         halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
-            .Returns(new HashedAddress(seed: 0)).Verifiable();
+            .Returns(new HashAddress(seed: 0)).Verifiable();
         halt.Setup(x => x.End()).Returns(true);
         return halt;
     }
