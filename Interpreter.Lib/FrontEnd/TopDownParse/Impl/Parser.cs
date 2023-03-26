@@ -82,6 +82,7 @@ public class Parser : IParser
         while (
             CurrentIsKeyword("function") || CurrentIsKeyword("let") || CurrentIsKeyword("const") ||
             CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") ||
+            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
             CurrentIs("LeftCurl") || CurrentIsKeyword("return") || CurrentIsKeyword("break") ||
             CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while") ||
             CurrentIsKeyword("type")
