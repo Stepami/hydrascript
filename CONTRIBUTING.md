@@ -4,11 +4,11 @@ Contributions are welcomed! Here's a few things to know:
 
 - [Contribution Guidelines](#contribution-guidelines)
   - [Steps to Contributing](#steps-to-contributing)
-  - [HydraScript Contributor License Agreement](#hydrascript-contributor-license-agreement)
   - [Code of Conduct](#code-of-conduct)
       - [Do not point fingers](#do-not-point-fingers)
       - [Provide code feedback based on evidence](#provide-code-feedback-based-on-evidence)
       - [Ask questions do not give answers](#ask-questions-do-not-give-answers)
+  - [HydraScript Contributor License Agreement](#hydrascript-contributor-license-agreement)
 
 ## Steps to Contributing
 
