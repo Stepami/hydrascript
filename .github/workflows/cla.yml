@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path-to-signatures: 'cla/signatures.json'
-          path-to-document: 'cla/contributor-licence-agreement.md'
+          path-to-signatures: '.github/cla/signatures.json'
+          path-to-document: 'https://github.com/Stepami/extended-js-subset/blob/master/.github/cla/contributor-licence-agreement.md'
           allowlist: Stepami,bot*
           branch: 'cla-signatures'
