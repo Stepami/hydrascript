@@ -20,8 +20,10 @@ jobs:
         uses: contributor-assistant/github-action@v2.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
-          path-to-signatures: '.github/cla/signatures.json'
-          path-to-document: 'https://github.com/Stepami/extended-js-subset/blob/master/.github/cla/contributor-licence-agreement.md'
+          path-to-signatures: 'signatures.json'
+          path-to-document: 'https://github.com/Stepami/extended-js-subset/blob/master/contributor-licence-agreement.md'
           allowlist: Stepami,bot*
-          branch: 'cla-signatures'
+          branch: 'main'
+          remote-repository-name: hydrascript-cla-signatures
