@@ -24,4 +24,4 @@ jobs:
           path-to-signatures: './github/cla/signatures.json'
           path-to-document: './github/cla/contributor-licence-agreement.md'
           allowlist: Stepami,bot*
-          branch: 'master'
+          branch: 'cla-signatures'
