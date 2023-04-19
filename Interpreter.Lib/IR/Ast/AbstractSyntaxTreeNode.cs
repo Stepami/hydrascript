@@ -9,8 +9,7 @@ using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast;
 
-public abstract class AbstractSyntaxTreeNode :
-    IEnumerable<AbstractSyntaxTreeNode>,
+public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNode>,
     IVisitable<InstructionProvider, AddressedInstructions>,
     IVisitable<SemanticChecker, Type>,
     IVisitable<SymbolTableBuilder>
@@ -75,12 +74,16 @@ public abstract class AbstractSyntaxTreeNode :
 
     protected abstract string NodeRepresentation();
 
+    #region Visitors
+
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     public virtual Type Accept(SemanticChecker visitor) => default;
 
     public virtual Unit Accept(SymbolTableBuilder visitor) => default;
 
+    #endregion
+    
     public override string ToString() =>
         $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
 }
