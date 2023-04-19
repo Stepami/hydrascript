@@ -4,7 +4,7 @@ using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Visitor.NET.Lib.Core;
 
-namespace Interpreter.Lib.IR.Ast.Visitors;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 
 public class SemanticChecker :
     IVisitor<WhileStatement, Type>,

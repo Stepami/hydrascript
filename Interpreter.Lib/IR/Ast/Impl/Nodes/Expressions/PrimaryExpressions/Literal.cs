@@ -1,6 +1,6 @@
 using Interpreter.Lib.BackEnd.Values;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
-using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 

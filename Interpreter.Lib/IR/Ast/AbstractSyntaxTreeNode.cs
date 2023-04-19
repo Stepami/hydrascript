@@ -4,6 +4,7 @@ using Interpreter.Lib.FrontEnd.GetTokens.Data;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast;
