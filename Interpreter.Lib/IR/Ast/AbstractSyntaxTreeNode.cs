@@ -12,7 +12,8 @@ namespace Interpreter.Lib.IR.Ast;
 public abstract class AbstractSyntaxTreeNode :
     IEnumerable<AbstractSyntaxTreeNode>,
     IVisitable<InstructionProvider, AddressedInstructions>,
-    IVisitable<SemanticChecker, Type>
+    IVisitable<SemanticChecker, Type>,
+    IVisitable<SymbolTableBuilder>
 {
     public AbstractSyntaxTreeNode Parent { get; set; }
         
@@ -77,6 +78,8 @@ public abstract class AbstractSyntaxTreeNode :
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     public virtual Type Accept(SemanticChecker visitor) => default;
+
+    public virtual Unit Accept(SymbolTableBuilder visitor) => default;
 
     public override string ToString() =>
         $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
