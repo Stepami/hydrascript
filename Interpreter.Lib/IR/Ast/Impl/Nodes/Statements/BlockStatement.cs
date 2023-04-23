@@ -1,5 +1,7 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 
@@ -19,5 +21,8 @@ public class BlockStatement : Statement
     protected override string NodeRepresentation() => "{}";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
+
+    public override Unit Accept(SymbolTableBuilder visitor) =>
         visitor.Visit(this);
 }

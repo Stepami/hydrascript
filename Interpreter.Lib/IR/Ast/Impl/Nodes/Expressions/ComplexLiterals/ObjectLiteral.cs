@@ -3,6 +3,8 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 
@@ -52,4 +54,7 @@ public class ObjectLiteral : ComplexLiteral
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
         new InstructionProvider().Visit(this);
+
+    public override Unit Accept(SymbolTableBuilder visitor) =>
+        visitor.Visit(this);
 }

@@ -72,17 +72,18 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     IEnumerator IEnumerable.GetEnumerator() =>
         GetEnumerator();
 
-    protected abstract string NodeRepresentation();
-
     #region Visitors
 
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     public virtual Type Accept(SemanticChecker visitor) => default;
 
-    public virtual Unit Accept(SymbolTableBuilder visitor) => default;
+    public virtual Unit Accept(SymbolTableBuilder visitor) =>
+        visitor.Visit(this);
 
     #endregion
+    
+    protected abstract string NodeRepresentation();
     
     public override string ToString() =>
         $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
