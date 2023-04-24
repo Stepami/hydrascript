@@ -5,6 +5,7 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast;
@@ -12,7 +13,7 @@ namespace Interpreter.Lib.IR.Ast;
 public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNode>,
     IVisitable<InstructionProvider, AddressedInstructions>,
     IVisitable<SemanticChecker, Type>,
-    IVisitable<SymbolTableBuilder>
+    IVisitable<SymbolTableInitializer>
 {
     public AbstractSyntaxTreeNode Parent { get; set; }
         
@@ -78,7 +79,7 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
 
     public virtual Type Accept(SemanticChecker visitor) => default;
 
-    public virtual Unit Accept(SymbolTableBuilder visitor) =>
+    public virtual Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 
     #endregion

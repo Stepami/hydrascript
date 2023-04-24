@@ -1,6 +1,7 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes;
@@ -23,6 +24,6 @@ public class ScriptBody : AbstractSyntaxTreeNode
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 
-    public override Unit Accept(SymbolTableBuilder visitor) =>
+    public override Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 }

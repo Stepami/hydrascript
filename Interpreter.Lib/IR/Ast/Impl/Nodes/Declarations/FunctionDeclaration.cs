@@ -6,6 +6,7 @@ using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
@@ -73,6 +74,6 @@ public class FunctionDeclaration : Declaration
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 
-    public override Unit Accept(SymbolTableBuilder visitor) =>
+    public override Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 }

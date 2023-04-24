@@ -1,9 +1,9 @@
 using Interpreter.Lib.IR.Ast;
 using Visitor.NET.Lib.Core;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Initializer.Impl;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service.Impl;
 
-public class SymbolTableInitializer : ISymbolTableInitializer
+public class SymbolTableInitializerService : ISymbolTableInitializerService
 {
     public Unit InitThroughParent(AbstractSyntaxTreeNode node)
     {
