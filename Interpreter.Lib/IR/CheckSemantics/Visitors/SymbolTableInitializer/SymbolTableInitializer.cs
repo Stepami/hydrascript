@@ -21,21 +21,40 @@ public class SymbolTableInitializer :
     public SymbolTableInitializer(ISymbolTableInitializerService initializerService) =>
         _initializerService = initializerService;
 
-    public Unit Visit(AbstractSyntaxTreeNode visitable) =>
+    public Unit Visit(AbstractSyntaxTreeNode visitable)
+    {
         _initializerService.InitThroughParent(visitable);
+        foreach (var child in visitable)
+            child.Accept(this);
+        return default;
+    }
 
     public Unit Visit(ScriptBody visitable)
     {
         visitable.SymbolTable = SymbolTableUtils.GetStandardLibrary();
+        visitable.StatementList.ForEach(item => item.Accept(this));
         return default;
     }
 
-    public Unit Visit(FunctionDeclaration visitable) =>
+    public Unit Visit(FunctionDeclaration visitable)
+    {
         _initializerService.InitWithNewScope(visitable);
-    
-    public Unit Visit(BlockStatement visitable) =>
-        _initializerService.InitWithNewScope(visitable);
+        visitable.Statements.Accept(this);
+        return default;
+    }
 
-    public Unit Visit(ObjectLiteral visitable) =>
+    public Unit Visit(BlockStatement visitable)
+    {
         _initializerService.InitWithNewScope(visitable);
+        visitable.StatementList.ForEach(item => item.Accept(this));
+        return default;
+    }
+
+    public Unit Visit(ObjectLiteral visitable)
+    {
+        _initializerService.InitWithNewScope(visitable);
+        visitable.Properties.ForEach(property => property.Accept(this));
+        visitable.Methods.ForEach(method => method.Accept(this));
+        return default;
+    }
 }
