@@ -23,6 +23,15 @@ public class Parser : IParser
 
     public Parser(ILexer lexer) => 
         _lexer = lexer;
+    
+    public IAbstractSyntaxTree TopDownParse(string text)
+    {
+        _tokens = _lexer.GetTokens(text);
+            
+        var root = Script();
+        Expect("EOP");
+        return new AbstractSyntaxTree(root);
+    }
 
     private Token Expect(string expectedTag, string expectedValue = null)
     {
@@ -58,15 +67,6 @@ public class Parser : IParser
     private bool CurrentIsOperator(string @operator) =>
         CurrentIs("Operator") &&
         _tokens.Current!.Value == @operator;
-
-    public IAbstractSyntaxTree TopDownParse(string text)
-    {
-        _tokens = _lexer.GetTokens(text);
-            
-        var root = Script();
-        Expect("EOP");
-        return new AbstractSyntaxTree(root);
-    }
 
     private ScriptBody Script() =>
         new(StatementList());
