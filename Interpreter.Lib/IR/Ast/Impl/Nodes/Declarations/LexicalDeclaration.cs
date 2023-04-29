@@ -1,6 +1,8 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 
@@ -29,5 +31,8 @@ public class LexicalDeclaration : Declaration
         Readonly ? "const" : "let";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
+        visitor.Visit(this);
+    
+    public override Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
 }

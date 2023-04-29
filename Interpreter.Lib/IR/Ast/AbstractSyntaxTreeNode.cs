@@ -13,7 +13,8 @@ namespace Interpreter.Lib.IR.Ast;
 public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNode>,
     IVisitable<InstructionProvider, AddressedInstructions>,
     IVisitable<SemanticChecker, Type>,
-    IVisitable<SymbolTableInitializer>
+    IVisitable<SymbolTableInitializer>,
+    IVisitable<DeclarationVisitor>
 {
     public AbstractSyntaxTreeNode Parent { get; set; }
         
@@ -80,6 +81,9 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     public virtual Type Accept(SemanticChecker visitor) => default;
 
     public virtual Unit Accept(SymbolTableInitializer visitor) =>
+        visitor.Visit(this);
+
+    public virtual Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
 
     #endregion
