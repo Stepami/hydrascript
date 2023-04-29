@@ -1,5 +1,6 @@
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Visitor.NET.Lib.Core;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
@@ -20,7 +21,8 @@ public class DeclarationVisitor :
 
     public Unit Visit(TypeDeclaration visitable)
     {
-        throw new NotImplementedException();
+        visitable.SymbolTable.AddSymbol(new TypeSymbol(visitable.TypeValue, visitable.TypeId));
+        return default;
     }
 
     public Unit Visit(LexicalDeclaration visitable)

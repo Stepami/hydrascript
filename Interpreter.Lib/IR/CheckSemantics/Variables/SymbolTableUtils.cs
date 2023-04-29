@@ -13,11 +13,11 @@ public static class SymbolTableUtils
     {
         var library = new SymbolTable();
             
-        library.AddType(TypeUtils.JavaScriptTypes.Number);
-        library.AddType(TypeUtils.JavaScriptTypes.Boolean);
-        library.AddType(TypeUtils.JavaScriptTypes.String);
-        library.AddType(TypeUtils.JavaScriptTypes.Null);
-        library.AddType(TypeUtils.JavaScriptTypes.Void);
+        library.AddSymbol(new TypeSymbol(TypeUtils.JavaScriptTypes.Number));
+        library.AddSymbol(new TypeSymbol(TypeUtils.JavaScriptTypes.Boolean));
+        library.AddSymbol(new TypeSymbol(TypeUtils.JavaScriptTypes.String));
+        library.AddSymbol(new TypeSymbol(TypeUtils.JavaScriptTypes.Null));
+        library.AddSymbol(new TypeSymbol(TypeUtils.JavaScriptTypes.Void));
 
         var print = new FunctionSymbol(
             "print",
