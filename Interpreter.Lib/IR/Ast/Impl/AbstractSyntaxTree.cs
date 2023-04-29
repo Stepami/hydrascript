@@ -10,14 +10,20 @@ namespace Interpreter.Lib.IR.Ast.Impl;
 public class AbstractSyntaxTree : IAbstractSyntaxTree
 {
     private readonly AbstractSyntaxTreeNode _root;
+    
     private readonly SymbolTableInitializer _symbolTableInitializer;
+    private readonly DeclarationVisitor _declarationVisitor;
+    
     private readonly SemanticChecker _semanticChecker;
     private readonly InstructionProvider _instructionProvider;
 
     public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
     {
         _root = root;
+        
         _symbolTableInitializer = new SymbolTableInitializer(new SymbolTableInitializerService());
+        _declarationVisitor = new();
+        
         _semanticChecker = new();
         _instructionProvider = new();
     }
@@ -31,6 +37,8 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     public AddressedInstructions GetInstructions()
     {
         _root.Accept(_symbolTableInitializer);
+        _root.Accept(_declarationVisitor);
+        
         _root.Accept(_semanticChecker);
         return _root.Accept(_instructionProvider);
     }
