@@ -13,7 +13,7 @@ public class DeclarationVisitor :
     public Unit Visit(AbstractSyntaxTreeNode visitable)
     {
         foreach (var child in visitable)
-            visitable.Accept(this);
+            child.Accept(this);
 
         return default;
     }
