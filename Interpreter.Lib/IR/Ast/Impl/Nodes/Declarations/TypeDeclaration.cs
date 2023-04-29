@@ -7,13 +7,13 @@ namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 public class TypeDeclaration : Declaration
 {
-    private readonly string _typeId;
-    private readonly Type _typeValue;
+    public string TypeId { get; }
+    public Type TypeValue { get; }
 
     public TypeDeclaration(string typeId, Type typeValue)
     {
-        _typeId = typeId;
-        _typeValue = typeValue;
+        TypeId = typeId;
+        TypeValue = typeValue;
     }
         
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
@@ -22,7 +22,7 @@ public class TypeDeclaration : Declaration
     }
 
     protected override string NodeRepresentation() =>
-        $"type {_typeId} = {_typeValue}";
+        $"type {TypeId} = {TypeValue}";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) => new();
     
