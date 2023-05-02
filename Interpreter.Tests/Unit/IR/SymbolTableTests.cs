@@ -46,7 +46,7 @@ public class SymbolTableTests
         const string id = "ident";
         var type = new Mock<Type>(id);
 
-        var symbol = new Mock<Symbol>(id, type.Object);
+        var symbol = new Mock<Symbol>();
         symbol.Setup(s => s.Id).Returns(id);
         symbol.Setup(s => s.Type).Returns(type.Object);
 
