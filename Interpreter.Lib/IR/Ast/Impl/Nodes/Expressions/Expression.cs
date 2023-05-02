@@ -1,6 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Visitor.NET.Lib.Core;
+using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 

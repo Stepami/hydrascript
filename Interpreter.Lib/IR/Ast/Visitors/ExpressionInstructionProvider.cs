@@ -11,7 +11,7 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using Visitor.NET.Lib.Core;
+using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Visitors;
 

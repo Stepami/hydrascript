@@ -6,7 +6,7 @@ using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
-using Visitor.NET.Lib.Core;
+using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast;
 

@@ -1,5 +1,5 @@
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
-using Visitor.NET.Lib.Core;
+using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes;
 

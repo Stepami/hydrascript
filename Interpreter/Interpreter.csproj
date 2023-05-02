@@ -14,8 +14,8 @@
     <ItemGroup>
       <PackageReference Include="CommandLineParser" Version="2.9.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-      <PackageReference Include="System.IO.Abstractions" Version="19.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+      <PackageReference Include="System.IO.Abstractions" Version="19.2.18" />
     </ItemGroup>
 
 </Project>
