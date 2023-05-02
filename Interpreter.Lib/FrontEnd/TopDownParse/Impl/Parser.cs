@@ -210,7 +210,7 @@ public class Parser : IParser
 
         type.Recursive = type.ToString().Contains(ident.Value);
 
-        return new TypeDeclaration(ident.Value, type) { Segment = typeWord.Segment };
+        return new TypeDeclaration(ident.Value, type) { Segment = typeWord.Segment + ident.Segment };
     }
 
     private Type TypeValue()
