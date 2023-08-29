@@ -36,7 +36,7 @@ public class ObjectLiteral : ComplexLiteral
         });
         Methods.ForEach(m =>
         {
-            var symbol = m.GetSymbol();
+            var symbol = m.Function;
             propertyTypes.Add(new PropertyType(symbol.Id, symbol.Type));
         });
         var type = new ObjectType(propertyTypes);

@@ -61,8 +61,6 @@ public class FunctionDeclaration : Declaration
         SymbolTable.Clear();
     }
 
-    public FunctionSymbol GetSymbol() => Function;
-
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         yield return Statements;

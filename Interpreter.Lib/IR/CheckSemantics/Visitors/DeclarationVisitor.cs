@@ -32,6 +32,7 @@ public class DeclarationVisitor :
 
     public Unit Visit(FunctionDeclaration visitable)
     {
+        //visitable.Parent.SymbolTable.AddSymbol(visitable.GetSymbol());
         throw new NotImplementedException();
     }
 }
