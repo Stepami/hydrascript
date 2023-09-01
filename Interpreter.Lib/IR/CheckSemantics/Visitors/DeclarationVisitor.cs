@@ -1,5 +1,6 @@
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Visitor.NET;
 
@@ -21,18 +22,30 @@ public class DeclarationVisitor :
 
     public Unit Visit(TypeDeclaration visitable)
     {
-        visitable.SymbolTable.AddSymbol(new TypeSymbol(visitable.TypeValue, visitable.TypeId));
+        visitable.SymbolTable.AddSymbol(
+            new TypeSymbol(
+                visitable.TypeValue,
+                visitable.TypeId));
         return default;
     }
 
     public Unit Visit(LexicalDeclaration visitable)
     {
-        throw new NotImplementedException();
+        foreach (var assignment in visitable.Assignments)
+        {
+            visitable.SymbolTable.AddSymbol(
+                new VariableSymbol(
+                    assignment.Destination.Id,
+                    assignment.DestinationType ?? TypeUtils.JavaScriptTypes.Undefined,
+                    visitable.Readonly));
+        }
+
+        return default;
     }
 
     public Unit Visit(FunctionDeclaration visitable)
     {
-        //visitable.Parent.SymbolTable.AddSymbol(visitable.GetSymbol());
-        throw new NotImplementedException();
+        visitable.Parent.SymbolTable.AddSymbol(visitable.Function);
+        return default;
     }
 }

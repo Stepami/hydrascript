@@ -11,7 +11,7 @@ public class AssignmentExpression : Expression
 {
     public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
-    private readonly Type _destinationType;
+    public Type DestinationType { get; }
 
     public AssignmentExpression(LeftHandSideExpression lhs, Expression source, Type destinationType = null)
     {
@@ -21,7 +21,7 @@ public class AssignmentExpression : Expression
         Source = source;
         source.Parent = this;
 
-        _destinationType = destinationType;
+        DestinationType = destinationType;
     }
 
     internal override Type NodeCheck()
@@ -40,23 +40,23 @@ public class AssignmentExpression : Expression
                 throw new DeclarationAlreadyExists(Destination.Id);
             }
 
-            if (_destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
+            if (DestinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
             {
-                type = _destinationType;
+                type = DestinationType;
             }
 
-            if (_destinationType != null && !_destinationType.Equals(type))
+            if (DestinationType != null && !DestinationType.Equals(type))
             {
-                throw new IncompatibleTypesOfOperands(Segment, _destinationType, type);
+                throw new IncompatibleTypesOfOperands(Segment, DestinationType, type);
             }
 
-            if (_destinationType == null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
+            if (DestinationType == null && type.Equals(TypeUtils.JavaScriptTypes.Undefined))
             {
                 throw new CannotDefineType(Segment);
             }
 
-            var typeOfSymbol = _destinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
-                ? _destinationType
+            var typeOfSymbol = DestinationType != null && type.Equals(TypeUtils.JavaScriptTypes.Undefined)
+                ? DestinationType
                 : type;
             if (typeOfSymbol is ObjectType objectTypeOfSymbol)
             {
