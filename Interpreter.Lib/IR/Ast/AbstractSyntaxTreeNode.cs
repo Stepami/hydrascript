@@ -55,18 +55,12 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
         return false;
     }
 
-    //internal virtual Type NodeCheck() => null;
-
     public abstract IEnumerator<AbstractSyntaxTreeNode> GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() =>
         GetEnumerator();
 
     #region Visitors
-
-    public abstract AddressedInstructions Accept(InstructionProvider visitor);
-
-    public virtual Type Accept(SemanticChecker visitor) => default;
 
     public virtual Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
@@ -76,6 +70,10 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     
     public virtual Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
+
+    public virtual Type Accept(SemanticChecker visitor) => default;
+
+    public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     #endregion
     

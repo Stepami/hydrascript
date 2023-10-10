@@ -141,7 +141,7 @@ public class InstructionProvider :
         if (!visitable.HasReturnStatement())
             result.Add(new Return());
 
-        result.Add(new EndBlock(BlockType.Function, blockId: functionInfo.ToString()));
+        result.Add(new EndBlock(BlockType.Function, blockId: functionInfo.ToString()), functionInfo.End.Name);
         
         return result;
     }
@@ -170,6 +170,7 @@ public class InstructionProvider :
         result.OfType<Goto>().Where(g => g.JumpType is not null)
             .ToList().ForEach(g =>
             {
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (g.JumpType)
                 {
                     case InsideStatementJumpType.Break:
