@@ -1,7 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -20,25 +18,6 @@ public class ConditionalExpression : Expression
         Test.Parent = this;
         Consequent.Parent = this;
         Alternate.Parent = this;
-    }
-
-    internal override Type NodeCheck()
-    {
-        var tType = Test.NodeCheck();
-
-        if (tType.Equals(TypeUtils.JavaScriptTypes.Boolean))
-        {
-            var cType = Consequent.NodeCheck();
-            var aType = Alternate.NodeCheck();
-            if (cType.Equals(aType))
-            {
-                return cType;
-            }
-
-            throw new WrongConditionalTypes(Consequent.Segment, cType, Alternate.Segment, aType);
-        }
-
-        throw new NotBooleanTestExpression(Test.Segment, tType);
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()

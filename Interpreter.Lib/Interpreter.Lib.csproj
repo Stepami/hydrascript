@@ -9,4 +9,8 @@
       <PackageReference Include="Visitor.NET" Version="3.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Interpreter.Tests" />
+    </ItemGroup>
+
 </Project>

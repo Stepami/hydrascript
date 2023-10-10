@@ -7,7 +7,7 @@ public class Simple : Instruction
 {
     public string Left { get; set; }
 
-    protected (IValue left, IValue right) right;
+    protected (IValue left, IValue right) Right;
     private readonly string _operator;
 
     public Simple(string left,
@@ -15,7 +15,7 @@ public class Simple : Instruction
         string @operator)
     {
         Left = left;
-        this.right = right;
+        Right = right;
         _operator = @operator;
     }
 
@@ -43,21 +43,21 @@ public class Simple : Instruction
     public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
-        if (right.left == null)
+        if (Right.left == null)
         {
-            var value = right.right.Get(frame);
+            var value = Right.right.Get(frame);
             frame[Left] = _operator switch
             {
                 "-" => -Convert.ToDouble(value),
                 "!" => !Convert.ToBoolean(value),
                 "~" => ((List<object>) value).Count,
                 "" => value,
-                _ => throw new NotImplementedException()
+                _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
         }
         else
         {
-            object lValue = right.left.Get(frame), rValue = right.right.Get(frame);
+            object lValue = Right.left.Get(frame), rValue = Right.right.Get(frame);
             frame[Left] = _operator switch
             {
                 "+" when lValue is string => lValue.ToString() + rValue,
@@ -77,7 +77,7 @@ public class Simple : Instruction
                 "." => ((Dictionary<string, object>) lValue)[rValue.ToString()!],
                 "[]" => ((List<object>) lValue)[Convert.ToInt32(rValue)],
                 "++" => ((List<object>) lValue).Concat((List<object>) rValue).ToList(),
-                _ => throw new NotImplementedException()
+                _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
         }
         if (vm.CallStack.Any())
@@ -97,7 +97,7 @@ public class Simple : Instruction
         return Address.Next;
     }
 
-    protected override string ToStringInternal() => right.left == null
-        ? $"{Left} = {_operator}{right.right}"
-        : $"{Left} = {right.left} {_operator} {right.right}";
+    protected override string ToStringInternal() => Right.left == null
+        ? $"{Left} = {_operator}{Right.right}"
+        : $"{Left} = {Right.left} {_operator} {Right.right}";
 }

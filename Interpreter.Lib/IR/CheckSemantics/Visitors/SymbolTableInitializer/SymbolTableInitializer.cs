@@ -3,7 +3,6 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
-using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service;
 using Visitor.NET;
 
@@ -17,9 +16,15 @@ public class SymbolTableInitializer :
     IVisitor<ObjectLiteral>
 {
     private readonly ISymbolTableInitializerService _initializerService;
+    private readonly IStandardLibraryProvider _provider;
 
-    public SymbolTableInitializer(ISymbolTableInitializerService initializerService) =>
+    public SymbolTableInitializer(
+        ISymbolTableInitializerService initializerService,
+        IStandardLibraryProvider provider)
+    {
         _initializerService = initializerService;
+        _provider = provider;
+    }
 
     public Unit Visit(AbstractSyntaxTreeNode visitable)
     {
@@ -31,7 +36,7 @@ public class SymbolTableInitializer :
 
     public Unit Visit(ScriptBody visitable)
     {
-        visitable.SymbolTable = SymbolTableUtils.GetStandardLibrary();
+        visitable.SymbolTable = _provider.GetStandardLibrary();
         visitable.StatementList.ForEach(item => item.Accept(this));
         return default;
     }

@@ -1,16 +1,17 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 
 public class CastAsExpression : Expression
 {
     public Expression Expression { get; }
-    private readonly Type _cast;
+    private readonly TypeValue _cast;
 
-    public CastAsExpression(Expression expression, Type cast)
+    public CastAsExpression(Expression expression, TypeValue cast)
     {
         Expression = expression;
         Expression.Parent = this;
@@ -29,5 +30,7 @@ public class CastAsExpression : Expression
         visitor.Visit(this);
 
     public override Type Accept(SemanticChecker visitor) =>
-        TypeUtils.JavaScriptTypes.String;
+        _cast.BuildType(SymbolTable) == "string"
+            ? "string"
+            : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
 }

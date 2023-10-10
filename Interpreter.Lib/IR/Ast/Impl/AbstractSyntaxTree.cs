@@ -2,8 +2,12 @@ using System.Text;
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service.Impl;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service.Impl;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Impl;
 
 namespace Interpreter.Lib.IR.Ast.Impl;
 
@@ -12,6 +16,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     private readonly AbstractSyntaxTreeNode _root;
     
     private readonly SymbolTableInitializer _symbolTableInitializer;
+    private readonly TypeSystemLoader _typeSystemLoader;
     private readonly DeclarationVisitor _declarationVisitor;
     
     private readonly SemanticChecker _semanticChecker;
@@ -21,22 +26,20 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     {
         _root = root;
         
-        _symbolTableInitializer = new SymbolTableInitializer(new SymbolTableInitializerService());
-        _declarationVisitor = new();
+        _symbolTableInitializer = new SymbolTableInitializer(
+            new SymbolTableInitializerService(),
+            new StandardLibraryProvider());
+        _typeSystemLoader = new TypeSystemLoader(new TypeDeclarationsResolver());
+        _declarationVisitor = new DeclarationVisitor();
         
-        _semanticChecker = new();
-        _instructionProvider = new();
+        _semanticChecker = new SemanticChecker(new DefaultValueForTypeCalculator());
+        _instructionProvider = new InstructionProvider();
     }
-
-    private void Check() =>
-        GetAllNodes().ToList().ForEach(node => node.SemanticCheck());
-
-    private IEnumerable<AbstractSyntaxTreeNode> GetAllNodes() =>
-        _root.GetAllNodes();
 
     public AddressedInstructions GetInstructions()
     {
         _root.Accept(_symbolTableInitializer);
+        _root.Accept(_typeSystemLoader);
         _root.Accept(_declarationVisitor);
         
         _root.Accept(_semanticChecker);

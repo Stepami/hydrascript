@@ -13,14 +13,14 @@ public class IndexAssignment : Simple, IWriteToComplexData
     {
         var frame = vm.Frames.Peek();
         var obj = (List<object>) frame[Left];
-        var index = Convert.ToInt32(right.left.Get(frame));
-        obj[index] = right.right.Get(frame);
+        var index = Convert.ToInt32(Right.left.Get(frame));
+        obj[index] = Right.right.Get(frame);
         return Address.Next;
     }
 
     public Simple ToSimple() =>
-        new IndexRead(new Name(Left), right.left);
+        new IndexRead(new Name(Left), Right.left);
 
     protected override string ToStringInternal() =>
-        $"{Left}[{right.left}] = {right.right}";
+        $"{Left}[{Right.left}] = {Right.right}";
 }

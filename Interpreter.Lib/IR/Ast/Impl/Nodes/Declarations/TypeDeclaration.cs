@@ -1,20 +1,24 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 public class TypeDeclaration : Declaration
 {
+    private readonly TypeValue _typeValue;
     public string TypeId { get; }
-    public Type TypeValue { get; }
 
-    public TypeDeclaration(string typeId, Type typeValue)
+    public TypeDeclaration(string typeId, TypeValue typeValue)
     {
         TypeId = typeId;
-        TypeValue = typeValue;
+        _typeValue = typeValue;
     }
+
+    public Type BuildType() =>
+        _typeValue.BuildType(SymbolTable);
         
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
@@ -22,10 +26,13 @@ public class TypeDeclaration : Declaration
     }
 
     protected override string NodeRepresentation() =>
-        $"type {TypeId} = {TypeValue}";
+        $"type {TypeId} = {_typeValue}";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) => new();
     
-    public override Unit Accept(DeclarationVisitor visitor) =>
+    public override Unit Accept(TypeSystemLoader visitor) =>
         visitor.Visit(this);
+
+    public override Unit Accept(DeclarationVisitor visitor) =>
+        default;
 }

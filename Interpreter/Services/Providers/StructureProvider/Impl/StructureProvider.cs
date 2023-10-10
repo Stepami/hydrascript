@@ -41,6 +41,6 @@ public class StructureProvider : IStructureProvider
 
         public override void Write(Utf8JsonWriter writer, 
             Structure value, JsonSerializerOptions options) =>
-            throw new NotImplementedException();
+            throw new NotSupportedException();
     }
 }

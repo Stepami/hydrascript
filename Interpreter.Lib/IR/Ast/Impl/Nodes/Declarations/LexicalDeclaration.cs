@@ -19,7 +19,6 @@ public class LexicalDeclaration : Declaration
 
     public void AddAssignment(AssignmentExpression assignment)
     {
-        assignment.SymbolTable = SymbolTable;
         assignment.Parent = this;
         Assignments.Add(assignment);
     }

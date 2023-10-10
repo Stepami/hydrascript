@@ -1,7 +1,6 @@
 using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
@@ -14,25 +13,12 @@ public class IdentifierReference : PrimaryExpression
         Name = name;
     }
 
-    internal override Type NodeCheck()
-    {
-        if (!ChildOf<DotAccess>())
-        {
-            var symbol = SymbolTable.FindSymbol<Symbol>(Name);
-            return symbol switch
-            {
-                VariableSymbol v => v.Type,
-                FunctionSymbol f => f.Type,
-                _ => throw new UnknownIdentifierReference(this)
-            };
-        }
-
-        return null;
-    }
-
     protected override string NodeRepresentation() => Name;
 
     public override IValue ToValue() => new Name(Name);
+
+    public override Type Accept(SemanticChecker visitor) =>
+        visitor.Visit(this);
 
     public static implicit operator string(IdentifierReference identifierReference) =>
         identifierReference.Name;

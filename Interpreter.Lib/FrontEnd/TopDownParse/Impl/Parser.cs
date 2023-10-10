@@ -11,8 +11,6 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
-using Interpreter.Lib.IR.CheckSemantics.Types;
-using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 
@@ -208,17 +206,15 @@ public class Parser : IParser
         Expect("Assign");
         var type = TypeValue();
 
-        type.Recursive = type.ToString().Contains(ident.Value);
-
         return new TypeDeclaration(ident.Value, type) { Segment = typeWord.Segment + ident.Segment };
     }
 
-    private Type TypeValue()
+    private TypeValue TypeValue()
     {
         if (CurrentIs("Ident"))
         {
             var ident = Expect("Ident");
-            var identType = new Type(ident.Value);
+            var identType = new TypeIdentValue(ident.Value);
 
             return WithSuffix(identType);
         }
@@ -226,26 +222,31 @@ public class Parser : IParser
         if (CurrentIs("LeftCurl"))
         {
             Expect("LeftCurl");
-            var propertyTypes = new List<PropertyType>();
+            var propertyTypes = new List<PropertyTypeValue>();
             while (CurrentIs("Ident"))
             {
                 var ident = Expect("Ident");
                 Expect("Colon");
                 var propType = TypeValue(); 
-                propertyTypes.Add(new PropertyType(ident.Value, propType));
+                propertyTypes.Add(
+                    new PropertyTypeValue(
+                        ident.Value,
+                        propType));
                 Expect("SemiColon");
             }
 
             Expect("RightCurl");
                 
-            return WithSuffix(new ObjectType(propertyTypes));
+            return WithSuffix(new ObjectTypeValue(propertyTypes));
         }
 
         if (CurrentIs("LeftParen"))
         {
             Expect("LeftParen");
-            var args = new List<Type>();
-            while (CurrentIs("Ident") || CurrentIs("LeftCurl") || CurrentIs("LeftParen"))
+            var args = new List<TypeValue>();
+            while (CurrentIs("Ident") ||
+                   CurrentIs("LeftCurl") ||
+                   CurrentIs("LeftParen"))
             {
                 args.Add(TypeValue());
                 if (!CurrentIs("RightParen"))
@@ -256,13 +257,13 @@ public class Parser : IParser
             Expect("RightParen");
             Expect("Arrow");
             var returnType = TypeValue();
-            return new FunctionType(returnType, args);
+            return new FunctionTypeValue(returnType, args);
         }
 
         return null;
     }
 
-    private Type WithSuffix(Type baseType)
+    private TypeValue WithSuffix(TypeValue baseType)
     {
         var type = baseType;
         while (CurrentIs("LeftBracket") || CurrentIs("QuestionMark"))
@@ -271,12 +272,12 @@ public class Parser : IParser
             {
                 Expect("LeftBracket");
                 Expect("RightBracket");
-                type = new ArrayType(type);
+                type = new ArrayTypeValue(type);
             } 
             else if (CurrentIs("QuestionMark"))
             {
                 Expect("QuestionMark");
-                type = new NullableType(type);
+                type = new NullableTypeValue(type);
             }
         }
 
@@ -309,13 +310,13 @@ public class Parser : IParser
         var ident = Expect("Ident");
 
         Expect("LeftParen");
-        var args = new List<VariableSymbol>();
+        var args = new List<PropertyTypeValue>();
         if (CurrentIs("Ident"))
         {
             var arg = Expect("Ident").Value;
             Expect("Colon");
             var type = TypeValue();
-            args.Add(new VariableSymbol(arg, type));
+            args.Add(new PropertyTypeValue(arg, type));
         }
 
         while (CurrentIs("Comma"))
@@ -324,24 +325,19 @@ public class Parser : IParser
             var arg = Expect("Ident").Value;
             Expect("Colon");
             var type = TypeValue();
-            args.Add(new VariableSymbol(arg, type));
+            args.Add(new PropertyTypeValue(arg, type));
         }
 
         Expect("RightParen");
 
-        var returnType = TypeUtils.JavaScriptTypes.Void;
+        TypeValue returnType = new TypeIdentValue(TypeId: "undefined");
         if (CurrentIs("Colon"))
         {
             Expect("Colon");
             returnType = TypeValue();
         }
 
-        var functionSymbol =
-            new FunctionSymbol(ident.Value, args,
-                new FunctionType(returnType, args.Select(x => x.Type))
-            );
-
-        return new FunctionDeclaration(functionSymbol, BlockStatement())
+        return new FunctionDeclaration(ident.Value, returnType, args, BlockStatement())
             { Segment = ident.Segment };
     }
 
@@ -390,13 +386,11 @@ public class Parser : IParser
             }
             else
             {
-                var expression = new Literal(
-                    type, TypeUtils.GetDefaultValue(type),
-                    label: TypeUtils.GetDefaultValue(type) == null ? "null" : null
-                );
+                var expression = new ImplicitLiteral(type);
                 assignment = new AssignmentExpression(
-                    new MemberExpression(identRef),
-                    expression, type);
+                    lhs: new MemberExpression(identRef),
+                    expression,
+                    type);
             }
         }
         declaration.AddAssignment(assignment);
@@ -672,26 +666,36 @@ public class Parser : IParser
         {
             var str = Expect("StringLiteral");
             return new Literal(
-                TypeUtils.JavaScriptTypes.String,
-                Regex.Unescape(str.Value.Trim('"')),
+                new TypeIdentValue(TypeId: "string"),
+                value: Regex.Unescape(str.Value.Trim('"')),
                 segment,
-                str.Value
+                label: str.Value
                     .Replace(@"\", @"\\")
-                    .Replace(@"""", @"\""")
-            );
+                    .Replace(@"""", @"\"""));
         }
 
         return _tokens.Current.Type.Tag switch
         {
-            "NullLiteral" => new Literal(TypeUtils.JavaScriptTypes.Null,
-                Expect("NullLiteral").Value == "null" ? null : "", segment, "null"),
-            "IntegerLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,
-                double.Parse(Expect("IntegerLiteral").Value), segment),
-            "FloatLiteral" => new Literal(TypeUtils.JavaScriptTypes.Number,
-                double.Parse(Expect("FloatLiteral").Value, CultureInfo.InvariantCulture), segment),
-            "BooleanLiteral" => new Literal(TypeUtils.JavaScriptTypes.Boolean,
-                bool.Parse(Expect("BooleanLiteral").Value), segment),
-            _ => new Literal(TypeUtils.JavaScriptTypes.Undefined, new TypeUtils.Undefined())
+            "NullLiteral" => new Literal(
+                new TypeIdentValue(TypeId: "null"),
+                Expect("NullLiteral").Value == "null" ? null : string.Empty,
+                segment, 
+                label: "null"),
+            "IntegerLiteral" => new Literal(
+                new TypeIdentValue(TypeId: "number"),
+                value: double.Parse(Expect("IntegerLiteral").Value),
+                segment),
+            "FloatLiteral" => new Literal(
+                new TypeIdentValue(TypeId: "number"),
+                value: double.Parse(
+                    Expect("FloatLiteral").Value,
+                    CultureInfo.InvariantCulture),
+                segment),
+            "BooleanLiteral" => new Literal(
+                new TypeIdentValue(TypeId: "boolean"),
+                value: bool.Parse(Expect("BooleanLiteral").Value),
+                segment),
+            _ => throw new ParserException("There are no more supported literals")
         };
     }
 
@@ -715,30 +719,27 @@ public class Parser : IParser
             {
                 Expect("Arrow");
                 Expect("LeftParen");
-                var args = new List<VariableSymbol>();
+                var args = new List<PropertyTypeValue>();
                 while (CurrentIs("Ident"))
                 {
                     var name = Expect("Ident").Value;
                     Expect("Colon");
                     var type = TypeValue();
-                    args.Add(new VariableSymbol(name, type));
+                    args.Add(new PropertyTypeValue(name, type));
                     if (!CurrentIs("RightParen"))
                     {
                         Expect("Comma");
                     }
                 }
                 Expect("RightParen");
-                var returnType = TypeUtils.JavaScriptTypes.Void;
+                TypeValue returnType = new TypeIdentValue(TypeId: "undefined");
                 if (CurrentIs("Colon"))
                 {
                     Expect("Colon");
                     returnType = TypeValue();
                 }
 
-                var functionSymbol = new FunctionSymbol(idToken.Value, args,
-                    new FunctionType(returnType, args.Select(a => a.Type))
-                );
-                methods.Add(new FunctionDeclaration(functionSymbol, BlockStatement())
+                methods.Add(new FunctionDeclaration(idToken.Value, returnType, args, BlockStatement())
                     { Segment = idToken.Segment }
                 );
             }

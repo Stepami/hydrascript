@@ -1,6 +1,6 @@
 using Visitor.NET;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Types.Visitors;
+namespace Interpreter.Lib.IR.CheckSemantics.Types;
 
 public class ReferenceResolver :
     IVisitor<Type>,
@@ -9,15 +9,15 @@ public class ReferenceResolver :
     IVisitor<NullableType>, 
     IVisitor<ObjectType>
 {
-    private readonly ObjectType _reference;
+    private readonly Type _reference;
     private readonly string _refId;
-    private readonly HashSet<Type> _visited;
+    private readonly ISet<Type> _visited;
 
-    public ReferenceResolver(ObjectType reference, string refId)
+    public ReferenceResolver(Type reference, string refId)
     {
         _reference = reference;
         _refId = refId;
-        _visited = new();
+        _visited = new HashSet<Type>();
     }
         
     public Unit Visit(ObjectType visitable)

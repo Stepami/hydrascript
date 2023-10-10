@@ -1,8 +1,8 @@
 using System.IO.Abstractions;
 using Interpreter.Lib.FrontEnd.TopDownParse;
+using Interpreter.Lib.FrontEnd.TopDownParse.Impl;
 using Interpreter.Services.Providers.LexerProvider;
 using Microsoft.Extensions.Options;
-using Parser = Interpreter.Lib.FrontEnd.TopDownParse.Impl.Parser;
 
 namespace Interpreter.Services.Providers.ParserProvider.Impl;
 

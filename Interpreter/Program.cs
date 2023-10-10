@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CommandLine;
-using Microsoft.Extensions.DependencyInjection;
 using Interpreter.Services.Executor;
 using Interpreter.Services.Executor.Impl;
 using Interpreter.Services.Parsing;
@@ -11,6 +10,7 @@ using Interpreter.Services.Providers.ParserProvider;
 using Interpreter.Services.Providers.ParserProvider.Impl;
 using Interpreter.Services.Providers.StructureProvider;
 using Interpreter.Services.Providers.StructureProvider.Impl;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Interpreter;

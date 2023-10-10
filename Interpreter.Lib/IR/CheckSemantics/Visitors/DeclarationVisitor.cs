@@ -8,7 +8,6 @@ namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 
 public class DeclarationVisitor : 
     IVisitor<AbstractSyntaxTreeNode>,
-    IVisitor<TypeDeclaration>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
@@ -20,23 +19,16 @@ public class DeclarationVisitor :
         return default;
     }
 
-    public Unit Visit(TypeDeclaration visitable)
-    {
-        visitable.SymbolTable.AddSymbol(
-            new TypeSymbol(
-                visitable.TypeValue,
-                visitable.TypeId));
-        return default;
-    }
-
     public Unit Visit(LexicalDeclaration visitable)
     {
         foreach (var assignment in visitable.Assignments)
         {
+            var destinationType = assignment.DestinationType?.BuildType(
+                assignment.SymbolTable) ?? "undefined";
             visitable.SymbolTable.AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
-                    assignment.DestinationType ?? TypeUtils.JavaScriptTypes.Undefined,
+                    destinationType,
                     visitable.Readonly));
         }
 
@@ -45,7 +37,23 @@ public class DeclarationVisitor :
 
     public Unit Visit(FunctionDeclaration visitable)
     {
-        visitable.Parent.SymbolTable.AddSymbol(visitable.Function);
+        var parameters = visitable.Arguments.Select(x =>
+        {
+            var arg = new VariableSymbol(
+                id: x.Key,
+                x.TypeValue.BuildType(visitable.Parent.SymbolTable));
+            visitable.SymbolTable.AddSymbol(arg);
+            return arg;
+        }).ToList();
+
+        var functionSymbol = new FunctionSymbol(
+            visitable.Name,
+            parameters,
+            new FunctionType(
+                visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
+                arguments: parameters.Select(x => x.Type)));
+
+        visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
         return default;
     }
 }

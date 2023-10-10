@@ -1,7 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -20,90 +18,6 @@ public class BinaryExpression : Expression
 
         Right = right;
         Right.Parent = this;
-    }
-
-    internal override Type NodeCheck()
-    {
-        var lType = Left.NodeCheck();
-        var rType = Right.NodeCheck();
-        Type retType = null;
-        if (Operator != "::" && !lType.Equals(rType))
-        {
-            throw new IncompatibleTypesOfOperands(Segment, lType, rType);
-        }
-
-        switch (Operator)
-        {
-            case "+":
-                if (lType.Equals(TypeUtils.JavaScriptTypes.Number))
-                {
-                    retType = TypeUtils.JavaScriptTypes.Number;
-                }
-                else if (lType.Equals(TypeUtils.JavaScriptTypes.String))
-                {
-                    retType = TypeUtils.JavaScriptTypes.String;
-                }
-                else throw new UnsupportedOperation(Segment, lType, Operator);
-
-                break;
-            case "-":
-            case "*":
-            case "/":
-            case "%":
-                if (lType.Equals(TypeUtils.JavaScriptTypes.Number))
-                {
-                    retType = TypeUtils.JavaScriptTypes.Number;
-                }
-                else throw new UnsupportedOperation(Segment, lType, Operator);
-
-                break;
-            case "||":
-            case "&&":
-                if (lType.Equals(TypeUtils.JavaScriptTypes.Boolean))
-                {
-                    retType = TypeUtils.JavaScriptTypes.Boolean;
-                }
-                else throw new UnsupportedOperation(Segment, lType, Operator);
-
-                break;
-            case "==":
-            case "!=":
-                retType = TypeUtils.JavaScriptTypes.Boolean;
-                break;
-            case ">":
-            case ">=":
-            case "<":
-            case "<=":
-                if (lType.Equals(TypeUtils.JavaScriptTypes.Number))
-                {
-                    retType = TypeUtils.JavaScriptTypes.Boolean;
-                }
-                else throw new UnsupportedOperation(Segment, lType, Operator);
-
-                break;
-            case "++":
-                if (lType is ArrayType && rType is ArrayType)
-                {
-                    retType = lType;
-                }
-                else throw new UnsupportedOperation(Segment, lType, Operator);
-
-                break;
-            case "::":
-                if (!(lType is ArrayType))
-                {
-                    throw new UnsupportedOperation(Segment, lType, Operator);
-                }
-                if (rType.Equals(TypeUtils.JavaScriptTypes.Number))
-                {
-                    retType = TypeUtils.JavaScriptTypes.Void;
-                }
-                else throw new ArrayAccessException(Segment, rType);
-
-                break;
-        }
-
-        return retType;
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()

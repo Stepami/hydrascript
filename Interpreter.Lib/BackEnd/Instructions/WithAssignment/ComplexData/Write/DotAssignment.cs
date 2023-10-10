@@ -13,14 +13,14 @@ public class DotAssignment : Simple, IWriteToComplexData
     {
         var frame = vm.Frames.Peek();
         var obj = (Dictionary<string, object>) frame[Left];
-        var field = (string) right.left.Get(frame) ?? string.Empty;
-        obj[field] = right.right.Get(frame);
+        var field = (string) Right.left.Get(frame) ?? string.Empty;
+        obj[field] = Right.right.Get(frame);
         return Address.Next;
     }
     
     public Simple ToSimple() =>
-        new DotRead(new Name(Left), right.left);
+        new DotRead(new Name(Left), Right.left);
 
     protected override string ToStringInternal() =>
-        $"{Left}.{right.left} = {right.right}";
+        $"{Left}.{Right.left} = {Right.right}";
 }

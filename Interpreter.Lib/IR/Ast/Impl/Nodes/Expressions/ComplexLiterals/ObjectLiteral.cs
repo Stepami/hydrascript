@@ -1,8 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Types;
-using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET;
 
@@ -20,28 +18,6 @@ public class ObjectLiteral : ComplexLiteral
 
         Methods = new List<FunctionDeclaration>(methods);
         Methods.ForEach(m => m.Parent = this);
-    }
-
-    internal override Type NodeCheck()
-    {
-        var propertyTypes = new List<PropertyType>();
-        Properties.ForEach(prop =>
-        {
-            var propType = prop.Expression.NodeCheck();
-            propertyTypes.Add(new PropertyType(prop.Id.Name, propType));
-            prop.Id.SymbolTable.AddSymbol(propType is ObjectType objectType
-                ? new ObjectSymbol(prop.Id.Name, objectType) {Table = prop.Expression.SymbolTable}
-                : new VariableSymbol(prop.Id.Name, propType)
-            );
-        });
-        Methods.ForEach(m =>
-        {
-            var symbol = m.Function;
-            propertyTypes.Add(new PropertyType(symbol.Id, symbol.Type));
-        });
-        var type = new ObjectType(propertyTypes);
-        SymbolTable.AddSymbol(new VariableSymbol("this", type, true));
-        return type;
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>

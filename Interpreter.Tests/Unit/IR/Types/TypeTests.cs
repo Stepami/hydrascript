@@ -1,4 +1,5 @@
 using Interpreter.Lib.IR.CheckSemantics.Types;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service.Impl;
 using Xunit;
 
 namespace Interpreter.Tests.Unit.IR.Types;
@@ -42,8 +43,9 @@ public class TypeTests
     [Fact]
     public void DefaultValueTest()
     {
-        Assert.Null(TypeUtils.GetDefaultValue(new NullableType(new Any())));
-        Assert.Null(TypeUtils.GetDefaultValue(new NullType()));
-        Assert.Null(TypeUtils.GetDefaultValue(new ObjectType(new List<PropertyType>())));
+        var calculator = new DefaultValueForTypeCalculator();
+        Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
+        Assert.Null(calculator.GetDefaultValueForType(new NullType()));
+        Assert.Null(calculator.GetDefaultValueForType(new ObjectType(new List<PropertyType>())));
     }
 }

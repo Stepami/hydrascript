@@ -16,8 +16,6 @@ public abstract class AccessExpression : Expression
         }
     }
 
-    public abstract Type Check(Type prev);
-
     public bool HasNext() =>
         Next is not null;
 

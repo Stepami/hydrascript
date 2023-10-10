@@ -1,11 +1,12 @@
 using System.Collections;
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.FrontEnd.GetTokens.Data;
-using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast;
@@ -14,21 +15,16 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     IVisitable<InstructionProvider, AddressedInstructions>,
     IVisitable<SemanticChecker, Type>,
     IVisitable<SymbolTableInitializer>,
+    IVisitable<TypeSystemLoader>,
     IVisitable<DeclarationVisitor>
 {
     public AbstractSyntaxTreeNode Parent { get; set; }
-        
+
     public SymbolTable SymbolTable { get; set; }
 
     public bool CanEvaluate { get; protected init; }
-        
-    public Segment Segment { get; init; }
 
-    protected AbstractSyntaxTreeNode()
-    {
-        Parent = null;
-        CanEvaluate = false;
-    }
+    public Segment Segment { get; init; }
 
     internal List<AbstractSyntaxTreeNode> GetAllNodes()
     {
@@ -59,15 +55,7 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
         return false;
     }
 
-    public void SemanticCheck()
-    {
-        if (CanEvaluate && !ChildOf<FunctionDeclaration>())
-        {
-            NodeCheck();
-        }
-    }
-
-    internal virtual Type NodeCheck() => null;
+    //internal virtual Type NodeCheck() => null;
 
     public abstract IEnumerator<AbstractSyntaxTreeNode> GetEnumerator();
 
@@ -83,6 +71,9 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     public virtual Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 
+    public virtual Unit Accept(TypeSystemLoader visitor) =>
+        visitor.Visit(this);
+    
     public virtual Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
 

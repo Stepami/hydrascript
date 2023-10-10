@@ -1,12 +1,9 @@
-using Interpreter.Lib.IR.CheckSemantics.Types.Visitors;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types;
 
 public class Type :
-    IVisitable<ReferenceResolver>,
-    IVisitable<ObjectTypePrinter, string>,
-    IVisitable<ObjectTypeHasher, int>
+    IVisitable<ReferenceResolver>
 {
     private readonly string _name;
 
@@ -16,15 +13,7 @@ public class Type :
 
     public Type(string name) => _name = name;
 
-    public bool Recursive { get; set; }
-
     public virtual Unit Accept(ReferenceResolver visitor) =>
-        visitor.Visit(this);
-
-    public virtual string Accept(ObjectTypePrinter visitor) =>
-        visitor.Visit(this);
-
-    public virtual int Accept(ObjectTypeHasher visitor) =>
         visitor.Visit(this);
 
     public override bool Equals(object obj)

@@ -1,8 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
@@ -14,22 +12,6 @@ public class DotAccess : AccessExpression
     {
         Property = property;
         Property.Parent = this;
-    }
-
-    public override Type Check(Type prev)
-    {
-        if (prev is ObjectType objectType)
-        {
-            var fieldType = objectType[Property.Name];
-            if (fieldType != null)
-            {
-                return HasNext() ? Next.Check(fieldType) : fieldType;
-            }
-
-            throw new ObjectAccessException(Segment, objectType, Property.Name);
-        }
-
-        return null;
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()

@@ -2,8 +2,6 @@ using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -34,22 +32,6 @@ public class MemberExpression : LeftHandSideExpression
 
     public override bool Empty() =>
         AccessChain is null;
-
-    internal override Type NodeCheck()
-    {
-        if (AccessChain == null)
-        {
-            return _identifierReference.NodeCheck();
-        }
-
-        var symbol = SymbolTable.FindSymbol<VariableSymbol>(_identifierReference);
-        if (symbol == null)
-        {
-            throw new UnknownIdentifierReference(_identifierReference);
-        }
-
-        return AccessChain.Check(symbol.Type);
-    }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {

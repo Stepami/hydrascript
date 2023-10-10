@@ -1,7 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Exceptions;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
@@ -22,23 +20,6 @@ public class IndexAccess : AccessExpression
         {
             yield return Next;
         }
-    }
-
-    public override Type Check(Type prev)
-    {
-        if (prev is ArrayType arrayType)
-        {
-            var indexType = Index.NodeCheck();
-            if (indexType.Equals(TypeUtils.JavaScriptTypes.Number))
-            {
-                var elemType = arrayType.Type;
-                return HasNext() ? Next.Check(elemType) : elemType;
-            }
-
-            throw new ArrayAccessException(Segment, indexType);
-        }
-
-        return null;
     }
 
     protected override string NodeRepresentation() => "[]";

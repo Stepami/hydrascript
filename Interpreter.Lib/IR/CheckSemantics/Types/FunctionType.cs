@@ -1,5 +1,4 @@
 using System.Text;
-using Interpreter.Lib.IR.CheckSemantics.Types.Visitors;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types;
@@ -17,12 +16,6 @@ public class FunctionType : Type
     }
 
     public override Unit Accept(ReferenceResolver visitor) =>
-        visitor.Visit(this);
-        
-    public override string Accept(ObjectTypePrinter visitor) =>
-        visitor.Visit(this);
-        
-    public override int Accept(ObjectTypeHasher visitor) =>
         visitor.Visit(this);
         
     public override bool Equals(object obj)

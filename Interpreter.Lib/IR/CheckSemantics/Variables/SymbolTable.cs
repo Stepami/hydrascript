@@ -13,6 +13,12 @@ public class SymbolTable
         _openScope = table;
     }
 
+    /// <summary>
+    /// Список доступных идентификаторов в области видимости таблицы символов
+    /// </summary>
+    public IEnumerable<string> AvailableSymbolIds =>
+        _symbols.Keys.Concat(_openScope?.AvailableSymbolIds ?? Array.Empty<string>());
+
     public void AddSymbol(Symbol symbol) =>
         _symbols[symbol.Id] = symbol;
 
@@ -32,6 +38,4 @@ public class SymbolTable
     /// </summary>
     public bool ContainsSymbol(string id) =>
         _symbols.ContainsKey(id);
-
-    public void Clear() => _symbols.Clear();
 }

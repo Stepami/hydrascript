@@ -14,7 +14,7 @@ public class AsString : Simple
     {
         var frame = vm.Frames.Peek();
         frame[Left] = JsonSerializer.Serialize(
-            right.right.Get(frame),
+            Right.right.Get(frame),
             new JsonSerializerOptions
             {
                 WriteIndented = true,
@@ -28,5 +28,5 @@ public class AsString : Simple
     }
 
     protected override string ToStringInternal() =>
-        $"{Left} = {right.right} as string";
+        $"{Left} = {Right.right} as string";
 }
