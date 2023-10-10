@@ -29,7 +29,9 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
         _symbolTableInitializer = new SymbolTableInitializer(
             new SymbolTableInitializerService(),
             new StandardLibraryProvider());
-        _typeSystemLoader = new TypeSystemLoader(new TypeDeclarationsResolver());
+        _typeSystemLoader = new TypeSystemLoader(
+            new TypeDeclarationsResolver(
+                new JavaScriptTypesProvider()));
         _declarationVisitor = new DeclarationVisitor();
         
         _semanticChecker = new SemanticChecker(new DefaultValueForTypeCalculator());

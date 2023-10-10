@@ -7,22 +7,19 @@ namespace Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Im
 internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
     private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
+    private readonly IJavaScriptTypesProvider _provider;
+
+    public TypeDeclarationsResolver(IJavaScriptTypesProvider provider) =>
+        _provider = provider;
 
     public void Store(TypeDeclaration declaration) =>
         _declarationsToResolve.Enqueue(declaration);
 
     public void Resolve()
     {
-        // todo replace with provider
-        Type[] defaults =
-        {
-            new("number"),
-            new("boolean"),
-            new("string"),
-            new NullType(),
-            new("undefined"),
-            new("void")
-        };
+        var defaults = _provider.GetDefaultTypes()
+            .Select(x => new TypeSymbol(x))
+            .ToList();
 
         while (_declarationsToResolve.Any())
         {
@@ -35,16 +32,15 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
                     declarationToResolve.TypeId));
 
             var resolvingCandidates = declarationToResolve.SymbolTable
-                .AvailableSymbolIds
-                .Except(defaults.Select(x => x.ToString()));
+                .GetAvailableSymbols()
+                .OfType<TypeSymbol>()
+                .Except(defaults);
 
-            foreach (var refId in resolvingCandidates)
+            foreach (var referenceSymbol in resolvingCandidates)
             {
-                var referenceSymbol = declarationToResolve.SymbolTable
-                    .FindSymbol<TypeSymbol>(refId);
-                if (referenceSymbol is null)
-                    continue;
-                type.Accept(new ReferenceResolver(referenceSymbol.Type, refId));
+                type.Accept(new ReferenceResolver(
+                    referenceSymbol.Type,
+                    referenceSymbol.Id));
             }
         }
     }

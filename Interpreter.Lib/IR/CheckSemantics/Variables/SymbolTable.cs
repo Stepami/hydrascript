@@ -14,10 +14,10 @@ public class SymbolTable
     }
 
     /// <summary>
-    /// Список доступных идентификаторов в области видимости таблицы символов
+    /// Символы доступные в области видимости таблицы
     /// </summary>
-    public IEnumerable<string> AvailableSymbolIds =>
-        _symbols.Keys.Concat(_openScope?.AvailableSymbolIds ?? Array.Empty<string>());
+    public IEnumerable<Symbol> GetAvailableSymbols() =>
+        _symbols.Values.Concat(_openScope?.GetAvailableSymbols() ?? Array.Empty<Symbol>());
 
     public void AddSymbol(Symbol symbol) =>
         _symbols[symbol.Id] = symbol;
@@ -25,12 +25,12 @@ public class SymbolTable
     /// <summary>
     /// Поиск эффективного символа
     /// </summary>
-    public T FindSymbol<T>(string id) where T : Symbol
+    public TSymbol FindSymbol<TSymbol>(string id) where TSymbol : Symbol
     {
         var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
         return !hasInsideTheScope
-            ? _openScope?.FindSymbol<T>(id)
-            : symbol as T;
+            ? _openScope?.FindSymbol<TSymbol>(id)
+            : symbol as TSymbol;
     }
 
     /// <summary>
