@@ -1,5 +1,4 @@
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
-using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Impl;
@@ -21,15 +20,21 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
             .Select(x => new TypeSymbol(x))
             .ToList();
 
+        foreach (var declarationToResolve in _declarationsToResolve)
+        {
+            declarationToResolve.SymbolTable.AddSymbol(
+                new TypeSymbol(
+                    declarationToResolve.BuildType(),
+                    declarationToResolve.TypeId));
+        }
+
         while (_declarationsToResolve.Any())
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
-            var type = declarationToResolve.BuildType();
-            declarationToResolve.SymbolTable.AddSymbol(
-                new TypeSymbol(
-                    type,
-                    declarationToResolve.TypeId));
+            var type = declarationToResolve.SymbolTable
+                .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)
+                .Type;
 
             var resolvingCandidates = declarationToResolve.SymbolTable
                 .GetAvailableSymbols()
@@ -38,9 +43,9 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 
             foreach (var referenceSymbol in resolvingCandidates)
             {
-                type.Accept(new ReferenceResolver(
+                type.ResolveReference(
                     referenceSymbol.Type,
-                    referenceSymbol.Id));
+                    referenceSymbol.Id);
             }
         }
     }
