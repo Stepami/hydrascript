@@ -38,10 +38,10 @@ public class ObjectType : NullableType
         ISet<Type> visited = null)
     {
         visited ??= new HashSet<Type>();
-        if (visited.Contains(reference))
+        if (visited.Contains(this))
             return;
 
-        visited.Add(reference);
+        visited.Add(this);
 
         foreach (var key in Keys)
             if (refId == this[key])
