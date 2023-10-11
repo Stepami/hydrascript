@@ -66,8 +66,7 @@ public class ObjectTypeTests
             }
         );
 
-        new ReferenceResolver(linkedListType, "self")
-            .Visit(linkedListType);
+        linkedListType.ResolveReference(linkedListType, refId: "self");
             
         Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"])["next"]);
         Assert.Equal(linkedListType, array.Type);
@@ -87,7 +86,10 @@ public class ObjectTypeTests
                 new("prop", new Type("number"))
             }
         );
-        var ex = Record.Exception(() => new ReferenceResolver(objectType, "self").Visit(objectType));
+        var ex = Record.Exception(
+            () => objectType.ResolveReference(
+                objectType,
+                refId: "self"));
         Assert.Null(ex);
         Assert.Equal(objectType["next"], objectType);
     }
@@ -113,8 +115,7 @@ public class ObjectTypeTests
             }
         );
 
-        new ReferenceResolver(linkedListType, "self")
-            .Visit(linkedListType);
+        linkedListType.ResolveReference(linkedListType, refId: "self");
 
         Assert.Contains("@this", linkedListType.ToString());
     }
@@ -129,8 +130,7 @@ public class ObjectTypeTests
                 new("next", new Type("self"))
             }
         );
-        new ReferenceResolver(nodeType, "self")
-            .Visit(nodeType);
+        nodeType.ResolveReference(nodeType, refId: "self");
 
         var linkedListType = new ObjectType(
             new List<PropertyType>
@@ -144,8 +144,7 @@ public class ObjectTypeTests
                 new("copy", new FunctionType(new Type("self"), Array.Empty<Type>()))
             }
         );
-        new ReferenceResolver(linkedListType, "self")
-            .Visit(linkedListType);
+        linkedListType.ResolveReference(linkedListType, refId: "self");
 
         Assert.Contains("head: head;", linkedListType.ToString());
     }

@@ -1,23 +1,40 @@
 using System.Text;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types;
 
 public class FunctionType : Type
 {
-    public Type ReturnType { get; set; }
-        
-    public List<Type> Arguments { get; }
+    public Type ReturnType { get; private set; }
+
+    private readonly List<Type> _arguments;
+    public IReadOnlyList<Type> Arguments => _arguments;
 
     public FunctionType(Type returnType, IEnumerable<Type> arguments)
     {
         ReturnType = returnType;
-        Arguments = new List<Type>(arguments);
+        _arguments = new List<Type>(arguments);
     }
 
-    public override Unit Accept(ReferenceResolver visitor) =>
-        visitor.Visit(this);
-        
+    public override void ResolveReference(
+        Type reference,
+        string refId,
+        ISet<Type> visited = null)
+    {
+        if (ReturnType == refId)
+            ReturnType = reference;
+        else
+            ReturnType.ResolveReference(reference, refId, visited);
+
+        for (var i = 0; i < Arguments.Count; i++)
+        {
+            var argType = Arguments[i];
+            if (argType == refId)
+                _arguments[i] = reference;
+            else
+                argType.ResolveReference(reference, refId, visited);
+        }
+    }
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(this, obj)) return true;

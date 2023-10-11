@@ -1,18 +1,23 @@
-using Visitor.NET;
-
 namespace Interpreter.Lib.IR.CheckSemantics.Types;
 
 public class ArrayType : Type
 {
-    public Type Type { get; set; }
+    public Type Type { get; private set; }
 
-    public ArrayType(Type type) : base($"{type}[]")
-    {
+    public ArrayType(Type type) :
+        base($"{type}[]") =>
         Type = type;
+
+    public override void ResolveReference(
+        Type reference,
+        string refId,
+        ISet<Type> visited = null)
+    {
+        if (Type == refId)
+            Type = reference;
+        else
+            Type.ResolveReference(reference, refId, visited);
     }
-        
-    public override Unit Accept(ReferenceResolver visitor) =>
-        visitor.Visit(this);
 
     public override bool Equals(object obj)
     {

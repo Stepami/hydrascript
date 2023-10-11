@@ -1,5 +1,4 @@
 using System.Text;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Types;
 
@@ -17,6 +16,7 @@ public class ObjectType : NullableType
                 x => x.Id,
                 x => x.Type
             );
+
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
     }
@@ -26,14 +26,29 @@ public class ObjectType : NullableType
         get => _properties.TryGetValue(id, out var type)
             ? type
             : null;
-        set => _properties[id] = value;
+        private set => _properties[id] = value;
     }
 
     public IEnumerable<string> Keys =>
         _properties.Keys;
 
-    public override Unit Accept(ReferenceResolver visitor) =>
-        visitor.Visit(this);
+    public override void ResolveReference(
+        Type reference,
+        string refId,
+        ISet<Type> visited = null)
+    {
+        visited ??= new HashSet<Type>();
+        if (visited.Contains(reference))
+            return;
+
+        visited.Add(reference);
+
+        foreach (var key in Keys)
+            if (refId == this[key])
+                this[key] = reference;
+            else
+                this[key].ResolveReference(reference, refId, visited);
+    }
 
     public override bool Equals(object obj)
     {
@@ -54,8 +69,12 @@ public class ObjectType : NullableType
     public override int GetHashCode() =>
         _hasher.HashObjectType(this);
 
-    public override string ToString() =>
-        _serializer.PrintObjectType(this);
+    public override string ToString()
+    {
+        var result = _serializer.PrintObjectType(this);
+        _serializer.Clear();
+        return result;
+    }
 
     private class ObjectTypeHasher
     {
@@ -64,7 +83,6 @@ public class ObjectType : NullableType
         public ObjectTypeHasher(ObjectType reference) =>
             _reference = reference;
 
-        // ReSharper disable once SuggestBaseTypeForParameter
         private int Hash(Type type) => type switch
         {
             ArrayType arrayType => HashArrayType(arrayType),
@@ -115,7 +133,8 @@ public class ObjectType : NullableType
             _visited = new HashSet<Type>();
         }
 
-        // ReSharper disable once SuggestBaseTypeForParameter
+        public void Clear() => _visited.Clear();
+
         private string Print(Type type) => type switch
         {
             ArrayType arrayType => PrintArrayType(arrayType),
