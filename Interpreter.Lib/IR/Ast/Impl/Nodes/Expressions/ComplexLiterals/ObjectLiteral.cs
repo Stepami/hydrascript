@@ -1,5 +1,5 @@
 using Interpreter.Lib.BackEnd;
-using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET;

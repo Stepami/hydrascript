@@ -1,5 +1,6 @@
 using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Xunit;
 

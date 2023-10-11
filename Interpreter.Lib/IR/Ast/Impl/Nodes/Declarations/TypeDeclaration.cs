@@ -1,6 +1,5 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
 using Visitor.NET;
 
@@ -19,7 +18,7 @@ public class TypeDeclaration : Declaration
 
     public Type BuildType() =>
         _typeValue.BuildType(SymbolTable);
-        
+
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
         yield break;
@@ -29,10 +28,7 @@ public class TypeDeclaration : Declaration
         $"type {TypeId} = {_typeValue}";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) => new();
-    
+
     public override Unit Accept(TypeSystemLoader visitor) =>
         visitor.Visit(this);
-
-    public override Unit Accept(DeclarationVisitor visitor) =>
-        default;
 }

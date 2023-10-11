@@ -1,4 +1,4 @@
-using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
