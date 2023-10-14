@@ -32,9 +32,8 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
-            var type = declarationToResolve.SymbolTable
-                .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)
-                .Type;
+            var typeSymbol = declarationToResolve.SymbolTable
+                .FindSymbol<TypeSymbol>(declarationToResolve.TypeId);
 
             var resolvingCandidates = declarationToResolve.SymbolTable
                 .GetAvailableSymbols()
@@ -43,10 +42,11 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 
             foreach (var referenceSymbol in resolvingCandidates)
             {
-                type.ResolveReference(
+                typeSymbol.Type.ResolveReference(
                     referenceSymbol.Type,
                     referenceSymbol.Id);
             }
+            typeSymbol.SetInitialized();
         }
     }
 }
