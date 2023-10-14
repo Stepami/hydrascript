@@ -1,8 +1,11 @@
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
+using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service;
 using Visitor.NET;
@@ -15,7 +18,9 @@ public class SemanticChecker :
     IVisitor<InsideStatementJump, Type>,
     IVisitor<ReturnStatement, Type>,
     IVisitor<IdentifierReference, Type>,
-    IVisitor<ImplicitLiteral, Type>
+    IVisitor<ImplicitLiteral, Type>,
+    IVisitor<ArrayLiteral, Type>,
+    IVisitor<ConditionalExpression, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
 
@@ -99,5 +104,36 @@ public class SemanticChecker :
         var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
+    }
+
+    public Type Visit(ArrayLiteral visitable)
+    {
+        if (!visitable.Expressions.Any())
+            return "undefined";
+
+        var type = visitable.First().Accept(this);
+        if (visitable.Expressions.All(e => e.Accept(this).Equals(type)))
+            return new ArrayType(type);
+
+        throw new WrongArrayLiteralDeclaration(visitable.Segment, type);
+    }
+
+    public Type Visit(ConditionalExpression visitable)
+    {
+        var tType = visitable.Test.Accept(this);
+        Type boolean = "boolean";
+        if (!tType.Equals(boolean))
+            throw new NotBooleanTestExpression(visitable.Test.Segment, tType);
+
+        var cType = visitable.Consequent.Accept(this);
+        var aType = visitable.Alternate.Accept(this);
+        if (cType.Equals(aType))
+            return cType;
+
+        throw new WrongConditionalTypes(
+            cSegment: visitable.Consequent.Segment,
+            cType,
+            aSegment: visitable.Alternate.Segment,
+            aType);
     }
 }
