@@ -1,6 +1,7 @@
 using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Xunit;
 
@@ -19,7 +20,9 @@ public class AstNodeTests
         // ReSharper disable once UnusedVariable
         var func = new FunctionDeclaration(
             name: Guid.NewGuid().ToString(),
-            new TypeIdentValue(TypeId: Guid.NewGuid().ToString()),
+            new TypeIdentValue(
+                TypeId: new IdentifierReference(
+                    name: Guid.NewGuid().ToString())),
             arguments: new List<PropertyTypeValue>(),
             new BlockStatement(stmtItemList));
 

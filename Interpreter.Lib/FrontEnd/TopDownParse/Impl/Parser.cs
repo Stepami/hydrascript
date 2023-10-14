@@ -41,11 +41,7 @@ public class Parser : IParser
         if (_tokens.Current!.Value != (expectedValue ?? _tokens.Current.Value))
             throw new ParserException(_tokens.Current.Segment, expectedValue, _tokens.Current);
 
-        if (CurrentIs(expectedTag) && _tokens.Current.Value == (expectedValue ?? _tokens.Current.Value))
-        {
-            _tokens.MoveNext();
-        }
-
+        _tokens.MoveNext();
         return current;
     }
 
@@ -207,7 +203,10 @@ public class Parser : IParser
         Expect("Assign");
         var type = TypeValue();
 
-        return new TypeDeclaration(ident.Value, type) { Segment = typeWord.Segment + ident.Segment };
+        var typeId = new IdentifierReference(name: ident.Value)
+            { Segment = ident.Segment };
+
+        return new TypeDeclaration(typeId, type) { Segment = typeWord.Segment + ident.Segment };
     }
 
     private TypeValue TypeValue()
@@ -215,7 +214,9 @@ public class Parser : IParser
         if (CurrentIs("Ident"))
         {
             var ident = Expect("Ident");
-            var identType = new TypeIdentValue(ident.Value);
+            var identType = new TypeIdentValue(
+                TypeId: new IdentifierReference(name: ident.Value)
+                    { Segment = ident.Segment });
 
             return WithSuffix(identType);
         }
@@ -329,9 +330,12 @@ public class Parser : IParser
             args.Add(new PropertyTypeValue(arg, type));
         }
 
-        Expect("RightParen");
+        var rp = Expect("RightParen");
 
-        TypeValue returnType = new TypeIdentValue(TypeId: "undefined");
+        TypeValue returnType = new TypeIdentValue(
+            TypeId: new IdentifierReference(name: "undefined")
+                { Segment = rp.Segment });
+
         if (CurrentIs("Colon"))
         {
             Expect("Colon");
@@ -667,7 +671,9 @@ public class Parser : IParser
         {
             var str = Expect("StringLiteral");
             return new Literal(
-                new TypeIdentValue(TypeId: "string"),
+                new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "string")
+                        {Segment = str.Segment}),
                 value: Regex.Unescape(str.Value.Trim('"')),
                 segment,
                 label: str.Value
@@ -678,22 +684,30 @@ public class Parser : IParser
         return _tokens.Current.Type.Tag switch
         {
             "NullLiteral" => new Literal(
-                new TypeIdentValue(TypeId: "null"),
+                new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "null")
+                        { Segment = _tokens.Current.Segment }),
                 Expect("NullLiteral").Value == "null" ? null : string.Empty,
-                segment, 
+                segment,
                 label: "null"),
             "IntegerLiteral" => new Literal(
-                new TypeIdentValue(TypeId: "number"),
+                new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "number")
+                        { Segment = _tokens.Current.Segment }),
                 value: double.Parse(Expect("IntegerLiteral").Value),
                 segment),
             "FloatLiteral" => new Literal(
-                new TypeIdentValue(TypeId: "number"),
+                new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "number")
+                        { Segment = _tokens.Current.Segment }),
                 value: double.Parse(
                     Expect("FloatLiteral").Value,
                     CultureInfo.InvariantCulture),
                 segment),
             "BooleanLiteral" => new Literal(
-                new TypeIdentValue(TypeId: "boolean"),
+                new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "boolean")
+                        { Segment = _tokens.Current.Segment }),
                 value: bool.Parse(Expect("BooleanLiteral").Value),
                 segment),
             _ => throw new ParserException("There are no more supported literals")
@@ -732,8 +746,10 @@ public class Parser : IParser
                         Expect("Comma");
                     }
                 }
-                Expect("RightParen");
-                TypeValue returnType = new TypeIdentValue(TypeId: "undefined");
+                var rp = Expect("RightParen");
+                TypeValue returnType = new TypeIdentValue(
+                    TypeId: new IdentifierReference(name: "undefined")
+                        { Segment = rp.Segment });
                 if (CurrentIs("Colon"))
                 {
                     Expect("Colon");

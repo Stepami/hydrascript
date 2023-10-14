@@ -31,7 +31,8 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
             new StandardLibraryProvider());
         _typeSystemLoader = new TypeSystemLoader(
             new TypeDeclarationsResolver(
-                new JavaScriptTypesProvider()));
+                new JavaScriptTypesProvider()),
+            new JavaScriptTypesProvider());
         _declarationVisitor = new DeclarationVisitor();
         
         _semanticChecker = new SemanticChecker(new DefaultValueForTypeCalculator());

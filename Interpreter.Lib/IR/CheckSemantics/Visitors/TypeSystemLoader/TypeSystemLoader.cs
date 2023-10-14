@@ -1,6 +1,7 @@
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
+using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service;
 using Visitor.NET;
@@ -13,9 +14,15 @@ public class TypeSystemLoader :
     IVisitor<TypeDeclaration>
 {
     private readonly ITypeDeclarationsResolver _resolver;
+    private readonly ISet<Type> _defaultTypes;
 
-    public TypeSystemLoader(ITypeDeclarationsResolver resolver) =>
+    public TypeSystemLoader(
+        ITypeDeclarationsResolver resolver,
+        IJavaScriptTypesProvider provider)
+    {
         _resolver = resolver;
+        _defaultTypes = provider.GetDefaultTypes().ToHashSet();
+    }
 
     public Unit Visit(ScriptBody visitable)
     {
@@ -34,9 +41,13 @@ public class TypeSystemLoader :
 
     public Unit Visit(TypeDeclaration visitable)
     {
+        if (visitable.SymbolTable.ContainsSymbol(visitable.TypeId) ||
+            _defaultTypes.Contains(visitable.TypeId.Name))
+            throw new DeclarationAlreadyExists(visitable.TypeId);
+
         visitable.SymbolTable.AddSymbol(
             new TypeSymbol(
-                visitable.TypeId,
+                visitable.TypeId.Name,
                 visitable.TypeId));
 
         _resolver.Store(visitable);

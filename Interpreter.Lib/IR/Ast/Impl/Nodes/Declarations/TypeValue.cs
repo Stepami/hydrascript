@@ -1,3 +1,4 @@
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
@@ -11,12 +12,12 @@ public abstract record TypeValue
 }
 
 public record TypeIdentValue(
-    string TypeId
+    IdentifierReference TypeId
 ) : TypeValue
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         symbolTable.FindSymbol<TypeSymbol>(TypeId)?.Type ??
-        throw new TypeDoNotExists(TypeId);
+        throw new UnknownIdentifierReference(TypeId);
 }
 
 public record ArrayTypeValue(

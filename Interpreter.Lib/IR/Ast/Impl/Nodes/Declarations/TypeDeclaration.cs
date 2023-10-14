@@ -1,4 +1,5 @@
 using Interpreter.Lib.BackEnd;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
 using Visitor.NET;
@@ -8,9 +9,9 @@ namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 public class TypeDeclaration : Declaration
 {
     private readonly TypeValue _typeValue;
-    public string TypeId { get; }
+    public IdentifierReference TypeId { get; }
 
-    public TypeDeclaration(string typeId, TypeValue typeValue)
+    public TypeDeclaration(IdentifierReference typeId, TypeValue typeValue)
     {
         TypeId = typeId;
         _typeValue = typeValue;
@@ -25,7 +26,7 @@ public class TypeDeclaration : Declaration
     }
 
     protected override string NodeRepresentation() =>
-        $"type {TypeId} = {_typeValue}";
+        $"type {TypeId.Name} = {_typeValue}";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) => new();
 
