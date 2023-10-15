@@ -9,7 +9,6 @@ public abstract class Expression : AbstractSyntaxTreeNode,
 {
     protected Expression()
     {
-        CanEvaluate = true;
     }
 
     public abstract AddressedInstructions Accept(ExpressionInstructionProvider visitor);

@@ -22,8 +22,6 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
 
     public SymbolTable SymbolTable { get; set; }
 
-    public bool CanEvaluate { get; protected init; }
-
     public Segment Segment { get; init; }
 
     internal List<AbstractSyntaxTreeNode> GetAllNodes()
@@ -71,7 +69,8 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     public virtual Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
 
-    public virtual Type Accept(SemanticChecker visitor) => default;
+    public virtual Type Accept(SemanticChecker visitor) =>
+        "undefined";
 
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 

@@ -1,3 +1,4 @@
+using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
@@ -13,6 +14,7 @@ using Visitor.NET;
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 
 public class SemanticChecker :
+    IVisitor<ScriptBody, Type>,
     IVisitor<WhileStatement, Type>,
     IVisitor<IfStatement, Type>,
     IVisitor<InsideStatementJump, Type>,
@@ -26,6 +28,15 @@ public class SemanticChecker :
 
     public SemanticChecker(IDefaultValueForTypeCalculator calculator) =>
         _calculator = calculator;
+
+
+    public Type Visit(ScriptBody visitable)
+    {
+        foreach (var statementListItem in visitable.StatementList)
+            statementListItem.Accept(this);
+
+        return "undefined";
+    }
 
     public Type Visit(WhileStatement visitable)
     {

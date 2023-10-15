@@ -23,8 +23,6 @@ public class IfStatement : Statement
             Else = @else;
             Else.Parent = this;
         }
-
-        CanEvaluate = true;
     }
 
     public bool Empty() =>

@@ -1,5 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
 using Visitor.NET;
@@ -21,12 +22,15 @@ public class ScriptBody : AbstractSyntaxTreeNode
 
     protected override string NodeRepresentation() => "Script";
 
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
-        visitor.Visit(this);
-
     public override Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 
     public override Unit Accept(TypeSystemLoader visitor) =>
+        visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
+        visitor.Visit(this);
+
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }

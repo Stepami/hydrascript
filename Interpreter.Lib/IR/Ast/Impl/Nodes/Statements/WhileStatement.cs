@@ -16,8 +16,6 @@ public class WhileStatement : Statement
 
         Statement = statement;
         Statement.Parent = this;
-
-        CanEvaluate = true;
     }
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()

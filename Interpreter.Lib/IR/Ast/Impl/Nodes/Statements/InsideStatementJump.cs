@@ -13,7 +13,6 @@ public class InsideStatementJump : Statement
 
     public InsideStatementJump(string keyword)
     {
-        CanEvaluate = true;
         Keyword = keyword;
     }
 

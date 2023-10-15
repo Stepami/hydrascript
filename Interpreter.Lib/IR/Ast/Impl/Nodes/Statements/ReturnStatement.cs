@@ -11,7 +11,6 @@ public class ReturnStatement : Statement
     public ReturnStatement(Expression expression = null)
     {
         Expression = expression;
-        CanEvaluate = true;
         if (expression is not null)
         {
             Expression.Parent = this;
