@@ -342,7 +342,8 @@ public class Parser : IParser
             returnType = TypeValue();
         }
 
-        return new FunctionDeclaration(ident.Value, returnType, args, BlockStatement())
+        var name = new IdentifierReference(ident.Value) { Segment = ident.Segment };
+        return new FunctionDeclaration(name, returnType, args, BlockStatement())
             { Segment = ident.Segment };
     }
 
@@ -737,10 +738,10 @@ public class Parser : IParser
                 var args = new List<PropertyTypeValue>();
                 while (CurrentIs("Ident"))
                 {
-                    var name = Expect("Ident").Value;
+                    var paramName = Expect("Ident").Value;
                     Expect("Colon");
                     var type = TypeValue();
-                    args.Add(new PropertyTypeValue(name, type));
+                    args.Add(new PropertyTypeValue(paramName, type));
                     if (!CurrentIs("RightParen"))
                     {
                         Expect("Comma");
@@ -756,7 +757,8 @@ public class Parser : IParser
                     returnType = TypeValue();
                 }
 
-                methods.Add(new FunctionDeclaration(idToken.Value, returnType, args, BlockStatement())
+                var name = new IdentifierReference(idToken.Value) { Segment = idToken.Segment };
+                methods.Add(new FunctionDeclaration(name, returnType, args, BlockStatement())
                     { Segment = idToken.Segment }
                 );
             }

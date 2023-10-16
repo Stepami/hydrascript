@@ -19,7 +19,7 @@ public class AstNodeTests
         };
         // ReSharper disable once UnusedVariable
         var func = new FunctionDeclaration(
-            name: Guid.NewGuid().ToString(),
+            name: new IdentifierReference(name: Guid.NewGuid().ToString()),
             new TypeIdentValue(
                 TypeId: new IdentifierReference(
                     name: Guid.NewGuid().ToString())),

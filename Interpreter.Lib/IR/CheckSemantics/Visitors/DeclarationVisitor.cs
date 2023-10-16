@@ -1,5 +1,6 @@
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
+using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Visitor.NET;
@@ -23,6 +24,9 @@ public class DeclarationVisitor :
     {
         foreach (var assignment in visitable.Assignments)
         {
+            if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
+                throw new DeclarationAlreadyExists(assignment.Destination.Id);
+            
             var destinationType = assignment.DestinationType?.BuildType(
                 assignment.SymbolTable) ?? "undefined";
             visitable.SymbolTable.AddSymbol(
@@ -37,6 +41,9 @@ public class DeclarationVisitor :
 
     public Unit Visit(FunctionDeclaration visitable)
     {
+        if (visitable.SymbolTable.ContainsSymbol(visitable.Name))
+            throw new DeclarationAlreadyExists(visitable.Name);
+
         var parameters = visitable.Arguments.Select(x =>
         {
             var arg = new VariableSymbol(

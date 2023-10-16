@@ -1,5 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
@@ -10,7 +11,7 @@ namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
 public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    public string Name { get; }
+    public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
     public List<PropertyTypeValue> Arguments { get; }
     public BlockStatement Statements { get; }
@@ -19,7 +20,7 @@ public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         Parent as ObjectLiteral;
 
     public FunctionDeclaration(
-        string name,
+        IdentifierReference name,
         TypeValue returnTypeValue,
         List<PropertyTypeValue> arguments,
         BlockStatement blockStatement)
@@ -43,7 +44,7 @@ public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     }
 
     protected override string NodeRepresentation() =>
-        $"function {Name}";
+        "function " + Name;
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
