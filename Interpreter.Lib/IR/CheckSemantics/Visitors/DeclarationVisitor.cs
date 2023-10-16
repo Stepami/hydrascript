@@ -1,5 +1,7 @@
 using Interpreter.Lib.IR.Ast;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
+using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
@@ -26,14 +28,19 @@ public class DeclarationVisitor :
         {
             if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
-            
+
             var destinationType = assignment.DestinationType?.BuildType(
                 assignment.SymbolTable) ?? "undefined";
+
+            if (destinationType == "undefined" &&
+                assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
+                throw new DeclarationWithoutInitializer(assignment.Destination.Id, visitable.ReadOnly);
+
             visitable.SymbolTable.AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
                     destinationType,
-                    visitable.Readonly));
+                    visitable.ReadOnly));
         }
 
         return default;

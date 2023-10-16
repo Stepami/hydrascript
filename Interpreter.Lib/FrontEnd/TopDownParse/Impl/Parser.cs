@@ -368,7 +368,13 @@ public class Parser : IParser
     {
         var ident = Expect("Ident");
         var identRef = new IdentifierReference(ident.Value) { Segment = ident.Segment };
-        AssignmentExpression assignment = null;
+        var assignment = new AssignmentExpression(
+                new MemberExpression(identRef),
+                new ImplicitLiteral(
+                    new TypeIdentValue(
+                        new IdentifierReference("undefined"))))
+            { Segment = ident.Segment };
+
         if (CurrentIs("Assign"))
         {
             var assignSegment = Expect("Assign").Segment;

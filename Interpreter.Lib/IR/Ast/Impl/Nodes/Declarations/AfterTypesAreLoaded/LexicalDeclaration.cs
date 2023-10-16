@@ -8,12 +8,12 @@ namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
 public class LexicalDeclaration : AfterTypesAreLoadedDeclaration
 {
-    public bool Readonly { get; }
+    public bool ReadOnly { get; }
     public List<AssignmentExpression> Assignments { get; }
 
-    public LexicalDeclaration(bool @readonly)
+    public LexicalDeclaration(bool readOnly)
     {
-        Readonly = @readonly;
+        ReadOnly = readOnly;
         Assignments = new();
     }
 
@@ -27,7 +27,7 @@ public class LexicalDeclaration : AfterTypesAreLoadedDeclaration
         Assignments.GetEnumerator();
 
     protected override string NodeRepresentation() =>
-        Readonly ? "const" : "let";
+        ReadOnly ? "const" : "let";
 
     public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
