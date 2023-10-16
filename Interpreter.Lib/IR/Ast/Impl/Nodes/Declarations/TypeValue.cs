@@ -18,6 +18,8 @@ public record TypeIdentValue(
     public override Type BuildType(SymbolTable symbolTable) =>
         symbolTable.FindSymbol<TypeSymbol>(TypeId)?.Type ??
         throw new UnknownIdentifierReference(TypeId);
+
+    public override string ToString() => TypeId;
 }
 
 public record ArrayTypeValue(
@@ -26,6 +28,8 @@ public record ArrayTypeValue(
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         new ArrayType(TypeValue.BuildType(symbolTable));
+
+    public override string ToString() => $"{TypeValue}[]";
 }
 
 public record NullableTypeValue(
@@ -34,11 +38,17 @@ public record NullableTypeValue(
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         new NullableType(TypeValue.BuildType(symbolTable));
+
+    public override string ToString() => $"{TypeValue}?";
 }
 
 public record PropertyTypeValue(
     string Key,
-    TypeValue TypeValue);
+    TypeValue TypeValue)
+{
+    public override string ToString() =>
+        $"{Key}: {TypeValue}";
+};
 
 public record ObjectTypeValue(
     IEnumerable<PropertyTypeValue> Properties
@@ -49,6 +59,9 @@ public record ObjectTypeValue(
             Properties.Select(x => new PropertyType(
                 Id: x.Key,
                 x.TypeValue.BuildType(symbolTable))));
+
+    public override string ToString() =>
+        $"{{{string.Join(';', Properties)}}}";
 }
 
 public record FunctionTypeValue(
@@ -60,4 +73,7 @@ public record FunctionTypeValue(
         new FunctionType(
             ReturnTypeValue.BuildType(symbolTable),
             Arguments.Select(x => x.BuildType(symbolTable)));
+
+    public override string ToString() =>
+        $"({string.Join(',', Arguments)}) => {ReturnTypeValue}";
 }
