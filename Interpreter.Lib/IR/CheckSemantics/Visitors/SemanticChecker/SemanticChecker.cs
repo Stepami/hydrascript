@@ -45,9 +45,7 @@ public class SemanticChecker :
         var condType = visitable.Condition.Accept(this);
         Type boolean = "boolean";
         if (!condType.Equals(boolean))
-        {
             throw new NotBooleanTestExpression(visitable.Segment, condType);
-        }
 
         return default;
     }
@@ -57,10 +55,8 @@ public class SemanticChecker :
         var testType = visitable.Test.Accept(this);
         Type boolean = "boolean";
         if (!testType.Equals(boolean))
-        {
             throw new NotBooleanTestExpression(visitable.Segment, testType);
-        }
-        
+
         return default;
     }
     
@@ -90,9 +86,7 @@ public class SemanticChecker :
     public Type Visit(ReturnStatement visitable)
     {
         if (!visitable.ChildOf<FunctionDeclaration>())
-        {
             throw new ReturnOutsideFunction(visitable.Segment);
-        }
 
         return visitable.Expression?.Accept(this) ?? "void";
     }
