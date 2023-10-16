@@ -99,10 +99,8 @@ public class SemanticChecker :
         var symbol = visitable.SymbolTable.FindSymbol<Symbol>(visitable.Name);
         return symbol switch
         {
-            { State: SymbolState.Declared } => throw new NotSupportedException(), // todo symbol not init error 
-            { State: SymbolState.Initialized } => symbol.Type,
-            null => throw new UnknownIdentifierReference(visitable),
-            _ => throw new ArgumentOutOfRangeException(nameof(symbol))
+            not null => symbol.Type,
+            null => throw new UnknownIdentifierReference(visitable)
         };
     }
 

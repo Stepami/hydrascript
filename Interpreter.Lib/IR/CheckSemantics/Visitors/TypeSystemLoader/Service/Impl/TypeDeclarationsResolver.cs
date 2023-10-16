@@ -46,7 +46,6 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
                     referenceSymbol.Type,
                     referenceSymbol.Id);
             }
-            typeSymbol.SetInitialized();
         }
     }
 }
