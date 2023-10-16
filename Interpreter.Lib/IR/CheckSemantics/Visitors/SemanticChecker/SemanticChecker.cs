@@ -22,7 +22,9 @@ public class SemanticChecker :
     IVisitor<IdentifierReference, Type>,
     IVisitor<ImplicitLiteral, Type>,
     IVisitor<ArrayLiteral, Type>,
-    IVisitor<ConditionalExpression, Type>
+    IVisitor<ConditionalExpression, Type>,
+    IVisitor<BinaryExpression, Type>,
+    IVisitor<UnaryExpression, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
 
@@ -146,5 +148,61 @@ public class SemanticChecker :
             cType,
             aSegment: visitable.Alternate.Segment,
             aType);
+    }
+
+    public Type Visit(BinaryExpression visitable)
+    {
+        var lType = visitable.Left.Accept(this);
+        var rType = visitable.Right.Accept(this);
+
+        if (visitable.Operator != "::" && !lType.Equals(rType))
+            throw new IncompatibleTypesOfOperands(
+                visitable.Segment,
+                left: lType,
+                right: rType);
+
+        Type number = "number";
+        Type @string = "string";
+        Type boolean = "boolean";
+
+        return visitable.Operator switch
+        {
+            "+" when lType.Equals(number) => number,
+            "+" when lType.Equals(@string) => @string,
+            "+" => throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
+            "-" or "*" or "/" or "%" => lType.Equals(number)
+                ? number
+                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
+            "||" or "&&" => lType.Equals(boolean)
+                ? boolean
+                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
+            "==" or "!=" => boolean,
+            ">" or ">=" or "<" or "<=" => lType.Equals(number)
+                ? boolean
+                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
+            "++" => lType is ArrayType && rType is ArrayType
+                ? lType
+                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
+            "::" when lType is not ArrayType => throw new UnsupportedOperation(visitable.Segment, lType,
+                visitable.Operator),
+            "::" => rType.Equals(number) ? "void" : throw new ArrayAccessException(visitable.Segment, rType),
+            _ => "undefined"
+        };
+    }
+
+    public Type Visit(UnaryExpression visitable)
+    {
+        var eType = visitable.Expression.Accept(this);
+
+        Type number = "number";
+        Type boolean = "boolean";
+
+        return visitable.Operator switch
+        {
+            "-" when eType.Equals(number) => number,
+            "!" when eType.Equals(boolean) => boolean,
+            "~" when eType is ArrayType => number,
+            _ => throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator)
+        };
     }
 }

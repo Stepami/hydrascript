@@ -1,5 +1,6 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -27,6 +28,9 @@ public class BinaryExpression : Expression
     }
 
     protected override string NodeRepresentation() => Operator;
+
+    public override Type Accept(SemanticChecker visitor) =>
+        visitor.Visit(this);
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
         visitor.Visit(this);
