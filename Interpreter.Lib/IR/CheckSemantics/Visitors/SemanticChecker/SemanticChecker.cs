@@ -98,7 +98,7 @@ public class SemanticChecker :
     public Type Visit(IdentifierReference visitable)
     {
         if (visitable.ChildOf<DotAccess>())
-            return null;
+            return "undefined";
 
         var symbol = visitable.SymbolTable.FindSymbol<Symbol>(visitable.Name);
         return symbol switch
