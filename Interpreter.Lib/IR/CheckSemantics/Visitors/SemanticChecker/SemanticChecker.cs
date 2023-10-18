@@ -27,7 +27,11 @@ public class SemanticChecker :
     IVisitor<BinaryExpression, Type>,
     IVisitor<UnaryExpression, Type>,
     IVisitor<LexicalDeclaration, Type>,
-    IVisitor<AssignmentExpression, Type>
+    IVisitor<AssignmentExpression, Type>,
+    IVisitor<MemberExpression, Type>,
+    IVisitor<IndexAccess, Type>,
+    IVisitor<DotAccess, Type>,
+    IVisitor<CastAsExpression, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
 
@@ -99,15 +103,8 @@ public class SemanticChecker :
 
     public Type Visit(IdentifierReference visitable)
     {
-        if (visitable.ChildOf<DotAccess>())
-            return "undefined";
-
         var symbol = visitable.SymbolTable.FindSymbol<Symbol>(visitable.Name);
-        return symbol switch
-        {
-            not null => symbol.Type,
-            null => throw new UnknownIdentifierReference(visitable)
-        };
+        return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
     public Type Visit(ImplicitLiteral visitable)
@@ -262,5 +259,55 @@ public class SemanticChecker :
                 right: sourceType);
 
         return symbol.Type;
+    }
+
+    public Type Visit(MemberExpression visitable)
+    {
+        var idType = visitable.Id.Accept(this);
+        visitable.ComputedIdType = idType;
+        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(this);
+    }
+
+    public Type Visit(IndexAccess visitable)
+    {
+        var prevType =
+            visitable.Prev?.ComputedType
+            ?? (visitable.Parent as MemberExpression)!.ComputedIdType;
+
+        if (prevType is not ArrayType arrayType)
+            throw new NonAccessibleType(prevType);
+
+        Type number = "number";
+        var indexType = visitable.Accept(this);
+        if (!indexType.Equals(number))
+            throw new ArrayAccessException(visitable.Segment, indexType);
+
+        var elemType = arrayType.Type;
+        visitable.ComputedType = elemType;
+        return visitable.HasNext() ? visitable.Next.Accept(this) : elemType;
+    }
+
+    public Type Visit(DotAccess visitable)
+    {
+        var prevType =
+            visitable.Prev?.ComputedType
+            ?? (visitable.Parent as MemberExpression)!.ComputedIdType;
+
+        if (prevType is not ObjectType objectType)
+            throw new NonAccessibleType(prevType);
+
+        var fieldType =
+            objectType[visitable.Property]
+            ?? throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
+        visitable.ComputedType = fieldType;
+        return visitable.HasNext() ? visitable.Next.Accept(this) : fieldType;
+    }
+
+    public Type Visit(CastAsExpression visitable)
+    {
+        visitable.Expression.Accept(this);
+        return visitable.Cast.BuildType(visitable.SymbolTable) == "string"
+            ? "string"
+            : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
     }
 }

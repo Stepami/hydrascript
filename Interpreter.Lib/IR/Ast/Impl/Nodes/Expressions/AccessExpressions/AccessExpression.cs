@@ -1,3 +1,5 @@
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
+
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
 public abstract class AccessExpression : Expression
@@ -6,6 +8,8 @@ public abstract class AccessExpression : Expression
 
     public AccessExpression Prev =>
         Parent as AccessExpression;
+
+    public Type ComputedType { get; set; }
 
     protected AccessExpression(AccessExpression prev)
     {
@@ -21,4 +25,6 @@ public abstract class AccessExpression : Expression
 
     public bool HasPrev() =>
         Prev is not null;
+
+    public abstract override Type Accept(SemanticChecker visitor);
 }
