@@ -25,8 +25,8 @@ If applicable, add screenshots/logs to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. macOS]
- - Platform [e.g. arm64]
- - Version [e.g. 1.2.6]
+ - Platform: [e.g. arm64]
+ - Version: [e.g. 1.2.6]
 
 
 **Additional context**
