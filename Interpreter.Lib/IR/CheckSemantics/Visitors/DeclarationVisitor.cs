@@ -34,13 +34,14 @@ public class DeclarationVisitor :
 
             if (destinationType == "undefined" &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
-                throw new DeclarationWithoutInitializer(assignment.Destination.Id, visitable.ReadOnly);
+                throw visitable.ReadOnly
+                    ? new ConstWithoutInitializer(assignment.Destination.Id)
+                    : new CannotDefineType(assignment.Destination.Id.Segment);
 
             visitable.SymbolTable.AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
-                    destinationType,
-                    visitable.ReadOnly));
+                    destinationType));
         }
 
         return default;

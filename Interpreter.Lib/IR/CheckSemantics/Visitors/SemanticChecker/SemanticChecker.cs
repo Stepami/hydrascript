@@ -19,12 +19,15 @@ public class SemanticChecker :
     IVisitor<IfStatement, Type>,
     IVisitor<InsideStatementJump, Type>,
     IVisitor<ReturnStatement, Type>,
+    IVisitor<ExpressionStatement, Type>,
     IVisitor<IdentifierReference, Type>,
     IVisitor<ImplicitLiteral, Type>,
     IVisitor<ArrayLiteral, Type>,
     IVisitor<ConditionalExpression, Type>,
     IVisitor<BinaryExpression, Type>,
-    IVisitor<UnaryExpression, Type>
+    IVisitor<UnaryExpression, Type>,
+    IVisitor<LexicalDeclaration, Type>,
+    IVisitor<AssignmentExpression, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
 
@@ -90,6 +93,9 @@ public class SemanticChecker :
 
         return visitable.Expression?.Accept(this) ?? "void";
     }
+
+    public Type Visit(ExpressionStatement visitable) =>
+        visitable.Expression.Accept(this);
 
     public Type Visit(IdentifierReference visitable)
     {
@@ -196,5 +202,65 @@ public class SemanticChecker :
             "~" when eType is ArrayType => number,
             _ => throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator)
         };
+    }
+
+    public Type Visit(LexicalDeclaration visitable)
+    {
+        Type undefined = "undefined";
+
+        foreach (var assignment in visitable.Assignments)
+        {
+            var registeredSymbol = visitable.SymbolTable.FindSymbol<VariableSymbol>(
+                assignment.Destination.Id);
+            var sourceType = assignment.Source.Accept(this);
+            if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
+                throw new IncompatibleTypesOfOperands(
+                    assignment.Segment,
+                    left: registeredSymbol.Type,
+                    right: sourceType);
+
+            var actualSymbol = sourceType switch
+            {
+                ObjectType objectType => new ObjectSymbol(registeredSymbol.Id, objectType, visitable.ReadOnly),
+                _ => new VariableSymbol(registeredSymbol.Id, sourceType, visitable.ReadOnly)
+            };
+            visitable.SymbolTable.AddSymbol(actualSymbol);
+        }
+
+        return undefined;
+    }
+
+    public Type Visit(AssignmentExpression visitable)
+    {
+        if (visitable.Destination is CallExpression)
+            throw new WrongAssignmentTarget(visitable.Destination);
+
+        var sourceType = visitable.Source.Accept(this);
+        if (!visitable.Destination.Empty())
+        {
+            var destinationType = visitable.Destination.Accept(this);
+            if (!destinationType.Equals(sourceType))
+                throw new IncompatibleTypesOfOperands(
+                    visitable.Segment,
+                    left: destinationType,
+                    right: sourceType);
+            return destinationType;
+        }
+
+        var symbol =
+            visitable.SymbolTable.FindSymbol<VariableSymbol>(
+                visitable.Destination.Id) ??
+            throw new UnknownIdentifierReference(visitable.Destination.Id);
+
+        if (symbol.ReadOnly)
+            throw new AssignmentToConst(visitable.Destination.Id);
+
+        if (!sourceType.Equals(symbol.Type))
+            throw new IncompatibleTypesOfOperands(
+                visitable.Segment,
+                left: symbol.Type,
+                right: sourceType);
+
+        return symbol.Type;
     }
 }

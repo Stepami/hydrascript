@@ -15,6 +15,7 @@ internal class StandardLibraryProvider : IStandardLibraryProvider
         library.AddSymbol(new TypeSymbol("string"));
         library.AddSymbol(new TypeSymbol(new NullType()));
         library.AddSymbol(new TypeSymbol("void"));
+        library.AddSymbol(new TypeSymbol("undefined"));
 
         var print = new FunctionSymbol(
             "print",
