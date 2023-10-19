@@ -1,6 +1,7 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
 using Visitor.NET;
 
@@ -25,12 +26,15 @@ public class ObjectLiteral : ComplexLiteral
 
     protected override string NodeRepresentation() => "{}";
 
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+    public override Unit Accept(SymbolTableInitializer visitor) =>
+        visitor.Visit(this);
+
+    public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);
 
     public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
         new InstructionProvider().Visit(this);
 
-    public override Unit Accept(SymbolTableInitializer visitor) =>
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }

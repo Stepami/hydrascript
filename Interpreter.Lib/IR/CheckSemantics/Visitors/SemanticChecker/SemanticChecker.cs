@@ -23,6 +23,7 @@ public class SemanticChecker :
     IVisitor<IdentifierReference, Type>,
     IVisitor<ImplicitLiteral, Type>,
     IVisitor<ArrayLiteral, Type>,
+    IVisitor<ObjectLiteral, Type>,
     IVisitor<ConditionalExpression, Type>,
     IVisitor<BinaryExpression, Type>,
     IVisitor<UnaryExpression, Type>,
@@ -124,6 +125,23 @@ public class SemanticChecker :
             return new ArrayType(type);
 
         throw new WrongArrayLiteralDeclaration(visitable.Segment, type);
+    }
+
+    public Type Visit(ObjectLiteral visitable)
+    {
+        var properties = visitable.Properties.Select(prop =>
+        {
+            var propType = prop.Expression.Accept(this);
+            visitable.SymbolTable.AddSymbol(propType switch
+            {
+                ObjectType objectType => new ObjectSymbol(prop.Id, objectType),
+                _ => new VariableSymbol(prop.Id, propType)
+            });
+            return new PropertyType(prop.Id, propType);
+        });
+        var objectLiteralType = new ObjectType(properties);
+        visitable.SymbolTable.AddSymbol(new ObjectSymbol(id: "this", objectLiteralType, readOnly: true));
+        return objectLiteralType;
     }
 
     public Type Visit(ConditionalExpression visitable)
