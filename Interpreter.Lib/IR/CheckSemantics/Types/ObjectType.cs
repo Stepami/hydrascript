@@ -23,14 +23,9 @@ public class ObjectType : NullableType
 
     public Type this[string id]
     {
-        get => _properties.TryGetValue(id, out var type)
-            ? type
-            : null;
+        get => _properties.GetValueOrDefault(id);
         private set => _properties[id] = value;
     }
-
-    public IEnumerable<string> Keys =>
-        _properties.Keys;
 
     public override void ResolveReference(
         Type reference,
@@ -38,12 +33,10 @@ public class ObjectType : NullableType
         ISet<Type> visited = null)
     {
         visited ??= new HashSet<Type>();
-        if (visited.Contains(this))
+        if (!visited.Add(this))
             return;
 
-        visited.Add(this);
-
-        foreach (var key in Keys)
+        foreach (var key in _properties.Keys)
             if (refId == this[key])
                 this[key] = reference;
             else
@@ -93,7 +86,7 @@ public class ObjectType : NullableType
         };
 
         public int HashObjectType(ObjectType objectType) =>
-            objectType.Keys.Select(key => HashCode.Combine(
+            objectType._properties.Keys.Select(key => HashCode.Combine(
                     key,
                     objectType[key].Equals(_reference)
                         ? "@this".GetHashCode()
@@ -154,7 +147,7 @@ public class ObjectType : NullableType
             }
 
             var sb = new StringBuilder("{");
-            foreach (var key in objectType.Keys)
+            foreach (var key in objectType._properties.Keys)
             {
                 var type = objectType[key];
                 var prop = $"{key}: ";
