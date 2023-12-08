@@ -2,12 +2,7 @@ using System.Text;
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service.Impl;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service.Impl;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Impl;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 namespace Interpreter.Lib.IR.Ast.Impl;
 

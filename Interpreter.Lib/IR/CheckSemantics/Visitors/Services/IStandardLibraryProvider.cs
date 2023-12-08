@@ -1,6 +1,6 @@
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 
 public interface IStandardLibraryProvider
 {

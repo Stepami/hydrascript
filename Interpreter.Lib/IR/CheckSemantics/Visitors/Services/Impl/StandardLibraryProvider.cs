@@ -2,7 +2,7 @@ using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service.Impl;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 internal class StandardLibraryProvider : IStandardLibraryProvider
 {

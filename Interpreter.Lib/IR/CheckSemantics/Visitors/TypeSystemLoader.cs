@@ -3,10 +3,10 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 using Visitor.NET;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 
 public class TypeSystemLoader :
     IVisitor<ScriptBody>,

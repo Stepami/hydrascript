@@ -1,6 +1,6 @@
 using Interpreter.Lib.IR.CheckSemantics.Types;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Impl;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 internal class JavaScriptTypesProvider : IJavaScriptTypesProvider
 {

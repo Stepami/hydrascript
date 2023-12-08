@@ -1,4 +1,4 @@
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 
 public interface IDefaultValueForTypeCalculator
 {

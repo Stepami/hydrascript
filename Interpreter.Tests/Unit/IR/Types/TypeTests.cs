@@ -1,5 +1,5 @@
 using Interpreter.Lib.IR.CheckSemantics.Types;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker.Service.Impl;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 using Xunit;
 
 namespace Interpreter.Tests.Unit.IR.Types;

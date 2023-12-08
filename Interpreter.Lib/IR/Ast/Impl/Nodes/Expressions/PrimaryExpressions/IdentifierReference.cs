@@ -1,5 +1,5 @@
 using Interpreter.Lib.BackEnd.Values;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 

@@ -1,7 +1,7 @@
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.TypeSystemLoader.Service.Impl;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {

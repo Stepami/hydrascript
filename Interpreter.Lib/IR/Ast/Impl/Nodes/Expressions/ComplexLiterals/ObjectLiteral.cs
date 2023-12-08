@@ -1,8 +1,7 @@
 using Interpreter.Lib.BackEnd;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Visitors;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SemanticChecker;
-using Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer;
+using Interpreter.Lib.IR.CheckSemantics.Visitors;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;

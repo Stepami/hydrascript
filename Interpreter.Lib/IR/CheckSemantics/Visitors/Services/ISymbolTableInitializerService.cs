@@ -1,6 +1,6 @@
 using Interpreter.Lib.IR.Ast;
 
-namespace Interpreter.Lib.IR.CheckSemantics.Visitors.SymbolTableInitializer.Service;
+namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 
 public interface ISymbolTableInitializerService
 {
