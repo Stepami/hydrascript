@@ -23,7 +23,8 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
         
         _symbolTableInitializer = new SymbolTableInitializer(
             new SymbolTableInitializerService(),
-            new StandardLibraryProvider());
+            new StandardLibraryProvider(
+                new JavaScriptTypesProvider()));
         _typeSystemLoader = new TypeSystemLoader(
             new TypeDeclarationsResolver(
                 new JavaScriptTypesProvider()),

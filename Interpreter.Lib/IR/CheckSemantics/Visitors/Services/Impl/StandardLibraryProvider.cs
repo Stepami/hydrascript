@@ -6,16 +6,19 @@ namespace Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 internal class StandardLibraryProvider : IStandardLibraryProvider
 {
+    private readonly IJavaScriptTypesProvider _provider;
+
+    public StandardLibraryProvider(IJavaScriptTypesProvider provider) =>
+        _provider = provider;
+
     public SymbolTable GetStandardLibrary()
     {
         var library = new SymbolTable();
-            
-        library.AddSymbol(new TypeSymbol("number"));
-        library.AddSymbol(new TypeSymbol("boolean"));
-        library.AddSymbol(new TypeSymbol("string"));
-        library.AddSymbol(new TypeSymbol(new NullType()));
-        library.AddSymbol(new TypeSymbol("void"));
-        library.AddSymbol(new TypeSymbol("undefined"));
+
+        foreach (var type in _provider.GetDefaultTypes())
+        {
+            library.AddSymbol(new TypeSymbol(type));
+        }
 
         var print = new FunctionSymbol(
             "print",
@@ -25,7 +28,7 @@ internal class StandardLibraryProvider : IStandardLibraryProvider
             },
             new FunctionType(
                 "void",
-                new Type[] {"string"})
+                new Type[] { "string" })
         );
 
         library.AddSymbol(print);
