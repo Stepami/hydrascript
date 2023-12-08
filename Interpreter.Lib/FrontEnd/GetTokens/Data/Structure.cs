@@ -12,8 +12,8 @@ public class Structure : IEnumerable<TokenType>
     {
         types.AddRange(new List<TokenType>
         {
-            TokenTypeUtils.End,
-            TokenTypeUtils.Error
+            new EndOfProgramType(),
+            new ErrorType()
         });
         types = types
             .OrderBy(t => t.Priority)

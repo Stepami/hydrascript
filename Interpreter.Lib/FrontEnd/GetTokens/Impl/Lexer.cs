@@ -58,7 +58,7 @@ public class Lexer : ILexer, IEnumerable<Token>
             }
         }
 
-        yield return new Token(TokenTypeUtils.End);
+        yield return new Token(new EndOfProgramType());
     }
 
     [ExcludeFromCodeCoverage]
