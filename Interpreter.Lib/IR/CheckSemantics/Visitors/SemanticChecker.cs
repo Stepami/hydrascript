@@ -32,12 +32,20 @@ public class SemanticChecker :
     IVisitor<MemberExpression, Type>,
     IVisitor<IndexAccess, Type>,
     IVisitor<DotAccess, Type>,
-    IVisitor<CastAsExpression, Type>
+    IVisitor<CastAsExpression, Type>,
+    IVisitor<CallExpression, Type>,
+    IVisitor<FunctionDeclaration, FunctionType>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
+    private readonly IFunctionWithUndefinedReturnStorage _storage;
 
-    public SemanticChecker(IDefaultValueForTypeCalculator calculator) =>
+    public SemanticChecker(
+        IDefaultValueForTypeCalculator calculator,
+        IFunctionWithUndefinedReturnStorage storage)
+    {
         _calculator = calculator;
+        _storage = storage;
+    }
 
     public Type Visit(ScriptBody visitable)
     {
@@ -326,5 +334,46 @@ public class SemanticChecker :
         return visitable.Cast.BuildType(visitable.SymbolTable) == "string"
             ? "string"
             : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
+    }
+
+    public Type Visit(CallExpression visitable)
+    {
+        var symbol =
+            visitable.SymbolTable.FindSymbol<Symbol>(visitable.Id)
+            ?? throw new UnknownIdentifierReference(visitable.Id);
+        var functionSymbol =
+            symbol as FunctionSymbol
+            ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
+
+        var functionType = functionSymbol.Type;
+
+        if (functionType.Arguments.Count != visitable.Parameters.Count)
+            throw new WrongNumberOfArguments(
+                visitable.Segment,
+                expected: functionType.Arguments.Count,
+                actual: visitable.Parameters.Count);
+
+        visitable.Parameters.Zip(functionType.Arguments).ToList()
+            .ForEach(pair =>
+            {
+                var (expr, expectedType) = pair;
+                var actualType = expr.Accept(this);
+                if (!actualType.Equals(expectedType))
+                    throw new WrongTypeOfArgument(expr.Segment, expectedType, actualType);
+            });
+
+        Type undefined = "undefined";
+        if (functionType.ReturnType.Equals(undefined))
+        {
+            var declaration = _storage.Get(functionSymbol);
+            functionType = declaration.Accept(this);
+        }
+
+        return functionType.ReturnType;
+    }
+
+    public FunctionType Visit(FunctionDeclaration visitable)
+    {
+        throw new NotImplementedException();
     }
 }

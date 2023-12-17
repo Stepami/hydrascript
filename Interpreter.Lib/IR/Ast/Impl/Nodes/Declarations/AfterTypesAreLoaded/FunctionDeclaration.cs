@@ -3,6 +3,7 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.Ast.Visitors;
+using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
 using Visitor.NET;
 
@@ -45,12 +46,15 @@ public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     protected override string NodeRepresentation() =>
         "function " + Name;
 
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
-        visitor.Visit(this);
-
     public override Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
-    
+
     public override Unit Accept(DeclarationVisitor visitor) =>
+        visitor.Visit(this);
+
+    public override FunctionType Accept(SemanticChecker visitor) =>
+        visitor.Visit(this);
+
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }

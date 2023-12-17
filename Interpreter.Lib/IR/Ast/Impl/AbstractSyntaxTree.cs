@@ -20,6 +20,7 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
     public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
     {
         _root = root;
+        var storage = new FunctionWithUndefinedReturnStorage();
         
         _symbolTableInitializer = new SymbolTableInitializer(
             new SymbolTableInitializerService(),
@@ -29,10 +30,11 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
             new TypeDeclarationsResolver(
                 new JavaScriptTypesProvider()),
             new JavaScriptTypesProvider());
-        _declarationVisitor = new DeclarationVisitor(
-            new FunctionWithUndefinedReturnStorage());
+        _declarationVisitor = new DeclarationVisitor(storage);
         
-        _semanticChecker = new SemanticChecker(new DefaultValueForTypeCalculator());
+        _semanticChecker = new SemanticChecker(
+            new DefaultValueForTypeCalculator(),
+            storage);
         _instructionProvider = new InstructionProvider();
     }
 
