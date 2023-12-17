@@ -5,15 +5,21 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 
-public class DeclarationVisitor : 
+public class DeclarationVisitor :
     IVisitor<AbstractSyntaxTreeNode>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
+    private readonly IFunctionWithUndefinedReturnStorage _storage;
+
+    public DeclarationVisitor(IFunctionWithUndefinedReturnStorage storage) =>
+        _storage = storage;
+
     public Unit Visit(AbstractSyntaxTreeNode visitable)
     {
         foreach (var child in visitable)
@@ -67,6 +73,10 @@ public class DeclarationVisitor :
             new FunctionType(
                 visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
                 arguments: parameters.Select(x => x.Type)));
+
+        Type undefined = "undefined";
+        if (functionSymbol.Type.ReturnType.Equals(undefined))
+            _storage.Save(functionSymbol, visitable);
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
         return default;

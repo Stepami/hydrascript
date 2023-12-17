@@ -39,7 +39,6 @@ public class SemanticChecker :
     public SemanticChecker(IDefaultValueForTypeCalculator calculator) =>
         _calculator = calculator;
 
-
     public Type Visit(ScriptBody visitable)
     {
         foreach (var statementListItem in visitable.StatementList)
@@ -57,7 +56,7 @@ public class SemanticChecker :
 
         return default;
     }
-    
+
     public Type Visit(IfStatement visitable)
     {
         var testType = visitable.Test.Accept(this);
@@ -67,7 +66,7 @@ public class SemanticChecker :
 
         return default;
     }
-    
+
     public Type Visit(InsideStatementJump visitable)
     {
         switch (visitable.Keyword)

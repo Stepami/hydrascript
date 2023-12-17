@@ -29,7 +29,8 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
             new TypeDeclarationsResolver(
                 new JavaScriptTypesProvider()),
             new JavaScriptTypesProvider());
-        _declarationVisitor = new DeclarationVisitor();
+        _declarationVisitor = new DeclarationVisitor(
+            new FunctionWithUndefinedReturnStorage());
         
         _semanticChecker = new SemanticChecker(new DefaultValueForTypeCalculator());
         _instructionProvider = new InstructionProvider();

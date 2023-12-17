@@ -17,7 +17,7 @@ public class CallExpression : LeftHandSideExpression
         Parameters = new List<Expression>(expressions);
         Parameters.ForEach(expr => expr.Parent = this);
     }
-    
+
     public override IdentifierReference Id =>
         Member.Id;
 
