@@ -5,6 +5,7 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
+using Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 using Moq;
 using Xunit;
@@ -17,7 +18,7 @@ public class FunctionWithUndefinedReturnStorageTests
     public void StorageIsEmptyAfterFlushTest()
     {
         const string functionName = nameof(functionName);
-        var storage = new FunctionWithUndefinedReturnStorage();
+        IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
         var symbol = new FunctionSymbol(
             id: functionName,
@@ -31,7 +32,6 @@ public class FunctionWithUndefinedReturnStorageTests
             returnTypeValue: Mock.Of<TypeValue>(),
             arguments: new List<PropertyTypeValue>(),
             new BlockStatement(new List<StatementListItem>()));
-
 
         storage.Save(symbol, decl);
 
