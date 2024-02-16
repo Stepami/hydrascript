@@ -34,7 +34,8 @@ public class SemanticChecker :
     IVisitor<DotAccess, Type>,
     IVisitor<CastAsExpression, Type>,
     IVisitor<CallExpression, Type>,
-    IVisitor<FunctionDeclaration, FunctionType>
+    IVisitor<FunctionDeclaration, FunctionType>,
+    IVisitor<BlockStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _storage;
@@ -51,6 +52,9 @@ public class SemanticChecker :
     {
         foreach (var statementListItem in visitable.StatementList)
             statementListItem.Accept(this);
+
+        foreach (var funcDecl in _storage.Flush())
+            funcDecl.Accept(this);
 
         return "undefined";
     }
@@ -393,12 +397,13 @@ public class SemanticChecker :
         Type undefined = "undefined";
         if (symbol.Type.ReturnType.Equals(undefined))
         {
-            var returnStatementsGroups = returnStatements
+            var returnStatementTypes = returnStatements
                 .GroupBy(x => x.Type)
+                .Select(x => x.Key)
                 .ToList();
-            if (returnStatementsGroups.Count > 1)
+            if (returnStatementTypes.Count > 1)
                 throw new CannotDefineType(visitable.Segment);
-            symbol.Type.DefineReturnType(returnStatementsGroups[0].Key);
+            symbol.Type.DefineReturnType(returnStatementTypes.ElementAtOrDefault(0) ?? "void");
         }
         else
         {
@@ -413,9 +418,15 @@ public class SemanticChecker :
 
         Type @void = "void";
         var hasReturnStatement = visitable.HasReturnStatement();
-        if (!symbol.Type.Equals(@void) && !hasReturnStatement)
-            throw new FunctionWithoutReturnStatement(visitable.Statements.Segment);
+        if (!symbol.Type.ReturnType.Equals(@void) && !hasReturnStatement)
+            throw new FunctionWithoutReturnStatement(visitable.Segment);
 
         return symbol.Type;
+    }
+
+    public Type Visit(BlockStatement visitable)
+    {
+        visitable.StatementList.ForEach(x => x.Accept(this));
+        return "undefined";
     }
 }

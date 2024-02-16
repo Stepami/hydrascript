@@ -20,9 +20,12 @@ public class BlockStatement : Statement
 
     protected override string NodeRepresentation() => "{}";
 
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
+    public override Unit Accept(SymbolTableInitializer visitor) =>
         visitor.Visit(this);
 
-    public override Unit Accept(SymbolTableInitializer visitor) =>
+    public override Type Accept(SemanticChecker visitor) =>
+        visitor.Visit(this);
+
+    public override AddressedInstructions Accept(InstructionProvider visitor) =>
         visitor.Visit(this);
 }
