@@ -179,11 +179,7 @@ public class ExpressionInstructionProvider :
         }
 
         if (visitable.Destination.Empty())
-        {
-            var lastSimple = result.OfType<Simple>().LastOrDefault();
-            if (lastSimple is not null)
-                lastSimple.Left = visitable.Destination.Id;
-        }
+            result.OfType<Simple>().Last().Left = visitable.Destination.Id;
         else
         {
             var last = new Name(result.OfType<Simple>().Last().Left);

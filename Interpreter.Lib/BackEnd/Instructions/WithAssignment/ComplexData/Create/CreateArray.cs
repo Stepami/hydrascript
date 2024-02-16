@@ -2,12 +2,12 @@ using Interpreter.Lib.BackEnd.Addresses;
 
 namespace Interpreter.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 
-public class CreateArray : Instruction
+public class CreateArray : Simple
 {
     private readonly string _id;
     private readonly int _size;
 
-    public CreateArray(string id, int size) =>
+    public CreateArray(string id, int size) : base(id) =>
         (_id, _size) = (id, size);
 
     public override IAddress Execute(VirtualMachine vm)

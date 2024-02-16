@@ -7,10 +7,13 @@ public class Simple : Instruction
 {
     public string Left { get; set; }
 
-    protected (IValue left, IValue right) Right;
+    protected readonly (IValue left, IValue right) Right;
     private readonly string _operator;
 
-    public Simple(string left,
+    protected Simple(string left) => Left = left;
+
+    public Simple(
+        string left,
         (IValue left, IValue right) right,
         string @operator)
     {
@@ -22,20 +25,27 @@ public class Simple : Instruction
     public Simple(IValue value) : this(
         left: null,
         right: (null, value),
-        @operator: string.Empty
-    ) { }
-    
+        @operator: string.Empty)
+    {
+    }
+
     public Simple(string unaryOperator, IValue value) : this(
         left: null,
         right: (null, value),
-        @operator: unaryOperator
-    ) { }
-    
-    public Simple(IValue leftValue, string binaryOperator, IValue rightValue) : this(
-        left: null,
-        right: (leftValue, rightValue),
-        @operator: binaryOperator
-    ) { }
+        @operator: unaryOperator)
+    {
+    }
+
+    public Simple(
+        IValue leftValue,
+        string binaryOperator,
+        IValue rightValue) :
+        this(
+            left: null,
+            right: (leftValue, rightValue),
+            @operator: binaryOperator)
+    {
+    }
 
     protected override void OnSetOfAddress(IAddress address) =>
         Left ??= $"_t{unchecked((uint)address.GetHashCode())}";
@@ -50,7 +60,7 @@ public class Simple : Instruction
             {
                 "-" => -Convert.ToDouble(value),
                 "!" => !Convert.ToBoolean(value),
-                "~" => ((List<object>) value).Count,
+                "~" => ((List<object>)value).Count,
                 "" => value,
                 _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
@@ -74,19 +84,20 @@ public class Simple : Instruction
                 ">=" => Convert.ToDouble(lValue) >= Convert.ToDouble(rValue),
                 "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
                 "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
-                "." => ((Dictionary<string, object>) lValue)[rValue.ToString()!],
-                "[]" => ((List<object>) lValue)[Convert.ToInt32(rValue)],
-                "++" => ((List<object>) lValue).Concat((List<object>) rValue).ToList(),
+                "." => ((Dictionary<string, object>)lValue)[rValue.ToString()!],
+                "[]" => ((List<object>)lValue)[Convert.ToInt32(rValue)],
+                "++" => ((List<object>)lValue).Concat((List<object>)rValue).ToList(),
                 _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
         }
+
         if (vm.CallStack.Any())
         {
             var call = vm.CallStack.Peek();
             var methodOf = call.To.MethodOf;
             if (methodOf != null)
             {
-                var methodOwner = (Dictionary<string, object>) frame[methodOf];
+                var methodOwner = (Dictionary<string, object>)frame[methodOf];
                 if (methodOwner.ContainsKey(Left))
                 {
                     methodOwner[Left] = frame[Left];
@@ -97,7 +108,8 @@ public class Simple : Instruction
         return Address.Next;
     }
 
-    protected override string ToStringInternal() => Right.left == null
-        ? $"{Left} = {_operator}{Right.right}"
-        : $"{Left} = {Right.left} {_operator} {Right.right}";
+    protected override string ToStringInternal() =>
+        Right.left == null
+            ? $"{Left} = {_operator}{Right.right}"
+            : $"{Left} = {Right.left} {_operator} {Right.right}";
 }
