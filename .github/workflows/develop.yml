@@ -60,13 +60,13 @@ jobs:
           hide_complexity: true
           thresholds: '80 100'
       - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
           reports: './Interpreter.Tests/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v4
         with:
           name: CoverageReport   
           path: coverage-report
