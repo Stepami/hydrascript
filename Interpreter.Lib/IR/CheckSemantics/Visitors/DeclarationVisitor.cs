@@ -6,7 +6,6 @@ using Interpreter.Lib.IR.CheckSemantics.Exceptions;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 

@@ -5,7 +5,6 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.Ast.Visitors;
 using Interpreter.Lib.IR.CheckSemantics.Types;
 using Interpreter.Lib.IR.CheckSemantics.Visitors;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 

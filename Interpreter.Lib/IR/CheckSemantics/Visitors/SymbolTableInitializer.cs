@@ -4,7 +4,6 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
 using Interpreter.Lib.IR.CheckSemantics.Visitors.Services;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.CheckSemantics.Visitors;
 
