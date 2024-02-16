@@ -21,10 +21,9 @@ public class ArrayType : Type
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj == null || GetType() != obj.GetType()) return false;
-        var that = (ArrayType) obj;
-        return Equals(Type, that.Type);
+        if (obj is ArrayType that)
+            return Equals(Type, that.Type);
+        return obj is Any;
     }
         
     public override int GetHashCode() => 

@@ -6,10 +6,8 @@ public class NullType : Type
     {
     }
 
-    public override bool Equals(object obj)
-    {
-        return obj is NullableType or NullType;
-    }
+    public override bool Equals(object obj) =>
+        obj is NullableType or NullType or Any;
 
     public override int GetHashCode() =>
         "null".GetHashCode();

@@ -40,13 +40,13 @@ public class FunctionType : Type
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj == null || GetType() != obj.GetType()) return false;
-        var that = (FunctionType) obj;
-        return ReturnType.Equals(that.ReturnType) &&
-               Arguments.Count == that.Arguments.Count &&
-               Arguments.Zip(that.Arguments)
-                   .All(pair => pair.First.Equals(pair.Second));
+        if (obj is FunctionType that)
+            return ReturnType.Equals(that.ReturnType) &&
+                   Arguments.Count == that.Arguments.Count &&
+                   Arguments.Zip(that.Arguments)
+                       .All(pair => pair.First.Equals(pair.Second));
+
+        return obj is Any;
     }
 
     public override int GetHashCode() =>

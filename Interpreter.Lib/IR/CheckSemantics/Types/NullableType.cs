@@ -26,10 +26,9 @@ public class NullableType : Type
     public override bool Equals(object obj)
     {
         if (obj is NullableType that)
-        {
-            return Type.Equals(that.Type);
-        }
-        return obj is NullType;
+            return Equals(Type, that.Type);
+
+        return obj is NullType or Any;
     }
 
     public override int GetHashCode() =>

@@ -18,13 +18,13 @@ public class Type
     {
     }
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj == null || GetType() != obj.GetType()) return false;
-        var that = (Type) obj;
-        return Equals(_name, that._name);
-    }
+    public override bool Equals(object obj) =>
+        obj switch
+        {
+            Any => true,
+            Type that => _name == that._name,
+            _ => false
+        };
 
     public override int GetHashCode() => 
         _name.GetHashCode();

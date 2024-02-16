@@ -14,8 +14,7 @@ public class ObjectType : NullableType
             .OrderBy(x => x.Id)
             .ToDictionary(
                 x => x.Id,
-                x => x.Type
-            );
+                x => x.Type);
 
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
@@ -46,17 +45,14 @@ public class ObjectType : NullableType
     public override bool Equals(object obj)
     {
         if (obj is ObjectType that)
-        {
             return ReferenceEquals(this, that) || _properties.Count == that._properties.Count &&
                 _properties
-                    .Zip(that._properties)
-                    .All(pair =>
-                        pair.First.Key == pair.Second.Key &&
-                        pair.First.Value.Equals(pair.Second.Value)
-                    );
-        }
+                    .Zip(that._properties).All(
+                        pair =>
+                            pair.First.Key == pair.Second.Key &&
+                            pair.First.Value.Equals(pair.Second.Value));
 
-        return obj is NullType;
+        return obj is NullType or Any;
     }
 
     public override int GetHashCode() =>
@@ -86,11 +82,12 @@ public class ObjectType : NullableType
         };
 
         public int HashObjectType(ObjectType objectType) =>
-            objectType._properties.Keys.Select(key => HashCode.Combine(
-                    key,
-                    objectType[key].Equals(_reference)
-                        ? "@this".GetHashCode()
-                        : objectType[key].GetType().GetHashCode()))
+            objectType._properties.Keys.Select(
+                    key => HashCode.Combine(
+                        key,
+                        objectType[key].Equals(_reference)
+                            ? "@this".GetHashCode()
+                            : objectType[key].GetType().GetHashCode()))
                 .Aggregate(36, HashCode.Combine);
 
         private int HashArrayType(ArrayType arrayType) =>
@@ -108,11 +105,11 @@ public class ObjectType : NullableType
                 functionType.ReturnType.Equals(_reference)
                     ? "@this".GetHashCode()
                     : Hash(functionType.ReturnType),
-                functionType.Arguments.Select(arg =>
-                    arg.Equals(_reference)
-                        ? "@this".GetHashCode()
-                        : Hash(arg)
-                ).Aggregate(36, HashCode.Combine));
+                functionType.Arguments.Select(
+                        arg => arg.Equals(_reference)
+                            ? "@this".GetHashCode()
+                            : Hash(arg))
+                    .Aggregate(36, HashCode.Combine));
     }
 
     private class ObjectTypePrinter
@@ -142,9 +139,7 @@ public class ObjectType : NullableType
             if (_visited.Contains(objectType))
                 return string.Empty;
             if (!objectType.Equals(_reference))
-            {
                 _visited.Add(objectType);
-            }
 
             var sb = new StringBuilder("{");
             foreach (var key in objectType._properties.Keys)
@@ -173,8 +168,7 @@ public class ObjectType : NullableType
             var sb = new StringBuilder();
             sb.Append(arrayType.Type.Equals(_reference)
                 ? "@this"
-                : Print(arrayType.Type)
-            );
+                : Print(arrayType.Type));
 
             return sb.Append("[]").ToString();
         }
@@ -184,8 +178,7 @@ public class ObjectType : NullableType
             var sb = new StringBuilder();
             sb.Append(nullableType.Type.Equals(_reference)
                 ? "@this"
-                : Print(nullableType.Type)
-            );
+                : Print(nullableType.Type));
 
             return sb.Append('?').ToString();
         }
@@ -193,15 +186,17 @@ public class ObjectType : NullableType
         private string PrintFunctionType(FunctionType functionType)
         {
             var sb = new StringBuilder("(");
-            sb.AppendJoin(", ", functionType.Arguments.Select(
-                x => x.Equals(_reference)
+            sb.AppendJoin(
+                    ", ",
+                    functionType.Arguments.Select(
+                        x => x.Equals(_reference)
+                            ? "@this"
+                            : Print(x)))
+                .Append(") => ");
+            sb.Append(
+                functionType.ReturnType.Equals(_reference)
                     ? "@this"
-                    : Print(x)
-            )).Append(") => ");
-            sb.Append(functionType.ReturnType.Equals(_reference)
-                ? "@this"
-                : Print(functionType.ReturnType)
-            );
+                    : Print(functionType.ReturnType));
 
             return sb.ToString();
         }

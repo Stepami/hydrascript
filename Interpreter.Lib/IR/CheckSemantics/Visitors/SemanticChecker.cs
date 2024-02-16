@@ -124,8 +124,8 @@ public class SemanticChecker :
 
     public Type Visit(ArrayLiteral visitable)
     {
-        if (!visitable.Expressions.Any())
-            return "undefined";
+        if (visitable.Expressions.Count == 0)
+            return new ArrayType(new Any());
 
         var type = visitable.First().Accept(this);
         if (visitable.Expressions.All(e => e.Accept(this).Equals(type)))
@@ -200,11 +200,13 @@ public class SemanticChecker :
             ">" or ">=" or "<" or "<=" => lType.Equals(number)
                 ? boolean
                 : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "++" => lType is ArrayType && rType is ArrayType
-                ? lType
+            "++" when lType is ArrayType { Type: Any } && rType is ArrayType { Type: Any } =>
+                throw new CannotDefineType(visitable.Segment),
+            "++" => lType is ArrayType lArrType && rType is ArrayType rArrType
+                ? new List<ArrayType> { lArrType, rArrType }.First(x => x.Type is not Any)
                 : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "::" when lType is not ArrayType => throw new UnsupportedOperation(visitable.Segment, lType,
-                visitable.Operator),
+            "::" when lType is not ArrayType =>
+                throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
             "::" => rType.Equals(number) ? "void" : throw new ArrayAccessException(visitable.Segment, rType),
             _ => "undefined"
         };
