@@ -10,7 +10,6 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Statements;
-using Visitor.NET;
 
 namespace Interpreter.Lib.IR.Ast.Visitors;
 
@@ -122,9 +121,6 @@ public class InstructionProvider :
 
     public AddressedInstructions Visit(FunctionDeclaration visitable)
     {
-        if (!visitable.Any())
-            return new();
-        
         var objectId = visitable.Object?.Id;
         var functionInfo = new FunctionInfo(visitable.Name, objectId);
 
