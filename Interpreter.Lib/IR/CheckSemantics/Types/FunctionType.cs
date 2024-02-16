@@ -15,6 +15,9 @@ public class FunctionType : Type
         _arguments = new List<Type>(arguments);
     }
 
+    public void DefineReturnType(Type returnType) =>
+        ReturnType = returnType;
+
     public override void ResolveReference(
         Type reference,
         string refId,

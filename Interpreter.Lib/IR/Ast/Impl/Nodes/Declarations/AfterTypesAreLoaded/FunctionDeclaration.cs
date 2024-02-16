@@ -11,6 +11,8 @@ namespace Interpreter.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
 public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
+    private IReadOnlyCollection<ReturnStatement> _returnStatements;
+
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
     public List<PropertyTypeValue> Arguments { get; }
@@ -33,10 +35,17 @@ public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         Statements.Parent = this;
     }
 
-    public bool HasReturnStatement() =>
-        Statements.GetAllNodes()
+    public bool HasReturnStatement()
+    {
+        _returnStatements ??= GetReturnStatements();
+        return _returnStatements.Count > 0;
+    }
+
+    public IReadOnlyCollection<ReturnStatement> GetReturnStatements() =>
+        _returnStatements ??= Statements
+            .GetAllNodes()
             .OfType<ReturnStatement>()
-            .Any();
+            .ToArray();
 
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {

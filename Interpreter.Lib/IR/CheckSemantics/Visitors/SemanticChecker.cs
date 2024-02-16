@@ -374,6 +374,46 @@ public class SemanticChecker :
 
     public FunctionType Visit(FunctionDeclaration visitable)
     {
-        throw new NotImplementedException();
+        var symbol =
+            visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)
+            ?? throw new UnknownIdentifierReference(visitable.Name);
+
+        _storage.RemoveIfPresent(symbol);
+
+        visitable.Statements.Accept(this);
+
+        var returnStatements = visitable.GetReturnStatements()
+            .Select(x => new
+            {
+                Statement = x,
+                Type = x.Accept(this)
+            });
+        Type undefined = "undefined";
+        if (symbol.Type.ReturnType.Equals(undefined))
+        {
+            var returnStatementsGroups = returnStatements
+                .GroupBy(x => x.Type)
+                .ToList();
+            if (returnStatementsGroups.Count > 1)
+                throw new CannotDefineType(visitable.Segment);
+            symbol.Type.DefineReturnType(returnStatementsGroups[0].Key);
+        }
+        else
+        {
+            var wrongReturn = returnStatements
+                .FirstOrDefault(x => !x.Type.Equals(symbol.Type.ReturnType));
+            if (wrongReturn is not null)
+                throw new WrongReturnType(
+                    wrongReturn.Statement.Segment,
+                    expected: symbol.Type.ReturnType,
+                    actual: wrongReturn.Type);
+        }
+
+        Type @void = "void";
+        var hasReturnStatement = visitable.HasReturnStatement();
+        if (!symbol.Type.Equals(@void) && !hasReturnStatement)
+            throw new FunctionWithoutReturnStatement(visitable.Statements.Segment);
+
+        return symbol.Type;
     }
 }

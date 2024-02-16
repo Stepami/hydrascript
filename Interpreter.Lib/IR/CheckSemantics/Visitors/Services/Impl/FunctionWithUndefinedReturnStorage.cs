@@ -23,6 +23,12 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
         return declaration;
     }
 
+    public void RemoveIfPresent(FunctionSymbol symbol)
+    {
+        _declarations.Remove(symbol.Id);
+        _keysWithOrder.Remove(symbol.Id);
+    }
+
     public IEnumerable<FunctionDeclaration> Flush() => _declarations
         .OrderBy(kvp => _keysWithOrder[kvp.Key])
         .Select(x =>

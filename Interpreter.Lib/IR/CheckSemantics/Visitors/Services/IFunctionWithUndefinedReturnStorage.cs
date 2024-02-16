@@ -9,5 +9,7 @@ public interface IFunctionWithUndefinedReturnStorage
 
     FunctionDeclaration Get(FunctionSymbol symbol);
 
+    void RemoveIfPresent(FunctionSymbol symbol);
+
     IEnumerable<FunctionDeclaration> Flush();
 }
