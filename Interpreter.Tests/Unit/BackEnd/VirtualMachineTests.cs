@@ -82,12 +82,18 @@ public class VirtualMachineTests
             new Return(new Name("n")),
             { new Simple("_t5", (new Name("n"), new Constant(1)), "-"), "5" },
             new PushParameter("n", new Name("_t5")),
-            new CallFunction(factorial, 1, "f"),
+            new CallFunction(factorial, 1, true)
+            {
+                Left = "f"
+            },
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
             { new EndBlock(BlockType.Function, blockId: factorial.ToString()), factorial.End.Name },
             new PushParameter("n", new Constant(6)),
-            new CallFunction(factorial, 1, "fa6"),
+            new CallFunction(factorial, 1, true)
+            {
+                Left = "fa6"
+            },
             halt.Object
         };
         

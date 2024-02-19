@@ -6,12 +6,23 @@ public class CallFunction : Simple
 {
     private readonly FunctionInfo _function;
     private readonly int _numberOfArguments;
-        
-    public CallFunction(FunctionInfo function, int numberOfArguments, string left = null) :
-        base(left, (null, null), "Call ")
+    private readonly bool _hasReturnValue;
+
+    public CallFunction(
+        FunctionInfo function,
+        int numberOfArguments,
+        bool hasReturnValue) :
+        base(null, (null, null), "Call ")
     {
         _function = function;
         _numberOfArguments = numberOfArguments + Convert.ToInt32(function.MethodOf != null);
+        _hasReturnValue = hasReturnValue;
+    }
+
+    protected override void OnSetOfAddress(IAddress address)
+    {
+        if (_hasReturnValue)
+            base.OnSetOfAddress(address);
     }
 
     public override IAddress Execute(VirtualMachine vm)
@@ -29,7 +40,7 @@ public class CallFunction : Simple
 
         if (_function.MethodOf != null)
         {
-            var obj = (Dictionary<string, object>) frame[_function.MethodOf];
+            var obj = (Dictionary<string, object>)frame[_function.MethodOf];
             foreach (var (key, value) in obj)
             {
                 frame[key] = value;

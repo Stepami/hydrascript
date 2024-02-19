@@ -11,7 +11,7 @@ using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using Interpreter.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using Visitor.NET;
+using Interpreter.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace Interpreter.Lib.IR.Ast.Visitors;
 
@@ -254,7 +254,31 @@ public class ExpressionInstructionProvider :
             
             return result;
         }
+        else
+        {
+            var functionSymbol = visitable.SymbolTable
+                .FindSymbol<FunctionSymbol>(visitable.Id);
+            if (functionSymbol.IsEmpty)
+                return new AddressedInstructions();
+            var functionInfo = new FunctionInfo(visitable.Id);
 
-        throw new NotImplementedException();
+            var result = new AddressedInstructions();
+            foreach (var (expr, symbol) in visitable.Parameters.Zip(functionSymbol.Parameters))
+            {
+                if (expr is PrimaryExpression primary)
+                    result.Add(new PushParameter(symbol.Id, primary.ToValue()));
+                else
+                {
+                    result.AddRange(expr.Accept(this));
+                    var id = result.OfType<Simple>().Last().Left;
+                    result.Add(new PushParameter(symbol.Id, new Name(id)));
+                }
+            }
+
+            Type @void = "void";
+            var hasReturnValue = !functionSymbol.Type.ReturnType.Equals(@void);
+            result.Add(new CallFunction(functionInfo, visitable.Parameters.Count, hasReturnValue));
+            return result;
+        }
     }
 }
