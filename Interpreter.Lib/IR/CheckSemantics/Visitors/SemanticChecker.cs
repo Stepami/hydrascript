@@ -240,6 +240,8 @@ public class SemanticChecker :
             var registeredSymbol = visitable.SymbolTable.FindSymbol<VariableSymbol>(
                 assignment.Destination.Id);
             var sourceType = assignment.Source.Accept(this);
+            if (sourceType.Equals(undefined))
+                throw new CannotDefineType(assignment.Source.Segment);
             if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
@@ -335,7 +337,12 @@ public class SemanticChecker :
 
     public Type Visit(CastAsExpression visitable)
     {
-        visitable.Expression.Accept(this);
+        Type undefined = "undefined";
+        var exprType = visitable.Expression.Accept(this);
+
+        if (exprType.Equals(undefined))
+            throw new CannotDefineType(visitable.Expression.Segment);
+
         return visitable.Cast.BuildType(visitable.SymbolTable) == "string"
             ? "string"
             : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");

@@ -79,6 +79,6 @@ public class DeclarationVisitor :
             _storage.Save(functionSymbol, visitable);
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
-        return default;
+        return visitable.Statements.Accept(this);
     }
 }
