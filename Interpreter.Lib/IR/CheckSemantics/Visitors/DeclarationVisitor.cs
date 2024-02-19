@@ -71,7 +71,8 @@ public class DeclarationVisitor :
             parameters,
             new FunctionType(
                 visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
-                arguments: parameters.Select(x => x.Type)));
+                arguments: parameters.Select(x => x.Type)),
+            isEmpty: visitable.Statements.Any());
 
         Type undefined = "undefined";
         if (functionSymbol.Type.ReturnType.Equals(undefined))

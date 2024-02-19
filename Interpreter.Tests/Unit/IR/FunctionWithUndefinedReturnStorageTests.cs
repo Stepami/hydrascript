@@ -25,7 +25,8 @@ public class FunctionWithUndefinedReturnStorageTests
             parameters: new List<Symbol>(),
             new FunctionType(
                 "undefined",
-                arguments: new List<Type>()));
+                arguments: new List<Type>()),
+            isEmpty: false);
 
         var decl = new FunctionDeclaration(
             name: new IdentifierReference(functionName),

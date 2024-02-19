@@ -28,7 +28,8 @@ internal class StandardLibraryProvider : IStandardLibraryProvider
             },
             new FunctionType(
                 "void",
-                new Type[] { "string" })
+                new Type[] { "string" }),
+            isEmpty: false
         );
 
         library.AddSymbol(print);

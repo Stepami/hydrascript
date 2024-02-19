@@ -8,12 +8,18 @@ public class FunctionSymbol : Symbol
     public override string Id { get; }
     public override FunctionType Type { get; }
     public List<Symbol> Parameters { get; }
+    public bool IsEmpty { get; }
 
-    public FunctionSymbol(string id, IEnumerable<Symbol> parameters, FunctionType type)
+    public FunctionSymbol(
+        string id,
+        IEnumerable<Symbol> parameters,
+        FunctionType type,
+        bool isEmpty)
     {
         Id = id;
         Parameters = new List<Symbol>(parameters);
         Type = type;
+        IsEmpty = isEmpty;
     }
 
     public override string ToString()
