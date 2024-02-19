@@ -212,13 +212,11 @@ public class InstructionProvider :
         }
         
         result.AddRange(visitable.Then.Accept(this));
-        if (visitable.HasElseBlock())
-        {
-            result.Add(new Goto(endBlockLabel));
+        result.Add(new Goto(endBlockLabel));
+        result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
 
-            result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
+        if (visitable.HasElseBlock())
             result.AddRange(visitable.Else.Accept(this));
-        }
 
         result.OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
             .ToList().ForEach(g=> g.SetJump(endBlockLabel));
