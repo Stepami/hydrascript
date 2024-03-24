@@ -47,7 +47,7 @@ public class MemberExpression : LeftHandSideExpression
         }
     }
 
-    protected override string NodeRepresentation() => Id;
+    protected override string NodeRepresentation() => nameof(MemberExpression);
 
     public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);
