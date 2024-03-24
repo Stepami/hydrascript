@@ -310,7 +310,7 @@ public class SemanticChecker :
             throw new NonAccessibleType(prevType);
 
         Type number = "number";
-        var indexType = visitable.Accept(this);
+        var indexType = visitable.Index.Accept(this);
         if (!indexType.Equals(number))
             throw new ArrayAccessException(visitable.Segment, indexType);
 
