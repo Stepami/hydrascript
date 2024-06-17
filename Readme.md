@@ -2,8 +2,8 @@
 
 Package | Line Rate | Health
 -------- | --------- | ------
-Interpreter.Lib | 40% | ❌
-Interpreter | 100% | ✔
+HydraScript.Lib | 40% | ❌
+HydraScript | 100% | ✔
 **Summary** | **43%** (925 / 2173) | ❌
 
 _Minimum allowed line rate is `80%`_
@@ -14,9 +14,9 @@ _Minimum allowed line rate is `80%`_
 
 За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 
-[Лексическая структура](Interpreter/TokenTypes.cs)
+[Лексическая структура](HydraScript/TokenTypes.cs)
 
-[Грамматика](Interpreter/grammar.txt)
+[Грамматика](HydraScript/grammar.txt)
 
 [Рабочие примеры](samples)
 
@@ -164,7 +164,7 @@ let s = v2d as string
 - .NET 7 SDK
 
 ### Сборка
-После клонирования репозитория идём в папку проекта `Interpreter`.
+После клонирования репозитория идём в папку проекта `HydraScript`.
 
 Там выполняем команду:
 ```dotnet publish -r <RUNTIME_IDENTIFIER> -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o <OUTPUT_DIRECTORY>```
@@ -174,13 +174,13 @@ let s = v2d as string
 ### Запуск
 
 ```
-Interpreter 1.2.6
-Copyright (C) 2022 Interpreter
+HydraScript 1.2.6
+Copyright (C) 2024 HydraScript
 USAGE:
 Simple interpretation call:
-  Interpreter file.js
+  HydraScript file.js
 Request dump:
-  Interpreter --dump file.js
+  HydraScript --dump file.js
 
   -d, --dump                (Default: false) Show dump data of interpreter
 

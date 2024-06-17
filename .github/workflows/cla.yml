@@ -23,7 +23,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           path-to-signatures: 'signatures.json'
-          path-to-document: 'https://github.com/Stepami/extended-js-subset/blob/master/contributor-licence-agreement.md'
+          path-to-document: 'https://github.com/Stepami/hydrascript/blob/master/contributor-licence-agreement.md'
           allowlist: Stepami,bot*
           branch: 'main'
           remote-repository-name: hydrascript-cla-signatures

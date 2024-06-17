@@ -46,13 +46,13 @@ jobs:
       - name: Publish
         run: |
           mkdir output
-          dotnet publish ./Interpreter/Interpreter.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
+          dotnet publish ./HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
       - name: Upload release assets
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_name: interpreter-${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
-          asset_path: ./output/Interpreter${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+          asset_name: hydrascript-${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+          asset_path: ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
           asset_content_type: ${{ matrix.config.type }}
 
