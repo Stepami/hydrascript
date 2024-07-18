@@ -17,9 +17,6 @@ public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public List<PropertyTypeValue> Arguments { get; }
     public BlockStatement Statements { get; }
 
-    public ObjectLiteral Object =>
-        Parent as ObjectLiteral;
-
     public FunctionDeclaration(
         IdentifierReference name,
         TypeValue returnTypeValue,

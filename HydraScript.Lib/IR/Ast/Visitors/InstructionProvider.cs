@@ -98,9 +98,8 @@ public class InstructionProvider :
     {
         if (!visitable.Statements.Any())
             return new();
-        
-        var objectId = visitable.Object?.Id;
-        var functionInfo = new FunctionInfo(visitable.Name, objectId);
+
+        var functionInfo = new FunctionInfo(visitable.Name);
 
         var result = new AddressedInstructions
         {

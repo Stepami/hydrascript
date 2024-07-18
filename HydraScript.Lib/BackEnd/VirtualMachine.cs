@@ -36,7 +36,7 @@ public record Call(
         $"{From} => {To.Start}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
 }
     
-public record FunctionInfo(string Id, string MethodOf = null)
+public record FunctionInfo(string Id)
 {
     public Label Start =>
         new($"Start_{this}");
@@ -44,14 +44,7 @@ public record FunctionInfo(string Id, string MethodOf = null)
     public Label End =>
         new($"End_{this}");
 
-    public string MethodOf { get; set; } = MethodOf;
-
-    private string CallId() =>
-        MethodOf == null
-            ? Id
-            : $"{MethodOf}.{Id}";
-
-    public override string ToString() => CallId();
+    public override string ToString() => Id;
 }
     
 public class Frame

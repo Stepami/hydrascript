@@ -15,7 +15,7 @@ public class CallFunction : Simple
         base(null, (null, null), "Call ")
     {
         _function = function;
-        _numberOfArguments = numberOfArguments + Convert.ToInt32(function.MethodOf != null);
+        _numberOfArguments = numberOfArguments;
         _hasReturnValue = hasReturnValue;
     }
 
@@ -36,15 +36,6 @@ public class CallFunction : Simple
             args.Add(vm.Arguments.Pop());
             frame[args[i].Id] = args[i].Value;
             i++;
-        }
-
-        if (_function.MethodOf != null)
-        {
-            var obj = (Dictionary<string, object>)frame[_function.MethodOf];
-            foreach (var (key, value) in obj)
-            {
-                frame[key] = value;
-            }
         }
 
         vm.CallStack.Push(new Call(Address, _function, args, Left));

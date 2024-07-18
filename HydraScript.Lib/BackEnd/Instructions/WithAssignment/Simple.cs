@@ -91,20 +91,6 @@ public class Simple : Instruction
             };
         }
 
-        if (vm.CallStack.Any())
-        {
-            var call = vm.CallStack.Peek();
-            var methodOf = call.To.MethodOf;
-            if (methodOf != null)
-            {
-                var methodOwner = (Dictionary<string, object>)frame[methodOf];
-                if (methodOwner.ContainsKey(Left))
-                {
-                    methodOwner[Left] = frame[Left];
-                }
-            }
-        }
-
         return Address.Next;
     }
 
