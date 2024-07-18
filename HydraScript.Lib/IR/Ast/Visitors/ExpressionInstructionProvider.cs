@@ -18,6 +18,7 @@ namespace HydraScript.Lib.IR.Ast.Visitors;
 public class ExpressionInstructionProvider :
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
+    IVisitor<ObjectLiteral, AddressedInstructions>,
     IVisitor<Property, AddressedInstructions>,
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
@@ -58,7 +59,21 @@ public class ExpressionInstructionProvider :
 
         return result;
     }
-    
+
+    public AddressedInstructions Visit(ObjectLiteral visitable)
+    {
+        var objectId = visitable.Id;
+        var createObject = new CreateObject(objectId);
+
+        var result = new AddressedInstructions { createObject };
+
+        result.AddRange(visitable.Properties
+            .SelectMany(property =>
+                property.Accept(this)));
+
+        return result;
+    }
+
     public AddressedInstructions Visit(Property visitable)
     {
         var objectId = visitable.Object.Id;

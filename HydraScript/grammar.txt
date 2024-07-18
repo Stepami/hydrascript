@@ -48,12 +48,9 @@ Literal -> "NullLiteral"
            "StringLiteral"
            "BooleanLiteral"
 ObjectLiteral -> '{' PropertyDefinitionList '}'
-PropertyDefinitionList -> (Property ';')*
-Property -> FieldProperty
-            MethodProperty
+PropertyDefinitionList -> (FieldProperty ';')*
 FieldProperty -> "Ident" ':' Expression
-MethodProperty -> "Ident" '=>' MethodDeclaration
-MethodDeclaration -> '(' FunctionParameters? ')' Type? BlockStatement
+
 ArrayLiteral -> '[' ElementList ']'
 ElementList -> (Expression ',')*
              

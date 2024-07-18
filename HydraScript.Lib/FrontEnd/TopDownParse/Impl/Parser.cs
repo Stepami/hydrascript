@@ -725,54 +725,20 @@ public class Parser : IParser
     {
         Expect("LeftCurl");
         var properties = new List<Property>();
-        var methods = new List<FunctionDeclaration>();
         while (CurrentIs("Ident"))
         {
             var idToken = Expect("Ident");
             var id = new IdentifierReference(idToken.Value)
                 { Segment = idToken.Segment };
-            if (CurrentIs("Colon"))
-            {
-                Expect("Colon");
-                var expr = Expression();
-                properties.Add(new Property(id, expr));
-            }
-            else if (CurrentIs("Arrow"))
-            {
-                Expect("Arrow");
-                Expect("LeftParen");
-                var args = new List<PropertyTypeValue>();
-                while (CurrentIs("Ident"))
-                {
-                    var paramName = Expect("Ident").Value;
-                    Expect("Colon");
-                    var type = TypeValue();
-                    args.Add(new PropertyTypeValue(paramName, type));
-                    if (!CurrentIs("RightParen"))
-                    {
-                        Expect("Comma");
-                    }
-                }
-                var rp = Expect("RightParen");
-                TypeValue returnType = new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "undefined")
-                        { Segment = rp.Segment });
-                if (CurrentIs("Colon"))
-                {
-                    Expect("Colon");
-                    returnType = TypeValue();
-                }
 
-                var name = new IdentifierReference(idToken.Value) { Segment = idToken.Segment };
-                methods.Add(new FunctionDeclaration(name, returnType, args, BlockStatement())
-                    { Segment = idToken.Segment }
-                );
-            }
+            Expect("Colon");
+            var expr = Expression();
+            properties.Add(new Property(id, expr));
 
             Expect("SemiColon");
         }
         Expect("RightCurl");
-        return new ObjectLiteral(properties, methods);
+        return new ObjectLiteral(properties);
     }
 
     private ArrayLiteral ArrayLiteral()

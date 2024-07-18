@@ -2,12 +2,10 @@ using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Addresses;
 using HydraScript.Lib.BackEnd.Instructions;
 using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 using HydraScript.Lib.BackEnd.Instructions.WithJump;
 using HydraScript.Lib.BackEnd.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
@@ -20,7 +18,6 @@ public class InstructionProvider :
     IVisitor<InsideStatementJump, AddressedInstructions>,
     IVisitor<ExpressionStatement, AddressedInstructions>,
     IVisitor<ReturnStatement, AddressedInstructions>,
-    IVisitor<ObjectLiteral, AddressedInstructions>,
     IVisitor<FunctionDeclaration, AddressedInstructions>,
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>
@@ -93,28 +90,6 @@ public class InstructionProvider :
         var result = visitable.Expression.Accept(_expressionVisitor);
         var last = new Name(result.OfType<Simple>().Last().Left);
         result.Add(new Return(last));
-
-        return result;
-    }
-
-    public AddressedInstructions Visit(ObjectLiteral visitable)
-    {
-        var objectId = visitable.Id;
-        var createObject = new CreateObject(objectId);
-
-        var result = new AddressedInstructions { createObject };
-
-        result.AddRange(visitable.Methods
-            .SelectMany(method =>
-                method.Accept(this)
-            )
-        );
-
-        result.AddRange(visitable.Properties
-            .SelectMany(property =>
-                property.Accept(_expressionVisitor)
-            )
-        );
 
         return result;
     }
