@@ -52,11 +52,6 @@ public static class TokenTypes
             "priority": 12
           },
           {
-            "tag": "Arrow",
-            "pattern": "[=][>]",
-            "priority": 13
-          },
-          {
             "tag": "Comma",
             "pattern": "[,]",
             "priority": 100
