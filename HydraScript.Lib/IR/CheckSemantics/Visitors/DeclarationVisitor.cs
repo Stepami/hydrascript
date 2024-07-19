@@ -1,4 +1,5 @@
 using HydraScript.Lib.IR.Ast;
+using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
@@ -69,13 +70,19 @@ public class DeclarationVisitor :
         var functionSymbol = new FunctionSymbol(
             visitable.Name,
             parameters,
-            new FunctionType(
-                visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
-                arguments: parameters.Select(x => x.Type)),
+            visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
             isEmpty: !visitable.Statements.Any());
+        if (parameters is [{ Type: ObjectType objectType }, ..] &&
+            visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
+        {
+            objectType.AddMethod(
+                functionSymbol.Id,
+                functionSymbol.Type,
+                parameters.Select(x => x.Type).ToArray());
+        }
 
         Type undefined = "undefined";
-        if (functionSymbol.Type.ReturnType.Equals(undefined))
+        if (functionSymbol.Type.Equals(undefined))
             _storage.Save(functionSymbol, visitable);
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);

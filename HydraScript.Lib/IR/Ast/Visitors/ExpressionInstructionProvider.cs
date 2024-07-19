@@ -291,7 +291,7 @@ public class ExpressionInstructionProvider :
             }
 
             Type @void = "void";
-            var hasReturnValue = !functionSymbol.Type.ReturnType.Equals(@void);
+            var hasReturnValue = !functionSymbol.Type.Equals(@void);
             result.Add(new CallFunction(functionInfo, visitable.Parameters.Count, hasReturnValue));
             return result;
         }

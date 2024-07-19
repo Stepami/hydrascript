@@ -5,6 +5,7 @@ namespace HydraScript.Lib.IR.CheckSemantics.Types;
 public class ObjectType : NullableType
 {
     private readonly Dictionary<string, Type> _properties;
+    private readonly Dictionary<string, Method> _methods;
     private readonly ObjectTypeHasher _hasher;
     private readonly ObjectTypePrinter _serializer;
 
@@ -15,6 +16,7 @@ public class ObjectType : NullableType
             .ToDictionary(
                 x => x.Id,
                 x => x.Type);
+        _methods = new();
 
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
@@ -25,6 +27,17 @@ public class ObjectType : NullableType
         get => _properties.GetValueOrDefault(id);
         private set => _properties[id] = value;
     }
+
+    public void AddMethod(string name, Type returnType, IReadOnlyList<Type> arguments)
+    {
+        var method = new Method(
+            name,
+            returnType,
+            arguments);
+        _methods[name] = method;
+    }
+
+    public Method GetMethod(string name) => _methods[name];
 
     public override void ResolveReference(
         Type reference,
@@ -45,12 +58,12 @@ public class ObjectType : NullableType
     public override bool Equals(object obj)
     {
         if (obj is ObjectType that)
-            return ReferenceEquals(this, that) || _properties.Count == that._properties.Count &&
-                _properties
-                    .Zip(that._properties).All(
-                        pair =>
-                            pair.First.Key == pair.Second.Key &&
-                            pair.First.Value.Equals(pair.Second.Value));
+            return ReferenceEquals(this, that) ||
+                   _properties.Count == that._properties.Count &&
+                   _properties.Zip(that._properties)
+                       .All(pair =>
+                           pair.First.Key == pair.Second.Key &&
+                           pair.First.Value.Equals(pair.Second.Value));
 
         return obj is NullType or Any;
     }
@@ -75,7 +88,6 @@ public class ObjectType : NullableType
         private int Hash(Type type) => type switch
         {
             ArrayType arrayType => HashArrayType(arrayType),
-            FunctionType functionType => HashFunctionType(functionType),
             ObjectType objectType => HashObjectType(objectType),
             NullableType nullableType => HashNullableType(nullableType),
             _ => type.GetHashCode()
@@ -99,17 +111,6 @@ public class ObjectType : NullableType
             nullableType.Type.Equals(_reference)
                 ? "@this".GetHashCode()
                 : Hash(nullableType.Type);
-
-        private int HashFunctionType(FunctionType functionType) =>
-            HashCode.Combine(
-                functionType.ReturnType.Equals(_reference)
-                    ? "@this".GetHashCode()
-                    : Hash(functionType.ReturnType),
-                functionType.Arguments.Select(
-                        arg => arg.Equals(_reference)
-                            ? "@this".GetHashCode()
-                            : Hash(arg))
-                    .Aggregate(36, HashCode.Combine));
     }
 
     private class ObjectTypePrinter
@@ -128,7 +129,6 @@ public class ObjectType : NullableType
         private string Print(Type type) => type switch
         {
             ArrayType arrayType => PrintArrayType(arrayType),
-            FunctionType functionType => PrintFunctionType(functionType),
             ObjectType objectType => PrintObjectType(objectType),
             NullableType nullableType => PrintNullableType(nullableType),
             _ => type.ToString()
@@ -182,25 +182,12 @@ public class ObjectType : NullableType
 
             return sb.Append('?').ToString();
         }
-
-        private string PrintFunctionType(FunctionType functionType)
-        {
-            var sb = new StringBuilder("(");
-            sb.AppendJoin(
-                    ", ",
-                    functionType.Arguments.Select(
-                        x => x.Equals(_reference)
-                            ? "@this"
-                            : Print(x)))
-                .Append(") => ");
-            sb.Append(
-                functionType.ReturnType.Equals(_reference)
-                    ? "@this"
-                    : Print(functionType.ReturnType));
-
-            return sb.ToString();
-        }
     }
 }
 
 public record PropertyType(string Id, Type Type);
+
+public record Method(
+    string Name,
+    Type ReturnType,
+    IReadOnlyList<Type> Arguments);

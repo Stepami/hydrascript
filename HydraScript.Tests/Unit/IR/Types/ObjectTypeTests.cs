@@ -50,7 +50,6 @@ public class ObjectTypeTests
     {
         var number = new Type("number");
         var array = new ArrayType(new Type("self"));
-        var method = new FunctionType(number, new List<Type> { new("self") });
         var nullable = new NullableType(new Type("self"));
         var linkedListType = new ObjectType(
             new List<PropertyType>
@@ -61,8 +60,7 @@ public class ObjectTypeTests
                     new("next", new Type("self"))
                 })),
                 new("children", array),
-                new("parent", nullable),
-                new("compare", method)
+                new("parent", nullable)
             }
         );
 
@@ -71,7 +69,6 @@ public class ObjectTypeTests
         Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"])["next"]);
         Assert.Equal(linkedListType, array.Type);
         Assert.Equal(linkedListType, nullable.Type);
-        Assert.Equal(linkedListType, method.Arguments[0]);
     }
 
     [Fact]
@@ -99,7 +96,6 @@ public class ObjectTypeTests
     {
         var number = new Type("number");
         var array = new ArrayType(new Type("self"));
-        var method = new FunctionType(number, new List<Type> { new("self") });
         var nullable = new NullableType(new Type("self"));
         var linkedListType = new ObjectType(
             new List<PropertyType>
@@ -110,8 +106,7 @@ public class ObjectTypeTests
                     new("next", new Type("self"))
                 })),
                 new("children", array),
-                new("parent", nullable),
-                new("compare", method)
+                new("parent", nullable)
             }
         );
 
@@ -135,17 +130,11 @@ public class ObjectTypeTests
         var linkedListType = new ObjectType(
             new List<PropertyType>
             {
-                new("head", nodeType),
-                new("append", new FunctionType(
-                        new Type("void"),
-                        new List<Type> { nodeType }
-                    )
-                ),
-                new("copy", new FunctionType(new Type("self"), Array.Empty<Type>()))
+                new("head", nodeType)
             }
         );
         linkedListType.ResolveReference(linkedListType, refId: "self");
 
-        Assert.Contains("head: head;", linkedListType.ToString());
+        Assert.Contains("next: next;", linkedListType.ToString());
     }
 }

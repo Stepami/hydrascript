@@ -67,12 +67,10 @@ ReturnStatement -> 'return' Expression?
 TypeDeclaration -> 'type' "Ident" = TypeValue
 TypeValue -> TypeValueBase TypeValueSuffix*
 TypeValueBase -> "Ident"
-                 FunctionTypeBase
                  ObjectTypeBase
 ObjectTypeBase -> '{' PropertyTypeList '}'
 PropertyTypeList -> (PropertyType ';')*
 PropertyType -> "Ident" ':' TypeValue
-FunctionTypeBase -> '(' ArgTypeList ')' '=>' TypeValue
 ArgTypeList -> (TypeValue ',')*
 TypeValueSuffix -> '['']'
                    '?'

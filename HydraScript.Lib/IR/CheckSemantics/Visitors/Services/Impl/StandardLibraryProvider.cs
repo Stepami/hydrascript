@@ -1,4 +1,3 @@
-using HydraScript.Lib.IR.CheckSemantics.Types;
 using HydraScript.Lib.IR.CheckSemantics.Variables;
 using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
@@ -26,9 +25,7 @@ internal class StandardLibraryProvider : IStandardLibraryProvider
             {
                 new VariableSymbol("str", "string")
             },
-            new FunctionType(
-                "void",
-                new Type[] { "string" }),
+            "void",
             isEmpty: false
         );
 

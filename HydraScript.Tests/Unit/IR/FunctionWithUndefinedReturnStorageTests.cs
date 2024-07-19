@@ -3,7 +3,6 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
-using HydraScript.Lib.IR.CheckSemantics.Types;
 using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
@@ -23,9 +22,7 @@ public class FunctionWithUndefinedReturnStorageTests
         var symbol = new FunctionSymbol(
             id: functionName,
             parameters: new List<Symbol>(),
-            new FunctionType(
-                "undefined",
-                arguments: new List<Type>()),
+            "undefined",
             isEmpty: false);
 
         var decl = new FunctionDeclaration(

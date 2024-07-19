@@ -33,7 +33,7 @@ public class SemanticChecker :
     IVisitor<DotAccess, Type>,
     IVisitor<CastAsExpression, Type>,
     IVisitor<CallExpression, Type>,
-    IVisitor<FunctionDeclaration, FunctionType>,
+    IVisitor<FunctionDeclaration, Type>,
     IVisitor<BlockStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
@@ -150,7 +150,6 @@ public class SemanticChecker :
             return new PropertyType(prop.Id, propType);
         });
         var objectLiteralType = new ObjectType(properties);
-        visitable.SymbolTable.AddSymbol(new ObjectSymbol(id: "this", objectLiteralType, readOnly: true));
         return objectLiteralType;
     }
 
@@ -248,10 +247,13 @@ public class SemanticChecker :
                     left: registeredSymbol.Type,
                     right: sourceType);
 
-            var actualSymbol = sourceType switch
+            var actualType = registeredSymbol.Type.Equals(undefined)
+                ? sourceType
+                : registeredSymbol.Type;
+            var actualSymbol = actualType switch
             {
                 ObjectType objectType => new ObjectSymbol(registeredSymbol.Id, objectType, visitable.ReadOnly),
-                _ => new VariableSymbol(registeredSymbol.Id, sourceType, visitable.ReadOnly)
+                _ => new VariableSymbol(registeredSymbol.Id, actualType, visitable.ReadOnly)
             };
             visitable.SymbolTable.AddSymbol(actualSymbol);
         }
@@ -356,35 +358,34 @@ public class SemanticChecker :
         var functionSymbol =
             symbol as FunctionSymbol
             ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
+        var functionReturnType = functionSymbol.Type;
 
-        var functionType = functionSymbol.Type;
-
-        if (functionType.Arguments.Count != visitable.Parameters.Count)
+        if (functionSymbol.Parameters.Count != visitable.Parameters.Count)
             throw new WrongNumberOfArguments(
                 visitable.Segment,
-                expected: functionType.Arguments.Count,
+                expected: functionSymbol.Parameters.Count,
                 actual: visitable.Parameters.Count);
 
-        visitable.Parameters.Zip(functionType.Arguments).ToList()
+        visitable.Parameters.Zip(functionSymbol.Parameters).ToList()
             .ForEach(pair =>
             {
-                var (expr, expectedType) = pair;
+                var (expr, expected) = pair;
                 var actualType = expr.Accept(this);
-                if (!actualType.Equals(expectedType))
-                    throw new WrongTypeOfArgument(expr.Segment, expectedType, actualType);
+                if (!actualType.Equals(expected.Type))
+                    throw new WrongTypeOfArgument(expr.Segment, expected.Type, actualType);
             });
 
         Type undefined = "undefined";
-        if (functionType.ReturnType.Equals(undefined))
+        if (functionSymbol.Type.Equals(undefined))
         {
             var declaration = _storage.Get(functionSymbol);
-            functionType = declaration.Accept(this);
+            functionReturnType = declaration.Accept(this);
         }
 
-        return functionType.ReturnType;
+        return functionReturnType;
     }
 
-    public FunctionType Visit(FunctionDeclaration visitable)
+    public Type Visit(FunctionDeclaration visitable)
     {
         var symbol =
             visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)
@@ -401,7 +402,7 @@ public class SemanticChecker :
                 Type = x.Accept(this)
             });
         Type undefined = "undefined";
-        if (symbol.Type.ReturnType.Equals(undefined))
+        if (symbol.Type.Equals(undefined))
         {
             var returnStatementTypes = returnStatements
                 .GroupBy(x => x.Type)
@@ -409,22 +410,22 @@ public class SemanticChecker :
                 .ToList();
             if (returnStatementTypes.Count > 1)
                 throw new CannotDefineType(visitable.Segment);
-            symbol.Type.DefineReturnType(returnStatementTypes.ElementAtOrDefault(0) ?? "void");
+            symbol.DefineReturnType(returnStatementTypes.ElementAtOrDefault(0) ?? "void");
         }
         else
         {
             var wrongReturn = returnStatements
-                .FirstOrDefault(x => !x.Type.Equals(symbol.Type.ReturnType));
+                .FirstOrDefault(x => !x.Type.Equals(symbol.Type));
             if (wrongReturn is not null)
                 throw new WrongReturnType(
                     wrongReturn.Statement.Segment,
-                    expected: symbol.Type.ReturnType,
+                    expected: symbol.Type,
                     actual: wrongReturn.Type);
         }
 
         Type @void = "void";
         var hasReturnStatement = visitable.HasReturnStatement();
-        if (!symbol.Type.ReturnType.Equals(@void) && !hasReturnStatement)
+        if (!symbol.Type.Equals(@void) && !hasReturnStatement)
             throw new FunctionWithoutReturnStatement(visitable.Segment);
 
         return symbol.Type;

@@ -242,26 +242,6 @@ public class Parser : IParser
             return WithSuffix(new ObjectTypeValue(propertyTypes));
         }
 
-        if (CurrentIs("LeftParen"))
-        {
-            Expect("LeftParen");
-            var args = new List<TypeValue>();
-            while (CurrentIs("Ident") ||
-                   CurrentIs("LeftCurl") ||
-                   CurrentIs("LeftParen"))
-            {
-                args.Add(TypeValue());
-                if (!CurrentIs("RightParen"))
-                {
-                    Expect("Comma");
-                }
-            }
-            Expect("RightParen");
-            Expect("Arrow");
-            var returnType = TypeValue();
-            return new FunctionTypeValue(returnType, args);
-        }
-
         return null;
     }
 

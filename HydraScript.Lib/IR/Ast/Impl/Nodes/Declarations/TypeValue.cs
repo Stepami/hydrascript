@@ -63,17 +63,3 @@ public record ObjectTypeValue(
     public override string ToString() =>
         $"{{{string.Join(';', Properties)}}}";
 }
-
-public record FunctionTypeValue(
-    TypeValue ReturnTypeValue,
-    IEnumerable<TypeValue> Arguments
-) : TypeValue
-{
-    public override Type BuildType(SymbolTable symbolTable) =>
-        new FunctionType(
-            ReturnTypeValue.BuildType(symbolTable),
-            Arguments.Select(x => x.BuildType(symbolTable)));
-
-    public override string ToString() =>
-        $"({string.Join(',', Arguments)}) => {ReturnTypeValue}";
-}
