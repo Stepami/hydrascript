@@ -15,10 +15,15 @@ public class MemberExpression : LeftHandSideExpression
 
     public Type ComputedIdType { get; set; }
 
+    public MemberExpression(IdentifierReference identifierReference) :
+        this(identifierReference, accessChain: null, tail: null)
+    {
+    }
+
     public MemberExpression(
         IdentifierReference identifierReference,
-        AccessExpression accessChain = null,
-        AccessExpression tail = null)
+        AccessExpression accessChain,
+        AccessExpression tail)
     {
         _identifierReference = identifierReference;
         _identifierReference.Parent = this;

@@ -15,10 +15,16 @@ public class DeclarationVisitor :
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
-    private readonly IFunctionWithUndefinedReturnStorage _storage;
+    private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
+    private readonly IMethodStorage _methodStorage;
 
-    public DeclarationVisitor(IFunctionWithUndefinedReturnStorage storage) =>
-        _storage = storage;
+    public DeclarationVisitor(
+        IFunctionWithUndefinedReturnStorage functionStorage,
+        IMethodStorage methodStorage)
+    {
+        _functionStorage = functionStorage;
+        _methodStorage = methodStorage;
+    }
 
     public Unit Visit(AbstractSyntaxTreeNode visitable)
     {
@@ -55,7 +61,7 @@ public class DeclarationVisitor :
 
     public Unit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.SymbolTable.ContainsSymbol(visitable.Name))
+        if (visitable.Parent.SymbolTable.ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>
@@ -75,15 +81,12 @@ public class DeclarationVisitor :
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
         {
-            objectType.AddMethod(
-                functionSymbol.Id,
-                functionSymbol.Type,
-                parameters.Select(x => x.Type).ToArray());
+            _methodStorage.BindMethod(objectType, functionSymbol);
         }
 
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
-            _storage.Save(functionSymbol, visitable);
+            _functionStorage.Save(functionSymbol, visitable);
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
         return visitable.Statements.Accept(this);

@@ -464,7 +464,10 @@ public class Parser : IParser
             }
         }
 
-        return new MemberExpression(identRef, accessChain.FirstOrDefault(), accessChain.LastOrDefault());
+        return new MemberExpression(
+            identRef,
+            accessChain.FirstOrDefault(),
+            tail: accessChain.LastOrDefault());;
     }
 
     private Expression CastExpression()

@@ -37,14 +37,17 @@ public class SemanticChecker :
     IVisitor<BlockStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
-    private readonly IFunctionWithUndefinedReturnStorage _storage;
+    private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
+    private readonly IMethodStorage _methodStorage;
 
     public SemanticChecker(
         IDefaultValueForTypeCalculator calculator,
-        IFunctionWithUndefinedReturnStorage storage)
+        IFunctionWithUndefinedReturnStorage functionStorage,
+        IMethodStorage methodStorage)
     {
         _calculator = calculator;
-        _storage = storage;
+        _functionStorage = functionStorage;
+        _methodStorage = methodStorage;
     }
 
     public Type Visit(ScriptBody visitable)
@@ -52,7 +55,7 @@ public class SemanticChecker :
         foreach (var statementListItem in visitable.StatementList)
             statementListItem.Accept(this);
 
-        foreach (var funcDecl in _storage.Flush())
+        foreach (var funcDecl in _functionStorage.Flush())
             funcDecl.Accept(this);
 
         return "undefined";
@@ -330,9 +333,12 @@ public class SemanticChecker :
         if (prevType is not ObjectType objectType)
             throw new NonAccessibleType(prevType);
 
-        var fieldType =
-            objectType[visitable.Property]
-            ?? throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
+        var fieldType = objectType[visitable.Property];
+        var hasMethod = objectType.HasMethod(visitable.Property);
+        if (fieldType is null)
+            return hasMethod
+                ? objectType
+                : throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
         visitable.ComputedType = fieldType;
         return visitable.HasNext() ? visitable.Next.Accept(this) : fieldType;
     }
@@ -352,22 +358,35 @@ public class SemanticChecker :
 
     public Type Visit(CallExpression visitable)
     {
-        var symbol =
-            visitable.SymbolTable.FindSymbol<Symbol>(visitable.Id)
-            ?? throw new UnknownIdentifierReference(visitable.Id);
-        var functionSymbol =
-            symbol as FunctionSymbol
-            ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
+        FunctionSymbol functionSymbol;
+        var methodCall = !visitable.Member.Empty();
+
+        if (methodCall)
+        {
+            var objectType = (ObjectType)visitable.Member.Accept(this);
+            var availableMethods = _methodStorage.GetAvailableMethods(objectType);
+            functionSymbol = availableMethods[objectType.LastAccessedMethod];
+        }
+        else
+        {
+            var symbol =
+                visitable.SymbolTable.FindSymbol<Symbol>(visitable.Id)
+                ?? throw new UnknownIdentifierReference(visitable.Id);
+            functionSymbol =
+                symbol as FunctionSymbol
+                ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
+        }
+
         var functionReturnType = functionSymbol.Type;
 
-        if (functionSymbol.Parameters.Count != visitable.Parameters.Count)
+        if (functionSymbol.Parameters.Count != visitable.Parameters.Count + (methodCall ? 1 : 0))
             throw new WrongNumberOfArguments(
                 visitable.Segment,
                 expected: functionSymbol.Parameters.Count,
                 actual: visitable.Parameters.Count);
 
-        visitable.Parameters.Zip(functionSymbol.Parameters).ToList()
-            .ForEach(pair =>
+        visitable.Parameters.Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..])
+            .ToList().ForEach(pair =>
             {
                 var (expr, expected) = pair;
                 var actualType = expr.Accept(this);
@@ -378,7 +397,7 @@ public class SemanticChecker :
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
         {
-            var declaration = _storage.Get(functionSymbol);
+            var declaration = _functionStorage.Get(functionSymbol);
             functionReturnType = declaration.Accept(this);
         }
 
@@ -391,7 +410,7 @@ public class SemanticChecker :
             visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)
             ?? throw new UnknownIdentifierReference(visitable.Name);
 
-        _storage.RemoveIfPresent(symbol);
+        _functionStorage.RemoveIfPresent(symbol);
 
         visitable.Statements.Accept(this);
 

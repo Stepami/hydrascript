@@ -5,9 +5,11 @@ namespace HydraScript.Lib.IR.CheckSemantics.Types;
 public class ObjectType : NullableType
 {
     private readonly Dictionary<string, Type> _properties;
-    private readonly Dictionary<string, Method> _methods;
+    private readonly HashSet<string> _methods;
     private readonly ObjectTypeHasher _hasher;
     private readonly ObjectTypePrinter _serializer;
+
+    public string LastAccessedMethod { get; private set; }
 
     public ObjectType(IEnumerable<PropertyType> properties)
     {
@@ -16,7 +18,7 @@ public class ObjectType : NullableType
             .ToDictionary(
                 x => x.Id,
                 x => x.Type);
-        _methods = new();
+        _methods = new HashSet<string>();
 
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
@@ -28,16 +30,14 @@ public class ObjectType : NullableType
         private set => _properties[id] = value;
     }
 
-    public void AddMethod(string name, Type returnType, IReadOnlyList<Type> arguments)
-    {
-        var method = new Method(
-            name,
-            returnType,
-            arguments);
-        _methods[name] = method;
-    }
+    public void AddMethod(string methodName) =>
+        _methods.Add(methodName);
 
-    public Method GetMethod(string name) => _methods[name];
+    public bool HasMethod(string methodName)
+    {
+        LastAccessedMethod = methodName;
+        return _methods.Contains(methodName);
+    }
 
     public override void ResolveReference(
         Type reference,
@@ -186,8 +186,3 @@ public class ObjectType : NullableType
 }
 
 public record PropertyType(string Id, Type Type);
-
-public record Method(
-    string Name,
-    Type ReturnType,
-    IReadOnlyList<Type> Arguments);
