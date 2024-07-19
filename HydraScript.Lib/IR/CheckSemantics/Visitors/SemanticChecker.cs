@@ -68,7 +68,9 @@ public class SemanticChecker :
         if (!condType.Equals(boolean))
             throw new NotBooleanTestExpression(visitable.Segment, condType);
 
-        return default;
+        visitable.Statement.Accept(this);
+
+        return "undefined";
     }
 
     public Type Visit(IfStatement visitable)
@@ -78,7 +80,10 @@ public class SemanticChecker :
         if (!testType.Equals(boolean))
             throw new NotBooleanTestExpression(visitable.Segment, testType);
 
-        return default;
+        visitable.Then.Accept(this);
+        visitable.Else?.Accept(this);
+
+        return "undefined";
     }
 
     public Type Visit(InsideStatementJump visitable)
@@ -101,7 +106,7 @@ public class SemanticChecker :
                 break;
         }
 
-        return default;
+        return "undefined";
     }
 
     public Type Visit(ReturnStatement visitable)
@@ -179,6 +184,11 @@ public class SemanticChecker :
     {
         var lType = visitable.Left.Accept(this);
         var rType = visitable.Right.Accept(this);
+
+        if (lType == "undefined" || rType == "undefined")
+        {
+            
+        }
 
         if (visitable.Operator != "::" && !lType.Equals(rType))
             throw new IncompatibleTypesOfOperands(
