@@ -19,6 +19,9 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public IAddress Start =>
         _addresses.First?.Value;
 
+    public IAddress End =>
+        _addresses.Last?.Value;
+
     public void Add(Instruction instruction, string label = null)
     {
         IAddress newAddress = label is null

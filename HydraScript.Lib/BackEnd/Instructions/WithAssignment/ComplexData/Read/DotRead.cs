@@ -8,6 +8,8 @@ public class DotRead : Simple, IReadFromComplexData
     private readonly Name _objectName;
     private readonly IValue _property;
 
+    public string Property => (string)_property.Get(frame: null);
+
     public DotRead(Name @object, IValue property) : base(
         leftValue: @object,
         binaryOperator: ".",

@@ -256,7 +256,8 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(CallExpression visitable)
     {
-        if (visitable.Id.Name is "print" && visitable.Empty())
+        var methodCall = !visitable.Empty();
+        if (visitable.Id.Name is "print" && !methodCall)
         {
             var param = visitable.Parameters[0];
             
@@ -271,14 +272,35 @@ public class ExpressionInstructionProvider :
         }
         else
         {
-            var functionSymbol = visitable.SymbolTable
-                .FindSymbol<FunctionSymbol>(visitable.Id);
+            FunctionSymbol functionSymbol;
+            AddressedInstructions result = new();
+            if (methodCall)
+            {
+                var memberInstructions = visitable.Member.Accept(this);
+                var lastMemberInstruction = (DotRead)memberInstructions[memberInstructions.End];
+                memberInstructions.Remove(lastMemberInstruction);
+                result.AddRange(memberInstructions);
+
+                var methodName = lastMemberInstruction.Property;
+                functionSymbol = visitable.SymbolTable
+                    .FindSymbol<FunctionSymbol>(methodName);
+            }
+            else
+            {
+                functionSymbol = visitable.SymbolTable
+                    .FindSymbol<FunctionSymbol>(visitable.Id);
+            }
             if (functionSymbol.IsEmpty)
                 return new AddressedInstructions();
-            var functionInfo = new FunctionInfo(visitable.Id);
+            var functionInfo = new FunctionInfo(functionSymbol.Id);
 
-            var result = new AddressedInstructions();
-            foreach (var (expr, symbol) in visitable.Parameters.Zip(functionSymbol.Parameters))
+            if (methodCall)
+            {
+                var caller = result.Any() ? result.OfType<Simple>().Last().Left : visitable.Id;
+                result.Add(new PushParameter(functionSymbol.Parameters[0].Id, new Name(caller)));
+            }
+            foreach (var (expr, symbol) in visitable.Parameters
+                         .Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..]))
             {
                 if (expr is PrimaryExpression primary)
                     result.Add(new PushParameter(symbol.Id, primary.ToValue()));
@@ -292,7 +314,10 @@ public class ExpressionInstructionProvider :
 
             Type @void = "void";
             var hasReturnValue = !functionSymbol.Type.Equals(@void);
-            result.Add(new CallFunction(functionInfo, visitable.Parameters.Count, hasReturnValue));
+            result.Add(new CallFunction(
+                functionInfo,
+                numberOfArguments: visitable.Parameters.Count + (methodCall ? 1 : 0),
+                hasReturnValue));
             return result;
         }
     }
