@@ -180,8 +180,8 @@ public class InstructionProvider :
             var last = new Name(result.OfType<Simple>().Last().Left);
             result.Add(new IfNotGoto(last,
                 visitable.HasElseBlock()
-                    ? endBlockLabel
-                    : startBlockLabel)
+                    ? startBlockLabel
+                    : endBlockLabel)
             );
         }
         
