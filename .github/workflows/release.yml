@@ -32,6 +32,9 @@ jobs:
           - os: macos-latest
             rid: osx-x64
             type: application/x-mach-binary
+          - os: macos-arm64-latest
+            rid: osx-arm64
+            type: application/x-mach-binary
           - os: windows-latest
             rid: win-x64
             type: application/x-dosexec
@@ -42,7 +45,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - name: Publish
         run: |
           mkdir output
