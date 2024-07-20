@@ -185,11 +185,6 @@ public class SemanticChecker :
         var lType = visitable.Left.Accept(this);
         var rType = visitable.Right.Accept(this);
 
-        if (lType == "undefined" || rType == "undefined")
-        {
-            
-        }
-
         if (visitable.Operator != "::" && !lType.Equals(rType))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
