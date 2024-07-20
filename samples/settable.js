@@ -1,16 +1,16 @@
 type settable = {
     prop: string;
-    setprop: (string) => void;
+}
+
+function setprop(obj: settable, str: string) {
+    obj.prop = str
+    if (obj.prop == "1") {
+        print("prop is one")
+    }
 }
 
 let obj: settable = {
     prop: "prop";
-    setprop => (str: string) {
-        prop = str
-        if (prop == "1") {
-            print("prop is one")
-        }
-    };
 }
 
 obj.setprop("1")
