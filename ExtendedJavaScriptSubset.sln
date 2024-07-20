@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter.Lib", "Interpreter.Lib\Interpreter.Lib.csproj", "{83524079-4A56-4AF0-9011-F7CA871536E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Lib", "HydraScript.Lib\HydraScript.Lib.csproj", "{83524079-4A56-4AF0-9011-F7CA871536E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter", "Interpreter\Interpreter.csproj", "{5DA79C0C-2B98-4E64-81EA-92AFFC5204D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript", "HydraScript\HydraScript.csproj", "{5DA79C0C-2B98-4E64-81EA-92AFFC5204D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter.Tests", "Interpreter.Tests\Interpreter.Tests.csproj", "{F0DD56CB-C68A-4CDC-AA54-0A07342FE08B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Tests", "HydraScript.Tests\HydraScript.Tests.csproj", "{F0DD56CB-C68A-4CDC-AA54-0A07342FE08B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

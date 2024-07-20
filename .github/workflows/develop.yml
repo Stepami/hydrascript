@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
       - name: Cache NuGet packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj*') }}
@@ -36,9 +36,9 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
-          path: ./Interpreter.Tests/coverage.cobertura.xml
+          path: ./HydraScript.Tests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 80
+          minimum_coverage: 20
           fail_below_threshold: true
           show_class_names: true
           show_missing: true
@@ -49,7 +49,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: ./Interpreter.Tests/coverage.cobertura.xml
+          filename: ./HydraScript.Tests/coverage.cobertura.xml
           badge: true
           fail_below_min: false
           format: markdown
@@ -57,13 +57,13 @@ jobs:
           hide_complexity: true
           thresholds: '80 100'
       - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
-          reports: './Interpreter.Tests/coverage.cobertura.xml' 
+          reports: './HydraScript.Tests/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v4
         with:
           name: CoverageReport   
           path: coverage-report

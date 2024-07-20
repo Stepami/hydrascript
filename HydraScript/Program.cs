@@ -1,0 +1,49 @@
+﻿using System.Diagnostics.CodeAnalysis;
+using CommandLine;
+using HydraScript.Services.Executor;
+using HydraScript.Services.Executor.Impl;
+using HydraScript.Services.Parsing;
+using HydraScript.Services.Parsing.Impl;
+using HydraScript.Services.Providers.LexerProvider;
+using HydraScript.Services.Providers.LexerProvider.Impl;
+using HydraScript.Services.Providers.ParserProvider;
+using HydraScript.Services.Providers.ParserProvider.Impl;
+using HydraScript.Services.Providers.StructureProvider;
+using HydraScript.Services.Providers.StructureProvider.Impl;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+namespace HydraScript;
+
+[ExcludeFromCodeCoverage]
+public static class Program
+{
+    private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
+    private static IServiceProvider ServiceProvider { get; set; }
+
+    private static void Main(string[] args) =>
+        Parser.Default.ParseArguments<CommandLineSettings>(args)
+            .WithParsed(options =>
+            {
+                ConfigureServices(options);
+                ServiceProvider
+                    .GetService<IExecutor>()!
+                    .Execute();
+            })
+            .WithNotParsed(errors => errors.Output());
+        
+
+    private static void ConfigureServices(CommandLineSettings settings)
+    {
+        ServiceCollection.AddSingleton<IStructureProvider, StructureProvider>();
+        ServiceCollection.AddSingleton<ILexerProvider, LexerProvider>();
+        ServiceCollection.AddSingleton<IParserProvider, ParserProvider>();
+        ServiceCollection.AddSingleton<IParsingService, ParsingService>();
+
+        ServiceCollection.AddSingleton<IExecutor, Executor>();
+
+        ServiceCollection.AddSingleton(_ => Options.Create(settings));
+            
+        ServiceProvider = ServiceCollection.BuildServiceProvider();
+    }
+}
