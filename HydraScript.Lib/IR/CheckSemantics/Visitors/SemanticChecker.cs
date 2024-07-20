@@ -411,12 +411,8 @@ public class SemanticChecker :
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var symbol =
-            visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)
-            ?? throw new UnknownIdentifierReference(visitable.Name);
-
+        var symbol = visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name);
         _functionStorage.RemoveIfPresent(symbol);
-
         visitable.Statements.Accept(this);
 
         var returnStatements = visitable.GetReturnStatements()

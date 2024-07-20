@@ -86,7 +86,12 @@ public class DeclarationVisitor :
 
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
-            _functionStorage.Save(functionSymbol, visitable);
+        {
+            if (visitable.HasReturnStatement())
+                _functionStorage.Save(functionSymbol, visitable);
+            else
+                functionSymbol.DefineReturnType("void");
+        }
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
         return visitable.Statements.Accept(this);
