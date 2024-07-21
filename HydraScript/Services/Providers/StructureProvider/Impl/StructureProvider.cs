@@ -14,7 +14,7 @@ public class StructureProvider : IStructureProvider
             new JsonSerializerOptions
             {
                 Converters = { new StructureReadConverter() }
-            });
+            })!;
 
     [ExcludeFromCodeCoverage]
     private class StructureReadConverter : JsonConverter<Structure>
@@ -26,8 +26,8 @@ public class StructureProvider : IStructureProvider
             var tokenTypes = jsonDocument.RootElement
                 .EnumerateArray().Select(element =>
                 {
-                    var tag = element.GetProperty("tag").GetString();
-                    var pattern = element.GetProperty("pattern").GetString();
+                    var tag = element.GetProperty("tag").GetString()!;
+                    var pattern = element.GetProperty("pattern").GetString()!;
                     var priority = element.GetProperty("priority").GetInt32();
 
                     var ignorable = element.TryGetProperty("canIgnore", out var canIgnore);

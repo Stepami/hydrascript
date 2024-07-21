@@ -22,14 +22,14 @@ namespace HydraScript;
 public static class Program
 {
     private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
-    private static IServiceProvider ServiceProvider { get; set; }
+    private static IServiceProvider? ServiceProvider { get; set; }
 
     private static void Main(string[] args) =>
         Parser.Default.ParseArguments<CommandLineSettings>(args)
             .WithParsed(options =>
             {
                 ConfigureServices(options);
-                ServiceProvider
+                ServiceProvider?
                     .GetService<IExecutor>()!
                     .Execute();
             })

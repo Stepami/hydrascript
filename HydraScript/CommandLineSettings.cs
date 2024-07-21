@@ -11,7 +11,7 @@ namespace HydraScript;
 public class CommandLineSettings
 {
     [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
-    public string InputFilePath { get; set; }
+    public required string InputFilePath { get; set; }
 
     [Option('d', "dump", Default = false, HelpText = "Show dump data of interpreter")]
     public bool Dump { get; set; }
