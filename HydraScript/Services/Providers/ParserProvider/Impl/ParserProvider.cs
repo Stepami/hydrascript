@@ -9,11 +9,16 @@ namespace HydraScript.Services.Providers.ParserProvider.Impl;
 public class ParserProvider : IParserProvider
 {
     private readonly ILexerProvider _lexerProvider;
+    private readonly IFileSystem _fileSystem;
     private readonly CommandLineSettings _settings;
 
-    public ParserProvider(ILexerProvider lexerProvider, IOptions<CommandLineSettings> options)
+    public ParserProvider(
+        ILexerProvider lexerProvider,
+        IFileSystem fileSystem,
+        IOptions<CommandLineSettings> options)
     {
         _lexerProvider = lexerProvider;
+        _fileSystem = fileSystem;
         _settings = options.Value;
     }
 
@@ -21,8 +26,9 @@ public class ParserProvider : IParserProvider
     {
         var lexer = _lexerProvider.CreateLexer();
         var parser = new Parser(lexer);
+        var inputFileName = _settings.InputFilePath.Split(".js")[0];
         return _settings.Dump
-            ? new LoggingParser(parser, _settings.GetInputFileName(), new FileSystem())
+            ? new LoggingParser(parser, inputFileName, _fileSystem)
             : parser;
     }
 }

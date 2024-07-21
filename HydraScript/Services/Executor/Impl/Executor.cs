@@ -3,6 +3,7 @@ using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
+using HydraScript.Services.SourceCode;
 using Microsoft.Extensions.Options;
 
 namespace HydraScript.Services.Executor.Impl;
@@ -10,19 +11,22 @@ namespace HydraScript.Services.Executor.Impl;
 public class Executor : IExecutor
 {
     private readonly IParsingService _parsingService;
-    private readonly CommandLineSettings _commandLineSettings;
+    private readonly ISourceCodeProvider _sourceCodeProvider;
 
-    public Executor(IParsingService parsingService, IOptions<CommandLineSettings> options)
+    public Executor(
+        IParsingService parsingService,
+        ISourceCodeProvider sourceCodeProvider)
     {
         _parsingService = parsingService;
-        _commandLineSettings = options.Value;
+        _sourceCodeProvider = sourceCodeProvider;
     }
 
     public void Execute()
     {
         try
         {
-            var ast = _parsingService.Parse(_commandLineSettings.GetText());
+            var text = _sourceCodeProvider.GetText();
+            var ast = _parsingService.Parse(text);
             var instructions = ast.GetInstructions();
 
             var vm = new VirtualMachine();

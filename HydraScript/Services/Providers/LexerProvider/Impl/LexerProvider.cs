@@ -9,11 +9,16 @@ namespace HydraScript.Services.Providers.LexerProvider.Impl;
 public class LexerProvider : ILexerProvider
 {
     private readonly IStructureProvider _structureProvider;
+    private readonly IFileSystem _fileSystem;
     private readonly CommandLineSettings _settings;
 
-    public LexerProvider(IStructureProvider structureProvider, IOptions<CommandLineSettings> options)
+    public LexerProvider(
+        IStructureProvider structureProvider,
+        IFileSystem fileSystem,
+        IOptions<CommandLineSettings> options)
     {
         _structureProvider = structureProvider;
+        _fileSystem = fileSystem;
         _settings = options.Value;
     }
 
@@ -21,8 +26,9 @@ public class LexerProvider : ILexerProvider
     {
         var structure = _structureProvider.CreateStructure();
         var lexer = new Lexer(structure);
+        var inputFileName = _settings.InputFilePath.Split(".js")[0];
         return _settings.Dump
-            ? new LoggingLexer(lexer, _settings.GetInputFileName(), new FileSystem())
+            ? new LoggingLexer(lexer, inputFileName, _fileSystem)
             : lexer;
     }
 }

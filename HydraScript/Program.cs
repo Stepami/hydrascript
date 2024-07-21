@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using CommandLine;
 using HydraScript.Services.Executor;
 using HydraScript.Services.Executor.Impl;
@@ -10,6 +11,8 @@ using HydraScript.Services.Providers.ParserProvider;
 using HydraScript.Services.Providers.ParserProvider.Impl;
 using HydraScript.Services.Providers.StructureProvider;
 using HydraScript.Services.Providers.StructureProvider.Impl;
+using HydraScript.Services.SourceCode;
+using HydraScript.Services.SourceCode.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -39,6 +42,8 @@ public static class Program
         ServiceCollection.AddSingleton<ILexerProvider, LexerProvider>();
         ServiceCollection.AddSingleton<IParserProvider, ParserProvider>();
         ServiceCollection.AddSingleton<IParsingService, ParsingService>();
+        ServiceCollection.AddSingleton<ISourceCodeProvider, SourceCodeProvider>();
+        ServiceCollection.AddSingleton<IFileSystem, FileSystem>();
 
         ServiceCollection.AddSingleton<IExecutor, Executor>();
 

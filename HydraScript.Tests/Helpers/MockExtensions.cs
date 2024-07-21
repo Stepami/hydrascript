@@ -1,7 +1,6 @@
 using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Addresses;
 using HydraScript.Lib.BackEnd.Instructions;
-using Microsoft.Extensions.Options;
 using Moq;
 
 namespace HydraScript.Tests.Helpers;
@@ -15,10 +14,6 @@ public static class MockExtensions
         halt.Setup(x => x.End()).Returns(true);
         return halt;
     }
-
-    public static IOptions<CommandLineSettings> ToOptions
-        (this Mock<CommandLineSettings> commandLineSettings) =>
-        Options.Create(commandLineSettings.Object);
 
     public static Mock<Instruction> ToInstructionMock(this int number)
     {
