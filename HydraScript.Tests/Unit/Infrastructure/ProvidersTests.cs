@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
@@ -32,13 +33,13 @@ public class ProvidersTests
                 Dump = dump,
                 InputFilePath = "file.js"
             });
-            
-        var lexerProvider = new LexerProvider(structureProvider.Object, options.Object);
+
+        var lexerProvider = new LexerProvider(structureProvider.Object, Mock.Of<IFileSystem>(), options.Object);
         var lexer = lexerProvider.CreateLexer();
-            
+
         Assert.IsType(lexerType, lexer);
     }
-        
+
     [Theory]
     [InlineData(typeof(Parser), false)]
     [InlineData(typeof(LoggingParser), true)]
@@ -57,9 +58,9 @@ public class ProvidersTests
         lexerProvider.Setup(x => x.CreateLexer())
             .Returns(lexer.Object);
 
-        var parserProvider = new ParserProvider(lexerProvider.Object, options.Object);
+        var parserProvider = new ParserProvider(lexerProvider.Object, Mock.Of<IFileSystem>(), options.Object);
         var parser = parserProvider.CreateParser();
-            
+
         Assert.IsType(parserType, parser);
     }
 }

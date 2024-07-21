@@ -11,10 +11,10 @@ namespace HydraScript;
 public class CommandLineSettings
 {
     [Value(0, MetaName = "InputFilePath", Required = true, HelpText = "Path to input file")]
-    public virtual string InputFilePath { get; set; }
+    public string InputFilePath { get; set; }
 
     [Option('d', "dump", Default = false, HelpText = "Show dump data of interpreter")]
-    public virtual bool Dump { get; set; }
+    public bool Dump { get; set; }
 
     [Usage(ApplicationAlias = "HydraScript")]
     public static IEnumerable<Example> Examples
@@ -27,10 +27,4 @@ public class CommandLineSettings
                 new CommandLineSettings { InputFilePath = "file.js", Dump = true });
         }
     }
-
-    public string GetInputFileName() =>
-        InputFilePath.Split(".js")[0];
-
-    public virtual string GetText() =>
-        File.ReadAllText(InputFilePath);
 }

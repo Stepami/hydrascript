@@ -5,7 +5,7 @@ using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Services.Executor.Impl;
 using HydraScript.Services.Parsing;
-using HydraScript.Tests.Helpers;
+using HydraScript.Services.SourceCode;
 using HydraScript.Tests.Stubs;
 using Moq;
 using Xunit;
@@ -14,15 +14,10 @@ namespace HydraScript.Tests.Unit.Infrastructure;
 
 public class ExecutorTests
 {
-    private readonly Mock<CommandLineSettings> _settings;
     private readonly Mock<IParsingService> _parsingService;
 
     public ExecutorTests()
     {
-        _settings = new Mock<CommandLineSettings>();
-        _settings.Setup(x => x.Dump).Returns(false);
-        _settings.Setup(x => x.InputFilePath).Returns("file.js");
-
         _parsingService = new Mock<IParsingService>();
     }
 
@@ -36,7 +31,7 @@ public class ExecutorTests
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, _settings.ToOptions());
+        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
 
@@ -50,7 +45,7 @@ public class ExecutorTests
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, _settings.ToOptions());
+        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
         
@@ -60,7 +55,7 @@ public class ExecutorTests
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Throws<LexerException>();
 
-        var executor = new Executor(_parsingService.Object, _settings.ToOptions());
+        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
         
@@ -70,7 +65,7 @@ public class ExecutorTests
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Throws<ParserException>();
 
-        var executor = new Executor(_parsingService.Object, _settings.ToOptions());
+        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
         
@@ -88,7 +83,7 @@ public class ExecutorTests
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, _settings.ToOptions());
+        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
 }
