@@ -13,7 +13,7 @@ public class TextCoordinateSystemComputerTests
     {
         const string text = "let x = 0";
         var result = _sut.GetLines(text);
-        result.Should().BeEquivalentTo([10]);
+        result.Should().BeEquivalentTo([text.Length + Environment.NewLine.Length - 1]);
     }
     
     [Fact]
@@ -21,19 +21,27 @@ public class TextCoordinateSystemComputerTests
     {
         var text = "let x = 0" + Environment.NewLine;
         var result = _sut.GetLines(text);
-        result.Should().BeEquivalentTo([10]);
+        result.Should().BeEquivalentTo([text.Length - 1]);
     }
     
     [Fact]
     public void GetLines_HasNewLines_MultipleIndicesResult()
     {
-        var text = "let x = 0" +
+        const string stmt1 = "let x = 0";
+        const string stmt2 = "x = x + 1";
+        const string stmt3 = """print("x")""";
+        var text = stmt1 +
                    Environment.NewLine +
-                   "x = x + 1" +
+                   stmt2 +
                    Environment.NewLine +
-                   """print("x")""" +
+                   stmt3 +
                    Environment.NewLine;
         var result = _sut.GetLines(text);
-        result.Should().BeEquivalentTo([10, 21, 33]);
+        result.Should().BeEquivalentTo(
+        [
+            stmt1.Length + Environment.NewLine.Length - 1,
+            stmt1.Length + stmt2.Length + Environment.NewLine.Length * 2 - 1,
+            stmt1.Length + stmt2.Length + stmt3.Length + Environment.NewLine.Length * 3 - 1
+        ]);
     }
 }
