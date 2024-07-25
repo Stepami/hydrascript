@@ -61,7 +61,7 @@ public class DeclarationVisitor :
 
     public Unit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.Parent.SymbolTable.ContainsSymbol(visitable.Name))
+        if (visitable.Parent!.SymbolTable.ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>

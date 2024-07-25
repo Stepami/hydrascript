@@ -5,16 +5,16 @@ namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment;
 
 public class Simple : Instruction
 {
-    public string Left { get; set; }
+    public string? Left { get; set; }
 
-    protected readonly (IValue left, IValue right) Right;
-    private readonly string _operator;
+    protected readonly (IValue? left, IValue? right) Right;
+    private readonly string _operator = string.Empty;
 
-    protected Simple(string left) => Left = left;
+    protected Simple(string? left) => Left = left;
 
     public Simple(
-        string left,
-        (IValue left, IValue right) right,
+        string? left,
+        (IValue? left, IValue? right) right,
         string @operator)
     {
         Left = left;
@@ -55,20 +55,20 @@ public class Simple : Instruction
         var frame = vm.Frames.Peek();
         if (Right.left == null)
         {
-            var value = Right.right.Get(frame);
-            frame[Left] = _operator switch
+            var value = Right.right!.Get(frame);
+            frame[Left!] = _operator switch
             {
                 "-" => -Convert.ToDouble(value),
                 "!" => !Convert.ToBoolean(value),
-                "~" => ((List<object>)value).Count,
+                "~" => ((List<object>)value!).Count,
                 "" => value,
                 _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
         }
         else
         {
-            object lValue = Right.left.Get(frame), rValue = Right.right.Get(frame);
-            frame[Left] = _operator switch
+            object? lValue = Right.left.Get(frame), rValue = Right.right!.Get(frame);
+            frame[Left!] = _operator switch
             {
                 "+" when lValue is string => lValue.ToString() + rValue,
                 "+" => Convert.ToDouble(lValue) + Convert.ToDouble(rValue),
@@ -84,9 +84,9 @@ public class Simple : Instruction
                 ">=" => Convert.ToDouble(lValue) >= Convert.ToDouble(rValue),
                 "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
                 "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
-                "." => ((Dictionary<string, object>)lValue)[rValue.ToString()!],
-                "[]" => ((List<object>)lValue)[Convert.ToInt32(rValue)],
-                "++" => ((List<object>)lValue).Concat((List<object>)rValue).ToList(),
+                "." => ((Dictionary<string, object>)lValue!)[rValue!.ToString()!],
+                "[]" => ((List<object>)lValue!)[Convert.ToInt32(rValue)],
+                "++" => ((List<object>)lValue!).Concat((List<object>)rValue!).ToList(),
                 _ => throw new NotSupportedException($"_operator {_operator} is not supported")
             };
         }

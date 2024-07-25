@@ -4,22 +4,23 @@ using HydraScript.Lib.BackEnd.Values;
 
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
 
-public class DotAssignment : Simple, IWriteToComplexData
+public class DotAssignment(string @object, IValue property, IValue value)
+    : Simple(left: @object, (property, value), "."), IWriteToComplexData
 {
-    public DotAssignment(string @object, IValue property, IValue value) :
-        base(left: @object, (property, value), ".") { }
-
     public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
-        var obj = (Dictionary<string, object>) frame[Left];
-        var field = (string) Right.left.Get(frame) ?? string.Empty;
-        obj[field] = Right.right.Get(frame);
+        if (frame[Left!] is Dictionary<string, object> obj)
+        {
+            var field = (string?)Right.left?.Get(frame) ?? string.Empty;
+            obj[field] = Right.right!.Get(frame)!;
+        }
+
         return Address.Next;
     }
     
     public Simple ToSimple() =>
-        new DotRead(new Name(Left), Right.left);
+        new DotRead(new Name(Left!), Right.left!);
 
     protected override string ToStringInternal() =>
         $"{Left}.{Right.left} = {Right.right}";

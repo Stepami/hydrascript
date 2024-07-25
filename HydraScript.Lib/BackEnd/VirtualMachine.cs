@@ -4,7 +4,7 @@ namespace HydraScript.Lib.BackEnd;
 
 public record VirtualMachine(
     Stack<Call> CallStack, Stack<Frame> Frames,
-    Stack<(string Id, object Value)> Arguments,
+    Stack<(string Id, object? Value)> Arguments,
     TextWriter Writer
 )
 {
@@ -26,16 +26,16 @@ public record VirtualMachine(
         instructions[address].Execute(this);
     }
 }
-    
+
 public record Call(
     IAddress From, FunctionInfo To, 
-    List<(string Id, object Value)> Parameters,
-    string Where = null)
+    List<(string Id, object? Value)> Parameters,
+    string? Where = null)
 {
     public override string ToString() =>
         $"{From} => {To.Start}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
 }
-    
+
 public record FunctionInfo(string Id)
 {
     public Label Start =>
@@ -46,22 +46,18 @@ public record FunctionInfo(string Id)
 
     public override string ToString() => Id;
 }
-    
-public class Frame
+
+public class Frame(IAddress returnAddress, Frame? parentFrame = null)
 {
-    private readonly Dictionary<string, object> _variables = new();
-    private readonly Frame _parentFrame;
+    private readonly Dictionary<string, object?> _variables = new();
 
-    public IAddress ReturnAddress { get; }
+    public IAddress ReturnAddress { get; } = returnAddress;
 
-    public Frame(IAddress returnAddress, Frame parentFrame = null) =>
-        (ReturnAddress, _parentFrame) = (returnAddress, parentFrame);
-
-    public object this[string id]
+    public object? this[string id]
     {
         get => _variables.TryGetValue(id, out var value)
             ? value
-            : _parentFrame?[id];
+            : parentFrame?[id];
         set => _variables[id] = value;
     }
 }

@@ -71,7 +71,7 @@ public class InstructionProvider :
                 "Unsupported keyword inside loop")
         };
 
-        return new() { new Goto(jumpType) };
+        return [new Goto(jumpType)];
     }
 
     public AddressedInstructions Visit(ExpressionStatement visitable) =>
@@ -82,13 +82,13 @@ public class InstructionProvider :
         switch (visitable.Expression)
         {
             case null:
-                return new() { new Return() };
+                return [new Return()];
             case PrimaryExpression primary:
-                return new() { new Return(primary.ToValue()) };
+                return [new Return(primary.ToValue())];
         }
 
         var result = visitable.Expression.Accept(_expressionVisitor);
-        var last = new Name(result.OfType<Simple>().Last().Left);
+        var last = new Name(result.OfType<Simple>().Last().Left!);
         result.Add(new Return(last));
 
         return result;
@@ -97,7 +97,7 @@ public class InstructionProvider :
     public AddressedInstructions Visit(FunctionDeclaration visitable)
     {
         if (!visitable.Statements.Any())
-            return new();
+            return [];
 
         var functionInfo = new FunctionInfo(visitable.Name);
 
@@ -135,7 +135,7 @@ public class InstructionProvider :
         else
         {
             result.AddRange(visitable.Condition.Accept(_expressionVisitor));
-            var last = new Name(result.OfType<Simple>().Last().Left);
+            var last = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new IfNotGoto(last, endBlockLabel));
         }
         
@@ -164,7 +164,7 @@ public class InstructionProvider :
     public AddressedInstructions Visit(IfStatement visitable)
     {
         if (visitable.Empty())
-            return new();
+            return [];
 
         var blockId = $"if_else_{visitable.GetHashCode()}";
         var startBlockLabel = new Label($"Start_{blockId}");
@@ -177,7 +177,7 @@ public class InstructionProvider :
         else
         {
             result.AddRange(visitable.Test.Accept(_expressionVisitor));
-            var last = new Name(result.OfType<Simple>().Last().Left);
+            var last = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new IfNotGoto(last,
                 visitable.HasElseBlock()
                     ? startBlockLabel
@@ -190,7 +190,7 @@ public class InstructionProvider :
         result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
 
         if (visitable.HasElseBlock())
-            result.AddRange(visitable.Else.Accept(this));
+            result.AddRange(visitable.Else?.Accept(this) ?? []);
 
         result.OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
             .ToList().ForEach(g=> g.SetJump(endBlockLabel));

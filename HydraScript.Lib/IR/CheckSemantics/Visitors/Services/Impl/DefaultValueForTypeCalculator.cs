@@ -10,7 +10,7 @@ internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
     private readonly Type _void = "void";
     private readonly Type _null = new NullType();
 
-    public object GetDefaultValueForType(Type type)
+    public object? GetDefaultValueForType(Type type)
     {
         if (type.Equals(_boolean))
             return false;

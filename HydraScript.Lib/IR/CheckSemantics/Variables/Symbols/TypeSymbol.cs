@@ -1,17 +1,11 @@
 namespace HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
-public class TypeSymbol : Symbol
+public class TypeSymbol(Type type, string? id = null) : Symbol
 {
-    public override string Id { get; }
-    public override Type Type { get; }
-    
-    public TypeSymbol(Type type, string id = null)
-    {
-        Id = id ?? type.ToString();
-        Type = type;
-    }
+    public override string Id { get; } = id ?? type.ToString();
+    public override Type Type { get; } = type;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is TypeSymbol typeSymbol)
         {

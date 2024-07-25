@@ -2,19 +2,15 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
 namespace HydraScript.Lib.FrontEnd.GetTokens.Impl;
 
-public class Lexer : ILexer, IEnumerable<Token>
+public class Lexer(Structure structure) : ILexer, IEnumerable<Token>
 {
-    private readonly List<int> _lines = new();
+    private readonly List<int> _lines = [];
     private string _text = "";
 
-    public Structure Structure { get; }
-
-    public Lexer(Structure structure) => 
-        Structure = structure;
+    public Structure Structure { get; } = structure;
 
     public List<Token> GetTokens(string text)
     {
@@ -58,7 +54,7 @@ public class Lexer : ILexer, IEnumerable<Token>
             }
         }
 
-        yield return new Token(new EndOfProgramType());
+        yield return new EndToken();
     }
 
     [ExcludeFromCodeCoverage]

@@ -9,12 +9,12 @@ public class AssignmentExpression : Expression
 {
     public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
-    public TypeValue DestinationType { get; }
+    public TypeValue? DestinationType { get; }
 
     public AssignmentExpression(
         LeftHandSideExpression lhs,
         Expression source,
-        TypeValue destinationType = null)
+        TypeValue? destinationType = null)
     {
         Destination = lhs;
         lhs.Parent = this;

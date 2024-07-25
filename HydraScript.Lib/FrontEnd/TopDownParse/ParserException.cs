@@ -12,7 +12,7 @@ public class ParserException : Exception
         
     protected ParserException(string message, Exception inner) : base(message, inner) { }
         
-    public ParserException(Segment segment, string expected, Token actual) : 
+    public ParserException(Segment segment, string? expected, Token actual) : 
         base($"Wrong syntax: {segment} expected {expected}; actual = ({actual.Type.Tag}, {actual.Value})")
     {
     }

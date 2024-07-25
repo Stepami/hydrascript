@@ -6,12 +6,12 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 public class ReturnStatement : Statement
 {
-    public Expression Expression { get; }
+    public Expression? Expression { get; }
 
-    public ReturnStatement(Expression expression = null)
+    public ReturnStatement(Expression? expression = null)
     {
         Expression = expression;
-        if (expression is not null)
+        if (Expression is not null)
         {
             Expression.Parent = this;
         }

@@ -1,25 +1,14 @@
 namespace HydraScript.Lib.BackEnd.Values;
 
-public class Name : IValue
+public class Name(string id) : IValue
 {
-    private readonly string _id;
+    private readonly string _id = id;
 
-    public Name(string id)
-    {
-        _id = id;
-    }
-
-    public object Get(Frame frame) => frame[_id];
+    public object? Get(Frame? frame) => frame![_id];
 
     public override string ToString() => _id;
-        
-    public bool Equals(IValue other)
-    {
-        if (other is Name that)
-        {
-            return _id == that._id;
-        }
 
-        return false;
-    }
+    public bool Equals(IValue? other) =>
+        other is Name that &&
+        _id == that._id;
 }

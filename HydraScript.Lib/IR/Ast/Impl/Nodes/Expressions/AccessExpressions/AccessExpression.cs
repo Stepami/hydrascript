@@ -4,14 +4,14 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
 public abstract class AccessExpression : Expression
 {
-    public AccessExpression Next { get; private set; }
+    public AccessExpression? Next { get; private set; }
 
-    public AccessExpression Prev =>
+    public AccessExpression? Prev =>
         Parent as AccessExpression;
 
-    public Type ComputedType { get; set; }
+    public Type ComputedType { get; set; } = default!;
 
-    protected AccessExpression(AccessExpression prev)
+    protected AccessExpression(AccessExpression? prev)
     {
         if (prev is not null)
         {

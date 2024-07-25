@@ -10,10 +10,10 @@ public class MemberExpression : LeftHandSideExpression
 {
     private readonly IdentifierReference _identifierReference;
 
-    public AccessExpression AccessChain { get; }
-    public AccessExpression Tail { get; }
+    public AccessExpression? AccessChain { get; }
+    public AccessExpression? Tail { get; }
 
-    public Type ComputedIdType { get; set; }
+    public Type ComputedIdType { get; set; } = default!;
 
     public MemberExpression(IdentifierReference identifierReference) :
         this(identifierReference, accessChain: null, tail: null)
@@ -22,14 +22,14 @@ public class MemberExpression : LeftHandSideExpression
 
     public MemberExpression(
         IdentifierReference identifierReference,
-        AccessExpression accessChain,
-        AccessExpression tail)
+        AccessExpression? accessChain,
+        AccessExpression? tail)
     {
         _identifierReference = identifierReference;
         _identifierReference.Parent = this;
-            
+
         AccessChain = accessChain;
-        if (accessChain is not null)
+        if (AccessChain is not null)
         {
             AccessChain.Parent = this;
         }

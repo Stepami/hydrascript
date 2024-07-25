@@ -2,30 +2,21 @@ using System.Text;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
-public class FunctionSymbol : Symbol
+public class FunctionSymbol(
+    string id,
+    IEnumerable<Symbol> parameters,
+    Type type,
+    bool isEmpty) : Symbol
 {
-    private Type _returnType;
-    
-    public override string Id { get; }
-    /// <summary>Тип возврата функции</summary>
-    public override Type Type => _returnType;
-    public IReadOnlyList<Symbol> Parameters { get; }
-    public bool IsEmpty { get; }
+    public override string Id { get; } = id;
 
-    public FunctionSymbol(
-        string id,
-        IEnumerable<Symbol> parameters,
-        Type returnType,
-        bool isEmpty)
-    {
-        Id = id;
-        Parameters = new List<Symbol>(parameters);
-        _returnType = returnType;
-        IsEmpty = isEmpty;
-    }
+    /// <summary>Тип возврата функции</summary>
+    public override Type Type => type;
+    public IReadOnlyList<Symbol> Parameters { get; } = new List<Symbol>(parameters);
+    public bool IsEmpty { get; } = isEmpty;
 
     public void DefineReturnType(Type returnType) =>
-        _returnType = returnType;
+        type = returnType;
 
     public override string ToString() =>
         new StringBuilder($"function {Id}(")

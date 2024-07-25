@@ -8,7 +8,7 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
 public class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    private IReadOnlyCollection<ReturnStatement> _returnStatements;
+    private IReadOnlyCollection<ReturnStatement> _returnStatements = [];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }

@@ -1,21 +1,14 @@
 namespace HydraScript.Lib.BackEnd.Addresses;
 
-public class Label : IAddress
+public class Label(string name) : IAddress
 {
-    public string Name { get; }
+    public string Name { get; } = name;
 
-    public Label(string name) =>
-        Name = name;
-    
-    public IAddress Next { get; set; }
+    public IAddress Next { get; set; } = default!;
 
-    public bool Equals(IAddress other)
-    {
-        if (other is Label label)
-            return Name == label.Name;
-
-        return false;
-    }
+    public bool Equals(IAddress? other) =>
+        other is Label label &&
+        Name == label.Name;
 
     public override int GetHashCode() =>
         Name.GetHashCode();

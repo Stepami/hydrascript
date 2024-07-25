@@ -5,23 +5,23 @@ using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 namespace HydraScript.Lib.FrontEnd.GetTokens.Data;
 
 [ExcludeFromCodeCoverage]
-public record Token(TokenType Type)
+public partial record Token(TokenType Type, Segment Segment, string Value)
 {
-    public Segment Segment { get; }
-
-    public string Value { get; }
-
-    public Token(TokenType type, Segment segment, string value) :
-        this(type) =>
-        (Segment, Value) = (segment, value);
-
     public override string ToString()
     {
-        var displayValue = Value;
-        if (displayValue != null) displayValue = Regex.Replace(Value, "\"", "\\\"");
+        var displayValue = Quotes().Replace(Value, "\\\"");
+
         if (Type.CanIgnore()) displayValue = "";
         return $"{Type} {Segment}: {displayValue}";
     }
+
+    [GeneratedRegex("\"")]
+    private static partial Regex Quotes();
+}
+
+public record EndToken() : Token(new EndOfProgramType(), null!, null!)
+{
+    public override string ToString() => Type.ToString();
 }
     
 [ExcludeFromCodeCoverage]

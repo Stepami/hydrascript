@@ -66,7 +66,7 @@ public class ObjectTypeTests
 
         linkedListType.ResolveReference(linkedListType, refId: "self");
             
-        Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"])["next"]);
+        Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"]!)["next"]);
         Assert.Equal(linkedListType, array.Type);
         Assert.Equal(linkedListType, nullable.Type);
     }

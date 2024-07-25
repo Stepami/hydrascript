@@ -2,7 +2,7 @@ namespace HydraScript.Lib.IR.CheckSemantics.Types;
 
 public class Type
 {
-    private readonly string _name;
+    private readonly string _name = default!;
 
     protected Type()
     {
@@ -14,11 +14,11 @@ public class Type
     public virtual void ResolveReference(
         Type reference,
         string refId,
-        ISet<Type> visited = null)
+        ISet<Type>? visited = null)
     {
     }
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         obj switch
         {
             Any => true,
@@ -26,7 +26,7 @@ public class Type
             _ => false
         };
 
-    public override int GetHashCode() => 
+    public override int GetHashCode() =>
         _name.GetHashCode();
 
     public override string ToString() => _name;

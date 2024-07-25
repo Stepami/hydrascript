@@ -17,28 +17,28 @@ namespace HydraScript.Lib.FrontEnd.TopDownParse.Impl;
 
 public class Parser : IParser
 {
-    private TokensStream _tokens;
+    private TokensStream _tokens = new List<Token>();
     private readonly ILexer _lexer;
 
     public Parser(ILexer lexer) => 
         _lexer = lexer;
-    
+
     public IAbstractSyntaxTree TopDownParse(string text)
     {
         _tokens = _lexer.GetTokens(text);
-            
+
         var root = Script();
         Expect("EOP");
         return new AbstractSyntaxTree(root);
     }
 
-    private Token Expect(string expectedTag, string expectedValue = null)
+    private Token Expect(string expectedTag, string? expectedValue = null)
     {
         var current = _tokens.Current;
 
         if (!CurrentIs(expectedTag))
-            throw new ParserException(_tokens.Current!.Segment, expectedTag, _tokens.Current);
-        if (_tokens.Current!.Value != (expectedValue ?? _tokens.Current.Value))
+            throw new ParserException(_tokens.Current.Segment, expectedTag, _tokens.Current);
+        if (_tokens.Current.Value != (expectedValue ?? _tokens.Current.Value))
             throw new ParserException(_tokens.Current.Segment, expectedValue, _tokens.Current);
 
         _tokens.MoveNext();
@@ -46,7 +46,7 @@ public class Parser : IParser
     }
 
     private bool CurrentIs(string tag) =>
-        _tokens.Current!.Type == _lexer.Structure.FindByTag(tag);
+        _tokens.Current.Type == _lexer.Structure.FindByTag(tag);
 
     private bool CurrentIsLiteral() =>
         CurrentIs("NullLiteral") ||
@@ -57,11 +57,11 @@ public class Parser : IParser
 
     private bool CurrentIsKeyword(string keyword) =>
         CurrentIs("Keyword") &&
-        _tokens.Current!.Value == keyword;
+        _tokens.Current.Value == keyword;
 
     private bool CurrentIsOperator(string @operator) =>
         CurrentIs("Operator") &&
-        _tokens.Current!.Value == @operator;
+        _tokens.Current.Value == @operator;
 
     private ScriptBody Script() =>
         new(StatementList());
@@ -139,7 +139,7 @@ public class Parser : IParser
             return WhileStatement();
         }
 
-        return null;
+        return null!;
     }
 
     private BlockStatement BlockStatement()
@@ -242,7 +242,7 @@ public class Parser : IParser
             return WithSuffix(new ObjectTypeValue(propertyTypes));
         }
 
-        return null;
+        return null!;
     }
 
     private TypeValue WithSuffix(TypeValue baseType)
@@ -283,7 +283,7 @@ public class Parser : IParser
             return TypeDeclaration();
         }
 
-        return null;
+        return null!;
     }
 
     private FunctionDeclaration FunctionDeclaration()
@@ -422,7 +422,7 @@ public class Parser : IParser
             }
 
             Expect("RightParen");
-            return new CallExpression(member as MemberExpression, expressions)
+            return new CallExpression((member as MemberExpression)!, expressions)
                 { Segment = lp.Segment };
         }
 
@@ -465,9 +465,9 @@ public class Parser : IParser
         }
 
         return new MemberExpression(
-            identRef,
+            identRef!,
             accessChain.FirstOrDefault(),
-            tail: accessChain.LastOrDefault());;
+            tail: accessChain.LastOrDefault());
     }
 
     private Expression CastExpression()
@@ -651,12 +651,12 @@ public class Parser : IParser
             return ArrayLiteral();
         }
 
-        return null;
+        return null!;
     }
 
     private Literal Literal()
     {
-        var segment = _tokens.Current!.Segment;
+        var segment = _tokens.Current.Segment;
         if (CurrentIs("StringLiteral"))
         {
             var str = Expect("StringLiteral");
