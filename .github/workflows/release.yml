@@ -49,7 +49,7 @@ jobs:
       - name: Publish
         run: |
           mkdir output
-          dotnet publish ./HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
+          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
       - name: Upload release assets
         uses: shogo82148/actions-upload-release-asset@v1
         with:
