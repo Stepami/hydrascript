@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
+  pull_request_target:
     branches:
       - '**'
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   build-and-test:
@@ -33,7 +40,7 @@ jobs:
           dotnet test -c Release --no-build -v n --filter="Category=Unit"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         uses: 5monkeys/cobertura-action@master
         with:
           path: ./HydraScript.Tests/coverage.cobertura.xml
