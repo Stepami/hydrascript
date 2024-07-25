@@ -34,7 +34,11 @@ public class ProvidersTests
                 InputFilePath = "file.js"
             });
 
-        var lexerProvider = new LexerProvider(structureProvider.Object, Mock.Of<IFileSystem>(), options.Object);
+        var lexerProvider = new LexerProvider(
+            structureProvider.Object,
+            Mock.Of<ITextCoordinateSystemComputer>(),
+            Mock.Of<IFileSystem>(),
+            options.Object);
         var lexer = lexerProvider.CreateLexer();
 
         Assert.IsType(lexerType, lexer);

@@ -5,9 +5,9 @@ using HydraScript.Lib.FrontEnd.GetTokens.Data;
 
 namespace HydraScript.Lib.FrontEnd.GetTokens.Impl;
 
-public class Lexer(Structure structure) : ILexer, IEnumerable<Token>
+public class Lexer(Structure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
 {
-    private readonly List<int> _lines = [];
+    private IReadOnlyList<int> _lines = [];
     private string _text = "";
 
     public Structure Structure { get; } = structure;
@@ -15,17 +15,7 @@ public class Lexer(Structure structure) : ILexer, IEnumerable<Token>
     public List<Token> GetTokens(string text)
     {
         _text = text;
-
-        _lines.Clear();
-        if (!string.IsNullOrEmpty(text))
-        {
-            var lineMatches =
-                new Regex(@"(?<NEWLINE>\n)").Matches(text[^1] == '\n'
-                    ? text
-                    : new string(text.Append('\n').ToArray()));
-            foreach (Match match in lineMatches)
-                _lines.Add(match.Groups["NEWLINE"].Index);
-        }
+        _lines = computer.GetLines(_text);
 
         return this.Where(t => !t.Type.CanIgnore()).ToList();
     }

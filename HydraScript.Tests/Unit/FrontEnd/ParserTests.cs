@@ -9,15 +9,10 @@ namespace HydraScript.Tests.Unit.FrontEnd;
 
 public class ParserTests
 {
-    private readonly IParser _parser;
-
-    public ParserTests()
-    {
-        _parser = new Parser(new Lexer(
-            new StructureProvider()
-                .CreateStructure()
-        ));
-    }
+    private readonly IParser _parser = new Parser(new Lexer(
+        new StructureProvider()
+            .CreateStructure(),
+        new TextCoordinateSystemComputer()));
 
     [Theory]
     [ClassData(typeof(ParserSuccessTestData))]

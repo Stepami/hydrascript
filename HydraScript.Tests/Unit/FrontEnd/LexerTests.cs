@@ -8,12 +8,9 @@ namespace HydraScript.Tests.Unit.FrontEnd;
 
 public class LexerTests
 {
-    private readonly Lexer _lexer;
-
-    public LexerTests()
-    {
-        _lexer = new Lexer(new StructureProvider().CreateStructure());
-    }
+    private readonly Lexer _lexer = new(
+        new StructureProvider().CreateStructure(),
+        new TextCoordinateSystemComputer());
 
     [Theory]
     [ClassData(typeof(LexerSuccessData))]
