@@ -15,10 +15,10 @@ public class IfNotGoto : Goto
     {
         var frame = vm.Frames.Peek();
         return !Convert.ToBoolean(_test.Get(frame))
-            ? jump
+            ? Jump
             : Address.Next;
     }
 
     protected override string ToStringInternal() =>
-        $"IfNot {_test} Goto {jump.Name}";
+        $"IfNot {_test} Goto {Jump.Name}";
 }
