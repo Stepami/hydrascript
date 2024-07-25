@@ -4,7 +4,6 @@ using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Services.SourceCode;
-using Microsoft.Extensions.Options;
 
 namespace HydraScript.Services.Executor.Impl;
 
