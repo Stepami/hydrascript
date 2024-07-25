@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		contributor-licence-agreement.md = contributor-licence-agreement.md
 		LICENSE = LICENSE
 		Readme.md = Readme.md
+		SECURITY.md = SECURITY.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubFolder", "GithubFolder", "{54CBE5A7-3C3E-44ED-B877-7B08A818083B}"
