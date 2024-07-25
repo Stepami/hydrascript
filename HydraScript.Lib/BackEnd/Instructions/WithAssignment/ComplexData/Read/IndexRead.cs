@@ -3,25 +3,18 @@ using HydraScript.Lib.BackEnd.Values;
 
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
 
-public class IndexRead : Simple, IReadFromComplexData
+public class IndexRead(Name array, IValue index) : Simple(
+    leftValue: array,
+    binaryOperator: "[]",
+    rightValue: index), IReadFromComplexData
 {
-    private readonly Name _arrayName;
-    private readonly IValue _index;
-
-    public IndexRead(Name array, IValue index) : base(
-        leftValue: array,
-        binaryOperator: "[]",
-        rightValue: index)
-    {
-        _arrayName = array;
-        _index = index;
-    }
+    private readonly IValue _index = index;
 
     public Simple ToAssignment(IValue value) =>
-        new IndexAssignment(_arrayName.ToString(), _index, value);
+        new IndexAssignment(array.ToString(), _index, value);
 
     public Instruction ToInstruction() => this;
 
     protected override string ToStringInternal() =>
-        $"{Left} = {_arrayName}[{_index}]";
+        $"{Left} = {array}[{_index}]";
 }

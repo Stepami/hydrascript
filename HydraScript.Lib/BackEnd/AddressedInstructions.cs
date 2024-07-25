@@ -17,12 +17,12 @@ public class AddressedInstructions : IEnumerable<Instruction>
     }
 
     public IAddress Start =>
-        _addresses.First?.Value;
+        _addresses.First?.Value!;
 
     public IAddress End =>
-        _addresses.Last?.Value;
+        _addresses.Last?.Value!;
 
-    public void Add(Instruction instruction, string label = null)
+    public void Add(Instruction instruction, string? label = null)
     {
         IAddress newAddress = label is null
             ? new HashAddress(seed: instruction.GetHashCode())
@@ -66,7 +66,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         var prev = nodeToRemove.Previous;
         if (prev is not null)
         {
-            prev.Value.Next = nodeToRemove.Next?.Value;
+            prev.Value.Next = nodeToRemove.Next?.Value!;
         }
 
         _addressToNode.Remove(address);

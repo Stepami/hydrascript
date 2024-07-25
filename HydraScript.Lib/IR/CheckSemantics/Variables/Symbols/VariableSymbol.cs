@@ -1,17 +1,10 @@
 namespace HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
-public class VariableSymbol : Symbol
+public class VariableSymbol(string id, Type type, bool readOnly = false) : Symbol
 {
-    public override string Id { get; }
-    public override Type Type { get; }
-    public bool ReadOnly { get; }
-
-    public VariableSymbol(string id, Type type, bool readOnly = false)
-    {
-        Id = id;
-        Type = type;
-        ReadOnly = readOnly;
-    }
+    public override string Id { get; } = id;
+    public override Type Type { get; } = type;
+    public bool ReadOnly { get; } = readOnly;
 
     public override string ToString() => $"{(ReadOnly ? "const " : "")}{Id}: {Type}";
 }

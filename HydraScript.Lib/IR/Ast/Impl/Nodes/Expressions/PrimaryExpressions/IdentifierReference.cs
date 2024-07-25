@@ -3,14 +3,9 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-public class IdentifierReference : PrimaryExpression
+public class IdentifierReference(string name) : PrimaryExpression
 {
-    public string Name { get; }
-
-    public IdentifierReference(string name)
-    {
-        Name = name;
-    }
+    public string Name { get; } = name;
 
     protected override string NodeRepresentation() => Name;
 

@@ -9,7 +9,7 @@ public class DotAccess : AccessExpression
 {
     public IdentifierReference Property { get; }
 
-    public DotAccess(IdentifierReference property, AccessExpression prev = null) : base(prev)
+    public DotAccess(IdentifierReference property, AccessExpression? prev = null) : base(prev)
     {
         Property = property;
         Property.Parent = this;
@@ -20,7 +20,7 @@ public class DotAccess : AccessExpression
         yield return Property;
         if (HasNext())
         {
-            yield return Next;
+            yield return Next!;
         }
     }
 

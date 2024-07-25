@@ -4,7 +4,7 @@ namespace HydraScript.Lib.BackEnd.Instructions.WithJump;
 
 public class Goto : Instruction
 {
-    protected Label jump;
+    protected Label jump = default!;
 
     public InsideStatementJumpType? JumpType { get; }
         

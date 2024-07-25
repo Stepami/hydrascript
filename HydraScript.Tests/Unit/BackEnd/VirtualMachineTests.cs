@@ -1,4 +1,3 @@
-#nullable enable
 using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Addresses;
 using HydraScript.Lib.BackEnd.Instructions;
@@ -119,21 +118,21 @@ public class VirtualMachineTests
             Address = new HashAddress(1)
         };
         createArray.Execute(vm);
-        Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]).Count);
+        Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]!).Count);
 
         var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0))
         {
             Address = new HashAddress(2)
         };
         indexAssignment.Execute(vm);
-        Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"])[0]);
+        Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"]!)[0]);
 
         var removeFromArray = new RemoveFromArray("arr", new Constant(5))
         {
             Address = new HashAddress(3)
         };
         removeFromArray.Execute(vm);
-        Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]).Count);
+        Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]!).Count);
     }
 
     [Fact]
@@ -150,7 +149,7 @@ public class VirtualMachineTests
         _vm.Run(program);
         halt.Verify(x => x.Execute(
             It.Is<VirtualMachine>(
-                vm => ((Dictionary<string, object?>)vm.Frames.Peek()["obj"])["prop"] == null
+                vm => ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null
             )
         ), Times.Once());
         _vm.Frames.Pop();

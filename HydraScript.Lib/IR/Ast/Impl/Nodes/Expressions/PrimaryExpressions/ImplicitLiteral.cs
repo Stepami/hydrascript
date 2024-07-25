@@ -4,13 +4,10 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-public class ImplicitLiteral : PrimaryExpression
+public class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
 {
-    public TypeValue TypeValue { get; }
-    public object ComputedDefaultValue { private get; set; }
-
-    public ImplicitLiteral(TypeValue typeValue) =>
-        TypeValue = typeValue;
+    public TypeValue TypeValue { get; } = typeValue;
+    public object? ComputedDefaultValue { private get; set; }
 
     protected override string NodeRepresentation() =>
         TypeValue.ToString();
@@ -20,7 +17,7 @@ public class ImplicitLiteral : PrimaryExpression
             ComputedDefaultValue,
             ComputedDefaultValue is null
                 ? "null"
-                : ComputedDefaultValue.ToString());
+                : ComputedDefaultValue.ToString()!);
     
     public override Type Accept(SemanticChecker visitor) =>
         visitor.Visit(this);

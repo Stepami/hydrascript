@@ -10,7 +10,7 @@ public class Property : Expression
     public Expression Expression { get; }
 
     public ObjectLiteral Object =>
-        Parent as ObjectLiteral;
+        (Parent as ObjectLiteral)!;
 
     public Property(IdentifierReference id, Expression expression)
     {

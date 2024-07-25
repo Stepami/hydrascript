@@ -8,7 +8,7 @@ public class IndexAccess : AccessExpression
 {
     public Expression Index { get; }
 
-    public IndexAccess(Expression index, AccessExpression prev = null) : base(prev)
+    public IndexAccess(Expression index, AccessExpression? prev = null) : base(prev)
     {
         Index = index;
         Index.Parent = this;
@@ -19,7 +19,7 @@ public class IndexAccess : AccessExpression
         yield return Index;
         if (HasNext())
         {
-            yield return Next;
+            yield return Next!;
         }
     }
 

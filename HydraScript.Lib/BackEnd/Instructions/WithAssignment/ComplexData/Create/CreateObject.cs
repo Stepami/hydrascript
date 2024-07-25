@@ -2,12 +2,9 @@ using HydraScript.Lib.BackEnd.Addresses;
 
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 
-public class CreateObject : Simple
+public class CreateObject(string id) : Simple(id)
 {
-    private readonly string _id;
-        
-    public CreateObject(string id) : base(id) =>
-        _id = id;
+    private readonly string _id = id;
 
     public override IAddress Execute(VirtualMachine vm)
     {

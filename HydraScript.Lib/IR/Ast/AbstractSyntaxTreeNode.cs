@@ -14,11 +14,11 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     IVisitable<TypeSystemLoader>,
     IVisitable<DeclarationVisitor>
 {
-    public AbstractSyntaxTreeNode Parent { get; set; }
+    public AbstractSyntaxTreeNode? Parent { get; set; }
 
-    public SymbolTable SymbolTable { get; set; }
+    public SymbolTable SymbolTable { get; set; } = default!;
 
-    public Segment Segment { get; init; }
+    public Segment Segment { get; init; } = default!;
 
     internal List<AbstractSyntaxTreeNode> GetAllNodes()
     {
@@ -43,6 +43,7 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
             {
                 return true;
             }
+
             parent = parent.Parent;
         }
 
@@ -61,7 +62,7 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
 
     public virtual Unit Accept(TypeSystemLoader visitor) =>
         visitor.Visit(this);
-    
+
     public virtual Unit Accept(DeclarationVisitor visitor) =>
         visitor.Visit(this);
 
@@ -71,9 +72,9 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     public abstract AddressedInstructions Accept(InstructionProvider visitor);
 
     #endregion
-    
+
     protected abstract string NodeRepresentation();
-    
+
     public override string ToString() =>
         $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
 }

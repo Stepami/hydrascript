@@ -30,7 +30,7 @@ public class CallFunction : Simple
         var frame = new Frame(Address.Next, vm.Frames.Peek());
 
         var i = 0;
-        var args = new List<(string Id, object Value)>();
+        var args = new List<(string Id, object? Value)>();
         while (i < _numberOfArguments)
         {
             args.Add(vm.Arguments.Pop());

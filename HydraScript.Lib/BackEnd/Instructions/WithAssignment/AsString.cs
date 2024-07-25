@@ -5,16 +5,13 @@ using HydraScript.Lib.BackEnd.Values;
 
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment;
 
-public class AsString : Simple
+public class AsString(IValue value) : Simple(value)
 {
-    public AsString(IValue value) :
-        base(value) { }
-
     public override IAddress Execute(VirtualMachine vm)
     {
         var frame = vm.Frames.Peek();
-        frame[Left] = JsonSerializer.Serialize(
-            Right.right.Get(frame),
+        frame[Left!] = JsonSerializer.Serialize(
+            Right.right!.Get(frame),
             new JsonSerializerOptions
             {
                 WriteIndented = true,

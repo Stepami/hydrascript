@@ -9,7 +9,7 @@ public class ObjectType : NullableType
     private readonly ObjectTypeHasher _hasher;
     private readonly ObjectTypePrinter _serializer;
 
-    public string LastAccessedMethod { get; private set; }
+    public string LastAccessedMethod { get; private set; } = default!;
 
     public ObjectType(IEnumerable<PropertyType> properties)
     {
@@ -24,10 +24,10 @@ public class ObjectType : NullableType
         _serializer = new ObjectTypePrinter(this);
     }
 
-    public Type this[string id]
+    public Type? this[string id]
     {
         get => _properties.GetValueOrDefault(id);
-        private set => _properties[id] = value;
+        private set => _properties[id] = value!;
     }
 
     public void AddMethod(string methodName) =>
@@ -42,20 +42,20 @@ public class ObjectType : NullableType
     public override void ResolveReference(
         Type reference,
         string refId,
-        ISet<Type> visited = null)
+        ISet<Type>? visited = null)
     {
         visited ??= new HashSet<Type>();
         if (!visited.Add(this))
             return;
 
         foreach (var key in _properties.Keys)
-            if (refId == this[key])
+            if (refId == this[key]!)
                 this[key] = reference;
             else
-                this[key].ResolveReference(reference, refId, visited);
+                this[key]!.ResolveReference(reference, refId, visited);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is ObjectType that)
             return ReferenceEquals(this, that) ||
@@ -97,9 +97,9 @@ public class ObjectType : NullableType
             objectType._properties.Keys.Select(
                     key => HashCode.Combine(
                         key,
-                        objectType[key].Equals(_reference)
+                        objectType[key]!.Equals(_reference)
                             ? "@this".GetHashCode()
-                            : objectType[key].GetType().GetHashCode()))
+                            : objectType[key]!.GetType().GetHashCode()))
                 .Aggregate(36, HashCode.Combine);
 
         private int HashArrayType(ArrayType arrayType) =>
@@ -147,7 +147,7 @@ public class ObjectType : NullableType
                 var type = objectType[key];
                 var prop = $"{key}: ";
 
-                if (type.Equals(_reference))
+                if (type!.Equals(_reference))
                     prop += "@this";
                 else
                 {

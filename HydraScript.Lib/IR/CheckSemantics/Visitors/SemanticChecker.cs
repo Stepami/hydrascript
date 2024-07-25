@@ -128,7 +128,7 @@ public class SemanticChecker :
 
     public Type Visit(ImplicitLiteral visitable)
     {
-        var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
+        var type = visitable.TypeValue.BuildType(visitable.Parent!.SymbolTable);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
     }
@@ -249,7 +249,7 @@ public class SemanticChecker :
             var sourceType = assignment.Source.Accept(this);
             if (sourceType.Equals(undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
-            if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
+            if (!registeredSymbol!.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
                     left: registeredSymbol.Type,
@@ -307,7 +307,7 @@ public class SemanticChecker :
     {
         var idType = visitable.Id.Accept(this);
         visitable.ComputedIdType = idType;
-        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(this);
+        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(this) ?? "undefined";
     }
 
     public Type Visit(IndexAccess visitable)
@@ -326,7 +326,7 @@ public class SemanticChecker :
 
         var elemType = arrayType.Type;
         visitable.ComputedType = elemType;
-        return visitable.HasNext() ? visitable.Next.Accept(this) : elemType;
+        return visitable.HasNext() ? visitable.Next?.Accept(this) ?? "undefined" : elemType;
     }
 
     public Type Visit(DotAccess visitable)
@@ -345,7 +345,7 @@ public class SemanticChecker :
                 ? objectType
                 : throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
         visitable.ComputedType = fieldType;
-        return visitable.HasNext() ? visitable.Next.Accept(this) : fieldType;
+        return visitable.HasNext() ? visitable.Next?.Accept(this) ?? "undefined" : fieldType;
     }
 
     public Type Visit(CastAsExpression visitable)
@@ -411,7 +411,7 @@ public class SemanticChecker :
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name);
+        var symbol = visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(this);
 

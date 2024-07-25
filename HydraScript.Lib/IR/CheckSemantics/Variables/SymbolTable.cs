@@ -6,7 +6,7 @@ public class SymbolTable
 {
     private readonly Dictionary<string, Symbol> _symbols = new();
 
-    private SymbolTable _openScope;
+    private SymbolTable? _openScope;
 
     public void AddOpenScope(SymbolTable table)
     {
@@ -17,7 +17,7 @@ public class SymbolTable
     /// Символы доступные в области видимости таблицы
     /// </summary>
     public IEnumerable<Symbol> GetAvailableSymbols() =>
-        _symbols.Values.Concat(_openScope?.GetAvailableSymbols() ?? Array.Empty<Symbol>());
+        _symbols.Values.Concat(_openScope?.GetAvailableSymbols() ?? []);
 
     public void AddSymbol(Symbol symbol) =>
         _symbols[symbol.Id] = symbol;
@@ -25,7 +25,7 @@ public class SymbolTable
     /// <summary>
     /// Поиск эффективного символа
     /// </summary>
-    public TSymbol FindSymbol<TSymbol>(string id) where TSymbol : Symbol
+    public TSymbol? FindSymbol<TSymbol>(string id) where TSymbol : Symbol
     {
         var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
         return !hasInsideTheScope

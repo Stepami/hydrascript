@@ -2,8 +2,8 @@ namespace HydraScript.Lib.IR.CheckSemantics.Types;
 
 public class NullableType : Type
 {
-    public Type Type { get; private set; }
-        
+    public Type Type { get; private set; } = default!;
+
     public NullableType(Type type) :
         base($"{type}?") =>
         Type = type;
@@ -15,7 +15,7 @@ public class NullableType : Type
     public override void ResolveReference(
         Type reference,
         string refId,
-        ISet<Type> visited = null)
+        ISet<Type>? visited = null)
     {
         if (Type == refId)
             Type = reference;
@@ -23,7 +23,7 @@ public class NullableType : Type
             Type.ResolveReference(reference, refId, visited);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is NullableType that)
             return Equals(Type, that.Type);

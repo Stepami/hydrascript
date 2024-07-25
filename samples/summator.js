@@ -1,4 +1,4 @@
-type summable{
+type summable = {
     x: number;
     y: number;
 }

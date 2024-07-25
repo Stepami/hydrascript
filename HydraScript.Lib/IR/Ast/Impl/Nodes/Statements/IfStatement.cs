@@ -8,9 +8,9 @@ public class IfStatement : Statement
 {
     public Expression Test { get; }
     public Statement Then { get; }
-    public Statement Else { get; }
+    public Statement? Else { get; }
 
-    public IfStatement(Expression test, Statement then, Statement @else = null)
+    public IfStatement(Expression test, Statement then, Statement? @else = null)
     {
         Test = test;
         Test.Parent = this;

@@ -4,7 +4,7 @@ namespace HydraScript.Lib.BackEnd.Instructions;
 
 public abstract class Instruction
 {
-    private IAddress _address;
+    private IAddress _address = default!;
 
     public IAddress Address
     {

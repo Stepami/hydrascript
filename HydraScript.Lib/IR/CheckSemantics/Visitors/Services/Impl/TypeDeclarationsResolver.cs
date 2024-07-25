@@ -28,12 +28,12 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
                     declarationToResolve.TypeId));
         }
 
-        while (_declarationsToResolve.Any())
+        while (_declarationsToResolve.Count != 0)
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
             var typeSymbol = declarationToResolve.SymbolTable
-                .FindSymbol<TypeSymbol>(declarationToResolve.TypeId);
+                .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)!;
 
             var resolvingCandidates = declarationToResolve.SymbolTable
                 .GetAvailableSymbols()

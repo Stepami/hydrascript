@@ -8,17 +8,17 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 public class Literal : PrimaryExpression
 {
     private readonly TypeValue _type;
-    private readonly object _value;
+    private readonly object? _value;
     private readonly string _label;
 
     public Literal(
         TypeValue type,
-        object value,
+        object? value,
         Segment segment,
-        string label = null)
+        string? label = null)
     {
         _type = type;
-        _label = label ?? value.ToString();
+        _label = (label ?? value?.ToString())!;
         _value = value;
         Segment = segment;
     }
@@ -29,5 +29,5 @@ public class Literal : PrimaryExpression
         new Constant(_value, _label);
 
     public override Type Accept(SemanticChecker visitor) =>
-        _type.BuildType(Parent.SymbolTable);
+        _type.BuildType(Parent!.SymbolTable);
 }
