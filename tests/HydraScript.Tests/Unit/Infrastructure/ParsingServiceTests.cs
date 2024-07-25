@@ -2,7 +2,6 @@ using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Services.Parsing.Impl;
 using HydraScript.Services.Providers.ParserProvider;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.Infrastructure;

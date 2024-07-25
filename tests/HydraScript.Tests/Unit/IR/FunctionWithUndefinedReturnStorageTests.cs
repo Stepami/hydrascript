@@ -6,7 +6,6 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.IR;

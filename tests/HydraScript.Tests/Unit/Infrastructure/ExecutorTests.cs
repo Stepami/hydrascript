@@ -7,7 +7,6 @@ using HydraScript.Services.Executor.Impl;
 using HydraScript.Services.Parsing;
 using HydraScript.Services.SourceCode;
 using HydraScript.Tests.Stubs;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.Infrastructure;

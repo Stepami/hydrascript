@@ -1,7 +1,6 @@
 using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Addresses;
 using HydraScript.Lib.BackEnd.Instructions;
-using Moq;
 
 namespace HydraScript.Tests.Helpers;
 

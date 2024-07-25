@@ -9,7 +9,6 @@ using HydraScript.Services.Providers.LexerProvider.Impl;
 using HydraScript.Services.Providers.ParserProvider.Impl;
 using HydraScript.Services.Providers.StructureProvider;
 using Microsoft.Extensions.Options;
-using Moq;
 using Xunit;
 using SystemType = System.Type;
 
