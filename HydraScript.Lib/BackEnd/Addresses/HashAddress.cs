@@ -3,6 +3,8 @@ namespace HydraScript.Lib.BackEnd.Addresses;
 public class HashAddress : IAddress
 {
     private readonly int _seed;
+
+    private readonly Guid _id = Guid.NewGuid();
     
     public IAddress Next { get; set; }
 
@@ -12,7 +14,7 @@ public class HashAddress : IAddress
     public bool Equals(IAddress other)
     {
         if (other is HashAddress hashed)
-            return _seed == hashed._seed;
+            return _seed == hashed._seed && _id == hashed._id;
 
         return false;
     }
