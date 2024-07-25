@@ -1,17 +1,14 @@
 namespace HydraScript.Lib.BackEnd.Addresses;
 
-public class HashAddress : IAddress
+public class HashAddress(int seed) : IAddress
 {
-    private readonly int _seed;
+    private readonly int _seed = seed;
 
     private readonly Guid _id = Guid.NewGuid();
-    
-    public IAddress Next { get; set; }
 
-    public HashAddress(int seed) =>
-        _seed = seed;
+    public IAddress Next { get; set; } = default!;
 
-    public bool Equals(IAddress other)
+    public bool Equals(IAddress? other)
     {
         if (other is HashAddress hashed)
             return _seed == hashed._seed && _id == hashed._id;
