@@ -5,7 +5,7 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 public abstract record TypeValue : IVisitable<TypeValue>
 {
-    public SymbolTable SymbolTable { get; set; } = default!;
+    public ISymbolTable SymbolTable { get; set; } = default!;
     public abstract TReturn Accept<TReturn>(IVisitor<TypeValue, TReturn> visitor);
 }
 

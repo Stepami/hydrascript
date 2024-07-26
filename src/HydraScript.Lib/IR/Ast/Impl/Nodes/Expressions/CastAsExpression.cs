@@ -21,7 +21,7 @@ public partial class CastAsExpression : Expression
     }
 
     /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
-    public override void InitScope(SymbolTable? scope = null)
+    public override void InitScope(ISymbolTable? scope = null)
     {
         base.InitScope(scope);
         Cast.SymbolTable = SymbolTable;

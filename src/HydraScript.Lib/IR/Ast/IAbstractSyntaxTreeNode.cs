@@ -7,7 +7,7 @@ public interface IAbstractSyntaxTreeNode :
     IVisitable<IAbstractSyntaxTreeNode>
 {
     public IAbstractSyntaxTreeNode Parent { get; }
-    public SymbolTable SymbolTable { get; }
-    public void InitScope(SymbolTable? scope = null);
+    public ISymbolTable SymbolTable { get; }
+    public void InitScope(ISymbolTable? scope = null);
     public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes();
 }

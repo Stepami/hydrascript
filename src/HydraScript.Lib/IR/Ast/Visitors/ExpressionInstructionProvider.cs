@@ -12,7 +12,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Visitors.Services;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 

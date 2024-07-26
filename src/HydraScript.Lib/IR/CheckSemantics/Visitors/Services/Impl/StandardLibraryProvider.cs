@@ -1,5 +1,6 @@
 using HydraScript.Lib.IR.CheckSemantics.Variables;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
@@ -10,7 +11,7 @@ public class StandardLibraryProvider : IStandardLibraryProvider
     public StandardLibraryProvider(IJavaScriptTypesProvider provider) =>
         _provider = provider;
 
-    public SymbolTable GetStandardLibrary()
+    public ISymbolTable GetStandardLibrary()
     {
         var library = new SymbolTable();
 
@@ -21,10 +22,7 @@ public class StandardLibraryProvider : IStandardLibraryProvider
 
         var print = new FunctionSymbol(
             "print",
-            new List<Symbol>
-            {
-                new VariableSymbol("str", "string")
-            },
+            [new VariableSymbol("str", "string")],
             "void",
             isEmpty: false
         );

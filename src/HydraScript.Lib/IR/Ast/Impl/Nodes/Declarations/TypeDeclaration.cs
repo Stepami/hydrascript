@@ -10,7 +10,7 @@ public partial class TypeDeclaration(IdentifierReference typeId, TypeValue typeV
     public TypeValue TypeValue { get; } = typeValue;
 
     /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
-    public override void InitScope(SymbolTable? scope = null)
+    public override void InitScope(ISymbolTable? scope = null)
     {
         base.InitScope(scope);
         TypeValue.SymbolTable = SymbolTable;

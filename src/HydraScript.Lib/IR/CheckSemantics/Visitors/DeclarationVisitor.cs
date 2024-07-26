@@ -5,7 +5,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Lib.IR.CheckSemantics.Types;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;

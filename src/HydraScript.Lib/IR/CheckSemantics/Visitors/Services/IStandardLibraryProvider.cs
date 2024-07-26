@@ -4,5 +4,5 @@ namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 public interface IStandardLibraryProvider
 {
-    SymbolTable GetStandardLibrary();
+    ISymbolTable GetStandardLibrary();
 }

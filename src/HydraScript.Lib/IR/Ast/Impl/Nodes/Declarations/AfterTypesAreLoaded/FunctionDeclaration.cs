@@ -38,7 +38,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
     /// <summary>Стратегия "блока" - углубление скоупа</summary>
     /// <param name="scope">Новый скоуп</param>
-    public override void InitScope(SymbolTable? scope = null)
+    public override void InitScope(ISymbolTable? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
         SymbolTable = scope;

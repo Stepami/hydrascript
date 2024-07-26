@@ -20,7 +20,7 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
 
     /// <summary>В корень дерева загружается стандартная библиотека</summary>
     /// <param name="scope">Скоуп std</param>
-    public override void InitScope(SymbolTable? scope = null)
+    public override void InitScope(ISymbolTable? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
         SymbolTable = scope;

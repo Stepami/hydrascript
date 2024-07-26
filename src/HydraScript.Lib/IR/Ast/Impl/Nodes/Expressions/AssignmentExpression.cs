@@ -28,7 +28,7 @@ public partial class AssignmentExpression : Expression
     }
 
     /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
-    public override void InitScope(SymbolTable? scope = null)
+    public override void InitScope(ISymbolTable? scope = null)
     {
         base.InitScope(scope);
         if (DestinationType is not null)

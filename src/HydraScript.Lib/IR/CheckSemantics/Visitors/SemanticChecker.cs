@@ -9,7 +9,8 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Lib.IR.CheckSemantics.Types;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
@@ -128,7 +129,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(IdentifierReference visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<Symbol>(visitable.Name);
+        var symbol = visitable.SymbolTable.FindSymbol<ISymbol>(visitable.Name);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
@@ -386,7 +387,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var symbol =
-                visitable.SymbolTable.FindSymbol<Symbol>(visitable.Id)
+                visitable.SymbolTable.FindSymbol<ISymbol>(visitable.Id)
                 ?? throw new UnknownIdentifierReference(visitable.Id);
             functionSymbol =
                 symbol as FunctionSymbol

@@ -2,7 +2,7 @@ using HydraScript.Lib.IR.Ast;
 using HydraScript.Lib.IR.Ast.Impl.Nodes;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
