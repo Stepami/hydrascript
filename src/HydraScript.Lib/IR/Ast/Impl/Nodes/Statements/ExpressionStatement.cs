@@ -1,10 +1,7 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
-public class ExpressionStatement : Statement
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class ExpressionStatement : Statement
 {
     public Expression Expression { get; }
 
@@ -20,10 +17,4 @@ public class ExpressionStatement : Statement
     }
 
     protected override string NodeRepresentation() => nameof(ExpressionStatement);
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
-        visitor.Visit(this);
 }

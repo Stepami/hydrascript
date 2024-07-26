@@ -1,10 +1,7 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
-public class IndexAccess : AccessExpression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class IndexAccess : AccessExpression
 {
     public Expression Index { get; }
 
@@ -24,10 +21,4 @@ public class IndexAccess : AccessExpression
     }
 
     protected override string NodeRepresentation() => "[]";
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }

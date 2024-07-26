@@ -1,10 +1,7 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
-public class IfStatement : Statement
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class IfStatement : Statement
 {
     public Expression Test { get; }
     public Statement Then { get; }
@@ -42,10 +39,4 @@ public class IfStatement : Statement
     }
 
     protected override string NodeRepresentation() => "if";
-
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
-        visitor.Visit(this);
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
 }

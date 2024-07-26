@@ -1,5 +1,3 @@
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
 public abstract class AccessExpression : Expression
@@ -26,5 +24,6 @@ public abstract class AccessExpression : Expression
     public bool HasPrev() =>
         Prev is not null;
 
-    public abstract override Type Accept(SemanticChecker visitor);
+    public abstract override TReturn Accept<TReturn>(
+        IVisitor<AbstractSyntaxTreeNode, TReturn> visitor);
 }

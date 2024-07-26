@@ -10,8 +10,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class DeclarationVisitor :
-    IVisitor<AbstractSyntaxTreeNode>,
+public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
@@ -26,15 +25,15 @@ public class DeclarationVisitor :
         _methodStorage = methodStorage;
     }
 
-    public Unit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
     {
         foreach (var child in visitable)
-            child.Accept(this);
+            child.Accept(This);
 
         return default;
     }
 
-    public Unit Visit(LexicalDeclaration visitable)
+    public VisitUnit Visit(LexicalDeclaration visitable)
     {
         foreach (var assignment in visitable.Assignments)
         {
@@ -59,7 +58,7 @@ public class DeclarationVisitor :
         return default;
     }
 
-    public Unit Visit(FunctionDeclaration visitable)
+    public VisitUnit Visit(FunctionDeclaration visitable)
     {
         if (visitable.Parent!.SymbolTable.ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
@@ -94,6 +93,6 @@ public class DeclarationVisitor :
         }
 
         visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
-        return visitable.Statements.Accept(this);
+        return visitable.Statements.Accept(This);
     }
 }

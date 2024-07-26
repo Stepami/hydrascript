@@ -1,10 +1,9 @@
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Values;
-using HydraScript.Lib.IR.Ast.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-public abstract class PrimaryExpression : Expression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public abstract partial class PrimaryExpression : Expression
 {
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
     {
@@ -12,7 +11,4 @@ public abstract class PrimaryExpression : Expression
     }
 
     public abstract IValue ToValue();
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }

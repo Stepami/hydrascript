@@ -1,20 +1,12 @@
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
-public class LexicalDeclaration : AfterTypesAreLoadedDeclaration
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class LexicalDeclaration(bool readOnly) : AfterTypesAreLoadedDeclaration
 {
-    public bool ReadOnly { get; }
-    public List<AssignmentExpression> Assignments { get; }
-
-    public LexicalDeclaration(bool readOnly)
-    {
-        ReadOnly = readOnly;
-        Assignments = new();
-    }
+    public bool ReadOnly { get; } = readOnly;
+    public List<AssignmentExpression> Assignments { get; } = [];
 
     public void AddAssignment(AssignmentExpression assignment)
     {
@@ -27,13 +19,4 @@ public class LexicalDeclaration : AfterTypesAreLoadedDeclaration
 
     protected override string NodeRepresentation() =>
         ReadOnly ? "const" : "let";
-
-    public override Unit Accept(DeclarationVisitor visitor) =>
-        visitor.Visit(this);
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(InstructionProvider visitor) =>
-        visitor.Visit(this);
 }

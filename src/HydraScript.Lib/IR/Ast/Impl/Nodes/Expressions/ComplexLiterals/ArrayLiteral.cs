@@ -1,10 +1,7 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 
-public class ArrayLiteral : ComplexLiteral
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class ArrayLiteral : ComplexLiteral
 {
     public List<Expression> Expressions { get; }
 
@@ -18,10 +15,4 @@ public class ArrayLiteral : ComplexLiteral
         Expressions.GetEnumerator();
 
     protected override string NodeRepresentation() => "[]";
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }

@@ -1,10 +1,9 @@
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 
-public class Property : Expression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class Property : Expression
 {
     public IdentifierReference Id { get; }
     public Expression Expression { get; }
@@ -34,7 +33,4 @@ public class Property : Expression
     }
 
     protected override string NodeRepresentation() => ":";
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }
