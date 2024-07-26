@@ -27,16 +27,17 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
 
     public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
     {
-        foreach (var child in visitable)
-            child.Accept(This);
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
 
         return default;
     }
 
     public VisitUnit Visit(LexicalDeclaration visitable)
     {
-        foreach (var assignment in visitable.Assignments)
+        for (var i = 0; i < visitable.Assignments.Count; i++)
         {
+            var assignment = visitable.Assignments[i];
             if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 

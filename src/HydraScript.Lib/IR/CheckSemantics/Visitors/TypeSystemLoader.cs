@@ -24,15 +24,16 @@ public class TypeSystemLoader : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(ScriptBody visitable)
     {
-        visitable.StatementList.ForEach(item => item.Accept(This));
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
         _resolver.Resolve();
         return default;
     }
 
     public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
     {
-        foreach (var child in visitable)
-            child.Accept(This);
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
 
         return default;
     }

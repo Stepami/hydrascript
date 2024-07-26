@@ -3,16 +3,18 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class BlockStatement : Statement
 {
-    public List<StatementListItem> StatementList { get; }
+    private readonly List<StatementListItem> _statementList;
+
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        _statementList;
+
+    public IReadOnlyList<StatementListItem> StatementList => _statementList;
 
     public BlockStatement(IEnumerable<StatementListItem> statementList)
     {
-        StatementList = new List<StatementListItem>(statementList);
-        StatementList.ForEach(item => item.Parent = this);
+        _statementList = new List<StatementListItem>(statementList);
+        _statementList.ForEach(item => item.Parent = this);
     }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
-        StatementList.GetEnumerator();
 
     protected override string NodeRepresentation() => "{}";
 }

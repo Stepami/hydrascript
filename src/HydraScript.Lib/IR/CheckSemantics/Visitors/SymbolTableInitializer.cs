@@ -25,15 +25,17 @@ public class SymbolTableInitializer : VisitorNoReturnBase<AbstractSyntaxTreeNode
     public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
     {
         _initializerService.InitThroughParent(visitable);
-        foreach (var child in visitable)
-            child.Accept(This);
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
+
         return default;
     }
 
     public VisitUnit Visit(ScriptBody visitable)
     {
         visitable.SymbolTable = _provider.GetStandardLibrary();
-        visitable.StatementList.ForEach(item => item.Accept(This));
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
         return default;
     }
 
@@ -47,7 +49,8 @@ public class SymbolTableInitializer : VisitorNoReturnBase<AbstractSyntaxTreeNode
     public VisitUnit Visit(BlockStatement visitable)
     {
         _initializerService.InitWithNewScope(visitable);
-        visitable.StatementList.ForEach(item => item.Accept(This));
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
         return default;
     }
 }

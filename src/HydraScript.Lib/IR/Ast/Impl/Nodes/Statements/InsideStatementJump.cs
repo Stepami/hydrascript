@@ -8,10 +8,5 @@ public partial class InsideStatementJump(string keyword) : Statement
 
     public string Keyword { get; } = keyword;
 
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield break;
-    }
-
     protected override string NodeRepresentation() => Keyword;
 }

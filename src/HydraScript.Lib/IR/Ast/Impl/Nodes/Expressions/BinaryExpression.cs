@@ -3,6 +3,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class BinaryExpression : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Left, Right];
+
     public Expression Left { get; }
     public string Operator { get; }
     public Expression Right { get; }
@@ -16,12 +19,6 @@ public partial class BinaryExpression : Expression
 
         Right = right;
         Right.Parent = this;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Left;
-        yield return Right;
     }
 
     protected override string NodeRepresentation() => Operator;

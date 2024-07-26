@@ -5,6 +5,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class Property : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Id, Expression];
+
     public IdentifierReference Id { get; }
     public Expression Expression { get; }
 
@@ -24,12 +27,6 @@ public partial class Property : Expression
     {
         id = Id.Name;
         expr = Expression;
-    }
-   
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Id;
-        yield return Expression;
     }
 
     protected override string NodeRepresentation() => ":";
