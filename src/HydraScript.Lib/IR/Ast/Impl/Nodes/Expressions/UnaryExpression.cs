@@ -3,6 +3,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class UnaryExpression : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Expression];
+
     public string Operator { get; }
     public Expression Expression { get; }
 
@@ -12,11 +15,6 @@ public partial class UnaryExpression : Expression
 
         Expression = expression;
         Expression.Parent = this;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Expression;
     }
 
     protected override string NodeRepresentation() => Operator;

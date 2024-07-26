@@ -5,17 +5,19 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class LexicalDeclaration(bool readOnly) : AfterTypesAreLoadedDeclaration
 {
+    private readonly List<AssignmentExpression> _assignments = [];
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        _assignments;
+
     public bool ReadOnly { get; } = readOnly;
-    public List<AssignmentExpression> Assignments { get; } = [];
+    public IReadOnlyList<AssignmentExpression> Assignments =>
+        _assignments;
 
     public void AddAssignment(AssignmentExpression assignment)
     {
         assignment.Parent = this;
-        Assignments.Add(assignment);
+        _assignments.Add(assignment);
     }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
-        Assignments.GetEnumerator();
 
     protected override string NodeRepresentation() =>
         ReadOnly ? "const" : "let";

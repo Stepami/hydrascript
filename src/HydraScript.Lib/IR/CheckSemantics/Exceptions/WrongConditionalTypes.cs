@@ -1,11 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Exceptions;
 
 [ExcludeFromCodeCoverage]
-public class WrongConditionalTypes : SemanticException
-{
-    public WrongConditionalTypes(Segment cSegment, Type cType, Segment aSegment, Type aType) :
-        base(cSegment + aSegment, $"Different types in conditional:  {cSegment} consequent - {cType}, {aSegment} alternate {aType}") { }
-}
+public class WrongConditionalTypes(
+    string segment,
+    string cSegment,
+    Type cType,
+    string aSegment,
+    Type aType) : SemanticException(
+        segment,
+        $"Different types in conditional:  {cSegment} consequent - {cType}, {aSegment} alternate {aType}");

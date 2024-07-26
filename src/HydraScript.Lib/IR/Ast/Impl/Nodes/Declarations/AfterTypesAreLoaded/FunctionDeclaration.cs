@@ -6,7 +6,7 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    private IReadOnlyCollection<ReturnStatement>? _returnStatements;
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children => [Statements];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
@@ -25,24 +25,17 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
         Statements = blockStatement;
         Statements.Parent = this;
-    }
 
-    public bool HasReturnStatement()
-    {
-        _returnStatements ??= GetReturnStatements();
-        return _returnStatements.Count > 0;
-    }
-
-    public IReadOnlyCollection<ReturnStatement> GetReturnStatements() =>
-        _returnStatements ??= Statements
+        ReturnStatements = Statements
             .GetAllNodes()
             .OfType<ReturnStatement>()
             .ToArray();
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Statements;
     }
+
+    public bool HasReturnStatement() =>
+        ReturnStatements.Count > 0;
+
+    public IReadOnlyCollection<ReturnStatement> ReturnStatements { get; }
 
     protected override string NodeRepresentation() =>
         "function " + Name;

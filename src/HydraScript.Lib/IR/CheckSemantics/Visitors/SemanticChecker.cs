@@ -56,8 +56,8 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
 
     public Type Visit(ScriptBody visitable)
     {
-        foreach (var statementListItem in visitable.StatementList)
-            statementListItem.Accept(This);
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
 
         foreach (var funcDecl in _functionStorage.Flush())
             funcDecl.Accept(This);
@@ -131,11 +131,11 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
     }
 
     public Type Visit(Literal visitable) =>
-        visitable.Type.BuildType(visitable.Parent!.SymbolTable);
+        visitable.Type.BuildType(visitable.Parent.SymbolTable);
 
     public Type Visit(ImplicitLiteral visitable)
     {
-        var type = visitable.TypeValue.BuildType(visitable.Parent!.SymbolTable);
+        var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
     }
@@ -181,6 +181,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
             return cType;
 
         throw new WrongConditionalTypes(
+            segment: visitable.Segment,
             cSegment: visitable.Consequent.Segment,
             cType,
             aSegment: visitable.Alternate.Segment,
@@ -249,8 +250,9 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
     {
         Type undefined = "undefined";
 
-        foreach (var assignment in visitable.Assignments)
+        for (var i = 0; i < visitable.Assignments.Count; i++)
         {
+            var assignment = visitable.Assignments[i];
             var registeredSymbol = visitable.SymbolTable.FindSymbol<VariableSymbol>(
                 assignment.Destination.Id);
             var sourceType = assignment.Source.Accept(This);
@@ -422,7 +424,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 
-        var returnStatements = visitable.GetReturnStatements()
+        var returnStatements = visitable.ReturnStatements
             .Select(x => new
             {
                 Statement = x,
@@ -460,7 +462,8 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
 
     public Type Visit(BlockStatement visitable)
     {
-        visitable.StatementList.ForEach(x => x.Accept(This));
+        for (var i = 0; i < visitable.Count; i++)
+            visitable[i].Accept(This);
         return "undefined";
     }
 }
