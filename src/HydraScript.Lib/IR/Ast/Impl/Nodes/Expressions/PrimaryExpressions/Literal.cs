@@ -1,5 +1,4 @@
 using HydraScript.Lib.BackEnd.Values;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
@@ -14,7 +13,7 @@ public partial class Literal : PrimaryExpression
     public Literal(
         TypeValue type,
         object? value,
-        Segment segment,
+        string segment,
         string? label = null)
     {
         Type = type;
