@@ -31,13 +31,8 @@ public class SymbolTableTests
     public void FlatteningScopeTest()
     {
         var table = new SymbolTable();
-        var stmtList = new List<StatementListItem>(
-            Enumerable.Repeat(
-                new Mock<StatementListItem>().Object,
-                new Random().Next(10)
-            )
-        );
-        var script = new ScriptBody(stmtList);
+        var stmt = new Mock<StatementListItem> { CallBase = true };
+        var script = new ScriptBody([stmt.Object]);
         script.InitScope(table);
         script.ToList().ForEach(node => node.InitScope());
 
@@ -53,7 +48,6 @@ public class SymbolTableTests
         Assert.All(
             script.ToList(),
             stmtListItem =>
-                Assert.True(stmtListItem.SymbolTable.ContainsSymbol(id))
-        );
+                Assert.True(stmtListItem.SymbolTable.ContainsSymbol(id)));
     }
 }
