@@ -7,9 +7,8 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class TypeSystemLoader :
+public class TypeSystemLoader : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
     IVisitor<ScriptBody>,
-    IVisitor<AbstractSyntaxTreeNode>,
     IVisitor<TypeDeclaration>
 {
     private readonly ITypeDeclarationsResolver _resolver;
@@ -23,22 +22,22 @@ public class TypeSystemLoader :
         _defaultTypes = provider.GetDefaultTypes().ToHashSet();
     }
 
-    public Unit Visit(ScriptBody visitable)
+    public VisitUnit Visit(ScriptBody visitable)
     {
-        visitable.StatementList.ForEach(item => item.Accept(this));
+        visitable.StatementList.ForEach(item => item.Accept(This));
         _resolver.Resolve();
         return default;
     }
 
-    public Unit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
     {
         foreach (var child in visitable)
-            child.Accept(this);
+            child.Accept(This);
 
         return default;
     }
 
-    public Unit Visit(TypeDeclaration visitable)
+    public VisitUnit Visit(TypeDeclaration visitable)
     {
         if (visitable.SymbolTable.ContainsSymbol(visitable.TypeId) ||
             _defaultTypes.Contains(visitable.TypeId.Name))

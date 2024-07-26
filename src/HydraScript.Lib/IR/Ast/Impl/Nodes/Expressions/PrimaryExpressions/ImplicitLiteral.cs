@@ -1,10 +1,10 @@
 using HydraScript.Lib.BackEnd.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-public class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
 {
     public TypeValue TypeValue { get; } = typeValue;
     public object? ComputedDefaultValue { private get; set; }
@@ -18,7 +18,4 @@ public class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
             ComputedDefaultValue is null
                 ? "null"
                 : ComputedDefaultValue.ToString()!);
-    
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
 }

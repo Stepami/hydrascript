@@ -11,7 +11,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class InstructionProvider :
+public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
@@ -22,20 +22,27 @@ public class InstructionProvider :
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>
 {
-    private readonly ExpressionInstructionProvider _expressionVisitor = new();
-    
+    private readonly IVisitor<AbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
+
+    public InstructionProvider()
+    {
+        _expressionVisitor = new ExpressionInstructionProvider();
+    }
+
     public AddressedInstructions Visit(ScriptBody visitable)
     {
         var result = new AddressedInstructions();
         foreach (var item in visitable.StatementList)
         {
-            result.AddRange(item.Accept(this));
+            result.AddRange(item.Accept(This));
         }
 
         result.Add(new Halt());
-        
+
         return result;
     }
+
+    public override AddressedInstructions DefaultVisit { get; } = [];
 
     public AddressedInstructions Visit(LexicalDeclaration visitable)
     {
@@ -53,7 +60,7 @@ public class InstructionProvider :
         var result = new AddressedInstructions();
         foreach (var item in visitable.StatementList)
         {
-            result.AddRange(item.Accept(this));
+            result.AddRange(item.Accept(This));
             if (item is ReturnStatement) break;
         }
 
@@ -109,13 +116,13 @@ public class InstructionProvider :
                 functionInfo.Start.Name
             }
         };
-        
-        result.AddRange(visitable.Statements.Accept(this));
+
+        result.AddRange(visitable.Statements.Accept(This));
         if (!visitable.HasReturnStatement())
             result.Add(new Return());
 
         result.Add(new EndBlock(BlockType.Function, blockId: functionInfo.ToString()), functionInfo.End.Name);
-        
+
         return result;
     }
 
@@ -124,7 +131,7 @@ public class InstructionProvider :
         var blockId = $"while_{visitable.GetHashCode()}";
         var startBlockLabel = new Label($"Start_{blockId}");
         var endBlockLabel = new Label($"End_{blockId}");
-        
+
         var result = new AddressedInstructions
         {
             { new BeginBlock(BlockType.Loop, blockId), startBlockLabel.Name }
@@ -138,8 +145,8 @@ public class InstructionProvider :
             var last = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new IfNotGoto(last, endBlockLabel));
         }
-        
-        result.AddRange(visitable.Statement.Accept(this));
+
+        result.AddRange(visitable.Statement.Accept(This));
         result.OfType<Goto>().Where(g => g.JumpType is not null)
             .ToList().ForEach(g =>
             {
@@ -169,9 +176,9 @@ public class InstructionProvider :
         var blockId = $"if_else_{visitable.GetHashCode()}";
         var startBlockLabel = new Label($"Start_{blockId}");
         var endBlockLabel = new Label($"End_{blockId}");
-        
+
         var result = new AddressedInstructions();
-        
+
         if (visitable.Test is PrimaryExpression primary)
             result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
         else
@@ -184,16 +191,16 @@ public class InstructionProvider :
                     : endBlockLabel)
             );
         }
-        
-        result.AddRange(visitable.Then.Accept(this));
+
+        result.AddRange(visitable.Then.Accept(This));
         result.Add(new Goto(endBlockLabel));
         result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
 
         if (visitable.HasElseBlock())
-            result.AddRange(visitable.Else?.Accept(this) ?? []);
+            result.AddRange(visitable.Else?.Accept(This) ?? []);
 
         result.OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
-            .ToList().ForEach(g=> g.SetJump(endBlockLabel));
+            .ToList().ForEach(g => g.SetJump(endBlockLabel));
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 

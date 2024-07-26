@@ -11,9 +11,7 @@ public abstract record TypeValue
     public abstract Type BuildType(SymbolTable symbolTable);
 }
 
-public record TypeIdentValue(
-    IdentifierReference TypeId
-) : TypeValue
+public record TypeIdentValue(IdentifierReference TypeId) : TypeValue
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         symbolTable.FindSymbol<TypeSymbol>(TypeId)?.Type ??
@@ -22,9 +20,7 @@ public record TypeIdentValue(
     public override string ToString() => TypeId;
 }
 
-public record ArrayTypeValue(
-    TypeValue TypeValue
-) : TypeValue
+public record ArrayTypeValue(TypeValue TypeValue) : TypeValue
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         new ArrayType(TypeValue.BuildType(symbolTable));
@@ -32,9 +28,7 @@ public record ArrayTypeValue(
     public override string ToString() => $"{TypeValue}[]";
 }
 
-public record NullableTypeValue(
-    TypeValue TypeValue
-) : TypeValue
+public record NullableTypeValue(TypeValue TypeValue) : TypeValue
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         new NullableType(TypeValue.BuildType(symbolTable));
@@ -48,11 +42,10 @@ public record PropertyTypeValue(
 {
     public override string ToString() =>
         $"{Key}: {TypeValue}";
-};
+}
 
 public record ObjectTypeValue(
-    IEnumerable<PropertyTypeValue> Properties
-) : TypeValue
+    IEnumerable<PropertyTypeValue> Properties) : TypeValue
 {
     public override Type BuildType(SymbolTable symbolTable) =>
         new ObjectType(

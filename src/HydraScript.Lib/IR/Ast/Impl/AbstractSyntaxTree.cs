@@ -10,12 +10,12 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
 {
     private readonly AbstractSyntaxTreeNode _root;
     
-    private readonly SymbolTableInitializer _symbolTableInitializer;
-    private readonly TypeSystemLoader _typeSystemLoader;
-    private readonly DeclarationVisitor _declarationVisitor;
+    private readonly IVisitor<AbstractSyntaxTreeNode> _symbolTableInitializer;
+    private readonly IVisitor<AbstractSyntaxTreeNode> _typeSystemLoader;
+    private readonly IVisitor<AbstractSyntaxTreeNode> _declarationVisitor;
     
-    private readonly SemanticChecker _semanticChecker;
-    private readonly InstructionProvider _instructionProvider;
+    private readonly IVisitor<AbstractSyntaxTreeNode, Type> _semanticChecker;
+    private readonly IVisitor<AbstractSyntaxTreeNode, AddressedInstructions> _instructionProvider;
 
     public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
     {
