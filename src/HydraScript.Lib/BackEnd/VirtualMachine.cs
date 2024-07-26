@@ -4,7 +4,7 @@ namespace HydraScript.Lib.BackEnd;
 
 public record VirtualMachine(
     Stack<Call> CallStack, Stack<Frame> Frames,
-    Stack<(string Id, object? Value)> Arguments,
+    Stack<CallArgument> Arguments,
     TextWriter Writer
 )
 {
@@ -29,11 +29,16 @@ public record VirtualMachine(
 
 public record Call(
     IAddress From, FunctionInfo To, 
-    List<(string Id, object? Value)> Parameters,
+    List<CallArgument> Arguments,
     string? Where = null)
 {
     public override string ToString() =>
-        $"{From} => {To.Start}: {To.Id}({string.Join(", ", Parameters.Select(x => $"{x.Id}: {x.Value}"))})";
+        $"{From} => {To.Start}: {To.Id}({string.Join(", ", Arguments)})";
+}
+
+public record CallArgument(string Id, object? Value)
+{
+    public override string ToString() => $"{Id}: {Value}";
 }
 
 public record FunctionInfo(string Id)

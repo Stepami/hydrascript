@@ -7,7 +7,9 @@ public class PushParameter(string parameter, IValue value) : Instruction
 {
     public override IAddress Execute(VirtualMachine vm)
     {
-        vm.Arguments.Push((parameter, value.Get(vm.Frames.Peek())));
+        vm.Arguments.Push(new CallArgument(
+            parameter,
+            value.Get(vm.Frames.Peek())));
         return Address.Next;
     }
 
