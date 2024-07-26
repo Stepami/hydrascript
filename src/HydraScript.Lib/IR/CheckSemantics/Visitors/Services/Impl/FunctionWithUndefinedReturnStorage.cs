@@ -3,7 +3,7 @@ using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
-internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturnStorage
+public class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturnStorage
 {
     private readonly Dictionary<string, FunctionDeclaration> _declarations = new();
     private readonly Dictionary<string, int> _keysWithOrder = new();

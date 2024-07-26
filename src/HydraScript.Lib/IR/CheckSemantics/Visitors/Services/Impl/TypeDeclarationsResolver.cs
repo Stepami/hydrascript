@@ -3,7 +3,7 @@ using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
-internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
+public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
     private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
     private readonly IJavaScriptTypesProvider _provider;

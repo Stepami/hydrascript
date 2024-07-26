@@ -2,7 +2,7 @@ using HydraScript.Lib.IR.CheckSemantics.Types;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
-internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
+public class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
 {
     private readonly Type _boolean = "boolean";
     private readonly Type _number = "number";

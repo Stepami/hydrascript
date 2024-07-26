@@ -3,6 +3,7 @@ using HydraScript.Lib.BackEnd.Instructions;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;
+using HydraScript.Services.CodeGen;
 using HydraScript.Services.Executor.Impl;
 using HydraScript.Services.Parsing;
 using HydraScript.Services.SourceCode;
@@ -25,13 +26,20 @@ public class ExecutorTests
     public void ExecuteGoesOkTest()
     {
         var ast = new Mock<IAbstractSyntaxTree>();
-        ast.Setup(x => x.GetInstructions())
-            .Returns(new AddressedInstructions { new Halt() });
+        ast.Setup(x => x.Root)
+            .Returns(Mock.Of<IAbstractSyntaxTreeNode>());
 
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
+        var codeGenService = new Mock<ICodeGenService>();
+        codeGenService.Setup(x => x.GetInstructions(It.IsAny<IAbstractSyntaxTree>()))
+            .Returns([new Halt()]);
+
+        var executor = new Executor(
+            _parsingService.Object,
+            Mock.Of<ISourceCodeProvider>(),
+            codeGenService.Object);
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
 
@@ -39,51 +47,71 @@ public class ExecutorTests
     public void SemanticExceptionCaughtTest()
     {
         var ast = new Mock<IAbstractSyntaxTree>();
-        ast.Setup(x => x.GetInstructions())
-            .Throws<SemanticExceptionStub>();
+        ast.Setup(x => x.Root)
+            .Returns(Mock.Of<IAbstractSyntaxTreeNode>());
 
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
+        var codeGenService = new Mock<ICodeGenService>();
+        codeGenService.Setup(x => x.GetInstructions(It.IsAny<IAbstractSyntaxTree>()))
+            .Throws<SemanticExceptionStub>();
+
+        var executor = new Executor(
+            _parsingService.Object,
+            Mock.Of<ISourceCodeProvider>(),
+            codeGenService.Object);
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
-        
+
     [Fact]
     public void LexerExceptionCaughtTest()
     {
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Throws<LexerException>();
 
-        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
+        var executor = new Executor(
+            _parsingService.Object,
+            Mock.Of<ISourceCodeProvider>(),
+            Mock.Of<ICodeGenService>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
-        
+
     [Fact]
     public void ParserExceptionCaughtTest()
     {
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Throws<ParserException>();
 
-        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
+        var executor = new Executor(
+            _parsingService.Object,
+            Mock.Of<ISourceCodeProvider>(),
+            Mock.Of<ICodeGenService>());
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
-        
+
     [Fact]
     public void InternalInterpreterErrorCaughtTest()
     {
         var instruction = new Mock<Instruction>();
         instruction.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
             .Throws<NullReferenceException>();
-            
+
         var ast = new Mock<IAbstractSyntaxTree>();
-        ast.Setup(x => x.GetInstructions())
-            .Returns(new AddressedInstructions { instruction.Object, new Halt() });
+        ast.Setup(x => x.Root)
+            .Returns(Mock.Of<IAbstractSyntaxTreeNode>());
 
         _parsingService.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
-        var executor = new Executor(_parsingService.Object, Mock.Of<ISourceCodeProvider>());
+        var codeGenService = new Mock<ICodeGenService>();
+        codeGenService.Setup(x => x.GetInstructions(It.IsAny<IAbstractSyntaxTree>()))
+            .Returns([instruction.Object, new Halt()]);
+
+        var executor = new Executor(
+            _parsingService.Object,
+            Mock.Of<ISourceCodeProvider>(),
+            codeGenService.Object);
         Assert.Null(Record.Exception(() => executor.Execute()));
     }
 }

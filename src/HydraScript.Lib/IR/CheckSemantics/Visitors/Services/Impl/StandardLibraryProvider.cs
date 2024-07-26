@@ -3,7 +3,7 @@ using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
-internal class StandardLibraryProvider : IStandardLibraryProvider
+public class StandardLibraryProvider : IStandardLibraryProvider
 {
     private readonly IJavaScriptTypesProvider _provider;
 

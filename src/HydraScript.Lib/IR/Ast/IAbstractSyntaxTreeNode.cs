@@ -8,5 +8,5 @@ public interface IAbstractSyntaxTreeNode :
 {
     public IAbstractSyntaxTreeNode Parent { get; }
     public SymbolTable SymbolTable { get; set; }
-    internal IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes();
+    public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes();
 }

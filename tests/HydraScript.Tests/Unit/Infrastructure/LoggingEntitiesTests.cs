@@ -1,6 +1,4 @@
 using System.IO.Abstractions;
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Instructions;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.FrontEnd.TopDownParse;
@@ -46,14 +44,14 @@ public class LoggingEntitiesTests
             It.Is<string>(p => p == "file.tokens"), It.Is<string>(c => c == "lexer")
         ), Times.Once());
     }
-        
+
     [Fact]
     public void CorrectTreeWrittenAndLoggingTreeProducedTest()
     {
         var ast = new Mock<IAbstractSyntaxTree>();
         ast.Setup(x => x.ToString())
             .Returns("digraph ast { }");
-            
+
         var parser = new Mock<IParser>();
         parser.Setup(x => x.TopDownParse(It.IsAny<string>()))
             .Returns(ast.Object);
@@ -62,33 +60,12 @@ public class LoggingEntitiesTests
             It.IsAny<string>(), It.IsAny<string>()
         )).Verifiable();
 
-        var loggingParser = new LoggingParser(parser.Object, "file", _fileSystem.Object);
-        var parsed = loggingParser.TopDownParse("");
+        var loggingParser = new LoggingParser(parser.Object, _fileSystem.Object);
+        _ = loggingParser.TopDownParse("");
 
         _file.Verify(x => x.WriteAllText(
             It.Is<string>(p => p == "ast.dot"),
             It.Is<string>(c => c == "digraph ast { }")
-        ), Times.Once());
-        Assert.IsType<LoggingAbstractSyntaxTree>(parsed);
-    }
-
-    [Fact]
-    public void CorrectFileNameProducedByTreeTest()
-    {
-        var ast = new Mock<IAbstractSyntaxTree>();
-        ast.Setup(x => x.GetInstructions())
-            .Returns(new AddressedInstructions { new Halt() });
-
-        _file.Setup(x => x.WriteAllLines(
-            It.IsAny<string>(), It.IsAny<IEnumerable<string>>()
-        )).Verifiable();
-
-        var loggingTree = new LoggingAbstractSyntaxTree(ast.Object, "file", _fileSystem.Object);
-        loggingTree.GetInstructions();
-
-        _file.Verify(x => x.WriteAllLines(
-            It.Is<string>(p => p == "file.tac"),
-            It.Is<IEnumerable<string>>(c => c.SequenceEqual(new[] { "\tEnd" }))
         ), Times.Once());
     }
 }
