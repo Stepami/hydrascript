@@ -1,4 +1,3 @@
-using HydraScript.Lib.BackEnd.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
@@ -24,6 +23,6 @@ public partial class Literal : PrimaryExpression
 
     protected override string NodeRepresentation() => _label;
 
-    public override IValue ToValue() =>
-        new Constant(_value, _label);
+    public override ValueDto ToValueDto() =>
+        ValueDto.ConstantDto(_value, _label);
 }

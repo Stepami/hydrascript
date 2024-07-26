@@ -1,4 +1,3 @@
-using HydraScript.Lib.BackEnd.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
@@ -12,8 +11,8 @@ public partial class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
     protected override string NodeRepresentation() =>
         TypeValue.ToString();
 
-    public override IValue ToValue() =>
-        new Constant(
+    public override ValueDto ToValueDto() =>
+        ValueDto.ConstantDto(
             ComputedDefaultValue,
             ComputedDefaultValue is null
                 ? "null"
