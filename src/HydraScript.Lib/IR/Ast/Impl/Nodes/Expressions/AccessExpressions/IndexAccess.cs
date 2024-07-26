@@ -1,9 +1,9 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class IndexAccess : AccessExpression
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         HasNext() ? [Index, Next!] : [Index];
 
     public Expression Index { get; }

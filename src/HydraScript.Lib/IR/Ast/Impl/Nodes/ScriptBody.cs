@@ -1,13 +1,12 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ScriptBody : AbstractSyntaxTreeNode
 {
     private readonly List<StatementListItem> _statementList;
 
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
-    protected override bool IsRoot => true;
 
     public IReadOnlyList<StatementListItem> StatementList => _statementList;
 

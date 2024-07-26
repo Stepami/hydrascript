@@ -6,7 +6,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class SymbolTableInitializer : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
+public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<ScriptBody>,
     IVisitor<FunctionDeclaration>,
     IVisitor<BlockStatement>
@@ -22,7 +22,7 @@ public class SymbolTableInitializer : VisitorNoReturnBase<AbstractSyntaxTreeNode
         _provider = provider;
     }
 
-    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
     {
         _initializerService.InitThroughParent(visitable);
         for (var i = 0; i < visitable.Count; i++)

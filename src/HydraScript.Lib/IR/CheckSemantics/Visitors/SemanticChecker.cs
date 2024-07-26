@@ -13,7 +13,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
+public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<ScriptBody, Type>,
     IVisitor<WhileStatement, Type>,
     IVisitor<IfStatement, Type>,

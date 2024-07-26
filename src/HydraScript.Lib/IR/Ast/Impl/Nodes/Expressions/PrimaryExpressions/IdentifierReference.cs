@@ -2,7 +2,7 @@ using HydraScript.Lib.BackEnd.Values;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class IdentifierReference(string name) : PrimaryExpression
 {
     public string Name { get; } = name;

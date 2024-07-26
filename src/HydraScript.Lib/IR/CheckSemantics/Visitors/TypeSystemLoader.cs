@@ -7,7 +7,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class TypeSystemLoader : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
+public class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<ScriptBody>,
     IVisitor<TypeDeclaration>
 {
@@ -30,7 +30,7 @@ public class TypeSystemLoader : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
         return default;
     }
 
-    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
     {
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);

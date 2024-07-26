@@ -1,11 +1,11 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class BlockStatement : Statement
 {
     private readonly List<StatementListItem> _statementList;
 
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
 
     public IReadOnlyList<StatementListItem> StatementList => _statementList;

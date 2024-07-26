@@ -1,9 +1,9 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ReturnStatement : Statement
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         Expression is not null ? [Expression] : [];
 
     public Expression? Expression { get; }

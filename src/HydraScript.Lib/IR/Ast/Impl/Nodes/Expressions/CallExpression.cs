@@ -2,12 +2,12 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class CallExpression : LeftHandSideExpression
 {
     private readonly List<Expression> _parameters;
 
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         [Member, .._parameters];
 
     public MemberExpression Member { get; }

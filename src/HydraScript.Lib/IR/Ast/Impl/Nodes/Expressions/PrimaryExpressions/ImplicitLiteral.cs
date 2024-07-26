@@ -3,7 +3,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
 {
     public TypeValue TypeValue { get; } = typeValue;

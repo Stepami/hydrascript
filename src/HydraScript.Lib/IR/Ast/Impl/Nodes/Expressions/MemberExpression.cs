@@ -3,12 +3,12 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class MemberExpression : LeftHandSideExpression
 {
     private readonly IdentifierReference _identifierReference;
 
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         AccessChain is not null ? [Id, AccessChain] : [Id];
 
     public AccessExpression? AccessChain { get; }

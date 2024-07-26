@@ -11,7 +11,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
+public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
@@ -22,7 +22,7 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>
 {
-    private readonly IVisitor<AbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
+    private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
 
     public InstructionProvider()
     {

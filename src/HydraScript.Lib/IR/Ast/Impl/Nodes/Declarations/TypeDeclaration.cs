@@ -2,7 +2,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class TypeDeclaration(IdentifierReference typeId, TypeValue typeValue) : Declaration
 {
     public IdentifierReference TypeId { get; } = typeId;

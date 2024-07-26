@@ -16,7 +16,9 @@ public class LoggingAbstractSyntaxTree : IAbstractSyntaxTree
         _fileName = fileName;
         _fileSystem = fileSystem;
     }
-    
+
+    public IAbstractSyntaxTreeNode Root => _ast.Root;
+
     public AddressedInstructions GetInstructions()
     {
         var instructions = _ast.GetInstructions();

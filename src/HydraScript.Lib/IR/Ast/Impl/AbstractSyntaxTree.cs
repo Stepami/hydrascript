@@ -8,18 +8,18 @@ namespace HydraScript.Lib.IR.Ast.Impl;
 
 public class AbstractSyntaxTree : IAbstractSyntaxTree
 {
-    private readonly AbstractSyntaxTreeNode _root;
-    
-    private readonly IVisitor<AbstractSyntaxTreeNode> _symbolTableInitializer;
-    private readonly IVisitor<AbstractSyntaxTreeNode> _typeSystemLoader;
-    private readonly IVisitor<AbstractSyntaxTreeNode> _declarationVisitor;
-    
-    private readonly IVisitor<AbstractSyntaxTreeNode, Type> _semanticChecker;
-    private readonly IVisitor<AbstractSyntaxTreeNode, AddressedInstructions> _instructionProvider;
+    private readonly IVisitor<IAbstractSyntaxTreeNode> _symbolTableInitializer;
+    private readonly IVisitor<IAbstractSyntaxTreeNode> _typeSystemLoader;
+    private readonly IVisitor<IAbstractSyntaxTreeNode> _declarationVisitor;
 
-    public AbstractSyntaxTree(AbstractSyntaxTreeNode root)
+    private readonly IVisitor<IAbstractSyntaxTreeNode, Type> _semanticChecker;
+    private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _instructionProvider;
+
+    public IAbstractSyntaxTreeNode Root { get; }
+
+    public AbstractSyntaxTree(IAbstractSyntaxTreeNode root)
     {
-        _root = root;
+        Root = root;
         var functionStorage = new FunctionWithUndefinedReturnStorage();
         var methodStorage = new MethodStorage();
         
@@ -42,22 +42,28 @@ public class AbstractSyntaxTree : IAbstractSyntaxTree
 
     public AddressedInstructions GetInstructions()
     {
-        _root.Accept(_symbolTableInitializer);
-        _root.Accept(_typeSystemLoader);
-        _root.Accept(_declarationVisitor);
+        Root.Accept(_symbolTableInitializer);
+        Root.Accept(_typeSystemLoader);
+        Root.Accept(_declarationVisitor);
         
-        _root.Accept(_semanticChecker);
-        return _root.Accept(_instructionProvider);
+        Root.Accept(_semanticChecker);
+        return Root.Accept(_instructionProvider);
     }
 
     public override string ToString()
     {
         var tree = new StringBuilder("digraph ast {\n");
-        _root.GetAllNodes().ForEach(node =>
+        var nodes = Root.GetAllNodes();
+        for (var i = 0; i < nodes.Count; i++)
         {
+            var node = nodes[i];
             tree.Append('\t').Append(node).Append('\n');
-            node.ToList().ForEach(child => tree.Append($"\t{node.GetHashCode()}->{child.GetHashCode()}\n"));
-        });
+            for (var j = 0; j < node.Count; j++)
+            {
+                var child = node[j];
+                tree.Append($"\t{node.GetHashCode()}->{child.GetHashCode()}\n");
+            }
+        }
         return tree.Append("}\n").ToString();
     }
 }

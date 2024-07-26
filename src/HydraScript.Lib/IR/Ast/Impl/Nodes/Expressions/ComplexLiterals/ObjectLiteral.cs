@@ -1,11 +1,11 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ObjectLiteral : ComplexLiteral
 {
     private readonly List<Property> _properties;
 
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _properties;
 
     public IReadOnlyList<Property> Properties => _properties;

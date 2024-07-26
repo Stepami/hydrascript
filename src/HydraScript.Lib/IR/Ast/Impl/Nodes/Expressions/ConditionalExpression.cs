@@ -1,9 +1,9 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ConditionalExpression : Expression
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         [Test, Consequent, Alternate];
 
     public Expression Test { get; }

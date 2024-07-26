@@ -10,7 +10,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
+public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
@@ -25,7 +25,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
         _methodStorage = methodStorage;
     }
 
-    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
     {
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);

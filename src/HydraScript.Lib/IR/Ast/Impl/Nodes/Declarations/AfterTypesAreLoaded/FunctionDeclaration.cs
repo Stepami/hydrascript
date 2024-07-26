@@ -3,10 +3,10 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children => [Statements];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children => [Statements];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }

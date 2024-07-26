@@ -4,7 +4,7 @@ namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 public interface ISymbolTableInitializerService
 {
-    void InitThroughParent(AbstractSyntaxTreeNode node);
+    void InitThroughParent(IAbstractSyntaxTreeNode node);
 
-    void InitWithNewScope(AbstractSyntaxTreeNode node);
+    void InitWithNewScope(IAbstractSyntaxTreeNode node);
 }

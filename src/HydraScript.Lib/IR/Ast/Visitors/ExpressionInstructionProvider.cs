@@ -15,7 +15,7 @@ using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
+public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
