@@ -32,9 +32,10 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
     public AddressedInstructions Visit(ScriptBody visitable)
     {
         var result = new AddressedInstructions();
-        foreach (var item in visitable.StatementList)
+        for (var i = 0; i < visitable.Count; i++)
         {
-            result.AddRange(item.Accept(This));
+            var instructions = visitable[i].Accept(This);
+            result.AddRange(instructions);
         }
 
         result.Add(new Halt());
@@ -47,8 +48,9 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
     public AddressedInstructions Visit(LexicalDeclaration visitable)
     {
         var result = new AddressedInstructions();
-        foreach (var assignment in visitable.Assignments)
+        for (var i = 0; i < visitable.Count; i++)
         {
+            var assignment = visitable[i];
             result.AddRange(assignment.Accept(_expressionVisitor));
         }
 
@@ -58,8 +60,9 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
     public AddressedInstructions Visit(BlockStatement visitable)
     {
         var result = new AddressedInstructions();
-        foreach (var item in visitable.StatementList)
+        for (var i = 0; i < visitable.Count; i++)
         {
+            var item = visitable[i];
             result.AddRange(item.Accept(This));
             if (item is ReturnStatement) break;
         }

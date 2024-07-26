@@ -492,7 +492,10 @@ public class Parser : IParser
             var consequent = Expression();
             Expect("Colon");
             var alternate = Expression();
-            return new ConditionalExpression(test, consequent, alternate);
+            return new ConditionalExpression(test, consequent, alternate)
+            {
+                Segment = consequent.Segment + alternate.Segment
+            };
         }
 
         return test;

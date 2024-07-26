@@ -5,6 +5,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class AssignmentExpression : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Destination, Source];
+
     public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
     public TypeValue? DestinationType { get; }
@@ -21,12 +24,6 @@ public partial class AssignmentExpression : Expression
         source.Parent = this;
 
         DestinationType = destinationType;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Destination;
-        yield return Source;
     }
 
     protected override string NodeRepresentation() => "=";

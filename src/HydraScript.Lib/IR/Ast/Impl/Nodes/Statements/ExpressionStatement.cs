@@ -3,17 +3,15 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class ExpressionStatement : Statement
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Expression];
+
     public Expression Expression { get; }
 
     public ExpressionStatement(Expression expression)
     {
         Expression = expression;
-        expression.Parent = this;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Expression;
+        Expression.Parent = this;
     }
 
     protected override string NodeRepresentation() => nameof(ExpressionStatement);

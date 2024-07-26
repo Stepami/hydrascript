@@ -3,16 +3,18 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class ArrayLiteral : ComplexLiteral
 {
-    public List<Expression> Expressions { get; }
+    private readonly List<Expression> _expressions;
+
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        _expressions;
+
+    public IReadOnlyList<Expression> Expressions => _expressions;
 
     public ArrayLiteral(IEnumerable<Expression> expressions)
     {
-        Expressions = new List<Expression>(expressions);
-        Expressions.ForEach(expr => expr.Parent = this);
+        _expressions = new List<Expression>(expressions);
+        _expressions.ForEach(expr => expr.Parent = this);
     }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
-        Expressions.GetEnumerator();
 
     protected override string NodeRepresentation() => "[]";
 }

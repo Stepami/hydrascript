@@ -3,6 +3,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class IfStatement : Statement
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        Else is not null ? [Test, Then, Else] : [Test, Then];
+
     public Expression Test { get; }
     public Statement Then { get; }
     public Statement? Else { get; }
@@ -22,21 +25,13 @@ public partial class IfStatement : Statement
         }
     }
 
-    public bool Empty() =>
-        !Then.Any() && !HasElseBlock();
-
-    public bool HasElseBlock() =>
-        Else is not null && Else.Any();
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
+    public bool Empty() => this is
     {
-        yield return Test;
-        yield return Then;
-        if (Else is not null)
-        {
-            yield return Else;
-        }
-    }
+        Then.Count: 0,
+        Else: null or { Count: 0 }
+    };
+
+    public bool HasElseBlock() => Else is { Count: > 0 };
 
     protected override string NodeRepresentation() => "if";
 }

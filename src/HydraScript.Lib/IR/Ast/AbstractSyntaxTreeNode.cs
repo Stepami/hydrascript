@@ -1,29 +1,38 @@
 using System.Collections;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast;
 
 public abstract class AbstractSyntaxTreeNode :
-    IEnumerable<AbstractSyntaxTreeNode>,
+    IReadOnlyList<AbstractSyntaxTreeNode>,
     IVisitable<AbstractSyntaxTreeNode>
 {
-    public AbstractSyntaxTreeNode? Parent { get; set; }
+    public AbstractSyntaxTreeNode Parent { get; set; } = default!;
+
+    protected virtual bool IsRoot => false;
 
     public SymbolTable SymbolTable { get; set; } = default!;
 
-    public Segment Segment { get; init; } = default!;
+    public string Segment { get; init; } = string.Empty;
+
+    protected virtual IReadOnlyList<AbstractSyntaxTreeNode> Children { get; } = [];
+
+    public IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
+        Children.ToList().GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
+
+    public int Count => Children.Count;
+
+    public AbstractSyntaxTreeNode this[int index] =>
+        Children[index];
 
     internal List<AbstractSyntaxTreeNode> GetAllNodes()
     {
-        var result = new List<AbstractSyntaxTreeNode>
-        {
-            this
-        };
-        foreach (var child in this)
-        {
-            result.AddRange(child.GetAllNodes());
-        }
+        List<AbstractSyntaxTreeNode> result = [this];
+        for (var index = 0; index < Children.Count; index++)
+            result.AddRange(Children[index].GetAllNodes());
 
         return result;
     }
@@ -31,7 +40,7 @@ public abstract class AbstractSyntaxTreeNode :
     public bool ChildOf<T>() where T : AbstractSyntaxTreeNode
     {
         var parent = Parent;
-        while (parent != null)
+        while (!parent.IsRoot)
         {
             if (parent is T)
             {
@@ -43,11 +52,6 @@ public abstract class AbstractSyntaxTreeNode :
 
         return false;
     }
-
-    public abstract IEnumerator<AbstractSyntaxTreeNode> GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() =>
-        GetEnumerator();
 
     public virtual TReturn Accept<TReturn>(IVisitor<AbstractSyntaxTreeNode, TReturn> visitor) =>
         visitor.DefaultVisit;

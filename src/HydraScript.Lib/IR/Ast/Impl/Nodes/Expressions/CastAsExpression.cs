@@ -5,6 +5,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class CastAsExpression : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Expression];
+
     public Expression Expression { get; }
     public TypeValue Cast { get; }
 
@@ -14,11 +17,6 @@ public partial class CastAsExpression : Expression
         Expression.Parent = this;
 
         Cast = cast;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Expression;
     }
 
     protected override string NodeRepresentation() => $"as {Cast}";

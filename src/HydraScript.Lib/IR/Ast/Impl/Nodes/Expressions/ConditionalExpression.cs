@@ -3,6 +3,9 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 [AutoVisitable<AbstractSyntaxTreeNode>]
 public partial class ConditionalExpression : Expression
 {
+    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+        [Test, Consequent, Alternate];
+
     public Expression Test { get; }
     public Expression Consequent { get; }
     public Expression Alternate { get; }
@@ -16,13 +19,6 @@ public partial class ConditionalExpression : Expression
         Test.Parent = this;
         Consequent.Parent = this;
         Alternate.Parent = this;
-    }
-
-    public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator()
-    {
-        yield return Test;
-        yield return Consequent;
-        yield return Alternate;
     }
 
     protected override string NodeRepresentation() => "?:";
