@@ -1,12 +1,10 @@
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-public class MemberExpression : LeftHandSideExpression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class MemberExpression : LeftHandSideExpression
 {
     private readonly IdentifierReference _identifierReference;
 
@@ -53,10 +51,4 @@ public class MemberExpression : LeftHandSideExpression
     }
 
     protected override string NodeRepresentation() => nameof(MemberExpression);
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }

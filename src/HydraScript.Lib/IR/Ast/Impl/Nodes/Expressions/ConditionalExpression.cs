@@ -1,10 +1,7 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
-
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-public class ConditionalExpression : Expression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class ConditionalExpression : Expression
 {
     public Expression Test { get; }
     public Expression Consequent { get; }
@@ -29,10 +26,4 @@ public class ConditionalExpression : Expression
     }
 
     protected override string NodeRepresentation() => "?:";
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }

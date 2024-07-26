@@ -21,7 +21,7 @@ public partial record Token(TokenType Type, Segment Segment, string Value)
 
 public record EndToken() : Token(new EndOfProgramType(), null!, null!)
 {
-    public override string ToString() => Type.ToString();
+    public override string ToString() => Type.Tag;
 }
     
 [ExcludeFromCodeCoverage]

@@ -15,7 +15,7 @@ using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class ExpressionInstructionProvider :
+public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
@@ -51,7 +51,7 @@ public class ExpressionInstructionProvider :
                 result.Add(new IndexAssignment(arrayName, index, primary.ToValue()));
             else
             {
-                result.AddRange(expression.Accept(this));
+                result.AddRange(expression.Accept(This));
                 var last = new Name(result.OfType<Simple>().Last().Left!);
                 result.Add(new IndexAssignment(arrayName, index, last));
             }
@@ -69,7 +69,7 @@ public class ExpressionInstructionProvider :
 
         result.AddRange(visitable.Properties
             .SelectMany(property =>
-                property.Accept(this)));
+                property.Accept(This)));
 
         return result;
     }
@@ -84,7 +84,7 @@ public class ExpressionInstructionProvider :
         if (expression is PrimaryExpression primary)
             return [new DotAssignment(objectId, propertyId, primary.ToValue())];
 
-        var instructions = expression.Accept(this);
+        var instructions = expression.Accept(This);
         var last = new Name(instructions.OfType<Simple>().Last().Left!);
         instructions.Add(new DotAssignment(objectId, propertyId, last));
 
@@ -96,7 +96,7 @@ public class ExpressionInstructionProvider :
         if (visitable.Expression is PrimaryExpression primary)
             return [new Simple(visitable.Operator, primary.ToValue())];
         
-        var result = visitable.Expression.Accept(this);
+        var result = visitable.Expression.Accept(This);
         var last = new Name(result.OfType<Simple>().Last().Left!);
         result.Add(new Simple(visitable.Operator, last));
         
@@ -115,7 +115,7 @@ public class ExpressionInstructionProvider :
             left = primaryLeft.ToValue();
         else
         {
-            result.AddRange(visitable.Left.Accept(this));
+            result.AddRange(visitable.Left.Accept(This));
             left = new Name(result.OfType<Simple>().Last().Left!);
         }
 
@@ -123,7 +123,7 @@ public class ExpressionInstructionProvider :
             right = primaryRight.ToValue();
         else
         {
-            result.AddRange(visitable.Right.Accept(this));
+            result.AddRange(visitable.Right.Accept(This));
             right = new Name(result.OfType<Simple>().Last().Left!);
         }
 
@@ -137,7 +137,7 @@ public class ExpressionInstructionProvider :
         if (visitable.Expression is PrimaryExpression primary)
             return [new AsString(primary.ToValue())];
         
-        var result = visitable.Expression.Accept(this);
+        var result = visitable.Expression.Accept(This);
         var last = new Name(result.OfType<Simple>().Last().Left!);
         result.Add(new AsString(last));
         
@@ -156,17 +156,17 @@ public class ExpressionInstructionProvider :
             result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
         else
         {
-            result.AddRange(visitable.Test.Accept(this));
+            result.AddRange(visitable.Test.Accept(This));
             var last = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new IfNotGoto(last, startBlockLabel));
         }
 
-        result.AddRange(visitable.Consequent.Accept(this));
+        result.AddRange(visitable.Consequent.Accept(This));
         var temp = result.OfType<Simple>().Last().Left!;
         result.Add(new Goto(endBlockLabel));
         
         result.Add(new BeginBlock(BlockType.Condition, blockId), startBlockLabel.Name);
-        result.AddRange(visitable.Alternate.Accept(this));
+        result.AddRange(visitable.Alternate.Accept(This));
         result.OfType<Simple>().Last().Left = temp;
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 
@@ -177,7 +177,7 @@ public class ExpressionInstructionProvider :
 
     public AddressedInstructions Visit(AssignmentExpression visitable)
     {
-        var result = visitable.Source.Accept(this);
+        var result = visitable.Source.Accept(This);
         if (visitable.Source is AssignmentExpression)
         {
             var last = result.OfType<Simple>().Last();
@@ -192,7 +192,7 @@ public class ExpressionInstructionProvider :
         else
         {
             var last = new Name(result.OfType<Simple>().Last().Left!);
-            result.AddRange(visitable.Destination.Accept(this));
+            result.AddRange(visitable.Destination.Accept(This));
             var lastRead = result.OfType<IReadFromComplexData>().Last();
             result.Replace(lastRead.ToInstruction(), lastRead.ToAssignment(last));
         }
@@ -203,7 +203,7 @@ public class ExpressionInstructionProvider :
     public AddressedInstructions Visit(MemberExpression visitable) =>
         visitable.Empty()
             ? []
-            : visitable.Tail?.Accept(this) ?? [];
+            : visitable.Tail?.Accept(This) ?? [];
 
     public AddressedInstructions Visit(DotAccess visitable)
     {
@@ -212,7 +212,7 @@ public class ExpressionInstructionProvider :
         if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
             return [new DotRead(new Name(lhs.Id), right)];
 
-        var result = visitable.Prev?.Accept(this) ?? [];
+        var result = visitable.Prev?.Accept(This) ?? [];
         var left = new Name(result.OfType<Simple>().Last().Left!);
         result.Add(new DotRead(left, right));
 
@@ -229,7 +229,7 @@ public class ExpressionInstructionProvider :
             right = primary.ToValue();
         else
         {
-            result.AddRange(visitable.Index.Accept(this));
+            result.AddRange(visitable.Index.Accept(This));
             right = new Name(result.OfType<Simple>().Last().Left!);
         }
 
@@ -237,7 +237,7 @@ public class ExpressionInstructionProvider :
             result.Add(new IndexRead(new Name(lhs.Id), right));
         else
         {
-            result.AddRange(visitable.Prev?.Accept(this) ?? []);
+            result.AddRange(visitable.Prev?.Accept(This) ?? []);
             var left = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new IndexRead(left, right));
         }
@@ -255,7 +255,7 @@ public class ExpressionInstructionProvider :
             if (param is PrimaryExpression prim)
                 return [new Print(prim.ToValue())];
             
-            var result = param.Accept(this);
+            var result = param.Accept(This);
             var last = new Name(result.OfType<Simple>().Last().Left!);
             result.Add(new Print(last));
             
@@ -267,7 +267,7 @@ public class ExpressionInstructionProvider :
             AddressedInstructions result = [];
             if (methodCall)
             {
-                var memberInstructions = visitable.Member.Accept(this);
+                var memberInstructions = visitable.Member.Accept(This);
                 var lastMemberInstruction = (DotRead)memberInstructions[memberInstructions.End];
                 memberInstructions.Remove(lastMemberInstruction);
                 result.AddRange(memberInstructions);
@@ -297,7 +297,7 @@ public class ExpressionInstructionProvider :
                     result.Add(new PushParameter(symbol.Id, primary.ToValue()));
                 else
                 {
-                    result.AddRange(expr.Accept(this));
+                    result.AddRange(expr.Accept(This));
                     var id = result.OfType<Simple>().Last().Left!;
                     result.Add(new PushParameter(symbol.Id, new Name(id)));
                 }

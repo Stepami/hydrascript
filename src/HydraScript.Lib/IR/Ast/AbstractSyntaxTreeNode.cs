@@ -1,18 +1,12 @@
 using System.Collections;
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.IR.Ast.Visitors;
 using HydraScript.Lib.IR.CheckSemantics.Variables;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast;
 
-public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNode>,
-    IVisitable<InstructionProvider, AddressedInstructions>,
-    IVisitable<SemanticChecker, Type>,
-    IVisitable<SymbolTableInitializer>,
-    IVisitable<TypeSystemLoader>,
-    IVisitable<DeclarationVisitor>
+public abstract class AbstractSyntaxTreeNode :
+    IEnumerable<AbstractSyntaxTreeNode>,
+    IVisitable<AbstractSyntaxTreeNode>
 {
     public AbstractSyntaxTreeNode? Parent { get; set; }
 
@@ -55,23 +49,8 @@ public abstract class AbstractSyntaxTreeNode : IEnumerable<AbstractSyntaxTreeNod
     IEnumerator IEnumerable.GetEnumerator() =>
         GetEnumerator();
 
-    #region Visitors
-
-    public virtual Unit Accept(SymbolTableInitializer visitor) =>
-        visitor.Visit(this);
-
-    public virtual Unit Accept(TypeSystemLoader visitor) =>
-        visitor.Visit(this);
-
-    public virtual Unit Accept(DeclarationVisitor visitor) =>
-        visitor.Visit(this);
-
-    public virtual Type Accept(SemanticChecker visitor) =>
-        "undefined";
-
-    public abstract AddressedInstructions Accept(InstructionProvider visitor);
-
-    #endregion
+    public virtual TReturn Accept<TReturn>(IVisitor<AbstractSyntaxTreeNode, TReturn> visitor) =>
+        visitor.DefaultVisit;
 
     protected abstract string NodeRepresentation();
 

@@ -10,5 +10,5 @@ public record TokenType(string Tag, string Pattern, int Priority)
 
     public string GetNamedRegex() => $"(?<{Tag}>{Pattern})";
 
-    public sealed override string ToString() => Tag;
+    public override string ToString() => Tag;
 }

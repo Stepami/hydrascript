@@ -1,10 +1,10 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes;
 
 public abstract class StatementListItem :
-    AbstractSyntaxTreeNode { }
+    AbstractSyntaxTreeNode;
 
 public abstract class Statement :
-    StatementListItem { }
+    StatementListItem;
 
 public abstract class Declaration :
-    StatementListItem { }
+    StatementListItem;

@@ -1,11 +1,9 @@
-using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.CheckSemantics.Visitors;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
-public class AssignmentExpression : Expression
+[AutoVisitable<AbstractSyntaxTreeNode>]
+public partial class AssignmentExpression : Expression
 {
     public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
@@ -32,10 +30,4 @@ public class AssignmentExpression : Expression
     }
 
     protected override string NodeRepresentation() => "=";
-
-    public override Type Accept(SemanticChecker visitor) =>
-        visitor.Visit(this);
-
-    public override AddressedInstructions Accept(ExpressionInstructionProvider visitor) =>
-        visitor.Visit(this);
 }
