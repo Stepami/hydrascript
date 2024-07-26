@@ -31,6 +31,9 @@ public record Segment(Coordinates Start, Coordinates End)
 
     public static Segment operator +(Segment left, Segment right) => 
         new(left.Start, right.End);
+
+    public static implicit operator string(Segment segment) =>
+        segment.ToString();
 }
     
 [ExcludeFromCodeCoverage]

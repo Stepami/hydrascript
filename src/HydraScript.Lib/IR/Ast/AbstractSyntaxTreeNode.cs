@@ -1,5 +1,4 @@
 using System.Collections;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast;
@@ -14,7 +13,7 @@ public abstract class AbstractSyntaxTreeNode :
 
     public SymbolTable SymbolTable { get; set; } = default!;
 
-    public Segment Segment { get; init; } = default!;
+    public string Segment { get; init; } = string.Empty;
 
     internal List<AbstractSyntaxTreeNode> GetAllNodes()
     {

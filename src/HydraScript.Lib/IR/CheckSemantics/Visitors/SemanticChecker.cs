@@ -181,6 +181,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
             return cType;
 
         throw new WrongConditionalTypes(
+            segment: visitable.Segment,
             cSegment: visitable.Consequent.Segment,
             cType,
             aSegment: visitable.Alternate.Segment,
