@@ -8,7 +8,9 @@ public abstract class AbstractSyntaxTreeNode :
     IEnumerable<AbstractSyntaxTreeNode>,
     IVisitable<AbstractSyntaxTreeNode>
 {
-    public AbstractSyntaxTreeNode? Parent { get; set; }
+    public AbstractSyntaxTreeNode Parent { get; set; } = default!;
+
+    protected virtual bool IsRoot => false;
 
     public SymbolTable SymbolTable { get; set; } = default!;
 
@@ -31,7 +33,7 @@ public abstract class AbstractSyntaxTreeNode :
     public bool ChildOf<T>() where T : AbstractSyntaxTreeNode
     {
         var parent = Parent;
-        while (parent != null)
+        while (!parent.IsRoot)
         {
             if (parent is T)
             {

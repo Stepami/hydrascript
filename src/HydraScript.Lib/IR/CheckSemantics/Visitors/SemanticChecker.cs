@@ -131,11 +131,11 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
     }
 
     public Type Visit(Literal visitable) =>
-        visitable.Type.BuildType(visitable.Parent!.SymbolTable);
+        visitable.Type.BuildType(visitable.Parent.SymbolTable);
 
     public Type Visit(ImplicitLiteral visitable)
     {
-        var type = visitable.TypeValue.BuildType(visitable.Parent!.SymbolTable);
+        var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
     }

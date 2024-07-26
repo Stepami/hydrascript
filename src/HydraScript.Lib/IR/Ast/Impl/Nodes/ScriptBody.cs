@@ -11,6 +11,8 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
         StatementList.ForEach(item => item.Parent = this);
     }
 
+    protected override bool IsRoot => true;
+
     public override IEnumerator<AbstractSyntaxTreeNode> GetEnumerator() =>
         StatementList.GetEnumerator();
 

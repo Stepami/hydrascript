@@ -60,7 +60,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.Parent!.SymbolTable.ContainsSymbol(visitable.Name))
+        if (visitable.Parent.SymbolTable.ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>
