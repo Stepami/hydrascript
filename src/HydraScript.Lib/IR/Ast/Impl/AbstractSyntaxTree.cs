@@ -6,7 +6,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
 namespace HydraScript.Lib.IR.Ast.Impl;
 
-public class AbstractSyntaxTree : IAbstractSyntaxTree
+internal class AbstractSyntaxTree : IAbstractSyntaxTree
 {
     private readonly IVisitor<IAbstractSyntaxTreeNode> _symbolTableInitializer;
     private readonly IVisitor<IAbstractSyntaxTreeNode> _typeSystemLoader;
