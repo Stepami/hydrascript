@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.BackEnd.Addresses;
+namespace HydraScript.Lib.BackEnd;
 
 public interface IAddress : IEquatable<IAddress>
 {

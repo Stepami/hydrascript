@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.BackEnd.Values;
+namespace HydraScript.Lib.BackEnd;
 
 public interface IValue : IEquatable<IValue>
 {

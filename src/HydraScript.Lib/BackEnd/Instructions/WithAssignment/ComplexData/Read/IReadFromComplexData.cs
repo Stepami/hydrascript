@@ -1,5 +1,3 @@
-using HydraScript.Lib.BackEnd.Values;
-
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
 
 public interface IReadFromComplexData

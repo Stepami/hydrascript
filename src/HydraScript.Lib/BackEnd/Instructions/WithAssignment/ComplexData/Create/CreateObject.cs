@@ -1,5 +1,3 @@
-using HydraScript.Lib.BackEnd.Addresses;
-
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 
 public class CreateObject(string id) : Simple(id)

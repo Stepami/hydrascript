@@ -1,5 +1,3 @@
-using HydraScript.Lib.BackEnd.Addresses;
-
 namespace HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
 
 public class CreateArray(string id, int size) : Simple(id)
