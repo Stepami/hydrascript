@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Lib.IR.Ast.Visitors;
+using HydraScript.Lib.IR.Ast.Visitors.Services.Impl;
 using HydraScript.Lib.IR.CheckSemantics.Visitors;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 using Microsoft.Extensions.Options;
@@ -44,7 +45,7 @@ internal class CodeGenService : ICodeGenService
             new DefaultValueForTypeCalculator(),
             functionStorage,
             methodStorage);
-        _instructionProvider = new InstructionProvider();
+        _instructionProvider = new InstructionProvider(new ValueDtoConverter());
     }
 
     public AddressedInstructions GetInstructions(IAbstractSyntaxTree ast)

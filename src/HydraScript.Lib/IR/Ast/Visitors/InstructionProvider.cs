@@ -8,6 +8,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
+using HydraScript.Lib.IR.Ast.Visitors.Services;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
@@ -22,11 +23,13 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>
 {
+    private readonly IValueDtoConverter _valueDtoConverter;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
 
-    public InstructionProvider()
+    public InstructionProvider(IValueDtoConverter valueDtoConverter)
     {
-        _expressionVisitor = new ExpressionInstructionProvider();
+        _valueDtoConverter = valueDtoConverter;
+        _expressionVisitor = new ExpressionInstructionProvider(_valueDtoConverter);
     }
 
     public AddressedInstructions Visit(ScriptBody visitable)
@@ -94,7 +97,7 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
             case null:
                 return [new Return()];
             case PrimaryExpression primary:
-                return [new Return(primary.ToValue())];
+                return [new Return(_valueDtoConverter.Convert(primary.ToValueDto()))];
         }
 
         var result = visitable.Expression.Accept(_expressionVisitor);
@@ -141,7 +144,7 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
         };
 
         if (visitable.Condition is PrimaryExpression primary)
-            result.Add(new IfNotGoto(primary.ToValue(), endBlockLabel));
+            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), endBlockLabel));
         else
         {
             result.AddRange(visitable.Condition.Accept(_expressionVisitor));
@@ -183,7 +186,7 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
         var result = new AddressedInstructions();
 
         if (visitable.Test is PrimaryExpression primary)
-            result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
+            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), startBlockLabel));
         else
         {
             result.AddRange(visitable.Test.Accept(_expressionVisitor));
