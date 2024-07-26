@@ -1,3 +1,5 @@
+using HydraScript.Lib.IR.CheckSemantics.Variables;
+
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
@@ -14,6 +16,15 @@ public partial class BlockStatement : Statement
     {
         _statementList = new List<StatementListItem>(statementList);
         _statementList.ForEach(item => item.Parent = this);
+    }
+
+    /// <summary>Стратегия "блока" - углубление скоупа</summary>
+    /// <param name="scope">Новый скоуп</param>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        SymbolTable = scope;
+        SymbolTable.AddOpenScope(Parent.SymbolTable);
     }
 
     protected override string NodeRepresentation() => "{}";

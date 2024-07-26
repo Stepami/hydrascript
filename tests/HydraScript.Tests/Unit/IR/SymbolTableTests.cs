@@ -37,11 +37,9 @@ public class SymbolTableTests
                 new Random().Next(10)
             )
         );
-        var script = new ScriptBody(stmtList)
-        {
-            SymbolTable = table
-        };
-        script.ToList().ForEach(node => node.SymbolTable = table);
+        var script = new ScriptBody(stmtList);
+        script.InitScope(table);
+        script.ToList().ForEach(node => node.InitScope());
 
         const string id = "ident";
         var type = new Mock<Type>(id);

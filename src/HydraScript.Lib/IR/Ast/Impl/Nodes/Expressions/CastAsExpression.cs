@@ -1,4 +1,5 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -17,6 +18,13 @@ public partial class CastAsExpression : Expression
         Expression.Parent = this;
 
         Cast = cast;
+    }
+
+    /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        base.InitScope(scope);
+        Cast.SymbolTable = SymbolTable;
     }
 
     protected override string NodeRepresentation() => $"as {Cast}";

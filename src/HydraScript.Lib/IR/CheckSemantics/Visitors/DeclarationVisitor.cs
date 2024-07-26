@@ -16,6 +16,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 {
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder = new TypeBuilder();
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
@@ -41,8 +42,8 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
             if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
-            var destinationType = assignment.DestinationType?.BuildType(
-                assignment.SymbolTable) ?? "undefined";
+            var destinationType = assignment.DestinationType?.Accept(
+                _typeBuilder) ?? "undefined";
 
             if (destinationType == "undefined" &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
@@ -68,7 +69,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
         {
             var arg = new VariableSymbol(
                 id: x.Key,
-                x.TypeValue.BuildType(visitable.Parent.SymbolTable));
+                x.TypeValue.Accept(_typeBuilder));
             visitable.SymbolTable.AddSymbol(arg);
             return arg;
         }).ToList();
@@ -76,7 +77,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
         var functionSymbol = new FunctionSymbol(
             visitable.Name,
             parameters,
-            visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
+            visitable.ReturnTypeValue.Accept(_typeBuilder),
             isEmpty: !visitable.Statements.Any());
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])

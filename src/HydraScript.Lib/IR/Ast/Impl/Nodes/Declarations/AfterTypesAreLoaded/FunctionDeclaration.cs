@@ -1,16 +1,20 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
+    private readonly List<PropertyTypeValue> _arguments;
+
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children => [Statements];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
-    public List<PropertyTypeValue> Arguments { get; }
+    public IReadOnlyList<PropertyTypeValue> Arguments => _arguments;
+
     public BlockStatement Statements { get; }
 
     public FunctionDeclaration(
@@ -21,7 +25,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     {
         Name = name;
         ReturnTypeValue = returnTypeValue;
-        Arguments = arguments;
+        _arguments = arguments;
 
         Statements = blockStatement;
         Statements.Parent = this;
@@ -30,6 +34,18 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
             .GetAllNodes()
             .OfType<ReturnStatement>()
             .ToArray();
+    }
+
+    /// <summary>Стратегия "блока" - углубление скоупа</summary>
+    /// <param name="scope">Новый скоуп</param>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        SymbolTable = scope;
+        SymbolTable.AddOpenScope(Parent.SymbolTable);
+
+        _arguments.ForEach(x => x.TypeValue.SymbolTable = Parent.SymbolTable);
+        ReturnTypeValue.SymbolTable = Parent.SymbolTable;
     }
 
     public bool HasReturnStatement() =>

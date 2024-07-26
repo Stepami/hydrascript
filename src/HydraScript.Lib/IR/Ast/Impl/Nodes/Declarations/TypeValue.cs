@@ -1,38 +1,29 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.CheckSemantics.Exceptions;
-using HydraScript.Lib.IR.CheckSemantics.Types;
 using HydraScript.Lib.IR.CheckSemantics.Variables;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
-public abstract record TypeValue
+public abstract record TypeValue : IVisitable<TypeValue>
 {
-    public abstract Type BuildType(SymbolTable symbolTable);
+    public SymbolTable SymbolTable { get; set; } = default!;
+    public abstract TReturn Accept<TReturn>(IVisitor<TypeValue, TReturn> visitor);
 }
 
-public record TypeIdentValue(IdentifierReference TypeId) : TypeValue
+[AutoVisitable<TypeValue>]
+public partial record TypeIdentValue(IdentifierReference TypeId) : TypeValue
 {
-    public override Type BuildType(SymbolTable symbolTable) =>
-        symbolTable.FindSymbol<TypeSymbol>(TypeId)?.Type ??
-        throw new UnknownIdentifierReference(TypeId);
-
     public override string ToString() => TypeId;
 }
 
-public record ArrayTypeValue(TypeValue TypeValue) : TypeValue
+[AutoVisitable<TypeValue>]
+public partial record ArrayTypeValue(TypeValue TypeValue) : TypeValue
 {
-    public override Type BuildType(SymbolTable symbolTable) =>
-        new ArrayType(TypeValue.BuildType(symbolTable));
-
     public override string ToString() => $"{TypeValue}[]";
 }
 
-public record NullableTypeValue(TypeValue TypeValue) : TypeValue
+[AutoVisitable<TypeValue>]
+public partial record NullableTypeValue(TypeValue TypeValue) : TypeValue
 {
-    public override Type BuildType(SymbolTable symbolTable) =>
-        new NullableType(TypeValue.BuildType(symbolTable));
-
     public override string ToString() => $"{TypeValue}?";
 }
 
@@ -44,15 +35,10 @@ public record PropertyTypeValue(
         $"{Key}: {TypeValue}";
 }
 
-public record ObjectTypeValue(
+[AutoVisitable<TypeValue>]
+public partial record ObjectTypeValue(
     IEnumerable<PropertyTypeValue> Properties) : TypeValue
 {
-    public override Type BuildType(SymbolTable symbolTable) =>
-        new ObjectType(
-            Properties.Select(x => new PropertyType(
-                Id: x.Key,
-                x.TypeValue.BuildType(symbolTable))));
-
     public override string ToString() =>
         $"{{{string.Join(';', Properties)}}}";
 }

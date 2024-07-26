@@ -1,4 +1,5 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
@@ -6,10 +7,15 @@ namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 public partial class TypeDeclaration(IdentifierReference typeId, TypeValue typeValue) : Declaration
 {
     public IdentifierReference TypeId { get; } = typeId;
+    public TypeValue TypeValue { get; } = typeValue;
 
-    public Type BuildType() =>
-        typeValue.BuildType(SymbolTable);
+    /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        base.InitScope(scope);
+        TypeValue.SymbolTable = SymbolTable;
+    }
 
     protected override string NodeRepresentation() =>
-        $"type {TypeId.Name} = {typeValue}";
+        $"type {TypeId.Name} = {TypeValue}";
 }

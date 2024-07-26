@@ -1,5 +1,6 @@
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Lib.IR.Ast.Impl.Nodes;
+using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
@@ -41,6 +42,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder = new TypeBuilder();
 
     public SemanticChecker(
         IDefaultValueForTypeCalculator calculator,
@@ -131,11 +133,11 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     }
 
     public Type Visit(Literal visitable) =>
-        visitable.Type.BuildType(visitable.Parent.SymbolTable);
+        visitable.Type.Accept(_typeBuilder);
 
     public Type Visit(ImplicitLiteral visitable)
     {
-        var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
+        var type = visitable.Type.Accept(_typeBuilder);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
     }
@@ -365,7 +367,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (exprType.Equals(undefined))
             throw new CannotDefineType(visitable.Expression.Segment);
 
-        return visitable.Cast.BuildType(visitable.SymbolTable) == "string"
+        return visitable.Cast.Accept(_typeBuilder) == "string"
             ? "string"
             : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
     }

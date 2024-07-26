@@ -1,4 +1,5 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 
@@ -24,6 +25,14 @@ public partial class AssignmentExpression : Expression
         source.Parent = this;
 
         DestinationType = destinationType;
+    }
+
+    /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        base.InitScope(scope);
+        if (DestinationType is not null)
+            DestinationType.SymbolTable = SymbolTable;
     }
 
     protected override string NodeRepresentation() => "=";

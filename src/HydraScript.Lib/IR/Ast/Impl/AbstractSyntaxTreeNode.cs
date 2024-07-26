@@ -7,7 +7,16 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
 {
     public IAbstractSyntaxTreeNode Parent { get; set; } = default!;
 
-    public SymbolTable SymbolTable { get; set; } = default!;
+    public SymbolTable SymbolTable { get; protected set; } = default!;
+
+    /// <summary>Базовая стратегия - инициализация через родительский узел</summary>
+    /// <param name="scope">Обязательно <c>null</c></param>
+    public virtual void InitScope(SymbolTable? scope = null)
+    {
+        if (scope is not null)
+            throw new ArgumentException("'scope' must be null");
+        SymbolTable = Parent.SymbolTable;
+    }
 
     public string Segment { get; init; } = string.Empty;
 

@@ -7,6 +7,7 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
     private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
     private readonly IJavaScriptTypesProvider _provider;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder = new TypeBuilder();
 
     public TypeDeclarationsResolver(IJavaScriptTypesProvider provider) =>
         _provider = provider;
@@ -24,7 +25,7 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
         {
             declarationToResolve.SymbolTable.AddSymbol(
                 new TypeSymbol(
-                    declarationToResolve.BuildType(),
+                    declarationToResolve.TypeValue.Accept(_typeBuilder),
                     declarationToResolve.TypeId));
         }
 

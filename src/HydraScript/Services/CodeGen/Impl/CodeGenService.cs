@@ -32,7 +32,6 @@ internal class CodeGenService : ICodeGenService
         var methodStorage = new MethodStorage();
         
         _symbolTableInitializer = new SymbolTableInitializer(
-            new SymbolTableInitializerService(),
             new StandardLibraryProvider(
                 new JavaScriptTypesProvider()));
         _typeSystemLoader = new TypeSystemLoader(

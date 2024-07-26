@@ -3,9 +3,8 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
-public partial class Literal : PrimaryExpression
+public partial class Literal : AbstractLiteral
 {
-    public TypeValue Type { get; }
     private readonly object? _value;
     private readonly string _label;
 
@@ -13,9 +12,8 @@ public partial class Literal : PrimaryExpression
         TypeValue type,
         object? value,
         string segment,
-        string? label = null)
+        string? label = null) : base(type)
     {
-        Type = type;
         _label = (label ?? value?.ToString())!;
         _value = value;
         Segment = segment;

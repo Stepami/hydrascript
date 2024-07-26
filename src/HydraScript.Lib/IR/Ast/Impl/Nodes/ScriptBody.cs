@@ -1,3 +1,5 @@
+using HydraScript.Lib.IR.CheckSemantics.Variables;
+
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
@@ -14,6 +16,14 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
     {
         _statementList = new List<StatementListItem>(statementList);
         _statementList.ForEach(item => item.Parent = this);
+    }
+
+    /// <summary>В корень дерева загружается стандартная библиотека</summary>
+    /// <param name="scope">Скоуп std</param>
+    public override void InitScope(SymbolTable? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        SymbolTable = scope;
     }
 
     protected override string NodeRepresentation() => "Script";
