@@ -1,6 +1,6 @@
 using System.Collections;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
 
 namespace HydraScript.Lib.BackEnd;
 

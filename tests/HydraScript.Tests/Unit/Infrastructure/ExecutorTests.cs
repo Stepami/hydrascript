@@ -1,5 +1,5 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Instructions;
+using HydraScript.Lib.BackEnd.Impl;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;

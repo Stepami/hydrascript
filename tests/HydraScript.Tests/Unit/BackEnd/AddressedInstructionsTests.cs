@@ -1,8 +1,8 @@
 using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Values;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Lib.BackEnd.Impl.Values;
 using HydraScript.Tests.Helpers;
 using Xunit;
 
