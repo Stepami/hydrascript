@@ -20,7 +20,7 @@ public abstract class Instruction
 
     public abstract IAddress Execute(VirtualMachine vm);
     
-    public virtual bool End() => false;
+    public virtual bool End => false;
 
     protected abstract string ToStringInternal();
 

@@ -11,7 +11,7 @@ public static class MockExtensions
     {
         halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
             .Returns(new HashAddress(seed: 0)).Verifiable();
-        halt.Setup(x => x.End()).Returns(true);
+        halt.Setup(x => x.End).Returns(true);
         return halt;
     }
 

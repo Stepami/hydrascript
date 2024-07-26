@@ -16,7 +16,7 @@ public record VirtualMachine(
         Frames.Push(new Frame(instructions.Start));
 
         var address = instructions.Start;
-        while (!instructions[address].End())
+        while (!instructions[address].End)
         {
             var instruction = instructions[address];
             var jump = instruction.Execute(this);

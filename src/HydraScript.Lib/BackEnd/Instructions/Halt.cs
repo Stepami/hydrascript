@@ -4,7 +4,7 @@ namespace HydraScript.Lib.BackEnd.Instructions;
 
 public class Halt : Instruction
 {
-    public override bool End() => true;
+    public override bool End => true;
 
     public override IAddress Execute(VirtualMachine vm)
     {
