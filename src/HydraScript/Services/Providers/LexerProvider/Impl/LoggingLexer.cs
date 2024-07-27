@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Data;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
 

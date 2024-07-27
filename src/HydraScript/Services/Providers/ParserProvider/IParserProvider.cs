@@ -1,4 +1,4 @@
-using HydraScript.Lib.FrontEnd.TopDownParse;
+using HydraScript.Domain.FrontEnd.Parser;
 
 namespace HydraScript.Services.Providers.ParserProvider;
 

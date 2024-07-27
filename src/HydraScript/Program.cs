@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using CommandLine;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Lib.FrontEnd.GetTokens;
-using HydraScript.Lib.FrontEnd.GetTokens.Impl;
 using HydraScript.Services.CodeGen;
 using HydraScript.Services.CodeGen.Impl;
 using HydraScript.Services.Executor;

@@ -1,9 +1,11 @@
 using System.IO.Abstractions;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Data;
+using HydraScript.Domain.FrontEnd.Lexer.Impl;
+using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
+using HydraScript.Domain.FrontEnd.Parser.Impl;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
-using HydraScript.Lib.FrontEnd.GetTokens.Impl;
-using HydraScript.Lib.FrontEnd.TopDownParse.Impl;
 using HydraScript.Services.Providers.LexerProvider;
 using HydraScript.Services.Providers.LexerProvider.Impl;
 using HydraScript.Services.Providers.ParserProvider.Impl;
@@ -18,7 +20,7 @@ namespace HydraScript.Tests.Unit.Infrastructure;
 public class ProvidersTests
 {
     [Theory]
-    [InlineData(typeof(Lexer), false)]
+    [InlineData(typeof(RegExpLexer), false)]
     [InlineData(typeof(LoggingLexer), true)]
     public void CertainLexerProvidedTest(SystemType lexerType, bool dump)
     {
@@ -45,7 +47,7 @@ public class ProvidersTests
     }
 
     [Theory]
-    [InlineData(typeof(Parser), false)]
+    [InlineData(typeof(TopDownParser), false)]
     [InlineData(typeof(LoggingParser), true)]
     public void CertainParserProvidedTest(SystemType parserType, bool dump)
     {

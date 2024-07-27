@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using HydraScript.Lib.FrontEnd.TopDownParse;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.IR.Ast;
 
 namespace HydraScript.Services.Providers.ParserProvider.Impl;
@@ -15,9 +15,9 @@ public class LoggingParser : IParser
         _fileSystem = fileSystem;
     }
     
-    public IAbstractSyntaxTree TopDownParse(string text)
+    public IAbstractSyntaxTree Parse(string text)
     {
-        var ast = _parser.TopDownParse(text);
+        var ast = _parser.Parse(text);
         var astDot = ast.ToString();
         _fileSystem.File.WriteAllText("ast.dot", astDot);
         return ast;

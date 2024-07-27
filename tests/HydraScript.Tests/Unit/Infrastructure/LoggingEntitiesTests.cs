@@ -1,12 +1,14 @@
 using System.IO.Abstractions;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Services.Providers.LexerProvider.Impl;
 using HydraScript.Services.Providers.ParserProvider.Impl;
 using Moq;
 using Xunit;
+
 
 namespace HydraScript.Tests.Unit.Infrastructure;
 
@@ -53,7 +55,7 @@ public class LoggingEntitiesTests
             .Returns("digraph ast { }");
 
         var parser = new Mock<IParser>();
-        parser.Setup(x => x.TopDownParse(It.IsAny<string>()))
+        parser.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object);
 
         _file.Setup(x => x.WriteAllText(
@@ -61,7 +63,7 @@ public class LoggingEntitiesTests
         )).Verifiable();
 
         var loggingParser = new LoggingParser(parser.Object, _fileSystem.Object);
-        _ = loggingParser.TopDownParse("");
+        _ = loggingParser.Parse("");
 
         _file.Verify(x => x.WriteAllText(
             It.Is<string>(p => p == "ast.dot"),

@@ -1,5 +1,7 @@
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Data;
+using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.FrontEnd;

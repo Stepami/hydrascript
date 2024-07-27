@@ -1,4 +1,5 @@
 using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.IR.Ast;
 
 namespace HydraScript.Services.CodeGen;

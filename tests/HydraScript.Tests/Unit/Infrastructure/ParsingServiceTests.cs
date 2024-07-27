@@ -1,4 +1,4 @@
-using HydraScript.Lib.FrontEnd.TopDownParse;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Services.Parsing.Impl;
 using HydraScript.Services.Providers.ParserProvider;
@@ -16,7 +16,7 @@ public class ParsingServiceTests
 
         var ast = new Mock<IAbstractSyntaxTree>();
         var parser = new Mock<IParser>();
-        parser.Setup(x => x.TopDownParse(It.IsAny<string>()))
+        parser.Setup(x => x.Parse(It.IsAny<string>()))
             .Returns(ast.Object).Verifiable();
             
         var parserProvider = new Mock<IParserProvider>();
@@ -26,7 +26,7 @@ public class ParsingServiceTests
         var parsingService = new ParsingService(parserProvider.Object);
         parsingService.Parse(text);
 
-        parser.Verify(x => x.TopDownParse(
+        parser.Verify(x => x.Parse(
             It.Is<string>(s => s == text)
         ), Times.Once());
     }

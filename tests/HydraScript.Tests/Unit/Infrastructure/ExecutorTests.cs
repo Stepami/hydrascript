@@ -1,7 +1,8 @@
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.FrontEnd.GetTokens;
-using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Services.CodeGen;
 using HydraScript.Services.Executor.Impl;

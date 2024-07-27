@@ -1,7 +1,7 @@
 using System.IO.Abstractions;
+using HydraScript.Domain.FrontEnd.Parser;
+using HydraScript.Domain.FrontEnd.Parser.Impl;
 using HydraScript.Services.Providers.LexerProvider;
-using HydraScript.Lib.FrontEnd.TopDownParse;
-using HydraScript.Lib.FrontEnd.TopDownParse.Impl;
 using Microsoft.Extensions.Options;
 
 namespace HydraScript.Services.Providers.ParserProvider.Impl;
@@ -25,7 +25,7 @@ public class ParserProvider : IParserProvider
     public IParser CreateParser()
     {
         var lexer = _lexerProvider.CreateLexer();
-        var parser = new Parser(lexer);
+        var parser = new TopDownParser(lexer);
         return _settings.Dump
             ? new LoggingParser(parser, _fileSystem)
             : parser;

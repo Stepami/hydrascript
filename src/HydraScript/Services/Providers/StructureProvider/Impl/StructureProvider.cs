@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Data;
+using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.FrontEnd.GetTokens.Data.TokenTypes;
 
 namespace HydraScript.Services.Providers.StructureProvider.Impl;
 

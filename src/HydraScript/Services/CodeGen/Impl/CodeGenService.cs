@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Lib.IR.Ast.Visitors;
 using HydraScript.Lib.IR.Ast.Visitors.Services.Impl;

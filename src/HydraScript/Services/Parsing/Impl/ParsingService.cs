@@ -1,3 +1,4 @@
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Services.Providers.ParserProvider;
 using HydraScript.Lib.IR.Ast;
 
@@ -15,6 +16,6 @@ public class ParsingService : IParsingService
     public IAbstractSyntaxTree Parse(string text)
     {
         var parser = _parserProvider.CreateParser();
-        return parser.TopDownParse(text);
+        return parser.Parse(text);
     }
 }
