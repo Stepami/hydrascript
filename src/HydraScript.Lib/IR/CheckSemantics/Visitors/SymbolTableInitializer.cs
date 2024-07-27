@@ -46,7 +46,7 @@ public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNod
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
         visitable.InitScope(scope: new Scope());
-        _symbolTables.Init(visitable.Scope, new SymbolTable());
+        _symbolTables.InitWithOpenScope(visitable.Scope);
         visitable.Statements.Accept(This);
         return default;
     }
@@ -54,7 +54,7 @@ public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNod
     public VisitUnit Visit(BlockStatement visitable)
     {
         visitable.InitScope(scope: new Scope());
-        _symbolTables.Init(visitable.Scope, new SymbolTable());
+        _symbolTables.InitWithOpenScope(visitable.Scope);
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
         return default;
