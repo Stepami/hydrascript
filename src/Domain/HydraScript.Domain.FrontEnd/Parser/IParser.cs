@@ -2,5 +2,5 @@ namespace HydraScript.Domain.FrontEnd.Parser;
 
 public interface IParser
 {
-    IAbstractSyntaxTree Parse(string text);
+    public IAbstractSyntaxTree Parse(string text);
 }

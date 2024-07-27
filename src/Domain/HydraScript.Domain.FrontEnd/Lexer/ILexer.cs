@@ -2,7 +2,7 @@ namespace HydraScript.Domain.FrontEnd.Lexer;
 
 public interface ILexer
 {
-    Structure Structure { get; }
+    public Structure Structure { get; }
 
-    List<Token> GetTokens(string text);
+    public List<Token> GetTokens(string text);
 }
