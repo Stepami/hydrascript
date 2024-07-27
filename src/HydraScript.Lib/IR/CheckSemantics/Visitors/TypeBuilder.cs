@@ -2,6 +2,7 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Lib.IR.CheckSemantics.Types;
 using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
@@ -11,8 +12,15 @@ public class TypeBuilder : VisitorBase<TypeValue, Type>,
     IVisitor<NullableTypeValue, NullableType>,
     IVisitor<ObjectTypeValue, ObjectType>
 {
+    private readonly ISymbolTableStorage _symbolTables;
+
+    public TypeBuilder(ISymbolTableStorage symbolTables)
+    {
+        _symbolTables = symbolTables;
+    }
+
     public Type Visit(TypeIdentValue visitable) =>
-        visitable.Scope.FindSymbol<TypeSymbol>(visitable.TypeId)?.Type ??
+        _symbolTables[visitable.Scope].FindSymbol<TypeSymbol>(visitable.TypeId)?.Type ??
         throw new UnknownIdentifierReference(visitable.TypeId);
 
     public ArrayType Visit(ArrayTypeValue visitable)

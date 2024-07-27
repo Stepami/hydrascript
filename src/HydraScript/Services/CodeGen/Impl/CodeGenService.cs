@@ -30,20 +30,25 @@ internal class CodeGenService : ICodeGenService
 
         var functionStorage = new FunctionWithUndefinedReturnStorage();
         var methodStorage = new MethodStorage();
+        var symbolTables = new SymbolTableStorage();
         
         _symbolTableInitializer = new SymbolTableInitializer(
             new StandardLibraryProvider(
-                new JavaScriptTypesProvider()));
+                new JavaScriptTypesProvider()),
+            symbolTables);
         _typeSystemLoader = new TypeSystemLoader(
             new TypeDeclarationsResolver(
-                new JavaScriptTypesProvider()),
-            new JavaScriptTypesProvider());
-        _declarationVisitor = new DeclarationVisitor(functionStorage, methodStorage);
+                new JavaScriptTypesProvider(),
+                symbolTables),
+            new JavaScriptTypesProvider(),
+            symbolTables);
+        _declarationVisitor = new DeclarationVisitor(functionStorage, methodStorage, symbolTables);
         
         _semanticChecker = new SemanticChecker(
             new DefaultValueForTypeCalculator(),
             functionStorage,
-            methodStorage);
+            methodStorage,
+            symbolTables);
         _instructionProvider = new InstructionProvider(new ValueDtoConverter());
     }
 

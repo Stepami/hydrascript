@@ -12,14 +12,17 @@ public class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<TypeDeclaration>
 {
     private readonly ITypeDeclarationsResolver _resolver;
-    private readonly ISet<Type> _defaultTypes;
+    private readonly IJavaScriptTypesProvider _provider;
+    private readonly ISymbolTableStorage _symbolTables;
 
     public TypeSystemLoader(
         ITypeDeclarationsResolver resolver,
-        IJavaScriptTypesProvider provider)
+        IJavaScriptTypesProvider provider,
+        ISymbolTableStorage symbolTables)
     {
         _resolver = resolver;
-        _defaultTypes = provider.GetDefaultTypes().ToHashSet();
+        _provider = provider;
+        _symbolTables = symbolTables;
     }
 
     public VisitUnit Visit(ScriptBody visitable)
@@ -40,11 +43,12 @@ public class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(TypeDeclaration visitable)
     {
-        if (visitable.Scope.ContainsSymbol(visitable.TypeId) ||
-            _defaultTypes.Contains(visitable.TypeId.Name))
+        var symbolTable = _symbolTables[visitable.Scope];
+        if (symbolTable.ContainsSymbol(visitable.TypeId) ||
+            _provider.Contains(visitable.TypeId.Name))
             throw new DeclarationAlreadyExists(visitable.TypeId);
 
-        visitable.Scope.AddSymbol(
+        symbolTable.AddSymbol(
             new TypeSymbol(
                 visitable.TypeId.Name,
                 visitable.TypeId));

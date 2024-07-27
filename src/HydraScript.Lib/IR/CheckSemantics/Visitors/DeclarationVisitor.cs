@@ -16,14 +16,18 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 {
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
-    private readonly IVisitor<TypeValue, Type> _typeBuilder = new TypeBuilder();
+    private readonly ISymbolTableStorage _symbolTables;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
-        IMethodStorage methodStorage)
+        IMethodStorage methodStorage,
+        ISymbolTableStorage symbolTables)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
+        _symbolTables = symbolTables;
+        _typeBuilder = new TypeBuilder(_symbolTables);
     }
 
     public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
@@ -39,7 +43,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            if (visitable.Scope.ContainsSymbol(assignment.Destination.Id))
+            if (_symbolTables[visitable.Scope].ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
             var destinationType = assignment.DestinationType?.Accept(
@@ -51,7 +55,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
                     ? new ConstWithoutInitializer(assignment.Destination.Id)
                     : new CannotDefineType(assignment.Destination.Id.Segment);
 
-            visitable.Scope.AddSymbol(
+            _symbolTables[visitable.Scope].AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
                     destinationType));
@@ -62,7 +66,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.Parent.Scope.ContainsSymbol(visitable.Name))
+        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>
@@ -70,7 +74,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
             var arg = new VariableSymbol(
                 id: x.Key,
                 x.TypeValue.Accept(_typeBuilder));
-            visitable.Scope.AddSymbol(arg);
+            _symbolTables[visitable.Scope].AddSymbol(arg);
             return arg;
         }).ToList();
 
@@ -94,7 +98,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
                 functionSymbol.DefineReturnType("void");
         }
 
-        visitable.Parent.Scope.AddSymbol(functionSymbol);
+        _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol);
         return visitable.Statements.Accept(This);
     }
 }

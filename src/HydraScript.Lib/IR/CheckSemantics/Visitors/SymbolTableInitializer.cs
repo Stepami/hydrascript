@@ -13,15 +13,20 @@ public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNod
     IVisitor<BlockStatement>
 {
     private readonly IStandardLibraryProvider _provider;
+    private readonly ISymbolTableStorage _symbolTables;
 
-    public SymbolTableInitializer(IStandardLibraryProvider provider)
+    public SymbolTableInitializer(
+        IStandardLibraryProvider provider,
+        ISymbolTableStorage symbolTables)
     {
         _provider = provider;
+        _symbolTables = symbolTables;
     }
 
     public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
     {
         visitable.InitScope();
+        _symbolTables.Init(visitable.Scope, new SymbolTable());
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
 
@@ -30,8 +35,9 @@ public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNod
 
     public VisitUnit Visit(ScriptBody visitable)
     {
-        var scope = _provider.GetStandardLibrary();
-        visitable.InitScope(scope);
+        visitable.InitScope(new Scope());
+        var symbolTable = _provider.GetStandardLibrary();
+        _symbolTables.Init(visitable.Scope, symbolTable);
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
         return default;
@@ -39,14 +45,16 @@ public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNod
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        visitable.InitScope(scope: new SymbolTable());
+        visitable.InitScope(scope: new Scope());
+        _symbolTables.Init(visitable.Scope, new SymbolTable());
         visitable.Statements.Accept(This);
         return default;
     }
 
     public VisitUnit Visit(BlockStatement visitable)
     {
-        visitable.InitScope(scope: new SymbolTable());
+        visitable.InitScope(scope: new Scope());
+        _symbolTables.Init(visitable.Scope, new SymbolTable());
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
         return default;

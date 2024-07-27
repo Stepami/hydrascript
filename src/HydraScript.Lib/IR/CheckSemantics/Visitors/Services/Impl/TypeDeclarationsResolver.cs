@@ -7,10 +7,17 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
     private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
     private readonly IJavaScriptTypesProvider _provider;
-    private readonly IVisitor<TypeValue, Type> _typeBuilder = new TypeBuilder();
+    private readonly ISymbolTableStorage _symbolTables;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
-    public TypeDeclarationsResolver(IJavaScriptTypesProvider provider) =>
+    public TypeDeclarationsResolver(
+        IJavaScriptTypesProvider provider,
+        ISymbolTableStorage symbolTables)
+    {
         _provider = provider;
+        _symbolTables = symbolTables;
+        _typeBuilder = new TypeBuilder(_symbolTables);
+    }
 
     public void Store(TypeDeclaration declaration) =>
         _declarationsToResolve.Enqueue(declaration);
@@ -23,7 +30,7 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 
         foreach (var declarationToResolve in _declarationsToResolve)
         {
-            declarationToResolve.Scope.AddSymbol(
+            _symbolTables[declarationToResolve.Scope].AddSymbol(
                 new TypeSymbol(
                     declarationToResolve.TypeValue.Accept(_typeBuilder),
                     declarationToResolve.TypeId));
@@ -33,10 +40,10 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
-            var typeSymbol = declarationToResolve.Scope
+            var typeSymbol = _symbolTables[declarationToResolve.Scope]
                 .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)!;
 
-            var resolvingCandidates = declarationToResolve.Scope
+            var resolvingCandidates = _symbolTables[declarationToResolve.Scope]
                 .GetAvailableSymbols()
                 .OfType<TypeSymbol>()
                 .Except(defaults);
