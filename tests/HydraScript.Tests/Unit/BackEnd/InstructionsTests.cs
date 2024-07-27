@@ -1,6 +1,6 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Impl.Addresses;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl.Addresses;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Tests.TestData;
 using Moq;
 using Xunit;
