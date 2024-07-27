@@ -1,11 +1,12 @@
 using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
-using HydraScript.Lib.BackEnd.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Values;
+using HydraScript.Lib.BackEnd.Impl;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Lib.BackEnd.Impl.Values;
 using HydraScript.Tests.Helpers;
 using Moq;
 using Xunit;
@@ -14,13 +15,13 @@ namespace HydraScript.Tests.Unit.BackEnd;
 
 public class VirtualMachineTests
 {
-    private readonly VirtualMachine _vm;
+    private readonly IVirtualMachine _vm;
 
     public VirtualMachineTests()
     {
-        _vm = new(new(), new(), new(), TextWriter.Null);
+        _vm = new VirtualMachine(TextWriter.Null);
     }
-    
+
     [Fact]
     public void CorrectPrintToOutTest()
     {
@@ -28,13 +29,18 @@ public class VirtualMachineTests
         writer.Setup(x => x.WriteLine(It.IsAny<object?>()))
             .Verifiable();
 
-        var vm = new VirtualMachine(new(), new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }), new(), writer.Object);
+        var exParams = new Mock<IExecuteParams>();
+        exParams.Setup(x => x.CallStack).Returns(new Stack<Call>());
+        exParams.Setup(x => x.Frames).Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
+        exParams.Setup(x => x.Arguments).Returns(new Queue<object?>());
+        exParams.Setup(x => x.Writer).Returns(writer.Object);
+
         var print = new Print(new Constant(223))
         {
             Address = new HashAddress(1)
         };
 
-        print.Execute(vm);
+        print.Execute(exParams.Object);
         writer.Verify(x => x.WriteLine(
             It.Is<object?>(v => v!.Equals(223))
         ), Times.Once());
@@ -53,18 +59,18 @@ public class VirtualMachineTests
     [Fact]
     public void VirtualMachineFramesClearedAfterExecutionTest()
     {
-        var program = new List<Instruction>
-        {
+        AddressedInstructions program =
+        [
             new Simple("a", (new Constant(1), new Constant(2)), "+"),
             new AsString(new Name("a"))
             {
                 Left = "s"
             },
             new Halt()
-        }.ToAddressedInstructions();
+        ];
         
         _vm.Run(program);
-        Assert.Empty(_vm.Frames);
+        Assert.Empty(_vm.ExecuteParams.Frames);
     }
 
     [Fact]
@@ -76,20 +82,21 @@ public class VirtualMachineTests
         {
             new Goto(factorial.End),
             { new BeginBlock(BlockType.Function, blockId: factorial.ToString()), factorial.Start.Name },
+            new PopParameter("n"),
             new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
             { new Simple("_t5", (new Name("n"), new Constant(1)), "-"), "5" },
-            new PushParameter("n", new Name("_t5")),
-            new CallFunction(factorial, 1, true)
+            new PushParameter(new Name("_t5")),
+            new CallFunction(factorial, true)
             {
                 Left = "f"
             },
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
             { new EndBlock(BlockType.Function, blockId: factorial.ToString()), factorial.End.Name },
-            new PushParameter("n", new Constant(6)),
-            new CallFunction(factorial, 1, true)
+            new PushParameter(new Constant(6)),
+            new CallFunction(factorial, true)
             {
                 Left = "fa6"
             },
@@ -97,20 +104,20 @@ public class VirtualMachineTests
         };
         
         _vm.Run(program);
-        Assert.Empty(_vm.CallStack);
-        Assert.Empty(_vm.Arguments);
+        Assert.Empty(_vm.ExecuteParams.CallStack);
+        Assert.Empty(_vm.ExecuteParams.Arguments);
         halt.Verify(x => x.Execute(
-            It.Is<VirtualMachine>(
-                vm => Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720
-            )
-        ), Times.Once());
-        _vm.Frames.Pop();
+            It.Is<IExecuteParams>(
+                vm =>
+                    Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720)),
+            Times.Once());
+        _vm.ExecuteParams.Frames.Pop();
     }
 
     [Fact]
     public void CreateArrayReservesCertainSpaceTest()
     {
-        var vm = new VirtualMachine();
+        var vm = new ExecuteParams(Console.Out);
         vm.Frames.Push(new Frame(new HashAddress(0)));
             
         var createArray = new CreateArray("arr", 6)
@@ -139,19 +146,19 @@ public class VirtualMachineTests
     public void ObjectCreationTest()
     {
         var halt = new Mock<Halt>().Trackable();
-        var program = new List<Instruction>
-        {
+        AddressedInstructions program =
+        [
             new CreateObject("obj"),
             new DotAssignment("obj", new Constant("prop"), new Constant(null, "null")),
             halt.Object
-        }.ToAddressedInstructions();
+        ];
             
         _vm.Run(program);
         halt.Verify(x => x.Execute(
-            It.Is<VirtualMachine>(
-                vm => ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null
-            )
-        ), Times.Once());
-        _vm.Frames.Pop();
+            It.Is<IExecuteParams>(
+                vm =>
+                    ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null)),
+            Times.Once());
+        _vm.ExecuteParams.Frames.Pop();
     }
 }

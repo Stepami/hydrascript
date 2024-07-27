@@ -25,5 +25,5 @@ public abstract class AccessExpression : Expression
         Prev is not null;
 
     public abstract override TReturn Accept<TReturn>(
-        IVisitor<AbstractSyntaxTreeNode, TReturn> visitor);
+        IVisitor<IAbstractSyntaxTreeNode, TReturn> visitor);
 }

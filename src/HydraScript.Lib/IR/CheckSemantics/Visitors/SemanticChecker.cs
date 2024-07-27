@@ -1,5 +1,6 @@
 using HydraScript.Lib.IR.Ast;
 using HydraScript.Lib.IR.Ast.Impl.Nodes;
+using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
@@ -8,12 +9,13 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Lib.IR.CheckSemantics.Types;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
+public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<ScriptBody, Type>,
     IVisitor<WhileStatement, Type>,
     IVisitor<IfStatement, Type>,
@@ -41,15 +43,20 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
+    private readonly ISymbolTableStorage _symbolTables;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
         IDefaultValueForTypeCalculator calculator,
         IFunctionWithUndefinedReturnStorage functionStorage,
-        IMethodStorage methodStorage)
+        IMethodStorage methodStorage,
+        ISymbolTableStorage symbolTables)
     {
         _calculator = calculator;
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
+        _symbolTables = symbolTables;
+        _typeBuilder = new TypeBuilder(_symbolTables);
     }
 
     public override Type DefaultVisit => "undefined";
@@ -126,16 +133,16 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
 
     public Type Visit(IdentifierReference visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<Symbol>(visitable.Name);
+        var symbol = _symbolTables[visitable.Scope].FindSymbol<ISymbol>(visitable.Name);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
     public Type Visit(Literal visitable) =>
-        visitable.Type.BuildType(visitable.Parent.SymbolTable);
+        visitable.Type.Accept(_typeBuilder);
 
     public Type Visit(ImplicitLiteral visitable)
     {
-        var type = visitable.TypeValue.BuildType(visitable.Parent.SymbolTable);
+        var type = visitable.Type.Accept(_typeBuilder);
         visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
         return type;
     }
@@ -157,7 +164,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         var properties = visitable.Properties.Select(prop =>
         {
             var propType = prop.Expression.Accept(This);
-            visitable.SymbolTable.AddSymbol(propType switch
+            _symbolTables[visitable.Scope].AddSymbol(propType switch
             {
                 ObjectType objectType => new ObjectSymbol(prop.Id, objectType),
                 _ => new VariableSymbol(prop.Id, propType)
@@ -253,7 +260,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            var registeredSymbol = visitable.SymbolTable.FindSymbol<VariableSymbol>(
+            var registeredSymbol = _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(
                 assignment.Destination.Id);
             var sourceType = assignment.Source.Accept(This);
             if (sourceType.Equals(undefined))
@@ -272,7 +279,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
                 ObjectType objectType => new ObjectSymbol(registeredSymbol.Id, objectType, visitable.ReadOnly),
                 _ => new VariableSymbol(registeredSymbol.Id, actualType, visitable.ReadOnly)
             };
-            visitable.SymbolTable.AddSymbol(actualSymbol);
+            _symbolTables[visitable.Scope].AddSymbol(actualSymbol);
         }
 
         return undefined;
@@ -296,7 +303,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         }
 
         var symbol =
-            visitable.SymbolTable.FindSymbol<VariableSymbol>(
+            _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(
                 visitable.Destination.Id) ??
             throw new UnknownIdentifierReference(visitable.Destination.Id);
 
@@ -365,7 +372,7 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         if (exprType.Equals(undefined))
             throw new CannotDefineType(visitable.Expression.Segment);
 
-        return visitable.Cast.BuildType(visitable.SymbolTable) == "string"
+        return visitable.Cast.Accept(_typeBuilder) == "string"
             ? "string"
             : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
     }
@@ -384,13 +391,14 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
         else
         {
             var symbol =
-                visitable.SymbolTable.FindSymbol<Symbol>(visitable.Id)
+                _symbolTables[visitable.Scope].FindSymbol<ISymbol>(visitable.Id)
                 ?? throw new UnknownIdentifierReference(visitable.Id);
             functionSymbol =
                 symbol as FunctionSymbol
                 ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
         }
 
+        visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
 
         if (functionSymbol.Parameters.Count != visitable.Parameters.Count + (methodCall ? 1 : 0))
@@ -415,12 +423,15 @@ public class SemanticChecker : VisitorBase<AbstractSyntaxTreeNode, Type>,
             functionReturnType = declaration.Accept(This);
         }
 
+        Type @void = "void";
+        if (functionReturnType.Equals(@void))
+            visitable.HasReturnValue = true;
         return functionReturnType;
     }
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)!;
+        var symbol = _symbolTables[visitable.Scope].FindSymbol<FunctionSymbol>(visitable.Name)!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 

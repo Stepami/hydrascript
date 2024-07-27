@@ -1,15 +1,23 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 
-internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
+public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
     private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
     private readonly IJavaScriptTypesProvider _provider;
+    private readonly ISymbolTableStorage _symbolTables;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
-    public TypeDeclarationsResolver(IJavaScriptTypesProvider provider) =>
+    public TypeDeclarationsResolver(
+        IJavaScriptTypesProvider provider,
+        ISymbolTableStorage symbolTables)
+    {
         _provider = provider;
+        _symbolTables = symbolTables;
+        _typeBuilder = new TypeBuilder(_symbolTables);
+    }
 
     public void Store(TypeDeclaration declaration) =>
         _declarationsToResolve.Enqueue(declaration);
@@ -22,9 +30,9 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 
         foreach (var declarationToResolve in _declarationsToResolve)
         {
-            declarationToResolve.SymbolTable.AddSymbol(
+            _symbolTables[declarationToResolve.Scope].AddSymbol(
                 new TypeSymbol(
-                    declarationToResolve.BuildType(),
+                    declarationToResolve.TypeValue.Accept(_typeBuilder),
                     declarationToResolve.TypeId));
         }
 
@@ -32,10 +40,10 @@ internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
-            var typeSymbol = declarationToResolve.SymbolTable
+            var typeSymbol = _symbolTables[declarationToResolve.Scope]
                 .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)!;
 
-            var resolvingCandidates = declarationToResolve.SymbolTable
+            var resolvingCandidates = _symbolTables[declarationToResolve.Scope]
                 .GetAvailableSymbols()
                 .OfType<TypeSymbol>()
                 .Except(defaults);

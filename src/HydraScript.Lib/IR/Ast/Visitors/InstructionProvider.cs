@@ -1,17 +1,18 @@
 using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Values;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Lib.BackEnd.Impl.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
+using HydraScript.Lib.IR.Ast.Visitors.Services;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
+public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,
@@ -22,11 +23,13 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>
 {
-    private readonly IVisitor<AbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
+    private readonly IValueDtoConverter _valueDtoConverter;
+    private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
 
-    public InstructionProvider()
+    public InstructionProvider(IValueDtoConverter valueDtoConverter)
     {
-        _expressionVisitor = new ExpressionInstructionProvider();
+        _valueDtoConverter = valueDtoConverter;
+        _expressionVisitor = new ExpressionInstructionProvider(_valueDtoConverter);
     }
 
     public AddressedInstructions Visit(ScriptBody visitable)
@@ -94,7 +97,7 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
             case null:
                 return [new Return()];
             case PrimaryExpression primary:
-                return [new Return(primary.ToValue())];
+                return [new Return(_valueDtoConverter.Convert(primary.ToValueDto()))];
         }
 
         var result = visitable.Expression.Accept(_expressionVisitor);
@@ -120,6 +123,9 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
             }
         };
 
+        foreach (var (id, _) in visitable.Arguments)
+            result.Add(new PopParameter(id));
+
         result.AddRange(visitable.Statements.Accept(This));
         if (!visitable.HasReturnStatement())
             result.Add(new Return());
@@ -141,7 +147,7 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
         };
 
         if (visitable.Condition is PrimaryExpression primary)
-            result.Add(new IfNotGoto(primary.ToValue(), endBlockLabel));
+            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), endBlockLabel));
         else
         {
             result.AddRange(visitable.Condition.Accept(_expressionVisitor));
@@ -183,7 +189,7 @@ public class InstructionProvider : VisitorBase<AbstractSyntaxTreeNode, Addressed
         var result = new AddressedInstructions();
 
         if (visitable.Test is PrimaryExpression primary)
-            result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
+            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), startBlockLabel));
         else
         {
             result.AddRange(visitable.Test.Accept(_expressionVisitor));

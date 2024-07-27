@@ -1,12 +1,12 @@
 using System.Collections;
 using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
-using HydraScript.Lib.BackEnd.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Values;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Lib.BackEnd.Impl.Values;
 
 namespace HydraScript.Tests.TestData;
 
@@ -32,16 +32,16 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new CallFunction(new FunctionInfo("func"), 2, false),
-            "Call func, 2"
+            new CallFunction(new FunctionInfo("func"), false),
+            "Call func"
         };
         yield return new object[]
         {
-            new CallFunction(new FunctionInfo("func"), 2, true)
+            new CallFunction(new FunctionInfo("func"), true)
             {
                 Left = "ret"
             },
-            "ret = Call func, 2"
+            "ret = Call func"
         };
         yield return new object[]
         {
@@ -93,8 +93,13 @@ public class InstructionsData : IEnumerable<object[]>
         };
         yield return new object[]
         {
-            new PushParameter("param", new Name("value")),
-            "PushParameter param = value"
+            new PushParameter(new Name("value")),
+            "PushParameter value"
+        };
+        yield return new object[]
+        {
+            new PopParameter("param"),
+            "PopParameter param"
         };
         yield return new object[]
         {

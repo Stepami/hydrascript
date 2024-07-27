@@ -1,8 +1,10 @@
-using HydraScript.Services.Parsing;
 using HydraScript.Lib.BackEnd;
+using HydraScript.Services.Parsing;
+using HydraScript.Lib.BackEnd.Impl;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
+using HydraScript.Services.CodeGen;
 using HydraScript.Services.SourceCode;
 
 namespace HydraScript.Services.Executor.Impl;
@@ -11,13 +13,16 @@ public class Executor : IExecutor
 {
     private readonly IParsingService _parsingService;
     private readonly ISourceCodeProvider _sourceCodeProvider;
+    private readonly ICodeGenService _codeGenService;
 
     public Executor(
         IParsingService parsingService,
-        ISourceCodeProvider sourceCodeProvider)
+        ISourceCodeProvider sourceCodeProvider,
+        ICodeGenService codeGenService)
     {
         _parsingService = parsingService;
         _sourceCodeProvider = sourceCodeProvider;
+        _codeGenService = codeGenService;
     }
 
     public void Execute()
@@ -26,9 +31,9 @@ public class Executor : IExecutor
         {
             var text = _sourceCodeProvider.GetText();
             var ast = _parsingService.Parse(text);
-            var instructions = ast.GetInstructions();
+            var instructions = _codeGenService.GetInstructions(ast);
 
-            var vm = new VirtualMachine();
+            IVirtualMachine vm = new VirtualMachine(Console.Out);
             vm.Run(instructions);
         }
         catch (Exception ex)

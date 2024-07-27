@@ -1,8 +1,6 @@
-using HydraScript.Lib.BackEnd;
-
 namespace HydraScript.Lib.IR.Ast;
 
 public interface IAbstractSyntaxTree
 {
-    AddressedInstructions GetInstructions();
+    public IAbstractSyntaxTreeNode Root { get; }
 }

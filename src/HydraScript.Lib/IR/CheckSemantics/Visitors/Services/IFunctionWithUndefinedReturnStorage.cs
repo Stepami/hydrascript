@@ -1,5 +1,5 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 

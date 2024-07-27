@@ -3,6 +3,8 @@ using System.IO.Abstractions;
 using CommandLine;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.GetTokens.Impl;
+using HydraScript.Services.CodeGen;
+using HydraScript.Services.CodeGen.Impl;
 using HydraScript.Services.Executor;
 using HydraScript.Services.Executor.Impl;
 using HydraScript.Services.Parsing;
@@ -47,6 +49,7 @@ public static class Program
         ServiceCollection.AddSingleton<ISourceCodeProvider, SourceCodeProvider>();
         ServiceCollection.AddSingleton<IFileSystem, FileSystem>();
         ServiceCollection.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
+        ServiceCollection.AddSingleton<ICodeGenService, CodeGenService>();
 
         ServiceCollection.AddSingleton<IExecutor, Executor>();
 
