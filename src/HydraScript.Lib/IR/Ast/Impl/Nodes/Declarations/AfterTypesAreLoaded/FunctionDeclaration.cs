@@ -41,11 +41,11 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public override void InitScope(ISymbolTable? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
-        SymbolTable = scope;
-        SymbolTable.AddOpenScope(Parent.SymbolTable);
+        Scope = scope;
+        Scope.AddOpenScope(Parent.Scope);
 
-        _arguments.ForEach(x => x.TypeValue.SymbolTable = Parent.SymbolTable);
-        ReturnTypeValue.SymbolTable = Parent.SymbolTable;
+        _arguments.ForEach(x => x.TypeValue.SymbolTable = Parent.Scope);
+        ReturnTypeValue.SymbolTable = Parent.Scope;
     }
 
     public bool HasReturnStatement() =>

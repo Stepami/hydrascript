@@ -23,7 +23,7 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
     public override void InitScope(ISymbolTable? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
-        SymbolTable = scope;
+        Scope = scope;
     }
 
     protected override string NodeRepresentation() => "Script";

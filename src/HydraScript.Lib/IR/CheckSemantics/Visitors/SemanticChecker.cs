@@ -129,7 +129,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(IdentifierReference visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<ISymbol>(visitable.Name);
+        var symbol = visitable.Scope.FindSymbol<ISymbol>(visitable.Name);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
@@ -160,7 +160,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var properties = visitable.Properties.Select(prop =>
         {
             var propType = prop.Expression.Accept(This);
-            visitable.SymbolTable.AddSymbol(propType switch
+            visitable.Scope.AddSymbol(propType switch
             {
                 ObjectType objectType => new ObjectSymbol(prop.Id, objectType),
                 _ => new VariableSymbol(prop.Id, propType)
@@ -256,7 +256,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            var registeredSymbol = visitable.SymbolTable.FindSymbol<VariableSymbol>(
+            var registeredSymbol = visitable.Scope.FindSymbol<VariableSymbol>(
                 assignment.Destination.Id);
             var sourceType = assignment.Source.Accept(This);
             if (sourceType.Equals(undefined))
@@ -275,7 +275,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 ObjectType objectType => new ObjectSymbol(registeredSymbol.Id, objectType, visitable.ReadOnly),
                 _ => new VariableSymbol(registeredSymbol.Id, actualType, visitable.ReadOnly)
             };
-            visitable.SymbolTable.AddSymbol(actualSymbol);
+            visitable.Scope.AddSymbol(actualSymbol);
         }
 
         return undefined;
@@ -299,7 +299,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         }
 
         var symbol =
-            visitable.SymbolTable.FindSymbol<VariableSymbol>(
+            visitable.Scope.FindSymbol<VariableSymbol>(
                 visitable.Destination.Id) ??
             throw new UnknownIdentifierReference(visitable.Destination.Id);
 
@@ -387,7 +387,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var symbol =
-                visitable.SymbolTable.FindSymbol<ISymbol>(visitable.Id)
+                visitable.Scope.FindSymbol<ISymbol>(visitable.Id)
                 ?? throw new UnknownIdentifierReference(visitable.Id);
             functionSymbol =
                 symbol as FunctionSymbol
@@ -423,7 +423,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var symbol = visitable.SymbolTable.FindSymbol<FunctionSymbol>(visitable.Name)!;
+        var symbol = visitable.Scope.FindSymbol<FunctionSymbol>(visitable.Name)!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 

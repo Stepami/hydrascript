@@ -43,11 +43,11 @@ public class SymbolTableTests
         symbol.Setup(s => s.Id).Returns(id);
         symbol.Setup(s => s.Type).Returns(type.Object);
 
-        script.SymbolTable.AddSymbol(symbol.Object);
+        script.Scope.AddSymbol(symbol.Object);
 
         Assert.All(
             script.ToList(),
             stmtListItem =>
-                Assert.True(stmtListItem.SymbolTable.ContainsSymbol(id)));
+                Assert.True(stmtListItem.Scope.ContainsSymbol(id)));
     }
 }

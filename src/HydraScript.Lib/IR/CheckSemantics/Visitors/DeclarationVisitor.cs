@@ -39,7 +39,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
+            if (visitable.Scope.ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
             var destinationType = assignment.DestinationType?.Accept(
@@ -51,7 +51,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
                     ? new ConstWithoutInitializer(assignment.Destination.Id)
                     : new CannotDefineType(assignment.Destination.Id.Segment);
 
-            visitable.SymbolTable.AddSymbol(
+            visitable.Scope.AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
                     destinationType));
@@ -62,7 +62,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.Parent.SymbolTable.ContainsSymbol(visitable.Name))
+        if (visitable.Parent.Scope.ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>
@@ -70,7 +70,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
             var arg = new VariableSymbol(
                 id: x.Key,
                 x.TypeValue.Accept(_typeBuilder));
-            visitable.SymbolTable.AddSymbol(arg);
+            visitable.Scope.AddSymbol(arg);
             return arg;
         }).ToList();
 
@@ -94,7 +94,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
                 functionSymbol.DefineReturnType("void");
         }
 
-        visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
+        visitable.Parent.Scope.AddSymbol(functionSymbol);
         return visitable.Statements.Accept(This);
     }
 }

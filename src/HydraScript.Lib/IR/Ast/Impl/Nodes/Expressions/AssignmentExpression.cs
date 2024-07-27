@@ -32,7 +32,7 @@ public partial class AssignmentExpression : Expression
     {
         base.InitScope(scope);
         if (DestinationType is not null)
-            DestinationType.SymbolTable = SymbolTable;
+            DestinationType.SymbolTable = Scope;
     }
 
     protected override string NodeRepresentation() => "=";

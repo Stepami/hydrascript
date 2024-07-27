@@ -287,12 +287,12 @@ public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode
                 result.AddRange(memberInstructions);
 
                 var methodName = lastMemberInstruction.Property;
-                functionSymbol = visitable.SymbolTable
+                functionSymbol = visitable.Scope
                     .FindSymbol<FunctionSymbol>(methodName)!;
             }
             else
             {
-                functionSymbol = visitable.SymbolTable
+                functionSymbol = visitable.Scope
                     .FindSymbol<FunctionSymbol>(visitable.Id)!;
             }
             if (functionSymbol.IsEmpty)

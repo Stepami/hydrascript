@@ -23,8 +23,8 @@ public partial class BlockStatement : Statement
     public override void InitScope(ISymbolTable? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
-        SymbolTable = scope;
-        SymbolTable.AddOpenScope(Parent.SymbolTable);
+        Scope = scope;
+        Scope.AddOpenScope(Parent.Scope);
     }
 
     protected override string NodeRepresentation() => "{}";

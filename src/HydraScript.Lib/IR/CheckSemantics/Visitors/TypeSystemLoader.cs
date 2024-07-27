@@ -40,11 +40,11 @@ public class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(TypeDeclaration visitable)
     {
-        if (visitable.SymbolTable.ContainsSymbol(visitable.TypeId) ||
+        if (visitable.Scope.ContainsSymbol(visitable.TypeId) ||
             _defaultTypes.Contains(visitable.TypeId.Name))
             throw new DeclarationAlreadyExists(visitable.TypeId);
 
-        visitable.SymbolTable.AddSymbol(
+        visitable.Scope.AddSymbol(
             new TypeSymbol(
                 visitable.TypeId.Name,
                 visitable.TypeId));

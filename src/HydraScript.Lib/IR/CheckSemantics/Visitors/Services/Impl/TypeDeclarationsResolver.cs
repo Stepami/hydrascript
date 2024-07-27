@@ -23,7 +23,7 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
 
         foreach (var declarationToResolve in _declarationsToResolve)
         {
-            declarationToResolve.SymbolTable.AddSymbol(
+            declarationToResolve.Scope.AddSymbol(
                 new TypeSymbol(
                     declarationToResolve.TypeValue.Accept(_typeBuilder),
                     declarationToResolve.TypeId));
@@ -33,10 +33,10 @@ public class TypeDeclarationsResolver : ITypeDeclarationsResolver
         {
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
-            var typeSymbol = declarationToResolve.SymbolTable
+            var typeSymbol = declarationToResolve.Scope
                 .FindSymbol<TypeSymbol>(declarationToResolve.TypeId)!;
 
-            var resolvingCandidates = declarationToResolve.SymbolTable
+            var resolvingCandidates = declarationToResolve.Scope
                 .GetAvailableSymbols()
                 .OfType<TypeSymbol>()
                 .Except(defaults);
