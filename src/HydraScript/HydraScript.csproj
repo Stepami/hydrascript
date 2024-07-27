@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\HydraScript.Lib\HydraScript.Lib.csproj" />
+      <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

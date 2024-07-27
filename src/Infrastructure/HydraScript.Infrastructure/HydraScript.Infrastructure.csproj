@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Application\HydraScript.Application.CodeGeneration\HydraScript.Application.CodeGeneration.csproj" />
+      <ProjectReference Include="..\..\Application\HydraScript.Application.StaticAnalysis\HydraScript.Application.StaticAnalysis.csproj" />
+    </ItemGroup>
+
+</Project>

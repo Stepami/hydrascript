@@ -33,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\HydraScript.Lib\HydraScript.Lib.csproj" />
       <ProjectReference Include="..\..\src\HydraScript\HydraScript.csproj" />
     </ItemGroup>
 

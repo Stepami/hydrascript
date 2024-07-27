@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.BackEnd\HydraScript.Domain.BackEnd.csproj" />
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.FrontEnd\HydraScript.Domain.FrontEnd.csproj" />
+    </ItemGroup>
+
+</Project>
