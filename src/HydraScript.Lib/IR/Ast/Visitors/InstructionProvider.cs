@@ -123,6 +123,9 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
             }
         };
 
+        foreach (var (id, _) in visitable.Arguments)
+            result.Add(new PopParameter(id));
+
         result.AddRange(visitable.Statements.Accept(This));
         if (!visitable.HasReturnStatement())
             result.Add(new Return());

@@ -12,7 +12,6 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Visitors.Services;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
@@ -261,6 +260,8 @@ public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode
 
     public AddressedInstructions Visit(CallExpression visitable)
     {
+        if (visitable.IsEmptyCall)
+            return [];
         var methodCall = !visitable.Empty();
         if (visitable.Id.Name is "print" && !methodCall)
         {
@@ -277,7 +278,7 @@ public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode
         }
         else
         {
-            FunctionSymbol functionSymbol;
+            string functionId;
             AddressedInstructions result = [];
             if (methodCall)
             {
@@ -286,43 +287,34 @@ public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode
                 memberInstructions.Remove(lastMemberInstruction);
                 result.AddRange(memberInstructions);
 
-                var methodName = lastMemberInstruction.Property;
-                functionSymbol = visitable.Scope
-                    .FindSymbol<FunctionSymbol>(methodName)!;
+                functionId = lastMemberInstruction.Property;
             }
             else
             {
-                functionSymbol = visitable.Scope
-                    .FindSymbol<FunctionSymbol>(visitable.Id)!;
+                functionId = visitable.Id;
             }
-            if (functionSymbol.IsEmpty)
-                return [];
-            var functionInfo = new FunctionInfo(functionSymbol.Id);
+            var functionInfo = new FunctionInfo(functionId);
 
             if (methodCall)
             {
                 var caller = result.Any() ? result.OfType<Simple>().Last().Left! : visitable.Id;
-                result.Add(new PushParameter(functionSymbol.Parameters[0].Id, new Name(caller)));
+                result.Add(new PushParameter(new Name(caller)));
             }
-            foreach (var (expr, symbol) in visitable.Parameters
-                         .Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..]))
+            foreach (var expr in visitable.Parameters)
             {
                 if (expr is PrimaryExpression primary)
-                    result.Add(new PushParameter(symbol.Id, _valueDtoConverter.Convert(primary.ToValueDto())));
+                    result.Add(new PushParameter(_valueDtoConverter.Convert(primary.ToValueDto())));
                 else
                 {
                     result.AddRange(expr.Accept(This));
                     var id = result.OfType<Simple>().Last().Left!;
-                    result.Add(new PushParameter(symbol.Id, new Name(id)));
+                    result.Add(new PushParameter(new Name(id)));
                 }
             }
 
-            Type @void = "void";
-            var hasReturnValue = !functionSymbol.Type.Equals(@void);
             result.Add(new CallFunction(
                 functionInfo,
-                numberOfArguments: visitable.Parameters.Count + (methodCall ? 1 : 0),
-                hasReturnValue));
+                visitable.HasReturnValue));
             return result;
         }
     }

@@ -3,17 +3,12 @@ using HydraScript.Lib.BackEnd.Impl.Addresses;
 namespace HydraScript.Lib.BackEnd;
 
 public record Call(
-    IAddress From, FunctionInfo To, 
-    List<CallArgument> Arguments,
+    IAddress From,
+    FunctionInfo To,
     string? Where = null)
 {
     public override string ToString() =>
-        $"{From} => {To.Start}: {To.Id}({string.Join(", ", Arguments)})";
-}
-
-public record CallArgument(string Id, object? Value)
-{
-    public override string ToString() => $"{Id}: {Value}";
+        $"{From}: {Where} => {To.Start}: {To.Id}";
 }
 
 public record FunctionInfo(string Id)

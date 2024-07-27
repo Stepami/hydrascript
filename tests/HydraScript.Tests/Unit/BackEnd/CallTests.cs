@@ -11,9 +11,8 @@ public class CallTests
     {
         var call = new Call(
             new Label("9"),
-            new FunctionInfo("func"),
-            [new CallArgument("arg", 1)]);
-        const string expected = "9:\n\t => Start_func:\n\t: func(arg: 1)";
+            new FunctionInfo("func"));
+        const string expected = "9:\n\t:  => Start_func:\n\t: func";
         Assert.Equal(expected, call.ToString());
     }
 }

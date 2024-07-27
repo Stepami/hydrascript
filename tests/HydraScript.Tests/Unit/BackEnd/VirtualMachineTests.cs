@@ -32,7 +32,7 @@ public class VirtualMachineTests
         var exParams = new Mock<IExecuteParams>();
         exParams.Setup(x => x.CallStack).Returns(new Stack<Call>());
         exParams.Setup(x => x.Frames).Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
-        exParams.Setup(x => x.Arguments).Returns(new Stack<CallArgument>());
+        exParams.Setup(x => x.Arguments).Returns(new Queue<object?>());
         exParams.Setup(x => x.Writer).Returns(writer.Object);
 
         var print = new Print(new Constant(223))
@@ -82,20 +82,21 @@ public class VirtualMachineTests
         {
             new Goto(factorial.End),
             { new BeginBlock(BlockType.Function, blockId: factorial.ToString()), factorial.Start.Name },
+            new PopParameter("n"),
             new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
             { new Simple("_t5", (new Name("n"), new Constant(1)), "-"), "5" },
-            new PushParameter("n", new Name("_t5")),
-            new CallFunction(factorial, 1, true)
+            new PushParameter(new Name("_t5")),
+            new CallFunction(factorial, true)
             {
                 Left = "f"
             },
             new Simple("_t8", (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
             { new EndBlock(BlockType.Function, blockId: factorial.ToString()), factorial.End.Name },
-            new PushParameter("n", new Constant(6)),
-            new CallFunction(factorial, 1, true)
+            new PushParameter(new Constant(6)),
+            new CallFunction(factorial, true)
             {
                 Left = "fa6"
             },

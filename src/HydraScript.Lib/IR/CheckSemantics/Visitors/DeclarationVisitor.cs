@@ -82,7 +82,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
             visitable.Name,
             parameters,
             visitable.ReturnTypeValue.Accept(_typeBuilder),
-            isEmpty: !visitable.Statements.Any());
+            visitable.IsEmpty);
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
         {

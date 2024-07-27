@@ -16,16 +16,13 @@ public class StandardLibraryProvider : IStandardLibraryProvider
         var library = new SymbolTable();
 
         foreach (var type in _provider.GetDefaultTypes())
-        {
             library.AddSymbol(new TypeSymbol(type));
-        }
 
         var print = new FunctionSymbol(
             "print",
             [new VariableSymbol("str", "string")],
             "void",
-            isEmpty: false
-        );
+            isEmpty: false);
 
         library.AddSymbol(print);
 

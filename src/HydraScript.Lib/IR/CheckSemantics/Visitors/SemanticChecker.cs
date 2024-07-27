@@ -398,6 +398,7 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 ?? throw new SymbolIsNotCallable(symbol.Id, visitable.Id.Segment);
         }
 
+        visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
 
         if (functionSymbol.Parameters.Count != visitable.Parameters.Count + (methodCall ? 1 : 0))
@@ -422,6 +423,9 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             functionReturnType = declaration.Accept(This);
         }
 
+        Type @void = "void";
+        if (functionReturnType.Equals(@void))
+            visitable.HasReturnValue = true;
         return functionReturnType;
     }
 

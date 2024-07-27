@@ -1,14 +1,14 @@
 namespace HydraScript.Lib.BackEnd.Impl.Instructions;
 
-public class PushParameter(IValue value) : Instruction
+public class PopParameter(string parameter) : Instruction
 {
     public override IAddress Execute(IExecuteParams executeParams)
     {
-        executeParams.Arguments.Enqueue(
-            value.Get(executeParams.Frames.Peek()));
+        var argument = executeParams.Arguments.Dequeue();
+        executeParams.Frames.Peek()[parameter] = argument;
         return Address.Next;
     }
 
     protected override string ToStringInternal() =>
-        $"PushParameter {value}";
+        $"PopParameter {parameter}";
 }

@@ -13,6 +13,9 @@ public partial class CallExpression : LeftHandSideExpression
     public MemberExpression Member { get; }
     public IReadOnlyList<Expression> Parameters => _parameters;
 
+    public bool IsEmptyCall { get; set; }
+    public bool HasReturnValue { get; set; }
+
     public CallExpression(MemberExpression member, IEnumerable<Expression> expressions)
     {
         Member = member;

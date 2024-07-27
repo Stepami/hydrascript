@@ -15,6 +15,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public IReadOnlyList<PropertyTypeValue> Arguments => _arguments;
 
     public BlockStatement Statements { get; }
+    public bool IsEmpty => Statements.Count == 0;
 
     public FunctionDeclaration(
         IdentifierReference name,
