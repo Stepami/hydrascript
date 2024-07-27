@@ -1,8 +1,8 @@
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
+internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
 {
     private readonly Type _boolean = "boolean";
     private readonly Type _number = "number";

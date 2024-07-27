@@ -1,4 +1,4 @@
-namespace HydraScript.Application.StaticAnalysis.Services;
+namespace HydraScript.Application.StaticAnalysis;
 
 public interface IComputedTypesStorage
 {

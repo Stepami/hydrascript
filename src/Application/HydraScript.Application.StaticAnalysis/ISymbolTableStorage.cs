@@ -1,7 +1,7 @@
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.IR;
 
-namespace HydraScript.Application.StaticAnalysis.Services;
+namespace HydraScript.Application.StaticAnalysis;
 
 public interface ISymbolTableStorage
 {

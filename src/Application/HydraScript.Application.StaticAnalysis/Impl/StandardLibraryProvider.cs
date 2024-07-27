@@ -2,9 +2,9 @@ using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl;
 using HydraScript.Domain.IR.Impl.Symbols;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class StandardLibraryProvider : IStandardLibraryProvider
+internal class StandardLibraryProvider : IStandardLibraryProvider
 {
     private readonly IJavaScriptTypesProvider _provider;
 

@@ -1,6 +1,6 @@
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class ComputedTypesStorage : IComputedTypesStorage
+internal class ComputedTypesStorage : IComputedTypesStorage
 {
     private readonly Dictionary<Guid, Type> _computedTypes = [];
 

@@ -1,13 +1,12 @@
 using HydraScript.Application.StaticAnalysis.Exceptions;
-using HydraScript.Application.StaticAnalysis.Services;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;
 
-namespace HydraScript.Application.StaticAnalysis;
+namespace HydraScript.Application.StaticAnalysis.Visitors;
 
-public class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
+internal class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<ScriptBody>,
     IVisitor<TypeDeclaration>
 {

@@ -1,5 +1,4 @@
 using HydraScript.Application.StaticAnalysis.Exceptions;
-using HydraScript.Application.StaticAnalysis.Services;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
@@ -8,9 +7,9 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpre
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis;
+namespace HydraScript.Application.StaticAnalysis.Visitors;
 
-public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
+internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
@@ -22,12 +21,13 @@ public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
-        ISymbolTableStorage symbolTables)
+        ISymbolTableStorage symbolTables,
+        IVisitor<TypeValue, Type> typeBuilder)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
-        _typeBuilder = new TypeBuilder(_symbolTables);
+        _typeBuilder = typeBuilder;
     }
 
     public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)

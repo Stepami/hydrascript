@@ -2,9 +2,9 @@ using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class SymbolTableStorage : ISymbolTableStorage
+internal class SymbolTableStorage : ISymbolTableStorage
 {
     private readonly Dictionary<Guid, ISymbolTable> _symbolTables = [];
     public ISymbolTable this[Scope scope] => _symbolTables[scope.Id];

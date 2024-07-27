@@ -1,22 +1,24 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class TypeDeclarationsResolver : ITypeDeclarationsResolver
+internal class TypeDeclarationsResolver : ITypeDeclarationsResolver
 {
-    private readonly Queue<TypeDeclaration> _declarationsToResolve = new();
+    private readonly Queue<TypeDeclaration> _declarationsToResolve = [];
+
     private readonly IJavaScriptTypesProvider _provider;
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public TypeDeclarationsResolver(
         IJavaScriptTypesProvider provider,
-        ISymbolTableStorage symbolTables)
+        ISymbolTableStorage symbolTables,
+        IVisitor<TypeValue, Type> typeBuilder)
     {
         _provider = provider;
         _symbolTables = symbolTables;
-        _typeBuilder = new TypeBuilder(_symbolTables);
+        _typeBuilder = typeBuilder;
     }
 
     public void Store(TypeDeclaration declaration) =>

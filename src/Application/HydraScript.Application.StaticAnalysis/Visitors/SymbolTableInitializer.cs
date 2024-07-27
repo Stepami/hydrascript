@@ -1,13 +1,12 @@
-using HydraScript.Application.StaticAnalysis.Services;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 using HydraScript.Domain.IR.Impl;
 
-namespace HydraScript.Application.StaticAnalysis;
+namespace HydraScript.Application.StaticAnalysis.Visitors;
 
-public class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
+internal class SymbolTableInitializer : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<ScriptBody>,
     IVisitor<FunctionDeclaration>,
     IVisitor<BlockStatement>

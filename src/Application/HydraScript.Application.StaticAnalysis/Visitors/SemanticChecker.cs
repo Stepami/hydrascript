@@ -1,5 +1,4 @@
 using HydraScript.Application.StaticAnalysis.Exceptions;
-using HydraScript.Application.StaticAnalysis.Services;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
@@ -13,9 +12,9 @@ using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis;
+namespace HydraScript.Application.StaticAnalysis.Visitors;
 
-public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
+internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<ScriptBody, Type>,
     IVisitor<WhileStatement, Type>,
     IVisitor<IfStatement, Type>,
@@ -52,14 +51,15 @@ public class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
-        IComputedTypesStorage computedTypes)
+        IComputedTypesStorage computedTypes,
+        IVisitor<TypeValue, Type> typeBuilder)
     {
         _calculator = calculator;
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
         _computedTypes = computedTypes;
-        _typeBuilder = new TypeBuilder(_symbolTables);
+        _typeBuilder = typeBuilder;
     }
 
     public override Type DefaultVisit => "undefined";

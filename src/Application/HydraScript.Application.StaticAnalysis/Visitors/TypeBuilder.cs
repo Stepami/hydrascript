@@ -1,12 +1,11 @@
 using HydraScript.Application.StaticAnalysis.Exceptions;
-using HydraScript.Application.StaticAnalysis.Services;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis;
+namespace HydraScript.Application.StaticAnalysis.Visitors;
 
-public class TypeBuilder : VisitorBase<TypeValue, Type>,
+internal class TypeBuilder : VisitorBase<TypeValue, Type>,
     IVisitor<TypeIdentValue, Type>,
     IVisitor<ArrayTypeValue, ArrayType>,
     IVisitor<NullableTypeValue, NullableType>,
@@ -14,10 +13,8 @@ public class TypeBuilder : VisitorBase<TypeValue, Type>,
 {
     private readonly ISymbolTableStorage _symbolTables;
 
-    public TypeBuilder(ISymbolTableStorage symbolTables)
-    {
+    public TypeBuilder(ISymbolTableStorage symbolTables) =>
         _symbolTables = symbolTables;
-    }
 
     public Type Visit(TypeIdentValue visitable) =>
         _symbolTables[visitable.Scope].FindSymbol<TypeSymbol>(visitable.TypeId)?.Type ??

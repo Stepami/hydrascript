@@ -1,8 +1,8 @@
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class JavaScriptTypesProvider : IJavaScriptTypesProvider
+internal class JavaScriptTypesProvider : IJavaScriptTypesProvider
 {
     private readonly HashSet<Type> _types =
     [

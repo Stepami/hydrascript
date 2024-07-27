@@ -1,11 +1,11 @@
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Application.StaticAnalysis.Services.Impl;
+namespace HydraScript.Application.StaticAnalysis.Impl;
 
-public class MethodStorage : IMethodStorage
+internal class MethodStorage : IMethodStorage
 {
-    private readonly Dictionary<ObjectType, Dictionary<string, FunctionSymbol>> _bindings = new();
+    private readonly Dictionary<ObjectType, Dictionary<string, FunctionSymbol>> _bindings = [];
 
     public void BindMethod(ObjectType objectType, FunctionSymbol method)
     {
