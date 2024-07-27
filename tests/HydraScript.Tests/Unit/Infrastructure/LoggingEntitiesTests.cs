@@ -41,7 +41,7 @@ public class LoggingEntitiesTests
         var loggingLexer = new LoggingLexer(
             lexer.Object,
             _fileSystem.Object,
-            inputFile: Options.Create(new InputFile { Path = "file" }));
+            inputFile: Options.Create(new InputFile { Info = new FileInfo("file") }));
         loggingLexer.GetTokens("");
 
         _file.Verify(

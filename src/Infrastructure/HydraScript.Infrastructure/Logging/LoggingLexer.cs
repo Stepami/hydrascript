@@ -18,7 +18,7 @@ internal class LoggingLexer(
     public List<Token> GetTokens(string text)
     {
         var tokens = lexer.GetTokens(text);
-        var fileName = _inputFile.Path.Split(".js")[0];
+        var fileName = _inputFile.Info.Name.Split(".js")[0];
         fileSystem.File.WriteAllText(
             $"{fileName}.tokens",
             lexer.ToString());

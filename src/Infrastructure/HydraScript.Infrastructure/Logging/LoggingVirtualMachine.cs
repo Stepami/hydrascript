@@ -15,7 +15,7 @@ internal class LoggingVirtualMachine(
 
     public void Run(AddressedInstructions instructions)
     {
-        var fileName = _inputFile.Path.Split(".js")[0];
+        var fileName = _inputFile.Info.Name.Split(".js")[0];
         fileSystem.File.WriteAllLines(
             $"{fileName}.tac",
             instructions.Select(i => i.ToString()!));
