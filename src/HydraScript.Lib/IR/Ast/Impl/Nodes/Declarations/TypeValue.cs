@@ -1,11 +1,10 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 public abstract record TypeValue : IVisitable<TypeValue>
 {
-    public ISymbolTable Scope { get; set; } = default!;
+    public Scope Scope { get; set; } = default!;
     public abstract TReturn Accept<TReturn>(IVisitor<TypeValue, TReturn> visitor);
 }
 

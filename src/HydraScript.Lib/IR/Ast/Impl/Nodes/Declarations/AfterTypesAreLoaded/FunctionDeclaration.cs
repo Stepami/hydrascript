@@ -1,6 +1,5 @@
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
-using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
@@ -38,7 +37,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
     /// <summary>Стратегия "блока" - углубление скоупа</summary>
     /// <param name="scope">Новый скоуп</param>
-    public override void InitScope(ISymbolTable? scope = null)
+    public override void InitScope(Scope? scope = null)
     {
         ArgumentNullException.ThrowIfNull(scope);
         Scope = scope;

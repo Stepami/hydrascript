@@ -1,5 +1,4 @@
 using System.Collections;
-using HydraScript.Lib.IR.CheckSemantics.Variables;
 
 namespace HydraScript.Lib.IR.Ast.Impl;
 
@@ -7,11 +6,11 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
 {
     public IAbstractSyntaxTreeNode Parent { get; set; } = default!;
 
-    public ISymbolTable Scope { get; protected set; } = default!;
+    public Scope Scope { get; protected set; } = default!;
 
     /// <summary>Базовая стратегия - инициализация через родительский узел</summary>
     /// <param name="scope">Обязательно <c>null</c></param>
-    public virtual void InitScope(ISymbolTable? scope = null)
+    public virtual void InitScope(Scope? scope = null)
     {
         if (scope is not null)
             throw new ArgumentException("'scope' must be null");
