@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HydraScript.Application.CodeGeneration.Visitors;
 
-public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
+internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,
     IVisitor<LexicalDeclaration, AddressedInstructions>,
     IVisitor<BlockStatement, AddressedInstructions>,

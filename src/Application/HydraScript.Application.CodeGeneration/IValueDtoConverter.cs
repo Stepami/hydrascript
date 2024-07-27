@@ -5,5 +5,5 @@ namespace HydraScript.Application.CodeGeneration;
 
 public interface IValueDtoConverter
 {
-    IValue Convert(ValueDto dto);
+    public IValue Convert(ValueDto dto);
 }

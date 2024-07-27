@@ -15,7 +15,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpre
 
 namespace HydraScript.Application.CodeGeneration.Visitors;
 
-public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
+internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,

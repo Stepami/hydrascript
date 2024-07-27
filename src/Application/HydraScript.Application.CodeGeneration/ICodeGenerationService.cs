@@ -5,5 +5,5 @@ namespace HydraScript.Application.CodeGeneration;
 
 public interface ICodeGenerationService
 {
-    AddressedInstructions GetInstructions(IAbstractSyntaxTree ast);
+    public AddressedInstructions GetInstructions(IAbstractSyntaxTree ast);
 }

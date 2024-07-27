@@ -4,7 +4,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpre
 
 namespace HydraScript.Application.CodeGeneration.Impl;
 
-public class ValueDtoConverter : IValueDtoConverter
+internal class ValueDtoConverter : IValueDtoConverter
 {
     public IValue Convert(ValueDto dto) =>
         dto switch
