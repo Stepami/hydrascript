@@ -20,7 +20,7 @@ namespace HydraScript.Tests.Unit.Infrastructure;
 public class ProvidersTests
 {
     [Theory]
-    [InlineData(typeof(RegExpLexer), false)]
+    [InlineData(typeof(RegexLexer), false)]
     [InlineData(typeof(LoggingLexer), true)]
     public void CertainLexerProvidedTest(SystemType lexerType, bool dump)
     {

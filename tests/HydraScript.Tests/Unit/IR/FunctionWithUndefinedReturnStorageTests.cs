@@ -1,5 +1,5 @@
-using HydraScript.Application.StaticAnalysis.Services;
-using HydraScript.Application.StaticAnalysis.Services.Impl;
+using HydraScript.Application.StaticAnalysis;
+using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;

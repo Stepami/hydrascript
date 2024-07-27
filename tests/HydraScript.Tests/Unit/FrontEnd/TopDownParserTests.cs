@@ -9,7 +9,7 @@ namespace HydraScript.Tests.Unit.FrontEnd;
 
 public class TopDownParserTests
 {
-    private readonly IParser _parser = new TopDownParser(new RegExpLexer(
+    private readonly IParser _parser = new TopDownParser(new RegexLexer(
         new StructureProvider()
             .CreateStructure(),
         new TextCoordinateSystemComputer()));

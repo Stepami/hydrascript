@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
-public class RegExpLexer(Structure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
+public class RegexLexer(Structure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
 {
     private IReadOnlyList<int> _lines = [];
     private string _text = "";
