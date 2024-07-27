@@ -10,9 +10,9 @@ public class IfNotGoto : Goto
         base(jump) =>
         _test = test;
 
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         return !Convert.ToBoolean(_test.Get(frame))
             ? Jump
             : Address.Next;

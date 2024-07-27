@@ -2,9 +2,9 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions;
 
 public class Print(IValue value) : Instruction
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        vm.Writer.WriteLine(value.Get(vm.Frames.Peek()));
+        executeParams.Writer.WriteLine(value.Get(executeParams.Frames.Peek()));
         return Address.Next;
     }
 

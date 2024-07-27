@@ -15,7 +15,7 @@ public class DotRead(Name @object, IValue property) : Simple(
     public Simple ToAssignment(IValue value) =>
         new DotAssignment(@object.ToString(), _property, value);
 
-    public Instruction ToInstruction() => this;
+    public IExecutableInstruction ToInstruction() => this;
 
     protected override string ToStringInternal() =>
         $"{Left} = {@object}.{_property}";

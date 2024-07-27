@@ -6,9 +6,9 @@ public class Halt : Instruction
 {
     public override bool End => true;
 
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        vm.Frames.Pop();
+        executeParams.Frames.Pop();
         return new HashAddress(seed: 0);
     }
 

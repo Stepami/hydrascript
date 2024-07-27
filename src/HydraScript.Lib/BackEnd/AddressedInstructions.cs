@@ -1,16 +1,15 @@
 using System.Collections;
 using HydraScript.Lib.BackEnd.Impl.Addresses;
-using HydraScript.Lib.BackEnd.Impl.Instructions;
 
 namespace HydraScript.Lib.BackEnd;
 
-public class AddressedInstructions : IEnumerable<Instruction>
+public class AddressedInstructions : IEnumerable<IExecutableInstruction>
 {
     private readonly LinkedList<IAddress> _addresses = new();
     private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode = new();
-    private readonly Dictionary<LinkedListNode<IAddress>, Instruction> _instructions = new();
+    private readonly Dictionary<LinkedListNode<IAddress>, IExecutableInstruction> _instructions = new();
 
-    public Instruction this[IAddress address]
+    public IExecutableInstruction this[IAddress address]
     {
         get => _instructions[_addressToNode[address]];
         private set => _instructions[_addressToNode[address]] = value;
@@ -22,7 +21,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
     public IAddress End =>
         _addresses.Last?.Value!;
 
-    public void Add(Instruction instruction, string? label = null)
+    public void Add(IExecutableInstruction instruction, string? label = null)
     {
         IAddress newAddress = label is null
             ? new HashAddress(seed: instruction.GetHashCode())
@@ -32,7 +31,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         AddWithAddress(instruction, newAddress);
     }
 
-    public void Replace(Instruction old, Instruction @new)
+    public void Replace(IExecutableInstruction old, IExecutableInstruction @new)
     {
         var address = old.Address;
         @new.Address = address;
@@ -40,7 +39,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         this[address] = @new;
     }
 
-    private void AddWithAddress(Instruction instruction, IAddress newAddress)
+    private void AddWithAddress(IExecutableInstruction instruction, IAddress newAddress)
     {
         var last = _addresses.Last;
         if (last is not null)
@@ -52,13 +51,13 @@ public class AddressedInstructions : IEnumerable<Instruction>
         _instructions.Add(newNode, instruction);
     }
 
-    public void AddRange(IEnumerable<Instruction> instructions)
+    public void AddRange(IEnumerable<IExecutableInstruction> instructions)
     {
         foreach (var instruction in instructions)
             AddWithAddress(instruction, instruction.Address);
     }
 
-    public void Remove(Instruction instruction)
+    public void Remove(IExecutableInstruction instruction)
     {
         var address = instruction.Address;
         var nodeToRemove = _addressToNode[address];
@@ -74,7 +73,7 @@ public class AddressedInstructions : IEnumerable<Instruction>
         _addresses.Remove(nodeToRemove);
     }
 
-    public IEnumerator<Instruction> GetEnumerator() =>
+    public IEnumerator<IExecutableInstruction> GetEnumerator() =>
         _addresses.Select(address => this[address])
             .GetEnumerator();
 

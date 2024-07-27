@@ -1,4 +1,4 @@
-using HydraScript.Lib.BackEnd.Impl;
+using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Impl.Addresses;
 using HydraScript.Lib.BackEnd.Impl.Instructions;
 using Moq;
@@ -9,18 +9,16 @@ public static class MockExtensions
 {
     public static Mock<Halt> Trackable(this Mock<Halt> halt)
     {
-        halt.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
+        halt.Setup(x => x.Execute(It.IsAny<IExecuteParams>()))
             .Returns(new HashAddress(seed: 0)).Verifiable();
         halt.Setup(x => x.End).Returns(true);
         return halt;
     }
 
-    public static Mock<Instruction> ToInstructionMock(this int number)
+    public static Mock<IExecutableInstruction> ToInstructionMock(this int number)
     {
-        var result = new Mock<Instruction>(MockBehavior.Default)
-        {
-            CallBase = true
-        };
+        var result = new Mock<IExecutableInstruction>();
+        result.SetupAllProperties();
         
         result.Setup(x => x.GetHashCode())
             .Returns(number);

@@ -5,9 +5,9 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
 
 public class AsString(IValue value) : Simple(value)
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         frame[Left!] = JsonSerializer.Serialize(
             Right.right!.Get(frame),
             new JsonSerializerOptions

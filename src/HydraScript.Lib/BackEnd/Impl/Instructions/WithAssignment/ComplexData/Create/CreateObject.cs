@@ -4,9 +4,9 @@ public class CreateObject(string id) : Simple(id)
 {
     private readonly string _id = id;
 
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         frame[_id] = new Dictionary<string, object>();
         return Address.Next;
     }

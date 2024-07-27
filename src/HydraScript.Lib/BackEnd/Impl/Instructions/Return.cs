@@ -2,13 +2,13 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions;
 
 public class Return(IValue? value = null) : Instruction
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Pop();
-        var call = vm.CallStack.Pop();
+        var frame = executeParams.Frames.Pop();
+        var call = executeParams.CallStack.Pop();
         if (call.Where != null && value != null)
         {
-            vm.Frames.Peek()[call.Where] = value.Get(frame);
+            executeParams.Frames.Peek()[call.Where] = value.Get(frame);
         }
 
         return frame.ReturnAddress;

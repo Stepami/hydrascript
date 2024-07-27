@@ -6,9 +6,9 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.W
 public class DotAssignment(string @object, IValue property, IValue value)
     : Simple(left: @object, (property, value), "."), IWriteToComplexData
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         if (frame[Left!] is Dictionary<string, object> obj)
         {
             var field = (string?)Right.left?.Get(frame) ?? string.Empty;

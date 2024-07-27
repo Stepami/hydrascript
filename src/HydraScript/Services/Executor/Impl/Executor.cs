@@ -1,3 +1,4 @@
+using HydraScript.Lib.BackEnd;
 using HydraScript.Services.Parsing;
 using HydraScript.Lib.BackEnd.Impl;
 using HydraScript.Lib.FrontEnd.GetTokens;
@@ -32,7 +33,7 @@ public class Executor : IExecutor
             var ast = _parsingService.Parse(text);
             var instructions = _codeGenService.GetInstructions(ast);
 
-            var vm = new VirtualMachine();
+            IVirtualMachine vm = new VirtualMachine(Console.Out);
             vm.Run(instructions);
         }
         catch (Exception ex)

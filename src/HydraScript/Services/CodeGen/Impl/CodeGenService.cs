@@ -62,7 +62,7 @@ internal class CodeGenService : ICodeGenService
             var fileName = _settings.InputFilePath.Split(".js")[0];
             _fileSystem.File.WriteAllLines(
                 $"{fileName}.tac",
-                instructions.Select(i => i.ToString()));
+                instructions.Select(i => i.ToString()!));
         }
 
         return instructions;

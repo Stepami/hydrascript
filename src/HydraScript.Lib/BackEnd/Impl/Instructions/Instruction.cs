@@ -1,6 +1,6 @@
 namespace HydraScript.Lib.BackEnd.Impl.Instructions;
 
-public abstract class Instruction
+public abstract class Instruction : IExecutableInstruction
 {
     private IAddress _address = default!;
 
@@ -16,7 +16,7 @@ public abstract class Instruction
     
     protected virtual void OnSetOfAddress(IAddress address) { }
 
-    public abstract IAddress Execute(VirtualMachine vm);
+    public abstract IAddress Execute(IExecuteParams executeParams);
     
     public virtual bool End => false;
 

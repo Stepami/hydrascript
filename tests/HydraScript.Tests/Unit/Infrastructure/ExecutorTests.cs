@@ -1,4 +1,4 @@
-using HydraScript.Lib.BackEnd.Impl;
+using HydraScript.Lib.BackEnd;
 using HydraScript.Lib.BackEnd.Impl.Instructions;
 using HydraScript.Lib.FrontEnd.GetTokens;
 using HydraScript.Lib.FrontEnd.TopDownParse;
@@ -93,8 +93,8 @@ public class ExecutorTests
     [Fact]
     public void InternalInterpreterErrorCaughtTest()
     {
-        var instruction = new Mock<Instruction>();
-        instruction.Setup(x => x.Execute(It.IsAny<VirtualMachine>()))
+        var instruction = new Mock<IExecutableInstruction>();
+        instruction.Setup(x => x.Execute(It.IsAny<IExecuteParams>()))
             .Throws<NullReferenceException>();
 
         var ast = new Mock<IAbstractSyntaxTree>();

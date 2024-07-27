@@ -6,9 +6,9 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.W
 public class IndexAssignment(string array, IValue index, IValue value)
     : Simple(left: array, right: (index, value), "[]"), IWriteToComplexData
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         if (frame[Left!] is List<object> list)
         {
             var index = Convert.ToInt32(Right.left!.Get(frame));

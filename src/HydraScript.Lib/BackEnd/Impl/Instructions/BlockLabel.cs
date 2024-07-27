@@ -13,7 +13,7 @@ public abstract class BlockLabel : Instruction
         _blockId = blockId;
     }
 
-    public override IAddress Execute(VirtualMachine vm) =>
+    public override IAddress Execute(IExecuteParams executeParams) =>
         Address.Next;
 
     protected override string ToStringInternal() =>

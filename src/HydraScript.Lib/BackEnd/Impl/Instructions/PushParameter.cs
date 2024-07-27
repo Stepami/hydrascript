@@ -2,11 +2,11 @@ namespace HydraScript.Lib.BackEnd.Impl.Instructions;
 
 public class PushParameter(string parameter, IValue value) : Instruction
 {
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        vm.Arguments.Push(new CallArgument(
+        executeParams.Arguments.Push(new CallArgument(
             parameter,
-            value.Get(vm.Frames.Peek())));
+            value.Get(executeParams.Frames.Peek())));
         return Address.Next;
     }
 

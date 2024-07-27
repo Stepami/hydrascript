@@ -13,7 +13,7 @@ public class IndexRead(Name array, IValue index) : Simple(
     public Simple ToAssignment(IValue value) =>
         new IndexAssignment(array.ToString(), _index, value);
 
-    public Instruction ToInstruction() => this;
+    public IExecutableInstruction ToInstruction() => this;
 
     protected override string ToStringInternal() =>
         $"{Left} = {array}[{_index}]";

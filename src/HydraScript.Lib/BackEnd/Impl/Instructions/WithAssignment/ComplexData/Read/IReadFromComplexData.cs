@@ -4,5 +4,5 @@ public interface IReadFromComplexData
 {
     Simple ToAssignment(IValue value);
     
-    Instruction ToInstruction();
+    IExecutableInstruction ToInstruction();
 }

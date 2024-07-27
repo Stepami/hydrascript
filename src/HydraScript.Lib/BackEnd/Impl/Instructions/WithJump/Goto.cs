@@ -14,7 +14,7 @@ public class Goto : Instruction
     public Goto(InsideStatementJumpType jumpType) =>
         JumpType = jumpType;
 
-    public override IAddress Execute(VirtualMachine vm) =>
+    public override IAddress Execute(IExecuteParams executeParams) =>
         Jump;
     
     public void SetJump(Label newJump) =>

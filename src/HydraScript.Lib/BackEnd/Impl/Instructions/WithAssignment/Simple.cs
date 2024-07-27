@@ -47,9 +47,9 @@ public class Simple : Instruction
     protected override void OnSetOfAddress(IAddress address) =>
         Left ??= $"_t{unchecked((uint)address.GetHashCode())}";
 
-    public override IAddress Execute(VirtualMachine vm)
+    public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = vm.Frames.Peek();
+        var frame = executeParams.Frames.Peek();
         if (Right.left == null)
         {
             var value = Right.right!.Get(frame);

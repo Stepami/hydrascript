@@ -13,15 +13,15 @@ public class AddressedInstructionsTests
     [Fact]
     public void EnumerationPreservedAfterRemovalTest()
     {
-        var instructions = new List<Instruction>
-        {
+        AddressedInstructions instructions =
+        [
             new AsString(new Constant(2))
             {
                 Left = "s"
             },
             new Print(new Name("s")),
             new Halt()
-        }.ToAddressedInstructions();
+        ];
 
         instructions.Remove(instructions[instructions.Start.Next]);
         
@@ -31,11 +31,11 @@ public class AddressedInstructionsTests
     [Fact]
     public void RemovalOfLastDoesNotThrowTest()
     {
-        var instructions = new List<Instruction>
-        {
+        AddressedInstructions instructions =
+        [
             new AsString(new Constant(2)),
             new Halt()
-        }.ToAddressedInstructions();
+        ];
 
         Assert.Null(Record.Exception(() => instructions.Remove(instructions.Last())));
         Assert.Null(instructions.Start.Next);
@@ -69,18 +69,18 @@ public class AddressedInstructionsTests
     [Fact]
     public void GetEnumeratorTests()
     {
-        AddressedInstructions collection = new();
+        AddressedInstructions collection = [];
         collection.Add(1.ToInstructionMock().Object);
-        
-        var collectionToAdd = new AddressedInstructions
-        {
+
+        AddressedInstructions collectionToAdd =
+        [
             2.ToInstructionMock().Object,
             3.ToInstructionMock().Object,
             4.ToInstructionMock().Object
-        };
-        
+        ];
+
         collection.AddRange(collectionToAdd);
-        
+
         collection.Add(5.ToInstructionMock().Object);
 
         Assert.Collection(
