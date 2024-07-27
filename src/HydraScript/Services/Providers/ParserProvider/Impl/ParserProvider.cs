@@ -26,9 +26,8 @@ public class ParserProvider : IParserProvider
     {
         var lexer = _lexerProvider.CreateLexer();
         var parser = new Parser(lexer);
-        var inputFileName = _settings.InputFilePath.Split(".js")[0];
         return _settings.Dump
-            ? new LoggingParser(parser, inputFileName, _fileSystem)
+            ? new LoggingParser(parser, _fileSystem)
             : parser;
     }
 }

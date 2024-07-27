@@ -1,6 +1,6 @@
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class InsideStatementJump(string keyword) : Statement
 {
     public const string Break = "break";

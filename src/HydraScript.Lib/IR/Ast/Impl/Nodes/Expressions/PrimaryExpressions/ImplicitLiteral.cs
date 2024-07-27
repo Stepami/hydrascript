@@ -1,19 +1,17 @@
-using HydraScript.Lib.BackEnd.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
-public partial class ImplicitLiteral(TypeValue typeValue) : PrimaryExpression
+[AutoVisitable<IAbstractSyntaxTreeNode>]
+public partial class ImplicitLiteral(TypeValue type) : AbstractLiteral(type)
 {
-    public TypeValue TypeValue { get; } = typeValue;
     public object? ComputedDefaultValue { private get; set; }
 
     protected override string NodeRepresentation() =>
-        TypeValue.ToString();
+        Type.ToString();
 
-    public override IValue ToValue() =>
-        new Constant(
+    public override ValueDto ToValueDto() =>
+        ValueDto.ConstantDto(
             ComputedDefaultValue,
             ComputedDefaultValue is null
                 ? "null"

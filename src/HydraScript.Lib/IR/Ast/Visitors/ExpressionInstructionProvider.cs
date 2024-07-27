@@ -1,21 +1,21 @@
 using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Addresses;
-using HydraScript.Lib.BackEnd.Instructions;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Create;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Read;
-using HydraScript.Lib.BackEnd.Instructions.WithAssignment.ComplexData.Write;
-using HydraScript.Lib.BackEnd.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Values;
+using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Lib.BackEnd.Impl.Instructions;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Read;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
+using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Lib.BackEnd.Impl.Values;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.Ast.Visitors.Services;
 
 namespace HydraScript.Lib.IR.Ast.Visitors;
 
-public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode, AddressedInstructions>,
+public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,
     IVisitor<ArrayLiteral, AddressedInstructions>,
     IVisitor<ObjectLiteral, AddressedInstructions>,
@@ -30,8 +30,15 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
     IVisitor<IndexAccess, AddressedInstructions>,
     IVisitor<CallExpression, AddressedInstructions>
 {
+    private readonly IValueDtoConverter _valueDtoConverter;
+
+    public ExpressionInstructionProvider(IValueDtoConverter valueDtoConverter)
+    {
+        _valueDtoConverter = valueDtoConverter;
+    }
+
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
-        [new Simple(visitable.ToValue())];
+        [new Simple(_valueDtoConverter.Convert(visitable.ToValueDto()))];
 
     public AddressedInstructions Visit(ArrayLiteral visitable)
     {
@@ -48,7 +55,10 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
             var index = new Constant(i);
             
             if (expression is PrimaryExpression primary)
-                result.Add(new IndexAssignment(arrayName, index, primary.ToValue()));
+                result.Add(new IndexAssignment(
+                    arrayName,
+                    index,
+                    _valueDtoConverter.Convert(primary.ToValueDto())));
             else
             {
                 result.AddRange(expression.Accept(This));
@@ -82,7 +92,10 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
         var propertyId = new Constant(id);
 
         if (expression is PrimaryExpression primary)
-            return [new DotAssignment(objectId, propertyId, primary.ToValue())];
+            return [new DotAssignment(
+                objectId,
+                propertyId,
+                _valueDtoConverter.Convert(primary.ToValueDto()))];
 
         var instructions = expression.Accept(This);
         var last = new Name(instructions.OfType<Simple>().Last().Left!);
@@ -94,7 +107,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
     public AddressedInstructions Visit(UnaryExpression visitable)
     {
         if (visitable.Expression is PrimaryExpression primary)
-            return [new Simple(visitable.Operator, primary.ToValue())];
+            return [new Simple(visitable.Operator, _valueDtoConverter.Convert(primary.ToValueDto()))];
         
         var result = visitable.Expression.Accept(This);
         var last = new Name(result.OfType<Simple>().Last().Left!);
@@ -106,13 +119,13 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
     public AddressedInstructions Visit(BinaryExpression visitable)
     {
         if (visitable is { Left: IdentifierReference arr, Right: PrimaryExpression primary, Operator: "::" })
-            return [new RemoveFromArray(arr.Name, primary.ToValue())];
+            return [new RemoveFromArray(arr.Name, index: _valueDtoConverter.Convert(primary.ToValueDto()))];
 
         var result = new AddressedInstructions();
         IValue left, right;
 
         if (visitable.Left is PrimaryExpression primaryLeft)
-            left = primaryLeft.ToValue();
+            left = _valueDtoConverter.Convert(primaryLeft.ToValueDto());
         else
         {
             result.AddRange(visitable.Left.Accept(This));
@@ -120,7 +133,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
         }
 
         if (visitable.Right is PrimaryExpression primaryRight)
-            right = primaryRight.ToValue();
+            right = _valueDtoConverter.Convert(primaryRight.ToValueDto());
         else
         {
             result.AddRange(visitable.Right.Accept(This));
@@ -135,7 +148,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
     public AddressedInstructions Visit(CastAsExpression visitable)
     {
         if (visitable.Expression is PrimaryExpression primary)
-            return [new AsString(primary.ToValue())];
+            return [new AsString(_valueDtoConverter.Convert(primary.ToValueDto()))];
         
         var result = visitable.Expression.Accept(This);
         var last = new Name(result.OfType<Simple>().Last().Left!);
@@ -153,7 +166,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
         var result = new AddressedInstructions();
 
         if (visitable.Test is PrimaryExpression primary)
-            result.Add(new IfNotGoto(primary.ToValue(), startBlockLabel));
+            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), startBlockLabel));
         else
         {
             result.AddRange(visitable.Test.Accept(This));
@@ -226,7 +239,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
         IValue right;
 
         if (visitable.Index is PrimaryExpression primary)
-            right = primary.ToValue();
+            right = _valueDtoConverter.Convert(primary.ToValueDto());
         else
         {
             result.AddRange(visitable.Index.Accept(This));
@@ -247,13 +260,15 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
 
     public AddressedInstructions Visit(CallExpression visitable)
     {
+        if (visitable.IsEmptyCall)
+            return [];
         var methodCall = !visitable.Empty();
         if (visitable.Id.Name is "print" && !methodCall)
         {
             var param = visitable.Parameters[0];
             
             if (param is PrimaryExpression prim)
-                return [new Print(prim.ToValue())];
+                return [new Print(_valueDtoConverter.Convert(prim.ToValueDto()))];
             
             var result = param.Accept(This);
             var last = new Name(result.OfType<Simple>().Last().Left!);
@@ -263,7 +278,7 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
         }
         else
         {
-            FunctionSymbol functionSymbol;
+            string functionId;
             AddressedInstructions result = [];
             if (methodCall)
             {
@@ -272,43 +287,34 @@ public class ExpressionInstructionProvider : VisitorBase<AbstractSyntaxTreeNode,
                 memberInstructions.Remove(lastMemberInstruction);
                 result.AddRange(memberInstructions);
 
-                var methodName = lastMemberInstruction.Property;
-                functionSymbol = visitable.SymbolTable
-                    .FindSymbol<FunctionSymbol>(methodName)!;
+                functionId = lastMemberInstruction.Property;
             }
             else
             {
-                functionSymbol = visitable.SymbolTable
-                    .FindSymbol<FunctionSymbol>(visitable.Id)!;
+                functionId = visitable.Id;
             }
-            if (functionSymbol.IsEmpty)
-                return [];
-            var functionInfo = new FunctionInfo(functionSymbol.Id);
+            var functionInfo = new FunctionInfo(functionId);
 
             if (methodCall)
             {
                 var caller = result.Any() ? result.OfType<Simple>().Last().Left! : visitable.Id;
-                result.Add(new PushParameter(functionSymbol.Parameters[0].Id, new Name(caller)));
+                result.Add(new PushParameter(new Name(caller)));
             }
-            foreach (var (expr, symbol) in visitable.Parameters
-                         .Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..]))
+            foreach (var expr in visitable.Parameters)
             {
                 if (expr is PrimaryExpression primary)
-                    result.Add(new PushParameter(symbol.Id, primary.ToValue()));
+                    result.Add(new PushParameter(_valueDtoConverter.Convert(primary.ToValueDto())));
                 else
                 {
                     result.AddRange(expr.Accept(This));
                     var id = result.OfType<Simple>().Last().Left!;
-                    result.Add(new PushParameter(symbol.Id, new Name(id)));
+                    result.Add(new PushParameter(new Name(id)));
                 }
             }
 
-            Type @void = "void";
-            var hasReturnValue = !functionSymbol.Type.Equals(@void);
             result.Add(new CallFunction(
                 functionInfo,
-                numberOfArguments: visitable.Parameters.Count + (methodCall ? 1 : 0),
-                hasReturnValue));
+                visitable.HasReturnValue));
             return result;
         }
     }

@@ -2,10 +2,10 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class Property : Expression
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children =>
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         [Id, Expression];
 
     public IdentifierReference Id { get; }

@@ -3,15 +3,19 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
+[AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    protected override IReadOnlyList<AbstractSyntaxTreeNode> Children => [Statements];
+    private readonly List<PropertyTypeValue> _arguments;
+
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children => [Statements];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
-    public List<PropertyTypeValue> Arguments { get; }
+    public IReadOnlyList<PropertyTypeValue> Arguments => _arguments;
+
     public BlockStatement Statements { get; }
+    public bool IsEmpty => Statements.Count == 0;
 
     public FunctionDeclaration(
         IdentifierReference name,
@@ -21,7 +25,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     {
         Name = name;
         ReturnTypeValue = returnTypeValue;
-        Arguments = arguments;
+        _arguments = arguments;
 
         Statements = blockStatement;
         Statements.Parent = this;
@@ -30,6 +34,18 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
             .GetAllNodes()
             .OfType<ReturnStatement>()
             .ToArray();
+    }
+
+    /// <summary>Стратегия "блока" - углубление скоупа</summary>
+    /// <param name="scope">Новый скоуп</param>
+    public override void InitScope(Scope? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        Scope = scope;
+        Scope.AddOpenScope(Parent.Scope);
+
+        _arguments.ForEach(x => x.TypeValue.Scope = Parent.Scope);
+        ReturnTypeValue.Scope = Parent.Scope;
     }
 
     public bool HasReturnStatement() =>

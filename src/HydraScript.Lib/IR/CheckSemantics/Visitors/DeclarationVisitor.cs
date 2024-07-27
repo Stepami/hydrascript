@@ -5,27 +5,32 @@ using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Lib.IR.CheckSemantics.Exceptions;
 using HydraScript.Lib.IR.CheckSemantics.Types;
-using HydraScript.Lib.IR.CheckSemantics.Variables.Symbols;
+using HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services;
 
 namespace HydraScript.Lib.IR.CheckSemantics.Visitors;
 
-public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
+public class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
+    private readonly ISymbolTableStorage _symbolTables;
+    private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
-        IMethodStorage methodStorage)
+        IMethodStorage methodStorage,
+        ISymbolTableStorage symbolTables)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
+        _symbolTables = symbolTables;
+        _typeBuilder = new TypeBuilder(_symbolTables);
     }
 
-    public override VisitUnit Visit(AbstractSyntaxTreeNode visitable)
+    public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
     {
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
@@ -38,11 +43,11 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            if (visitable.SymbolTable.ContainsSymbol(assignment.Destination.Id))
+            if (_symbolTables[visitable.Scope].ContainsSymbol(assignment.Destination.Id))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
-            var destinationType = assignment.DestinationType?.BuildType(
-                assignment.SymbolTable) ?? "undefined";
+            var destinationType = assignment.DestinationType?.Accept(
+                _typeBuilder) ?? "undefined";
 
             if (destinationType == "undefined" &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
@@ -50,7 +55,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
                     ? new ConstWithoutInitializer(assignment.Destination.Id)
                     : new CannotDefineType(assignment.Destination.Id.Segment);
 
-            visitable.SymbolTable.AddSymbol(
+            _symbolTables[visitable.Scope].AddSymbol(
                 new VariableSymbol(
                     assignment.Destination.Id,
                     destinationType));
@@ -61,23 +66,23 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        if (visitable.Parent.SymbolTable.ContainsSymbol(visitable.Name))
+        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(visitable.Name))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         var parameters = visitable.Arguments.Select(x =>
         {
             var arg = new VariableSymbol(
                 id: x.Key,
-                x.TypeValue.BuildType(visitable.Parent.SymbolTable));
-            visitable.SymbolTable.AddSymbol(arg);
+                x.TypeValue.Accept(_typeBuilder));
+            _symbolTables[visitable.Scope].AddSymbol(arg);
             return arg;
         }).ToList();
 
         var functionSymbol = new FunctionSymbol(
             visitable.Name,
             parameters,
-            visitable.ReturnTypeValue.BuildType(visitable.Parent.SymbolTable),
-            isEmpty: !visitable.Statements.Any());
+            visitable.ReturnTypeValue.Accept(_typeBuilder),
+            visitable.IsEmpty);
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
         {
@@ -93,7 +98,7 @@ public class DeclarationVisitor : VisitorNoReturnBase<AbstractSyntaxTreeNode>,
                 functionSymbol.DefineReturnType("void");
         }
 
-        visitable.Parent.SymbolTable.AddSymbol(functionSymbol);
+        _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol);
         return visitable.Statements.Accept(This);
     }
 }

@@ -7,13 +7,11 @@ namespace HydraScript.Services.Providers.ParserProvider.Impl;
 public class LoggingParser : IParser
 {
     private readonly IParser _parser;
-    private readonly string _fileName;
     private readonly IFileSystem _fileSystem;
 
-    public LoggingParser(IParser parser, string fileName, IFileSystem fileSystem)
+    public LoggingParser(IParser parser, IFileSystem fileSystem)
     {
         _parser = parser;
-        _fileName = fileName;
         _fileSystem = fileSystem;
     }
     
@@ -22,6 +20,6 @@ public class LoggingParser : IParser
         var ast = _parser.TopDownParse(text);
         var astDot = ast.ToString();
         _fileSystem.File.WriteAllText("ast.dot", astDot);
-        return new LoggingAbstractSyntaxTree(ast, _fileName, _fileSystem);
+        return ast;
     }
 }

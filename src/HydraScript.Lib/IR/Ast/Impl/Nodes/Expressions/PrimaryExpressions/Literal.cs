@@ -1,23 +1,19 @@
-using HydraScript.Lib.BackEnd.Values;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
 
 namespace HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
 
-[AutoVisitable<AbstractSyntaxTreeNode>]
-public partial class Literal : PrimaryExpression
+[AutoVisitable<IAbstractSyntaxTreeNode>]
+public partial class Literal : AbstractLiteral
 {
-    public TypeValue Type { get; }
     private readonly object? _value;
     private readonly string _label;
 
     public Literal(
         TypeValue type,
         object? value,
-        Segment segment,
-        string? label = null)
+        string segment,
+        string? label = null) : base(type)
     {
-        Type = type;
         _label = (label ?? value?.ToString())!;
         _value = value;
         Segment = segment;
@@ -25,6 +21,6 @@ public partial class Literal : PrimaryExpression
 
     protected override string NodeRepresentation() => _label;
 
-    public override IValue ToValue() =>
-        new Constant(_value, _label);
+    public override ValueDto ToValueDto() =>
+        ValueDto.ConstantDto(_value, _label);
 }
