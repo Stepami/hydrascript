@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
+namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class TypeSymbol(Type type, string? id = null) :
     Symbol(id ?? type.ToString(), type)

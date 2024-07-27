@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
+namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class FunctionSymbol(
     string id,

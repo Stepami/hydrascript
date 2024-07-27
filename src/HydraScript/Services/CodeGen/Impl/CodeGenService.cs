@@ -8,7 +8,7 @@ using HydraScript.Lib.IR.CheckSemantics.Visitors;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 using Microsoft.Extensions.Options;
 using Visitor.NET;
-using Type = HydraScript.Lib.IR.CheckSemantics.Types.Type;
+using Type = HydraScript.Domain.IR.Types.Type;
 
 namespace HydraScript.Services.CodeGen.Impl;
 

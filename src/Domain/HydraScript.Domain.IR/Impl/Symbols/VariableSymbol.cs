@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
+namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class VariableSymbol(
     string id,

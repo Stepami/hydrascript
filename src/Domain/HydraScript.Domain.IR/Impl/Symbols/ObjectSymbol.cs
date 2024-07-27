@@ -1,6 +1,6 @@
-using HydraScript.Lib.IR.CheckSemantics.Types;
+using HydraScript.Domain.IR.Types;
 
-namespace HydraScript.Lib.IR.CheckSemantics.Variables.Impl.Symbols;
+namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class ObjectSymbol(
     string id,

@@ -1,6 +1,7 @@
-using HydraScript.Lib.IR.CheckSemantics.Types;
+using HydraScript.Domain.IR.Types;
 using HydraScript.Lib.IR.CheckSemantics.Visitors.Services.Impl;
 using Xunit;
+using Type = HydraScript.Domain.IR.Types.Type;
 
 namespace HydraScript.Tests.Unit.IR.Types;
 

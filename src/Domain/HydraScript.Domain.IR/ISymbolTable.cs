@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.IR.CheckSemantics.Variables;
+namespace HydraScript.Domain.IR;
 
 public interface ISymbolTable
 {

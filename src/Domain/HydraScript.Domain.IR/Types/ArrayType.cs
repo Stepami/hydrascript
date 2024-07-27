@@ -1,4 +1,4 @@
-namespace HydraScript.Lib.IR.CheckSemantics.Types;
+namespace HydraScript.Domain.IR.Types;
 
 public class ArrayType(Type type) : Type($"{type}[]")
 {

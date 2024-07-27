@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace HydraScript.Lib.IR.CheckSemantics.Types;
+namespace HydraScript.Domain.IR.Types;
 
 public class ObjectType : NullableType
 {
