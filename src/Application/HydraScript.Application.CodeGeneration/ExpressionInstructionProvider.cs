@@ -1,19 +1,20 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Impl.Addresses;
-using HydraScript.Lib.BackEnd.Impl.Instructions;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Read;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Impl.Values;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.AccessExpressions;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.ComplexLiterals;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Visitors.Services;
+using HydraScript.Application.CodeGeneration.Services;
+using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl.Addresses;
+using HydraScript.Domain.BackEnd.Impl.Instructions;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Read;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Domain.BackEnd.Impl.Values;
+using HydraScript.Domain.FrontEnd.Parser;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessExpressions;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
-namespace HydraScript.Lib.IR.Ast.Visitors;
+namespace HydraScript.Application.CodeGeneration;
 
 public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,

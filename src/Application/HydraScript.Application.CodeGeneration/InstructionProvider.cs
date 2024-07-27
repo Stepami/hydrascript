@@ -1,16 +1,17 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Impl.Addresses;
-using HydraScript.Lib.BackEnd.Impl.Instructions;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithAssignment;
-using HydraScript.Lib.BackEnd.Impl.Instructions.WithJump;
-using HydraScript.Lib.BackEnd.Impl.Values;
-using HydraScript.Lib.IR.Ast.Impl.Nodes;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
-using HydraScript.Lib.IR.Ast.Visitors.Services;
+using HydraScript.Application.CodeGeneration.Services;
+using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl.Addresses;
+using HydraScript.Domain.BackEnd.Impl.Instructions;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
+using HydraScript.Domain.BackEnd.Impl.Values;
+using HydraScript.Domain.FrontEnd.Parser;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 
-namespace HydraScript.Lib.IR.Ast.Visitors;
+namespace HydraScript.Application.CodeGeneration;
 
 public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,

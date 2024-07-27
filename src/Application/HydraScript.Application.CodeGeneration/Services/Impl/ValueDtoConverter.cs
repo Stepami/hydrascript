@@ -1,8 +1,8 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Impl.Values;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
+using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl.Values;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
-namespace HydraScript.Lib.IR.Ast.Visitors.Services.Impl;
+namespace HydraScript.Application.CodeGeneration.Services.Impl;
 
 public class ValueDtoConverter : IValueDtoConverter
 {

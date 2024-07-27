@@ -1,11 +1,11 @@
 using System.IO.Abstractions;
+using HydraScript.Application.CodeGeneration;
+using HydraScript.Application.CodeGeneration.Services.Impl;
 using HydraScript.Application.StaticAnalysis;
 using HydraScript.Application.StaticAnalysis.Services.Impl;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Lib.IR.Ast;
-using HydraScript.Lib.IR.Ast.Visitors;
-using HydraScript.Lib.IR.Ast.Visitors.Services.Impl;
 using Microsoft.Extensions.Options;
 using Visitor.NET;
 using Type = HydraScript.Domain.IR.Types.Type;
