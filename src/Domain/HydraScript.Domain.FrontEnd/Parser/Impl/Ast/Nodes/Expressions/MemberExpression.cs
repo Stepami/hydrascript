@@ -14,7 +14,7 @@ public partial class MemberExpression : LeftHandSideExpression
     public AccessExpression? AccessChain { get; }
     public AccessExpression? Tail { get; }
 
-    public Type ComputedIdType { get; set; } = default!;
+    public Guid ComputedIdTypeGuid { get; set; } = Guid.Empty;
 
     public MemberExpression(IdentifierReference identifierReference)
     {

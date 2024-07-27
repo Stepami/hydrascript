@@ -7,7 +7,7 @@ public abstract class AccessExpression : Expression
     public AccessExpression? Prev =>
         Parent as AccessExpression;
 
-    public Type ComputedType { get; set; } = default!;
+    public Guid ComputedTypeGuid { get; set; } = Guid.Empty;
 
     protected AccessExpression(AccessExpression? prev)
     {

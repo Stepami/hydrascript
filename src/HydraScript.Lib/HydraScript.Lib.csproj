@@ -16,4 +16,8 @@
         <InternalsVisibleTo Include="HydraScript.Tests" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="IR\CheckSemantics\Visitors\" />
+    </ItemGroup>
+
 </Project>
