@@ -2,21 +2,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HydraScript.Domain.FrontEnd.Lexer;
-using HydraScript.Domain.FrontEnd.Lexer.Data;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
 
-namespace HydraScript.Services.Providers.StructureProvider.Impl;
+namespace HydraScript.Infrastructure;
 
-public class StructureProvider : IStructureProvider
+internal static class StructureInstance
 {
-    public Structure CreateStructure() =>
-        JsonSerializer.Deserialize<Structure>(
-            TokenTypes.Json,
-            new JsonSerializerOptions
-            {
-                Converters = { new StructureReadConverter() }
-            })!;
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    {
+        Converters = { new StructureReadConverter() }
+    };
+
+    private static Structure? _instance;
+    public static Structure Get
+    {
+        get
+        {
+            _instance ??= JsonSerializer.Deserialize<Structure>(
+                TokenTypesJson.String,
+                JsonSerializerOptions)!;
+            return _instance;
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private class StructureReadConverter : JsonConverter<Structure>
