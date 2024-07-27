@@ -24,7 +24,7 @@ public partial class CastAsExpression : Expression
     public override void InitScope(ISymbolTable? scope = null)
     {
         base.InitScope(scope);
-        Cast.SymbolTable = Scope;
+        Cast.Scope = Scope;
     }
 
     protected override string NodeRepresentation() => $"as {Cast}";

@@ -12,18 +12,18 @@ public class TypeBuilder : VisitorBase<TypeValue, Type>,
     IVisitor<ObjectTypeValue, ObjectType>
 {
     public Type Visit(TypeIdentValue visitable) =>
-        visitable.SymbolTable.FindSymbol<TypeSymbol>(visitable.TypeId)?.Type ??
+        visitable.Scope.FindSymbol<TypeSymbol>(visitable.TypeId)?.Type ??
         throw new UnknownIdentifierReference(visitable.TypeId);
 
     public ArrayType Visit(ArrayTypeValue visitable)
     {
-        visitable.TypeValue.SymbolTable = visitable.SymbolTable;
+        visitable.TypeValue.Scope = visitable.Scope;
         return new ArrayType(visitable.TypeValue.Accept(This));
     }
 
     public NullableType Visit(NullableTypeValue visitable)
     {
-        visitable.TypeValue.SymbolTable = visitable.SymbolTable;
+        visitable.TypeValue.Scope = visitable.Scope;
         return new NullableType(visitable.TypeValue.Accept(This));
     }
 
@@ -31,7 +31,7 @@ public class TypeBuilder : VisitorBase<TypeValue, Type>,
         new(visitable.Properties
             .Select(x =>
             {
-                x.TypeValue.SymbolTable = visitable.SymbolTable;
+                x.TypeValue.Scope = visitable.Scope;
                 return new PropertyType(
                     Id: x.Key,
                     x.TypeValue.Accept(This));

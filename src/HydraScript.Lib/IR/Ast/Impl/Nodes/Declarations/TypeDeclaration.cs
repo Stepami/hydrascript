@@ -13,7 +13,7 @@ public partial class TypeDeclaration(IdentifierReference typeId, TypeValue typeV
     public override void InitScope(ISymbolTable? scope = null)
     {
         base.InitScope(scope);
-        TypeValue.SymbolTable = Scope;
+        TypeValue.Scope = Scope;
     }
 
     protected override string NodeRepresentation() =>

@@ -44,8 +44,8 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         Scope = scope;
         Scope.AddOpenScope(Parent.Scope);
 
-        _arguments.ForEach(x => x.TypeValue.SymbolTable = Parent.Scope);
-        ReturnTypeValue.SymbolTable = Parent.Scope;
+        _arguments.ForEach(x => x.TypeValue.Scope = Parent.Scope);
+        ReturnTypeValue.Scope = Parent.Scope;
     }
 
     public bool HasReturnStatement() =>
