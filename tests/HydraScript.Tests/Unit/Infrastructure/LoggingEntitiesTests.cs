@@ -1,14 +1,11 @@
 using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Parser;
-using HydraScript.Lib.FrontEnd.GetTokens;
-using HydraScript.Lib.FrontEnd.GetTokens.Data;
-using HydraScript.Lib.IR.Ast;
-using HydraScript.Services.Providers.LexerProvider.Impl;
-using HydraScript.Services.Providers.ParserProvider.Impl;
+using HydraScript.Infrastructure;
+using HydraScript.Infrastructure.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-
 
 namespace HydraScript.Tests.Unit.Infrastructure;
 
@@ -31,20 +28,27 @@ public class LoggingEntitiesTests
     {
         var lexer = new Mock<ILexer>();
         lexer.Setup(x => x.GetTokens(It.IsAny<string>()))
-            .Returns(new List<Token>());
+            .Returns([]);
         lexer.Setup(x => x.ToString())
             .Returns("lexer");
 
-        _file.Setup(x => x.WriteAllText(
-            It.IsAny<string>(), It.IsAny<string>()
-        )).Verifiable();
+        _file.Setup(
+                x => x.WriteAllText(
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+            .Verifiable();
 
-        var loggingLexer = new LoggingLexer(lexer.Object, "file", _fileSystem.Object);
+        var loggingLexer = new LoggingLexer(
+            lexer.Object,
+            _fileSystem.Object,
+            inputFile: Options.Create(new InputFile { Path = "file" }));
         loggingLexer.GetTokens("");
 
-        _file.Verify(x => x.WriteAllText(
-            It.Is<string>(p => p == "file.tokens"), It.Is<string>(c => c == "lexer")
-        ), Times.Once());
+        _file.Verify(
+            x => x.WriteAllText(
+                It.Is<string>(p => p == "file.tokens"),
+                It.Is<string>(c => c == "lexer")),
+            Times.Once());
     }
 
     [Fact]
@@ -65,9 +69,10 @@ public class LoggingEntitiesTests
         var loggingParser = new LoggingParser(parser.Object, _fileSystem.Object);
         _ = loggingParser.Parse("");
 
-        _file.Verify(x => x.WriteAllText(
-            It.Is<string>(p => p == "ast.dot"),
-            It.Is<string>(c => c == "digraph ast { }")
-        ), Times.Once());
+        _file.Verify(
+            x => x.WriteAllText(
+                It.Is<string>(p => p == "ast.dot"),
+                It.Is<string>(c => c == "digraph ast { }")),
+            Times.Once());
     }
 }

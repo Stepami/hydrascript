@@ -1,7 +1,6 @@
 using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Domain.IR.Types;
 using Xunit;
-using Type = HydraScript.Domain.IR.Types.Type;
 
 namespace HydraScript.Tests.Unit.IR.Types;
 

@@ -12,8 +12,4 @@
         <PackageReference Include="Visitor.NET.AutoVisitableGen" Version="1.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="HydraScript.Tests" />
-    </ItemGroup>
-
 </Project>

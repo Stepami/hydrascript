@@ -1,7 +1,6 @@
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
-using HydraScript.Lib.FrontEnd.GetTokens;
-using HydraScript.Services.Providers.StructureProvider.Impl;
+using HydraScript.Infrastructure;
 using HydraScript.Tests.TestData;
 using Xunit;
 
@@ -10,7 +9,7 @@ namespace HydraScript.Tests.Unit.FrontEnd;
 public class RegexLexerTests
 {
     private readonly RegexLexer _regexLexer = new(
-        new StructureProvider().CreateStructure(),
+        StructureInstance.Get,
         new TextCoordinateSystemComputer());
 
     [Theory]

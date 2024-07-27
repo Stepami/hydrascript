@@ -1,9 +1,4 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
-using HydraScript.Lib.IR.Ast.Impl.Nodes;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
 using Xunit;
 using BlockStatement = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements.BlockStatement;
 using FunctionDeclaration = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded.FunctionDeclaration;
