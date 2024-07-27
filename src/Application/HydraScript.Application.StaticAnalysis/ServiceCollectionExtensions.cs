@@ -14,20 +14,20 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMethodStorage, MethodStorage>();
         services.AddSingleton<ISymbolTableStorage, SymbolTableStorage>();
 
-        services.AddScoped<IComputedTypesStorage, ComputedTypesStorage>();
-        services.AddScoped<ITypeDeclarationsResolver, TypeDeclarationsResolver>();
+        services.AddSingleton<IComputedTypesStorage, ComputedTypesStorage>();
+        services.AddSingleton<ITypeDeclarationsResolver, TypeDeclarationsResolver>();
 
-        services.AddTransient<IStandardLibraryProvider, StandardLibraryProvider>();
-        services.AddTransient<IJavaScriptTypesProvider, JavaScriptTypesProvider>();
-        services.AddTransient<IDefaultValueForTypeCalculator, DefaultValueForTypeCalculator>();
+        services.AddSingleton<IStandardLibraryProvider, StandardLibraryProvider>();
+        services.AddSingleton<IJavaScriptTypesProvider, JavaScriptTypesProvider>();
+        services.AddSingleton<IDefaultValueForTypeCalculator, DefaultValueForTypeCalculator>();
 
-        services.AddTransient<IVisitor<TypeValue, Type>, TypeBuilder>();
+        services.AddSingleton<IVisitor<TypeValue, Type>, TypeBuilder>();
 
-        services.AddTransient<IVisitor<IAbstractSyntaxTreeNode>, SymbolTableInitializer>();
-        services.AddTransient<IVisitor<IAbstractSyntaxTreeNode>, TypeSystemLoader>();
-        services.AddTransient<IVisitor<IAbstractSyntaxTreeNode>, DeclarationVisitor>();
+        services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, SymbolTableInitializer>();
+        services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, TypeSystemLoader>();
+        services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, DeclarationVisitor>();
 
-        services.AddTransient<IVisitor<IAbstractSyntaxTreeNode, Type>, SemanticChecker>();
+        services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode, Type>, SemanticChecker>();
 
         return services;
     }

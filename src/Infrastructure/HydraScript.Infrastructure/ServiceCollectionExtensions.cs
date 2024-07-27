@@ -15,7 +15,7 @@ namespace HydraScript.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddDomain(this IServiceCollection services)
+    public static IServiceCollection AddDomain(this IServiceCollection services)
     {
         services.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
         services.AddSingleton(StructureInstance.Get);
@@ -24,9 +24,11 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton(Console.Out);
         services.AddSingleton<IVirtualMachine, VirtualMachine>();
+
+        return services;
     }
 
-    public static void AddApplication(this IServiceCollection services) => services
+    public static IServiceCollection AddApplication(this IServiceCollection services) => services
         .AddStaticAnalysis()
         .AddCodeGeneration();
 
@@ -38,10 +40,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddSingleton(Options.Create(new InputFile { Info = inputFileInfo }));
 
-        services.AddTransient<IStaticAnalyzer, StaticAnalyzer>();
-        services.AddTransient<ICodeGenerator, CodeGenerator>();
+        services.AddSingleton<IStaticAnalyzer, StaticAnalyzer>();
+        services.AddSingleton<ICodeGenerator, CodeGenerator>();
 
-        services.AddTransient<ISourceCodeProvider, SourceCodeProvider>();
+        services.AddSingleton<ISourceCodeProvider, SourceCodeProvider>();
 
         if (dump)
         {

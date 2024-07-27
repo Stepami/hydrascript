@@ -10,11 +10,11 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCodeGeneration(this IServiceCollection services)
     {
-        services.AddTransient<IValueDtoConverter, ValueDtoConverter>();
-        services.AddKeyedTransient<
+        services.AddSingleton<IValueDtoConverter, ValueDtoConverter>();
+        services.AddKeyedSingleton<
             IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions>,
             InstructionProvider>("instructions");
-        services.AddKeyedTransient<
+        services.AddKeyedSingleton<
             IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions>,
             ExpressionInstructionProvider>("expression-instructions");
         return services;

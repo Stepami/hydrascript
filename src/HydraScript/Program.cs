@@ -18,10 +18,12 @@ var runner = new CommandLineBuilder(command)
                 var parseResult = context.GetInvocationContext().ParseResult;
                 var fileInfo = parseResult.GetValueForArgument(command.PathArgument);
                 var dump = parseResult.GetValueForOption(command.DumpOption);
-                services.AddDomain();
-                services.AddApplication();
-                services.AddInfrastructure(dump, fileInfo);
+                services
+                    .AddDomain()
+                    .AddApplication()
+                    .AddInfrastructure(dump, fileInfo);
             })
+            .UseDefaultServiceProvider((_, options) => options.ValidateScopes = true)
             .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>())
     .UseDefaults().Build();
 
