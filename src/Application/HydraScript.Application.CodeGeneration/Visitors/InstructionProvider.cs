@@ -1,4 +1,3 @@
-using HydraScript.Application.CodeGeneration.Services;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
@@ -10,8 +9,9 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace HydraScript.Application.CodeGeneration;
+namespace HydraScript.Application.CodeGeneration.Visitors;
 
 public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<ScriptBody, AddressedInstructions>,
@@ -27,10 +27,13 @@ public class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addresse
     private readonly IValueDtoConverter _valueDtoConverter;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
 
-    public InstructionProvider(IValueDtoConverter valueDtoConverter)
+    public InstructionProvider(
+        IValueDtoConverter valueDtoConverter,
+        [FromKeyedServices("expression-instructions")]
+        IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> expressionVisitor)
     {
         _valueDtoConverter = valueDtoConverter;
-        _expressionVisitor = new ExpressionInstructionProvider(_valueDtoConverter);
+        _expressionVisitor = expressionVisitor;
     }
 
     public AddressedInstructions Visit(ScriptBody visitable)

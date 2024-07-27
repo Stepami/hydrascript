@@ -1,4 +1,3 @@
-using HydraScript.Application.CodeGeneration.Services;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
@@ -14,7 +13,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessExpres
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
-namespace HydraScript.Application.CodeGeneration;
+namespace HydraScript.Application.CodeGeneration.Visitors;
 
 public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, AddressedInstructions>,
     IVisitor<PrimaryExpression, AddressedInstructions>,
@@ -33,10 +32,8 @@ public class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNode
 {
     private readonly IValueDtoConverter _valueDtoConverter;
 
-    public ExpressionInstructionProvider(IValueDtoConverter valueDtoConverter)
-    {
+    public ExpressionInstructionProvider(IValueDtoConverter valueDtoConverter) =>
         _valueDtoConverter = valueDtoConverter;
-    }
 
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         [new Simple(_valueDtoConverter.Convert(visitable.ToValueDto()))];

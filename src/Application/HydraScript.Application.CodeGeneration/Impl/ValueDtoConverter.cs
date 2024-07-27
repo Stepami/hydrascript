@@ -2,7 +2,7 @@ using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Values;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
-namespace HydraScript.Application.CodeGeneration.Services.Impl;
+namespace HydraScript.Application.CodeGeneration.Impl;
 
 public class ValueDtoConverter : IValueDtoConverter
 {
