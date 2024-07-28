@@ -429,7 +429,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         }
 
         Type @void = "void";
-        if (functionReturnType.Equals(@void))
+        if (!functionReturnType.Equals(@void))
             visitable.HasReturnValue = true;
         return functionReturnType;
     }
