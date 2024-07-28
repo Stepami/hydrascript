@@ -1,5 +1,5 @@
-using HydraScript.Lib.BackEnd;
-using HydraScript.Lib.BackEnd.Impl.Addresses;
+using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl.Addresses;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.BackEnd;

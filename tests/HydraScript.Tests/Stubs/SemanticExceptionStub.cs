@@ -1,4 +1,4 @@
-using HydraScript.Lib.IR.CheckSemantics.Exceptions;
+using HydraScript.Application.StaticAnalysis.Exceptions;
 
 namespace HydraScript.Tests.Stubs;
 

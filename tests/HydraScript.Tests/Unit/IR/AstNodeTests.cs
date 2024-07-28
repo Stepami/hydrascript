@@ -1,9 +1,12 @@
-using HydraScript.Lib.IR.Ast.Impl.Nodes;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Expressions.PrimaryExpressions;
-using HydraScript.Lib.IR.Ast.Impl.Nodes.Statements;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using Xunit;
+using BlockStatement = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements.BlockStatement;
+using FunctionDeclaration = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded.FunctionDeclaration;
+using IdentifierReference = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions.IdentifierReference;
+using LexicalDeclaration = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded.LexicalDeclaration;
+using Literal = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions.Literal;
+using ScriptBody = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.ScriptBody;
+using TypeIdentValue = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.TypeIdentValue;
 
 namespace HydraScript.Tests.Unit.IR;
 

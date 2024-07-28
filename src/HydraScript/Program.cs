@@ -1,60 +1,36 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO.Abstractions;
-using CommandLine;
-using HydraScript.Lib.FrontEnd.GetTokens;
-using HydraScript.Lib.FrontEnd.GetTokens.Impl;
-using HydraScript.Services.CodeGen;
-using HydraScript.Services.CodeGen.Impl;
-using HydraScript.Services.Executor;
-using HydraScript.Services.Executor.Impl;
-using HydraScript.Services.Parsing;
-using HydraScript.Services.Parsing.Impl;
-using HydraScript.Services.Providers.LexerProvider;
-using HydraScript.Services.Providers.LexerProvider.Impl;
-using HydraScript.Services.Providers.ParserProvider;
-using HydraScript.Services.Providers.ParserProvider.Impl;
-using HydraScript.Services.Providers.StructureProvider;
-using HydraScript.Services.Providers.StructureProvider.Impl;
-using HydraScript.Services.SourceCode;
-using HydraScript.Services.SourceCode.Impl;
+﻿using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
+using HydraScript;
+using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace HydraScript;
+GetRunner(ConfigureHost).Invoke(args);
 
-[ExcludeFromCodeCoverage]
-public static class Program
+public static partial class Program
 {
-    private static IServiceCollection ServiceCollection { get; } = new ServiceCollection();
-    private static IServiceProvider? ServiceProvider { get; set; }
+    public static readonly ExecuteCommand Command = new();
 
-    private static void Main(string[] args) =>
-        Parser.Default.ParseArguments<CommandLineSettings>(args)
-            .WithParsed(options =>
-            {
-                ConfigureServices(options);
-                ServiceProvider?
-                    .GetService<IExecutor>()!
-                    .Execute();
-            })
-            .WithNotParsed(errors => errors.Output());
-        
+    public static Parser GetRunner(Action<IHostBuilder> configureHost) =>
+        new CommandLineBuilder(Command)
+            .UseHost(Host.CreateDefaultBuilder, configureHost)
+            .UseHelp()
+            .Build();
 
-    private static void ConfigureServices(CommandLineSettings settings)
-    {
-        ServiceCollection.AddSingleton<IStructureProvider, StructureProvider>();
-        ServiceCollection.AddSingleton<ILexerProvider, LexerProvider>();
-        ServiceCollection.AddSingleton<IParserProvider, ParserProvider>();
-        ServiceCollection.AddSingleton<IParsingService, ParsingService>();
-        ServiceCollection.AddSingleton<ISourceCodeProvider, SourceCodeProvider>();
-        ServiceCollection.AddSingleton<IFileSystem, FileSystem>();
-        ServiceCollection.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
-        ServiceCollection.AddSingleton<ICodeGenService, CodeGenService>();
-
-        ServiceCollection.AddSingleton<IExecutor, Executor>();
-
-        ServiceCollection.AddSingleton(_ => Options.Create(settings));
-            
-        ServiceProvider = ServiceCollection.BuildServiceProvider();
-    }
+    private static void ConfigureHost(IHostBuilder builder) => builder
+        .ConfigureServices((context, services) =>
+        {
+            services.AddLogging(c => c.ClearProviders());
+            var parseResult = context.GetInvocationContext().ParseResult;
+            var fileInfo = parseResult.GetValueForArgument(Command.PathArgument);
+            var dump = parseResult.GetValueForOption(Command.DumpOption);
+            services
+                .AddDomain()
+                .AddApplication()
+                .AddInfrastructure(dump, fileInfo);
+        })
+        .UseDefaultServiceProvider((_, options) => options.ValidateScopes = true)
+        .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>();
 }

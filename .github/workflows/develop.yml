@@ -35,7 +35,7 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release -v n
-      - name: Test
+      - name: Unit Tests
         run: |
           dotnet test -c Release --no-build -v n --filter="Category=Unit"
           mkdir coverage-report
@@ -74,3 +74,5 @@ jobs:
         with:
           name: CoverageReport   
           path: coverage-report
+      - name: Integration Tests
+        run: dotnet test -c Release --no-build -v n --filter="Category=Integration"

@@ -1,4 +1,4 @@
-using HydraScript.Lib.IR.CheckSemantics.Types;
+using HydraScript.Domain.IR.Types;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.IR.Types;
