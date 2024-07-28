@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace HydraScript;
 
-internal class ExecuteCommand : RootCommand
+public class ExecuteCommand : RootCommand
 {
     public ExecuteCommand() : base("HydraScript interpreter")
     {

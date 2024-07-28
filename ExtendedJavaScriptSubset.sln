@@ -86,6 +86,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Application.Cod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure", "src\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj", "{160B77ED-BA30-40A2-81EF-F5D1E4D22039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.IntegrationTests", "tests\HydraScript.IntegrationTests\HydraScript.IntegrationTests.csproj", "{1CE98127-3027-4BD4-AAA3-63A589B09E73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,10 @@ Global
 		{160B77ED-BA30-40A2-81EF-F5D1E4D22039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{160B77ED-BA30-40A2-81EF-F5D1E4D22039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{160B77ED-BA30-40A2-81EF-F5D1E4D22039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CE98127-3027-4BD4-AAA3-63A589B09E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CE98127-3027-4BD4-AAA3-63A589B09E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CE98127-3027-4BD4-AAA3-63A589B09E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CE98127-3027-4BD4-AAA3-63A589B09E73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{54CBE5A7-3C3E-44ED-B877-7B08A818083B} = {86CF2A2F-4DFE-48E7-B062-EF824730916A}
@@ -140,5 +146,6 @@ Global
 		{01376DD7-A13C-476C-A8DB-44EA9BB3F64F} = {A280C99E-0112-4F3C-A5E9-B793F2D9898E}
 		{07DEA726-9772-4B61-AA66-1B82823F6BF0} = {A280C99E-0112-4F3C-A5E9-B793F2D9898E}
 		{160B77ED-BA30-40A2-81EF-F5D1E4D22039} = {B7DDF6C9-B67C-430A-948A-A380EF68DEF1}
+		{1CE98127-3027-4BD4-AAA3-63A589B09E73} = {3F131901-A9EC-451A-B7E9-726887CFE5FB}
 	EndGlobalSection
 EndGlobal

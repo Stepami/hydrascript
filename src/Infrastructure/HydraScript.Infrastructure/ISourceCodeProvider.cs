@@ -16,7 +16,7 @@ internal class SourceCodeProvider(
 
     public string GetText()
     {
-        var inputFilePath = _inputFile.Info.Name;
+        var inputFilePath = _inputFile.Info.FullName;
         return fileSystem.File.ReadAllText(inputFilePath);
     }
 }

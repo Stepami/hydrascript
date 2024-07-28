@@ -7,24 +7,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-var command = new ExecuteCommand();
-var runner = new CommandLineBuilder(command)
-    .UseHost(
-        Host.CreateDefaultBuilder,
-        configureHost: builder => builder
-            .ConfigureServices((context, services) =>
-            {
-                services.AddLogging(c => c.ClearProviders());
-                var parseResult = context.GetInvocationContext().ParseResult;
-                var fileInfo = parseResult.GetValueForArgument(command.PathArgument);
-                var dump = parseResult.GetValueForOption(command.DumpOption);
-                services
-                    .AddDomain()
-                    .AddApplication()
-                    .AddInfrastructure(dump, fileInfo);
-            })
-            .UseDefaultServiceProvider((_, options) => options.ValidateScopes = true)
-            .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>())
-    .UseDefaults().Build();
+GetRunner(ConfigureHost).Invoke(args);
 
-await runner.InvokeAsync(args);
+public static partial class Program
+{
+    public static readonly ExecuteCommand Command = new();
+
+    public static Parser GetRunner(Action<IHostBuilder> configureHost) =>
+        new CommandLineBuilder(Command)
+            .UseHost(Host.CreateDefaultBuilder, configureHost)
+            .UseHelp()
+            .Build();
+
+    private static void ConfigureHost(IHostBuilder builder) => builder
+        .ConfigureServices((context, services) =>
+        {
+            services.AddLogging(c => c.ClearProviders());
+            var parseResult = context.GetInvocationContext().ParseResult;
+            var fileInfo = parseResult.GetValueForArgument(Command.PathArgument);
+            var dump = parseResult.GetValueForOption(Command.DumpOption);
+            services
+                .AddDomain()
+                .AddApplication()
+                .AddInfrastructure(dump, fileInfo);
+        })
+        .UseDefaultServiceProvider((_, options) => options.ValidateScopes = true)
+        .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>();
+}
