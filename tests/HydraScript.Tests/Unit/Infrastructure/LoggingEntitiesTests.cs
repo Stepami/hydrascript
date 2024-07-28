@@ -4,7 +4,6 @@ using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Infrastructure;
 using HydraScript.Infrastructure.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.Infrastructure;
