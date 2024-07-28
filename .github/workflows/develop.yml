@@ -37,7 +37,7 @@ jobs:
         run: dotnet build --no-restore -c Release -v n
       - name: Unit Tests
         run: |
-          dotnet test -c Release --no-build -v n --filter="Category=Unit"
+          dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Unit"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request_target'

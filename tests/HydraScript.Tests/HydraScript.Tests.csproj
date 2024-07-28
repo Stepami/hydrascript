@@ -8,11 +8,6 @@
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
     </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <CollectCoverage>true</CollectCoverage>
-        <CoverletOutputFormat>cobertura</CoverletOutputFormat>
-    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
