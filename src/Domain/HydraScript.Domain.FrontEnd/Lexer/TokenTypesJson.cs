@@ -1,7 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace HydraScript.Domain.FrontEnd.Lexer;
 
 public static class TokenTypesJson
 {
+    [StringSyntax(StringSyntaxAttribute.Json)]
     public const string String =
         """
         [
