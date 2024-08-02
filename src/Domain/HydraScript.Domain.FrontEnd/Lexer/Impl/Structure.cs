@@ -4,9 +4,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
-namespace HydraScript.Domain.FrontEnd.Lexer;
+namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
-public class Structure : IEnumerable<TokenType>
+public class Structure : IStructure
 {
     public Structure(List<TokenType> types)
     {

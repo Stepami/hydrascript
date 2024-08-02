@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
 namespace HydraScript.Infrastructure;
@@ -14,7 +15,7 @@ internal static class StructureInstance
     };
 
     private static Structure? _instance;
-    public static Structure Get
+    public static IStructure Get
     {
         get
         {
