@@ -26,9 +26,8 @@ internal class TokenTypesProvider : ITokenTypesProvider
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            using var jsonDocument = JsonDocument.ParseValue(ref reader);
-            var tokenTypes = jsonDocument.RootElement
-                .EnumerateArray()
+            var root = JsonElement.ParseValue(ref reader);
+            var tokenTypes = root.EnumerateArray()
                 .Select(element =>
                 {
                     var tag = element.GetProperty("tag").GetString()!;

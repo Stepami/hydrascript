@@ -8,33 +8,23 @@ namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
 public class Structure : IStructure
 {
-    public Structure(List<TokenType> types)
+    public Structure(ITokenTypesProvider provider)
     {
-        types.AddRange(new List<TokenType>
-        {
-            new EndOfProgramType(),
-            new ErrorType()
-        });
-        types = types
+        Types = provider.GetTokenTypes()
+            .Concat([new EndOfProgramType(), new ErrorType()])
             .OrderBy(t => t.Priority)
-            .ToList();
-            
-        Types = types
-            .ToDictionary(x => x.Tag, x => x);
+            .ToDictionary(x => x.Tag);
 
         Regex = new Regex(
             string.Join(
                 '|',
-                types
-                    .Where(t => !t.EndOfProgram())
+                this.Where(t => !t.EndOfProgram())
                     .Select(t => t.GetNamedRegex())
-                    .ToList()
-            )
-        );
+                    .ToList()));
     }
 
     private Dictionary<string, TokenType> Types { get; }
-        
+
     public Regex Regex { get; }
 
     public TokenType FindByTag(string tag) =>
@@ -43,10 +33,10 @@ public class Structure : IStructure
     public override string ToString() =>
         new StringBuilder()
             .AppendJoin('\n',
-                Types.Select(x => $"{x.Key} {x.Value.Pattern}")
-            ).ToString();
+                Types.Select(x => $"{x.Key} {x.Value.Pattern}"))
+            .ToString();
 
-    public IEnumerator<TokenType> GetEnumerator() => 
+    public IEnumerator<TokenType> GetEnumerator() =>
         Types.Values.GetEnumerator();
 
     [ExcludeFromCodeCoverage]

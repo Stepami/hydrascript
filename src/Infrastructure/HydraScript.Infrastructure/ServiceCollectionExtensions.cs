@@ -18,7 +18,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDomain(this IServiceCollection services)
     {
         services.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
-        services.AddSingleton(StructureInstance.Get);
+        services.AddSingleton<ITokenTypesProvider, TokenTypesProvider>();
+        services.AddSingleton<IStructure, Structure>();
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
