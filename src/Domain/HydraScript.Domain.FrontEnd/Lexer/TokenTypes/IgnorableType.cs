@@ -1,7 +1,6 @@
 namespace HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
-public record IgnorableType(string Tag, string Pattern, int Priority)
-    : TokenType(Tag, Pattern, Priority)
+public record IgnorableType(string Tag) : TokenType(Tag)
 {
     public override bool CanIgnore() => true;
 }

@@ -4,12 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
-public class RegexLexer(Structure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
+public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
 {
     private IReadOnlyList<int> _lines = [];
     private string _text = "";
 
-    public Structure Structure { get; } = structure;
+    public IStructure Structure { get; } = structure;
 
     public List<Token> GetTokens(string text)
     {

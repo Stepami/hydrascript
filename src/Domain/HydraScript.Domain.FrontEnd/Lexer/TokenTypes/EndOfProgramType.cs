@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
-internal record EndOfProgramType() : TokenType("EOP", "", int.MaxValue - 1)
+internal record EndOfProgramType() : TokenType(EopTag)
 {
-    public override bool EndOfProgram() => true;
+    public const string EopTag = "EOP";
 }
