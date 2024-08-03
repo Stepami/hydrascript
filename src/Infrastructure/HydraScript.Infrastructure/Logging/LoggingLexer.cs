@@ -13,7 +13,7 @@ internal class LoggingLexer(
     private readonly InputFile _inputFile = inputFile.Value;
 
     [ExcludeFromCodeCoverage]
-    public Structure Structure => lexer.Structure;
+    public IStructure Structure => lexer.Structure;
 
     public List<Token> GetTokens(string text)
     {
