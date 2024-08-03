@@ -37,6 +37,7 @@ jobs:
         run: dotnet build --no-restore -c Release -v n
       - name: Unit Tests
         run: |
+          dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj --no-build -v n
           dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Unit"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
