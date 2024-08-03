@@ -9,7 +9,7 @@ namespace HydraScript.Tests.Unit.FrontEnd;
 public class RegexLexerTests
 {
     private readonly RegexLexer _regexLexer = new(
-        new Structure(new TokenTypesProvider()),
+        new Structure<GeneratedRegexContainer>(new TokenTypesProvider()),
         new TextCoordinateSystemComputer());
 
     [Theory]

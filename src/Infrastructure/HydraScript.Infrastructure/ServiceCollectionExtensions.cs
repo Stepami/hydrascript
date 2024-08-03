@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
         services.AddSingleton<ITokenTypesProvider, TokenTypesProvider>();
-        services.AddSingleton<IStructure, Structure>();
+        services.AddSingleton<IStructure, Structure<GeneratedRegexContainer>>();
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
