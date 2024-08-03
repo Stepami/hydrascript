@@ -36,7 +36,7 @@ namespace HydraScript.Infrastructure;
 internal partial class TestPatternContainer
 {
     [StringSyntax(StringSyntaxAttribute.Regex)]
-    private const string Pattern =
+    public const string Pattern =
         """
             (?<Word>[a-zA-Z]+)|(?<Number>[0-9]+)|(?<ERROR>\S+)
         """;

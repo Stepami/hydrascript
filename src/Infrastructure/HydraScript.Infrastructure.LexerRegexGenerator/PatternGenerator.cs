@@ -79,7 +79,7 @@ namespace HydraScript.Infrastructure;
 internal partial class {info.ClassName}
 {{
     [StringSyntax(StringSyntaxAttribute.Regex)]
-    private const string Pattern =
+    public const string Pattern =
         """"""
             {pattern}
         """""";
