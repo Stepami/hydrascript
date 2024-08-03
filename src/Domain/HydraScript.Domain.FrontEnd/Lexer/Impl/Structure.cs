@@ -11,7 +11,6 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
 {
     private Dictionary<string, TokenType> Types { get; } = provider.GetTokenTypes()
         .Concat([new EndOfProgramType(), new ErrorType()])
-        .OrderBy(t => t.Priority)
         .ToDictionary(x => x.Tag);
 
     public Regex Regex { get; } = TContainer.GetRegex();
@@ -21,8 +20,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
 
     public override string ToString() =>
         new StringBuilder()
-            .AppendJoin('\n',
-                Types.Select(x => $"{x.Key} {x.Value.Pattern}"))
+            .AppendJoin('\n', this)
             .ToString();
 
     public IEnumerator<TokenType> GetEnumerator() =>

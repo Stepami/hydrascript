@@ -31,16 +31,17 @@ internal class TokenTypesProvider : ITokenTypesProvider
                 .Select(element =>
                 {
                     var tag = element.GetProperty("tag").GetString()!;
-                    var pattern = element.GetProperty("pattern").GetString()!;
                     var priority = element.GetProperty("priority").GetInt32();
 
                     var ignorable = element.TryGetProperty("canIgnore", out var canIgnore);
 
-                    return ignorable && canIgnore.GetBoolean()
-                        ? new IgnorableType(tag, pattern, priority)
-                        : new TokenType(tag, pattern, priority);
+                    var tokenType = ignorable && canIgnore.GetBoolean()
+                        ? new IgnorableType(tag)
+                        : new TokenType(tag);
+                    return new PrioritizedTokenType(tokenType, priority);
                 })
-                .OrderBy(x => x.Priority);
+                .OrderBy(x => x.Priority)
+                .Select(x => x.TokenType);
             return tokenTypes;
         }
 
@@ -48,5 +49,7 @@ internal class TokenTypesProvider : ITokenTypesProvider
             Utf8JsonWriter writer,
             IEnumerable<TokenType> value,
             JsonSerializerOptions options) => throw new NotSupportedException();
+
+        private record PrioritizedTokenType(TokenType TokenType, int Priority);
     }
 }

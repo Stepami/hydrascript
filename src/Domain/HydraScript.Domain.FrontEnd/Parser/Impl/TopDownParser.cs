@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
@@ -26,7 +27,7 @@ public class TopDownParser : IParser
         _tokens = _lexer.GetTokens(text);
 
         var root = Script();
-        Expect("EOP");
+        Expect(EndOfProgramType.EopTag);
         return new AbstractSyntaxTree(root);
     }
 
