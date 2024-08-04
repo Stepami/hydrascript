@@ -1,15 +1,14 @@
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-41%25-critical?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-47%25-critical?style=flat)
 
-| Package                                | Line Rate            | Health |
-|----------------------------------------|----------------------|--------|
-| HydraScript                            | 0%                   | ❌      |
-| HydraScript.Infrastructure             | 31%                  | ❌      |
-| HydraScript.Domain.BackEnd             | 81%                  | ➖      |
-| HydraScript.Application.CodeGeneration | 0%                   | ❌      |
-| HydraScript.Domain.FrontEnd            | 58%                  | ❌      |
-| HydraScript.Application.StaticAnalysis | 4%                   | ❌      |
-| HydraScript.Domain.IR                  | 74%                  | ❌      |
-| **Summary**                            | **41%** (960 / 2358) | ❌      |
+| Package                                | Line Rate             | Health |
+|----------------------------------------|-----------------------|--------|
+| HydraScript.Domain.BackEnd             | 81%                   | ➖      |
+| HydraScript.Infrastructure             | 70%                   | ❌      |
+| HydraScript.Domain.FrontEnd            | 57%                   | ❌      |
+| HydraScript.Domain.IR                  | 74%                   | ❌      |
+| HydraScript.Application.CodeGeneration | 0%                    | ❌      |
+| HydraScript.Application.StaticAnalysis | 4%                    | ❌      |
+| **Summary**                            | **47%** (1325 / 2792) | ❌      |
 
 _Minimum allowed line rate is `80%`_
 
