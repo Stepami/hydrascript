@@ -40,6 +40,10 @@
             <Link>Samples\ceil.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\cycled.js">
+            <Link>Samples\cycled.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\defaultarray.js">
             <Link>Samples\defaultarray.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
