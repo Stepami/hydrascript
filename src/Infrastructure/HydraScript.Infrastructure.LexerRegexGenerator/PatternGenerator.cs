@@ -64,9 +64,10 @@ public class PatternContainerAttribute<T>(string json) : System.Attribute
     {
         foreach (var info in containerInfos)
         {
-            var tokenTypes = JsonSerializer.Deserialize<IEnumerable<TokenType>>(
+            var tokenTypes = JsonSerializer.Deserialize(
                     info.Json,
-                    JsonSerializerOptions)!
+                    PatternGeneratorContext.Default.IEnumerableTokenType)!
+                .OrderBy(x => x.Priority)
                 .Concat([new TokenType("ERROR", @"\S+", int.MaxValue)]);
             var pattern = string.Join('|', tokenTypes.Select(t => t.GetNamedRegex()));
 
