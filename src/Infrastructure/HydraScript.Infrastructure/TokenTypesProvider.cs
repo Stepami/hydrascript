@@ -6,17 +6,12 @@ using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
 namespace HydraScript.Infrastructure;
 
-internal class TokenTypesProvider : ITokenTypesProvider
+internal partial class TokenTypesProvider : ITokenTypesProvider
 {
-    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
-    {
-        Converters = { new TokenTypesReadConverter() }
-    };
-
     public IEnumerable<TokenType> GetTokenTypes() =>
-        JsonSerializer.Deserialize<IEnumerable<TokenType>>(
+        JsonSerializer.Deserialize(
             TokenTypesJson.String,
-            JsonSerializerOptions)!;
+            TokenTypesProviderContext.Default.IEnumerableTokenType)!;
 
     [ExcludeFromCodeCoverage]
     private class TokenTypesReadConverter : JsonConverter<IEnumerable<TokenType>>
@@ -52,4 +47,8 @@ internal class TokenTypesProvider : ITokenTypesProvider
 
         private record PrioritizedTokenType(TokenType TokenType, int Priority);
     }
+
+    [JsonSourceGenerationOptions(Converters = [typeof(TokenTypesReadConverter)])]
+    [JsonSerializable(typeof(IEnumerable<TokenType>))]
+    private partial class TokenTypesProviderContext : JsonSerializerContext;
 }
