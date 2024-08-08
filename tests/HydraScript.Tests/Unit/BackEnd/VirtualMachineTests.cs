@@ -8,7 +8,6 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Wr
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
 using HydraScript.Tests.Helpers;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.BackEnd;
