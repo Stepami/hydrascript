@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-GetRunner(ConfigureHost).Invoke(args);
+return GetRunner(ConfigureHost).Invoke(args);
 
 public static partial class Program
 {
