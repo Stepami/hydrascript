@@ -1,3 +1,7 @@
+# HydraScript
+
+![logo](hydrascript-logo.jpg)
+
 ![Code Coverage](https://img.shields.io/badge/Code%20Coverage-47%25-critical?style=flat)
 
 | Package                                | Line Rate             | Health |
@@ -11,10 +15,6 @@
 | **Summary**                            | **47%** (1325 / 2792) | ❌      |
 
 _Minimum allowed line rate is `80%`_
-
-# HydraScript
-
-![logo](hydrascript-logo.jpg)
 
 ## "Расширенное подмножество ЯП JavaScript"
 
