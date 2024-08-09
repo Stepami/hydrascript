@@ -12,6 +12,10 @@
 
 _Minimum allowed line rate is `80%`_
 
+# HydraScript
+
+![logo](hydrascript-logo.jpg)
+
 ## "Расширенное подмножество ЯП JavaScript"
 
 ### Вводная информация
