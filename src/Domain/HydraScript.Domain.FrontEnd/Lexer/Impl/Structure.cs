@@ -24,7 +24,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
             .AppendJoin('\n', this)
             .ToString();
 
-    public IEnumerator<TokenType> GetEnumerator() => 
+    public IEnumerator<TokenType> GetEnumerator() =>
         ((IEnumerable<TokenType>)Types.Values).GetEnumerator();
 
     [ExcludeFromCodeCoverage]
