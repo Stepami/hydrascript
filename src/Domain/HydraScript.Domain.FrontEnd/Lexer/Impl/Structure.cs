@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,9 +10,9 @@ namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
     where TContainer : IGeneratedRegexContainer
 {
-    private Dictionary<string, TokenType> Types { get; } = provider.GetTokenTypes()
+    private FrozenDictionary<string, TokenType> Types { get; } = provider.GetTokenTypes()
         .Concat([new EndOfProgramType(), new ErrorType()])
-        .ToDictionary(x => x.Tag);
+        .ToFrozenDictionary(x => x.Tag);
 
     public Regex Regex { get; } = TContainer.GetRegex();
 
@@ -23,8 +24,8 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
             .AppendJoin('\n', this)
             .ToString();
 
-    public IEnumerator<TokenType> GetEnumerator() =>
-        Types.Values.GetEnumerator();
+    public IEnumerator<TokenType> GetEnumerator() => 
+        ((IEnumerable<TokenType>)Types.Values).GetEnumerator();
 
     [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
