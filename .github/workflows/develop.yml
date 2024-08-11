@@ -18,7 +18,7 @@ permissions:
 jobs:
   build-and-test:
     name: Build & Test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build /p:Version=${{ steps.version_step.outputs.majorMinorPatch }} --no-restore -c Release -v n
+        run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Release -v n
       - name: Unit Tests
         run: |
           dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj --no-build -v n
@@ -88,3 +88,9 @@ jobs:
           path: coverage-report
       - name: Integration Tests
         run: dotnet test -c Release --no-build -v n --filter="Category=Integration"
+      - name: Upload Windows Build
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
+          path: ./src/HydraScript/bin/Release/net8.0
