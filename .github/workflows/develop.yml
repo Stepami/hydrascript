@@ -22,10 +22,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Setup GitVersion
+        uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '5.12.0'
+      - name: Determine Version
+        id: version_step
+        uses: gittools/actions/gitversion/execute@v3.0.0
+        with:
+          useConfigFile: true
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -34,7 +45,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --no-restore -c Release -v n
+        run: dotnet build /p:Version=${{ steps.version_step.outputs.majorMinorPatch }} --no-restore -c Release -v n
       - name: Unit Tests
         run: |
           dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj --no-build -v n
