@@ -3,10 +3,10 @@ name: Develop Workflow
 on:
   push:
     branches-ignore:  
-      - 'release_test'
+      - 'release'
   pull_request_target:
     branches-ignore:
-      - 'release_test'
+      - 'release'
 
 permissions:
   actions: write

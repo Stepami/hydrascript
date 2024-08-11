@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - 'release_test'
+      - 'release'
       
 jobs:
   create-release:
