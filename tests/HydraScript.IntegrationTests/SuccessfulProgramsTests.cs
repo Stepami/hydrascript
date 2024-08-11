@@ -24,6 +24,7 @@ public class SuccessfulProgramsTests(
             "arraddremove.js",
             "arreditread.js",
             "ceil.js",
+            "cycled.js",
             "defaultarray.js",
             "equals.js",
             "exprtest.js",

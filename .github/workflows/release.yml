@@ -2,42 +2,58 @@ name: Release Workflow
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - 'release'
       
 jobs:
   create-release:
     name: Create release
     runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    outputs: 
+      determined_version: ${{ steps.version_step.outputs.majorMinorPatch }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create release
-        id: create_release
-        uses: ncipollo/release-action@v1
+        with:
+          fetch-depth: 0
+      - name: Setup GitVersion
+        uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '5.12.0'
+      - name: Determine Version
+        id: version_step
+        uses: gittools/actions/gitversion/execute@v3.0.0
+        with:
+          useConfigFile: true
+      - name: Setup GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        with:
+          versionSpec: '0.18.x'
+      - name: Create release with GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/create@v3.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+          owner: 'Stepami'
+          repository: 'hydrascript'
+          milestone: 'v${{ steps.version_step.outputs.majorMinorPatch }}'
+          name: 'v${{ steps.version_step.outputs.majorMinorPatch }}'
+
   upload-release-assets:
     name: Upload release assets
     needs: create-release
+    outputs:
+      determined_version: ${{ needs.create-release.outputs.determined_version }}
     strategy:
       matrix:
         config: 
           - os: ubuntu-latest
             rid: linux-x64
-            type: application/x-pie-executable
-          - os: macos-latest
+          - os: macos-12
             rid: osx-x64
-            type: application/x-mach-binary
-          - os: macos-arm64-latest
+          - os: macos-14
             rid: osx-arm64
-            type: application/x-mach-binary
           - os: windows-latest
             rid: win-x64
-            type: application/x-dosexec
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout
@@ -46,16 +62,45 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Setup GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        with:
+          versionSpec: '0.18.x'
       - name: Publish
         run: |
           mkdir output
-          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o ./output
-      - name: Upload release assets
-        uses: shogo82148/actions-upload-release-asset@v1
+          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${{ needs.create-release.outputs.determined_version }} --self-contained false -o ./output
+      - name: Rename Executable
+        run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+      - name: Add asset to a release with GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/addasset@v3.0.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_name: hydrascript-${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
-          asset_path: ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
-          asset_content_type: ${{ matrix.config.type }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: 'Stepami'
+          repository: 'hydrascript'
+          milestone: 'v${{ needs.create-release.outputs.determined_version }}'
+          assets: ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
 
+  publish-release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs: upload-release-assets
+    steps:
+      - name: Setup GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        with:
+          versionSpec: '0.18.x'
+      - name: Publish release with GitReleaseManager  
+        uses: gittools/actions/gitreleasemanager/publish@v3.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: 'Stepami'
+          repository: 'hydrascript'
+          milestone: 'v${{ needs.upload-release-assets.outputs.determined_version }}'
+      - name: Close release with GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/close@v3.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: 'Stepami'
+          repository: 'hydrascript'
+          milestone: 'v${{ needs.upload-release-assets.outputs.determined_version }}'

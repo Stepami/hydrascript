@@ -1,0 +1,7 @@
+mode: Mainline
+branches:
+  release:
+    increment: None
+ignore:
+  sha: []
+merge-message-formats: {}

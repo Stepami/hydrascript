@@ -22,4 +22,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <PropertyGroup>
+        <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    </PropertyGroup>
+
 </Project>

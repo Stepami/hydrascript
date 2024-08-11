@@ -14,23 +14,24 @@ public class TestHostFixture : IDisposable
 
     public Parser GetRunner(ITestOutputHelper testOutputHelper) =>
         Program.GetRunner(configureHost: builder => builder
-            .ConfigureLogging(x =>
-            {
-                x.ClearProviders();
-                x.AddXUnit(testOutputHelper);
-            })
-            .ConfigureServices((context, services) =>
-            {
-                var parseResult = context.GetInvocationContext().ParseResult;
-                var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
-                var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
-                services
-                    .AddDomain()
-                    .AddApplication()
-                    .AddInfrastructure(dump, fileInfo);
-                services.AddSingleton(Writer);
-            })
-            .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>());
+                .ConfigureLogging(x =>
+                {
+                    x.ClearProviders();
+                    x.AddXUnit(testOutputHelper);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    var parseResult = context.GetInvocationContext().ParseResult;
+                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
+                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
+                    services
+                        .AddDomain()
+                        .AddApplication()
+                        .AddInfrastructure(dump, fileInfo);
+                    services.AddSingleton(Writer);
+                })
+                .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
+            useDefault: false);
 
     public void Dispose() => Writer.Dispose();
 }

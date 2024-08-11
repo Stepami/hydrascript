@@ -7,17 +7,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-GetRunner(ConfigureHost).Invoke(args);
+return GetRunner(ConfigureHost).Invoke(args);
 
 public static partial class Program
 {
     public static readonly ExecuteCommand Command = new();
 
-    public static Parser GetRunner(Action<IHostBuilder> configureHost) =>
-        new CommandLineBuilder(Command)
-            .UseHost(Host.CreateDefaultBuilder, configureHost)
-            .UseHelp()
-            .Build();
+    public static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
+    {
+        var builder = new CommandLineBuilder(Command)
+            .UseHost(Host.CreateDefaultBuilder, configureHost);
+        if (useDefault)
+            builder = builder.UseDefaults();
+        return builder.Build();
+    }
 
     private static void ConfigureHost(IHostBuilder builder) => builder
         .ConfigureServices((context, services) =>
