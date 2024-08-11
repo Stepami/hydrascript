@@ -24,7 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{C7773DC6-9052-4F69-B947-CBFD5D663E80}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\develop.yml = .github\workflows\develop.yml
-		.github\workflows\release.txt = .github\workflows\release.txt
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IssueTemplate", "IssueTemplate", "{0E31199C-4893-4920-A356-D1FF7850BFAD}"

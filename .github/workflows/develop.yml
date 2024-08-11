@@ -2,11 +2,11 @@ name: Develop Workflow
 
 on:
   push:
-    branches:
-      - '**'
+    branches-ignore:  
+      - 'release_test'
   pull_request_target:
-    branches:
-      - '**'
+    branches-ignore:
+      - 'release_test'
 
 permissions:
   actions: write
