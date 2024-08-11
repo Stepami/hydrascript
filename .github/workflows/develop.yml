@@ -41,11 +41,14 @@ jobs:
         run: |
           gv = v${{ steps.version_step.outputs.majorMinorPatch }}
           lt = $( git describe --tags --abbrev=0 )
-          if [[ "$gv" == "$lt" ]]; then
+          if ( $gv -eq $lt )
+          {
             echo "equal"
+          }
           else
+          {
             echo "not equal"
-          fi
+          }
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
