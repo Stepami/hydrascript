@@ -70,6 +70,11 @@ jobs:
         run: |
           mkdir output
           dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${{ needs.create-release.outputs.determined_version }} --self-contained false -o ./output
+      - name: Get New Executable Name
+        id: get_new_exec_name
+        run: echo "exec_filename=hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}" >> $GITHUB_OUTPUT
+      - name: Rename Executable
+        run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/${{ steps.get_new_exec_name.outputs.exec_filename }}
       - name: Add asset to a release with GitReleaseManager
         uses: gittools/actions/gitreleasemanager/addasset@v3.0.0
         with:
@@ -77,7 +82,7 @@ jobs:
           owner: 'Stepami'
           repository: 'hydrascript'
           milestone: 'v${{ needs.create-release.outputs.determined_version }}'
-          assets: ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+          assets: ./output/${{ steps.get_new_exec_name.outputs.exec_filename }}
 
   publish-release:
     name: Publish release
