@@ -24,6 +24,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
             .AppendJoin('\n', this)
             .ToString();
 
+    // ReSharper disable once NotDisposedResourceIsReturned
     public IEnumerator<TokenType> GetEnumerator() =>
         Types.Values.AsEnumerable().GetEnumerator();
 
