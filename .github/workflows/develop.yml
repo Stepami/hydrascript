@@ -39,8 +39,8 @@ jobs:
           useConfigFile: true
       - name: TestTestTest
         run: |
-          gv = v${{ steps.version_step.outputs.majorMinorPatch }}
-          lt = $( git describe --tags --abbrev=0 )
+          $gv = 'v${{ steps.version_step.outputs.majorMinorPatch }}'
+          $lt = $( git describe --tags --abbrev=0 )
           if ( $gv -eq $lt )
           {
             echo "equal"
