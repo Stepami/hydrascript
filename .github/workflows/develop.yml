@@ -37,11 +37,15 @@ jobs:
         uses: gittools/actions/gitversion/execute@v3.0.0
         with:
           useConfigFile: true
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj*') }}
+      - name: TestTestTest
+        run: |
+          gv = v${{ steps.version_step.outputs.majorMinorPatch }}
+          lt = $( git describe --tags --abbrev=0 )
+          if [[ "$gv" == "$lt" ]]; then
+            echo "equal"
+          else
+            echo "not equal"
+          fi
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -94,12 +98,3 @@ jobs:
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
           path: ./src/HydraScript/bin/Release/net8.0
-      - name: TestTestTest
-        run: |
-          $gv = v${{ steps.version_step.outputs.majorMinorPatch }}
-          $lt = $( git describe --tags --abbrev=0 )
-          if [[ $gv -eq $lt ]]; then
-            echo "equal"
-          else
-            echo "not equal"
-          fi
