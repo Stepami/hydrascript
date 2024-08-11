@@ -69,17 +69,6 @@ jobs:
           link_missing_lines: true
           show_branch: true
           only_changed_files: true
-      - name: Code Coverage Summary Report For Master
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: ./tests/HydraScript.Tests/coverage.cobertura.xml
-          badge: true
-          fail_below_min: false
-          format: markdown
-          hide_branch_rate: true
-          hide_complexity: true
-          thresholds: '80 100'
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
