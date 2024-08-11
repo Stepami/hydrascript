@@ -70,11 +70,8 @@ jobs:
         run: |
           mkdir output
           dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${{ needs.create-release.outputs.determined_version }} --self-contained false -o ./output
-      - name: Get New Executable Name
-        id: get_new_exec_name
-        run: echo "exec_filename=hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}" >> $GITHUB_OUTPUT
       - name: Rename Executable
-        run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/${{ steps.get_new_exec_name.outputs.exec_filename }}
+        run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
         uses: gittools/actions/gitreleasemanager/addasset@v3.0.0
         with:
@@ -82,7 +79,7 @@ jobs:
           owner: 'Stepami'
           repository: 'hydrascript'
           milestone: 'v${{ needs.create-release.outputs.determined_version }}'
-          assets: ./output/${{ steps.get_new_exec_name.outputs.exec_filename }}
+          assets: ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
 
   publish-release:
     name: Publish release
@@ -95,6 +92,13 @@ jobs:
           versionSpec: '0.18.x'
       - name: Publish release with GitReleaseManager  
         uses: gittools/actions/gitreleasemanager/publish@v3.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: 'Stepami'
+          repository: 'hydrascript'
+          milestone: 'v${{ needs.upload-release-assets.outputs.determined_version }}'
+      - name: Close release with GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/close@v3.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: 'Stepami'
