@@ -25,7 +25,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
             .ToString();
 
     public IEnumerator<TokenType> GetEnumerator() =>
-        ((IEnumerable<TokenType>)Types.Values).GetEnumerator();
+        Types.Values.AsEnumerable().GetEnumerator();
 
     [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
