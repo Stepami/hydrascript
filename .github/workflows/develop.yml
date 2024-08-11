@@ -94,3 +94,12 @@ jobs:
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
           path: ./src/HydraScript/bin/Release/net8.0
+      - name: TestTestTest
+        run: |
+          $gv = v${{ steps.version_step.outputs.majorMinorPatch }}
+          $lt = $( git describe --tags --abbrev=0 )
+          if [[ $gv -eq $lt ]]; then
+            echo "equal"
+          else
+            echo "not equal"
+          fi
