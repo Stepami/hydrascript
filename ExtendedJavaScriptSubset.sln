@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.gitignore = .gitignore
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		contributor-licence-agreement.md = contributor-licence-agreement.md
 		LICENSE = LICENSE
 		Readme.md = Readme.md
 		SECURITY.md = SECURITY.md
@@ -23,7 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubFolder", "GithubFolde
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{C7773DC6-9052-4F69-B947-CBFD5D663E80}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\cla.yml = .github\workflows\cla.yml
 		.github\workflows\develop.yml = .github\workflows\develop.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
