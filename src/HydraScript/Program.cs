@@ -17,6 +17,7 @@ public static partial class Program
         new CommandLineBuilder(Command)
             .UseHost(Host.CreateDefaultBuilder, configureHost)
             .UseHelp()
+            .UseVersionOption()
             .Build();
 
     private static void ConfigureHost(IHostBuilder builder) => builder
