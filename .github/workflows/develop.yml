@@ -41,13 +41,9 @@ jobs:
         run: |
           $gv = 'v${{ steps.version_step.outputs.majorMinorPatch }}'
           $lt = $( git describe --tags --abbrev=0 )
-          if ( $gv -eq $lt )
+          if ( -Not ( $gv -eq $lt ) )
           {
-            echo "equal"
-          }
-          else
-          {
-            echo "not equal"
+            echo $gv
           }
       - name: Restore dependencies
         run: dotnet restore
