@@ -1,20 +1,17 @@
 type withEquals = {
     prop: number;
-    equals: (withEquals) => boolean;
 }
 
-let obj1 = {
+function equals(obj: withEquals, that: withEquals) {
+    return obj.prop == that.prop
+}
+
+let obj1: withEquals = {
     prop: 1;
-    equals => (that: withEquals): boolean {
-        return prop == (that.prop)
-    };
 }
 
-let obj2 = {
+let obj2: withEquals = {
     prop: 2;
-    equals => (that: withEquals): boolean {
-        return prop == (that.prop)
-    };
 }
 
 let res = obj1.equals(obj2)

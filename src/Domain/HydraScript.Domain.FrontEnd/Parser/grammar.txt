@@ -1,0 +1,89 @@
+Script -> StatementList
+StatementList -> StatementListItem*
+StatementListItem -> Statement
+                     Declaration
+                     
+Statement -> BlockStatement
+             ExpressionStatement
+             IfStatement
+             WhileStatement
+             ContinueStatement
+             BreakStatement
+             ReturnStatement
+             
+Declaration -> LexicalDeclaration
+               FunctionDeclaration
+               TypeDeclaration
+               
+BlockStatement -> '{' StatementList '}'
+
+ExpressionStatement -> Expression
+Expression -> CastExpression   
+              AssignmentExpression
+
+CastExpression -> ConditionalExpression 'as' 'string'
+
+AssignmentExpression -> LeftHandSideExpression '=' Expression
+
+LeftHandSideExpression -> MemberExpression
+                          CallExpression
+CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
+MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
+
+Arguments -> '(' (Expression ',')* ')'
+
+ConditionalExpression -> OrExpression ('?' Expression ':' Expression)?
+OrExpression -> AndExpression ('||' AndExpression)*
+AndExpression -> EqExpression ('&&' EqExpression)*
+EqExpression -> RelExpression (('=='|'!=') RelExpression)*
+RelExpression -> AddExpression (('<'|'>'|'<='|'>=') AddExpression)*
+AddExpression -> MulExpression (('+'|'-') MulExpression)*
+MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
+UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
+
+PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+Literal -> "NullLiteral"
+           "IntegerLiteral"
+           "FloatLiteral"
+           "StringLiteral"
+           "BooleanLiteral"
+ObjectLiteral -> '{' PropertyDefinitionList '}'
+PropertyDefinitionList -> (FieldProperty ';')*
+FieldProperty -> "Ident" ':' Expression
+
+ArrayLiteral -> '[' ElementList ']'
+ElementList -> (Expression ',')*
+             
+IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
+
+WhileStatement -> 'while' '(' Expression ')' Statement
+
+ContinueStatement -> 'continue'
+
+BreakStatement -> 'break'
+
+ReturnStatement -> 'return' Expression?
+
+TypeDeclaration -> 'type' "Ident" = TypeValue
+TypeValue -> TypeValueBase TypeValueSuffix*
+TypeValueBase -> "Ident"
+                 ObjectTypeBase
+ObjectTypeBase -> '{' PropertyTypeList '}'
+PropertyTypeList -> (PropertyType ';')*
+PropertyType -> "Ident" ':' TypeValue
+ArgTypeList -> (TypeValue ',')*
+TypeValueSuffix -> '['']'
+                   '?'
+ 
+LexicalDeclaration -> LetOrConst "Ident" Initialization (',' "Ident" Initialization)*
+LetOrConst -> 'let'
+              'const'
+Initialization -> Typed
+                  Initializer
+Typed -> Type Initializer?
+Initializer -> '=' Expression
+
+FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement
+FunctionParameters -> ParameterDeclaration (',' ParameterDeclaration)*
+ParameterDeclaration -> "Ident" Type
+Type -> ':' TypeValue

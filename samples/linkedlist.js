@@ -4,8 +4,27 @@ type node = {
 }
 type list = {
     head: node;
-    append: (number,) => void;
-    getOdd: () => number[];
+}
+
+function append(lst: list, item: number) {
+    let tail: node = lst.head
+    while (tail.next != null) {
+        tail = tail.next
+    }
+    tail.next = makeNode(item)
+}
+
+function getOdd(lst: list): number[] {
+    let result: number[]
+    let n = lst.head
+    while (n != null) {
+        if (n.data % 2 != 0) {
+            let i = n.data
+            result = result ++ [i]
+        }
+        n = n.next
+    }
+    return result
 }
 
 function makeNode(item: number): node {
@@ -17,25 +36,6 @@ function makeNode(item: number): node {
 
 let linkedList: list = {
     head: makeNode(1);
-    append => (item: number) {
-        let tail: node = head
-        while ((tail.next) != null) {
-            tail = tail.next
-        }
-        tail.next = makeNode(item)
-    };
-    getOdd => (): number[] {
-        let result: number[]
-        let n = head
-        while (n != null) {
-            if ((n.data) % 2 != 0) {
-                let i = n.data
-                result = result ++ [i,]
-            }
-            n = n.next
-        }
-        return result
-    };
 }
 
 linkedList.append(3)
