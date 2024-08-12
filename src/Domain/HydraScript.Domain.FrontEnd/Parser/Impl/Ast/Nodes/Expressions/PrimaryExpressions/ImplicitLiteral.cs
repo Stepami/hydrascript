@@ -8,7 +8,7 @@ public partial class ImplicitLiteral(TypeValue type) : AbstractLiteral(type)
     public object? ComputedDefaultValue { private get; set; }
 
     protected override string NodeRepresentation() =>
-        Type.ToString();
+        $"Implicit {Type}";
 
     public override ValueDto ToValueDto() =>
         ValueDto.ConstantDto(
