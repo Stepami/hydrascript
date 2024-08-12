@@ -12,7 +12,11 @@ public class TestHostFixture : IDisposable
 {
     public readonly TextWriter Writer = new StringWriter();
 
-    public Parser GetRunner(ITestOutputHelper testOutputHelper) =>
+    public readonly string[] InMemoryScript = ["file.js"];
+
+    public Parser GetRunner(
+        ITestOutputHelper testOutputHelper,
+        Action<IServiceCollection>? configureTestServices = null) =>
         Program.GetRunner(configureHost: builder => builder
                 .ConfigureLogging(x =>
                 {
@@ -28,6 +32,7 @@ public class TestHostFixture : IDisposable
                         .AddApplication()
                         .AddInfrastructure(dump: false, fileInfo);
                     services.AddSingleton(Writer);
+                    configureTestServices?.Invoke(services);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
             useDefault: false);
