@@ -45,7 +45,7 @@ public class Simple : Instruction
     }
 
     protected override void OnSetOfAddress(IAddress address) =>
-        Left ??= $"_t{unchecked((uint)address.GetHashCode())}";
+        Left ??= address.Name;
 
     public override IAddress Execute(IExecuteParams executeParams)
     {

@@ -268,11 +268,11 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         {
             var assignment = visitable.Assignments[i];
             var registeredSymbol = _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(
-                assignment.Destination.Id);
+                assignment.Destination.Id)!;
             var sourceType = assignment.Source.Accept(This);
             if (sourceType.Equals(undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
-            if (!registeredSymbol!.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
+            if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
                     left: registeredSymbol.Type,
