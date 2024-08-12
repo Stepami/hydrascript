@@ -14,7 +14,7 @@ public class SuccessfulProgramsTests(
         var runner = fixture.GetRunner(testOutputHelper);
         var code = runner.Invoke([$"Samples/{fileName}"]);
         testOutputHelper.WriteLine(fixture.Writer.ToString());
-        code.Should().Be(0);
+        code.Should().Be(ExitCodes.Success);
     }
 
     public static TheoryData<string> SuccessfulProgramsNames =>
