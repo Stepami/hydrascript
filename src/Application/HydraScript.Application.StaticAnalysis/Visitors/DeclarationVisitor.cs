@@ -74,6 +74,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             var arg = new VariableSymbol(
                 id: x.Key,
                 x.TypeValue.Accept(_typeBuilder));
+            arg.Initialize();
             _symbolTables[visitable.Scope].AddSymbol(arg);
             return arg;
         }).ToList();

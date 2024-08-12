@@ -24,19 +24,19 @@ internal class ExecuteCommandHandler(
             var ast = parser.Parse(sourceCode);
             var instructions = codeGenerator.GetInstructions(ast);
             virtualMachine.Run(instructions);
-            return 0;
+            return ExitCodes.Success;
         }
         catch (Exception ex)
             when (ex is LexerException or ParserException or SemanticException)
         {
             writer.WriteLine(ex.Message);
-            return 1;
+            return ExitCodes.HydraScriptError;
         }
         catch (Exception ex)
         {
             writer.WriteLine("Internal HydraScript Error");
             writer.WriteLine(ex);
-            return 2;
+            return ExitCodes.DotnetRuntimeError;
         }
     }
 

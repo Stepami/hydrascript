@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 
 return GetRunner(ConfigureHost).Invoke(args);
 
-public static partial class Program
+internal static partial class Program
 {
-    public static readonly ExecuteCommand Command = new();
+    internal static readonly ExecuteCommand Command = new();
 
-    public static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
+    internal static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
     {
         var builder = new CommandLineBuilder(Command)
             .UseHost(Host.CreateDefaultBuilder, configureHost);

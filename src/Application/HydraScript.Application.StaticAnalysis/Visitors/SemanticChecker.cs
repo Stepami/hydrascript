@@ -137,6 +137,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(IdentifierReference visitable)
     {
         var symbol = _symbolTables[visitable.Scope].FindSymbol<ISymbol>(visitable.Name);
+        if (symbol is { Initialized: false })
+            throw new AccessBeforeInitialization(visitable);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
@@ -167,11 +169,13 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var properties = visitable.Properties.Select(prop =>
         {
             var propType = prop.Expression.Accept(This);
-            _symbolTables[visitable.Scope].AddSymbol(propType switch
+            var propSymbol = propType switch
             {
                 ObjectType objectType => new ObjectSymbol(prop.Id, objectType),
                 _ => new VariableSymbol(prop.Id, propType)
-            });
+            };
+            propSymbol.Initialize();
+            _symbolTables[visitable.Scope].AddSymbol(propSymbol);
             return new PropertyType(prop.Id, propType);
         });
         var objectLiteralType = new ObjectType(properties);
@@ -282,6 +286,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 ObjectType objectType => new ObjectSymbol(registeredSymbol.Id, objectType, visitable.ReadOnly),
                 _ => new VariableSymbol(registeredSymbol.Id, actualType, visitable.ReadOnly)
             };
+            actualSymbol.Initialize();
             _symbolTables[visitable.Scope].AddSymbol(actualSymbol);
         }
 

@@ -10,9 +10,12 @@ namespace HydraScript.IntegrationTests;
 
 public class TestHostFixture : IDisposable
 {
-    public readonly TextWriter Writer = new StringWriter();
+    public readonly string[] InMemoryScript = ["file.js"];
 
-    public Parser GetRunner(ITestOutputHelper testOutputHelper) =>
+    public Parser GetRunner(
+        ITestOutputHelper testOutputHelper,
+        TextWriter? writer = null,
+        Action<IServiceCollection>? configureTestServices = null) =>
         Program.GetRunner(configureHost: builder => builder
                 .ConfigureLogging(x =>
                 {
@@ -21,17 +24,19 @@ public class TestHostFixture : IDisposable
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    var parseResult = context.GetInvocationContext().ParseResult;
-                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
-                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
+                    var fileInfo = context.GetInvocationContext().ParseResult
+                        .GetValueForArgument(Program.Command.PathArgument);
                     services
                         .AddDomain()
                         .AddApplication()
-                        .AddInfrastructure(dump, fileInfo);
-                    services.AddSingleton(Writer);
+                        .AddInfrastructure(dump: false, fileInfo);
+                    services.AddSingleton(writer ?? TextWriter.Null);
+                    configureTestServices?.Invoke(services);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
             useDefault: false);
 
-    public void Dispose() => Writer.Dispose();
+    public void Dispose()
+    {
+    }
 }
