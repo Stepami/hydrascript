@@ -21,13 +21,12 @@ public class TestHostFixture : IDisposable
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    var parseResult = context.GetInvocationContext().ParseResult;
-                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
-                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
+                    var fileInfo = context.GetInvocationContext().ParseResult
+                        .GetValueForArgument(Program.Command.PathArgument);
                     services
                         .AddDomain()
                         .AddApplication()
-                        .AddInfrastructure(dump, fileInfo);
+                        .AddInfrastructure(dump: false, fileInfo);
                     services.AddSingleton(Writer);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
