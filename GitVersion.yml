@@ -1,7 +1,7 @@
 mode: Mainline
 branches:
   release:
-    label: ''
+    tag: ''
     regex: ^release$
     increment: None
 ignore:
