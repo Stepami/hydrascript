@@ -17,7 +17,7 @@ public class HashAddress(int seed) : IAddress
             {
                 var baseName = $"{unchecked((uint)GetHashCode())}{_id:N}";
                 var nameArray = Random.Shared.GetItems(baseName.AsSpan(), 10);
-                _name = new string(nameArray);
+                _name = "_t" + new string(nameArray);
             }
 
             return _name;
