@@ -1,6 +1,8 @@
 mode: Mainline
 branches:
   release:
+    label: ''
+    regex: ^release$
     increment: None
 ignore:
   sha: []
