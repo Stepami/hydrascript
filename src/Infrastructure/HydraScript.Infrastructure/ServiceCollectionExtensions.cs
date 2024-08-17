@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
-        services.AddSingleton(Console.Out);
+        services.AddSingleton<IOutputWriter, LoggingWriter>();
         services.AddSingleton<IVirtualMachine, VirtualMachine>();
 
         return services;

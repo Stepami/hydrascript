@@ -25,7 +25,8 @@ internal static partial class Program
     private static void ConfigureHost(IHostBuilder builder) => builder
         .ConfigureServices((context, services) =>
         {
-            services.AddLogging(c => c.ClearProviders());
+            services.AddLogging(c => c.ClearProviders().AddConsole());
+            services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
             var parseResult = context.GetInvocationContext().ParseResult;
             var fileInfo = parseResult.GetValueForArgument(Command.PathArgument);
             var dump = parseResult.GetValueForOption(Command.DumpOption);
