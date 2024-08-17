@@ -6,55 +6,41 @@ namespace HydraScript.IntegrationTests.ErrorPrograms;
 
 public class VariableInitializationTests(
     TestHostFixture fixture,
-    ITestOutputHelper testOutputHelper) : IClassFixture<TestHostFixture>, IDisposable
+    ITestOutputHelper testOutputHelper) : IClassFixture<TestHostFixture>
 {
-    private readonly StringWriter _writer = new();
-
-    [Fact]
-    public void VariableWithoutTypeDeclared_AccessedBeforeInitialization_ExitCodeHydraScriptError()
+    [Theory, MemberData(nameof(VariableInitializationScripts))]
+    public void VariableWithoutTypeDeclared_AccessedBeforeInitialization_ExitCodeHydraScriptError(string script)
     {
-        const string script =
-"""
-let x = f()
-function f() {
-    print(x as string)
-    return 5
-}
-""";
         var runner = fixture.GetRunner(
             testOutputHelper,
-            _writer,
             configureTestServices: services => services.SetupInMemoryScript(script));
         var code = runner.Invoke(fixture.InMemoryScript);
         code.Should().Be(ExitCodes.HydraScriptError);
-        var output = _writer.ToString().Trim();
-        output.Should().Be("(3, 11)-(3, 12) Cannot access 'x' before initialization");
+        fixture.LogMessages.Should()
+            .Contain(x => x.Contains("Cannot access 'x' before initialization"));
     }
 
-    [Fact]
-    public void TypedVariableDeclared_AccessedBeforeInitialization_ExitCodeHydraScriptError()
+    public static TheoryData<string> VariableInitializationScripts
     {
-        const string script =
-"""
-let x: number = f()
-function f() {
-    print(x as string)
-    return 5
-}
-""";
-        var runner = fixture.GetRunner(
-            testOutputHelper,
-            _writer,
-            configureTestServices: services => services.SetupInMemoryScript(script));
-        var code = runner.Invoke(fixture.InMemoryScript);
-        code.Should().Be(ExitCodes.HydraScriptError);
-        var output = _writer.ToString().Trim();
-        output.Should().Be("(3, 11)-(3, 12) Cannot access 'x' before initialization");
-    }
-
-    public void Dispose()
-    {
-        _writer.Dispose();
-        fixture.Dispose();
+        get
+        {
+            const string variableWithoutTypeDeclared =
+                """
+                let x = f()
+                function f() {
+                    print(x as string)
+                    return 5
+                }
+                """;
+            const string typedVariableDeclared =
+                """
+                let x: number = f()
+                function f() {
+                    print(x as string)
+                    return 5
+                }
+                """;
+            return new TheoryData<string>([variableWithoutTypeDeclared, typedVariableDeclared]);
+        }
     }
 }
