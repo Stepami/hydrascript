@@ -10,33 +10,40 @@ namespace HydraScript.IntegrationTests;
 
 public class TestHostFixture : IDisposable
 {
+    private readonly List<string> _logMessages = [];
+
     public readonly string[] InMemoryScript = ["file.js"];
+    public IReadOnlyCollection<string> LogMessages => _logMessages;
 
     public Parser GetRunner(
         ITestOutputHelper testOutputHelper,
-        TextWriter? writer = null,
         Action<IServiceCollection>? configureTestServices = null) =>
         Program.GetRunner(configureHost: builder => builder
-                .ConfigureLogging(x =>
-                {
-                    x.ClearProviders();
-                    x.AddXUnit(testOutputHelper);
-                })
+                .ConfigureLogging(x => x.ClearProviders()
+                    .AddXUnit(testOutputHelper)
+                    .AddFakeLogging(options =>
+                    {
+                        options.OutputSink = logMessage => _logMessages.Add(logMessage);
+                        options.OutputFormatter = fakeLogRecord =>
+                            fakeLogRecord.Level switch
+                            {
+                                LogLevel.Error => $"{fakeLogRecord.Message} {fakeLogRecord.Exception?.Message}",
+                                _ => fakeLogRecord.ToString()
+                            };
+                    }))
                 .ConfigureServices((context, services) =>
                 {
+                    services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
                     var fileInfo = context.GetInvocationContext().ParseResult
                         .GetValueForArgument(Program.Command.PathArgument);
                     services
                         .AddDomain()
                         .AddApplication()
                         .AddInfrastructure(dump: false, fileInfo);
-                    services.AddSingleton(writer ?? TextWriter.Null);
                     configureTestServices?.Invoke(services);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
             useDefault: false);
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() => _logMessages.Clear();
 }

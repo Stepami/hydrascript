@@ -3,9 +3,9 @@ using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Lexer;
 using Microsoft.Extensions.Options;
 
-namespace HydraScript.Infrastructure.Logging;
+namespace HydraScript.Infrastructure.Dumping;
 
-internal class LoggingLexer(
+internal class DumpingLexer(
     ILexer lexer,
     IFileSystem fileSystem,
     IOptions<InputFile> inputFile) : ILexer
