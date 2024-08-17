@@ -1,9 +1,9 @@
 using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Parser;
 
-namespace HydraScript.Infrastructure.Logging;
+namespace HydraScript.Infrastructure.Dumping;
 
-internal class LoggingParser(IParser parser, IFileSystem fileSystem) : IParser
+internal class DumpingParser(IParser parser, IFileSystem fileSystem) : IParser
 {
     public IAbstractSyntaxTree Parse(string text)
     {

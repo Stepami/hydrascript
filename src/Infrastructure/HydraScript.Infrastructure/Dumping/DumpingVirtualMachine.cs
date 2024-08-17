@@ -2,9 +2,9 @@ using System.IO.Abstractions;
 using HydraScript.Domain.BackEnd;
 using Microsoft.Extensions.Options;
 
-namespace HydraScript.Infrastructure.Logging;
+namespace HydraScript.Infrastructure.Dumping;
 
-internal class LoggingVirtualMachine(
+internal class DumpingVirtualMachine(
     IVirtualMachine virtualMachine,
     IFileSystem fileSystem,
     IOptions<InputFile> inputFile) : IVirtualMachine
