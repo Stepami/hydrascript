@@ -13,7 +13,7 @@ public class TextCoordinateSystemComputerTests
     {
         const string text = "let x = 0";
         var result = _sut.GetLines(text);
-        result.Should().BeEquivalentTo([text.Length + Environment.NewLine.Length - 1]);
+        result.Should().BeEquivalentTo([-1, text.Length + Environment.NewLine.Length - 1]);
     }
     
     [Fact]
@@ -21,7 +21,7 @@ public class TextCoordinateSystemComputerTests
     {
         var text = "let x = 0" + Environment.NewLine;
         var result = _sut.GetLines(text);
-        result.Should().BeEquivalentTo([text.Length - 1]);
+        result.Should().BeEquivalentTo([-1, text.Length - 1]);
     }
     
     [Fact]
@@ -39,6 +39,7 @@ public class TextCoordinateSystemComputerTests
         var result = _sut.GetLines(text);
         result.Should().BeEquivalentTo(
         [
+            -1,
             stmt1.Length + Environment.NewLine.Length - 1,
             stmt1.Length + stmt2.Length + Environment.NewLine.Length * 2 - 1,
             stmt1.Length + stmt2.Length + stmt3.Length + Environment.NewLine.Length * 3 - 1
