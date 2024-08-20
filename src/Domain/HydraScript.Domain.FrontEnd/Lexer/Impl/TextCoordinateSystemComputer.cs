@@ -6,6 +6,7 @@ public class TextCoordinateSystemComputer : ITextCoordinateSystemComputer
 {
     private readonly SearchValues<char> _sv = SearchValues.Create(['\n']);
 
+    /// <inheritdoc/>
     public IReadOnlyList<int> GetLines(string text)
     {
         var newText = text.EndsWith(Environment.NewLine)
@@ -13,19 +14,32 @@ public class TextCoordinateSystemComputer : ITextCoordinateSystemComputer
             : text + Environment.NewLine;
         var textLength = newText.Length;
 
-        LinkedList<int> indices = [];
+        var indices = new List<int>(capacity: 128) { -1 };
+        var textAsSpan = newText.AsSpan();
         while (true)
         {
-            var start = indices.Last != null ? indices.Last.Value + 1 : 0;
+            var start = indices[^1] + 1;
             if (start == textLength)
                 break;
-            var textAsSpan = newText.AsSpan(
+            var index = textAsSpan.Slice(
                 start,
-                length: textLength - start);
-            var index = textAsSpan.IndexOfAny(_sv);
-            indices.AddLast(start + index);
+                length: textLength - start).IndexOfAny(_sv);
+            indices.Add(start + index);
         }
 
         return indices.ToList();
+    }
+
+    /// <inheritdoc/>
+    public Coordinates GetCoordinates(int absoluteIndex, IReadOnlyList<int> newLineList)
+    {
+        for (var i = 1; i < newLineList.Count; i++)
+            if (absoluteIndex <= newLineList[i])
+            {
+                var offset = newLineList[i - 1];
+                return new Coordinates(Line: i, Column: absoluteIndex - offset);
+            }
+
+        return new Coordinates();
     }
 }

@@ -21,8 +21,7 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
 
     public IEnumerator<Token> GetEnumerator()
     {
-        var matches = Structure.Regex.Matches(_text);
-        foreach (Match match in matches)
+        foreach (Match match in Structure.Regex.Matches(_text))
         {
             foreach (var type in Structure)
             {
@@ -32,9 +31,8 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
 
                 var value = group.Value;
                 var segment = new Segment(
-                    new Coordinates(group.Index, _lines),
-                    new Coordinates(group.Index + group.Length, _lines)
-                );
+                    computer.GetCoordinates(group.Index, _lines),
+                    computer.GetCoordinates(absoluteIndex: group.Index + group.Length, _lines));
                 var token = new Token(type, segment, value);
 
                 if (type.Error()) throw new LexerException(token);
