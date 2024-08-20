@@ -42,17 +42,17 @@ public record Coordinates(int Line, int Column)
     public Coordinates(int absolutePos, IReadOnlyList<int> system) :
         this(0, 0)
     {
-        for (var i = 0; i < system.Count; i++)
+        for (var i = 1; i < system.Count; i++)
             if (absolutePos <= system[i])
             {
-                var offset = i == 0 ? -1 : system[i - 1];
-                (Line, Column) = (i + 1, absolutePos - offset);
+                var offset = system[i - 1];
+                (Line, Column) = (i, absolutePos - offset);
                 break;
             }
 
         if (Line == 0)
         {
-            (Line, Column) = (system.Count + 1, 1);
+            (Line, Column) = (system.Count, 1);
         }
     }
 
