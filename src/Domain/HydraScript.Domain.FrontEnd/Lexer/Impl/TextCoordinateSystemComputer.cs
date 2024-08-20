@@ -29,4 +29,17 @@ public class TextCoordinateSystemComputer : ITextCoordinateSystemComputer
 
         return indices.ToList();
     }
+
+    /// <inheritdoc/>
+    public Coordinates GetCoordinates(int absoluteIndex, IReadOnlyList<int> newLineList)
+    {
+        for (var i = 1; i < newLineList.Count; i++)
+            if (absoluteIndex <= newLineList[i])
+            {
+                var offset = newLineList[i - 1];
+                return new Coordinates(Line: i, Column: absoluteIndex - offset);
+            }
+
+        return new Coordinates();
+    }
 }

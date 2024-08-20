@@ -39,21 +39,8 @@ public record Segment(Coordinates Start, Coordinates End)
 [ExcludeFromCodeCoverage]
 public record Coordinates(int Line, int Column)
 {
-    public Coordinates(int absolutePos, IReadOnlyList<int> system) :
-        this(0, 0)
+    public Coordinates() : this(Line: 1, Column: 1)
     {
-        for (var i = 1; i < system.Count; i++)
-            if (absolutePos <= system[i])
-            {
-                var offset = system[i - 1];
-                (Line, Column) = (i, absolutePos - offset);
-                break;
-            }
-
-        if (Line == 0)
-        {
-            (Line, Column) = (system.Count, 1);
-        }
     }
 
     public override string ToString() => $"({Line}, {Column})";
