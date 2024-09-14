@@ -2,7 +2,6 @@ using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Tests.TestData;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.BackEnd;
@@ -19,6 +18,6 @@ public class InstructionsTests
     {
         var @goto = new Goto(new Label("1"));
         @goto.SetJump(new Label("5"));
-        Assert.Equal(new Label("5"), @goto.Execute(Mock.Of<IExecuteParams>()));
+        Assert.Equal(new Label("5"), @goto.Execute(Substitute.For<IExecuteParams>()));
     }
 }

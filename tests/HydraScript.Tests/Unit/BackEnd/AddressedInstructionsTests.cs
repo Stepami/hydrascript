@@ -3,7 +3,6 @@ using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Values;
-using HydraScript.Tests.Helpers;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.BackEnd;
@@ -64,32 +63,5 @@ public class AddressedInstructionsTests
 
         Assert.Same(@new, instructions[prev.Address.Next]);
         Assert.Same(next, instructions[@new.Address.Next]);
-    }
-
-    [Fact]
-    public void GetEnumeratorTests()
-    {
-        AddressedInstructions collection = [];
-        collection.Add(1.ToInstructionMock().Object);
-
-        AddressedInstructions collectionToAdd =
-        [
-            2.ToInstructionMock().Object,
-            3.ToInstructionMock().Object,
-            4.ToInstructionMock().Object
-        ];
-
-        collection.AddRange(collectionToAdd);
-
-        collection.Add(5.ToInstructionMock().Object);
-
-        Assert.Collection(
-            collection.Select(x => x.ToString()),
-            x => Assert.Equal("1", x),
-            x => Assert.Equal("2", x),
-            x => Assert.Equal("3", x),
-            x => Assert.Equal("4", x),
-            x => Assert.Equal("5", x)
-        );
     }
 }

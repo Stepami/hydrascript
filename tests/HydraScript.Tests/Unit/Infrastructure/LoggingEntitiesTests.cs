@@ -4,75 +4,51 @@ using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Infrastructure;
 using HydraScript.Infrastructure.Dumping;
 using Microsoft.Extensions.Options;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.Infrastructure;
 
 public class LoggingEntitiesTests
 {
-    private readonly Mock<IFile> _file;
-    private readonly Mock<IFileSystem> _fileSystem;
+    private readonly IFile _file;
+    private readonly IFileSystem _fileSystem;
 
     public LoggingEntitiesTests()
     {
-        _file = new Mock<IFile>();
+        _file = Substitute.For<IFile>();
 
-        _fileSystem = new Mock<IFileSystem>();
-        _fileSystem.Setup(x => x.File)
-            .Returns(_file.Object);
+        _fileSystem = Substitute.For<IFileSystem>();
+        _fileSystem.File.Returns(_file);
     }
 
     [Fact]
     public void CorrectFileNameProducedByLexerTest()
     {
-        var lexer = new Mock<ILexer>();
-        lexer.Setup(x => x.GetTokens(It.IsAny<string>()))
-            .Returns([]);
-        lexer.Setup(x => x.ToString())
-            .Returns("lexer");
+        var lexer = Substitute.For<ILexer>();
+        lexer.GetTokens(default!).ReturnsForAnyArgs([]);
 
-        _file.Setup(
-                x => x.WriteAllText(
-                    It.IsAny<string>(),
-                    It.IsAny<string>()))
-            .Verifiable();
-
-        var loggingLexer = new DumpingLexer(
-            lexer.Object,
-            _fileSystem.Object,
-            inputFile: Options.Create(new InputFile { Info = new FileInfo("file") }));
+        var inputFile = Options.Create(new InputFile { Info = new FileInfo("file") });
+        var loggingLexer = new DumpingLexer(lexer, _fileSystem, inputFile);
         loggingLexer.GetTokens("");
 
-        _file.Verify(
-            x => x.WriteAllText(
-                It.Is<string>(p => p == "file.tokens"),
-                It.Is<string>(c => c == "lexer")),
-            Times.Once());
+        _file.Received(1).WriteAllText(
+            Arg.Is<string>(p => p == "file.tokens"),
+            Arg.Is<string>(c => c == lexer.ToString()));
     }
 
     [Fact]
     public void CorrectTreeWrittenAndLoggingTreeProducedTest()
     {
-        var ast = new Mock<IAbstractSyntaxTree>();
-        ast.Setup(x => x.ToString())
-            .Returns("digraph ast { }");
+        var ast = Substitute.For<IAbstractSyntaxTree>();
 
-        var parser = new Mock<IParser>();
-        parser.Setup(x => x.Parse(It.IsAny<string>()))
-            .Returns(ast.Object);
+        var parser = Substitute.For<IParser>();
+        parser.Parse(default!).ReturnsForAnyArgs(ast);
 
-        _file.Setup(x => x.WriteAllText(
-            It.IsAny<string>(), It.IsAny<string>()
-        )).Verifiable();
-
-        var loggingParser = new DumpingParser(parser.Object, _fileSystem.Object);
+        var loggingParser = new DumpingParser(parser, _fileSystem);
         _ = loggingParser.Parse("");
 
-        _file.Verify(
-            x => x.WriteAllText(
-                It.Is<string>(p => p == "ast.dot"),
-                It.Is<string>(c => c == "digraph ast { }")),
-            Times.Once());
+        _file.Received(1).WriteAllText(
+            Arg.Is<string>(p => p == "ast.dot"),
+            Arg.Is<string>(c => c == ast.ToString()));
     }
 }

@@ -7,8 +7,6 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Cr
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
-using HydraScript.Tests.Helpers;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.BackEnd;
@@ -19,31 +17,27 @@ public class VirtualMachineTests
 
     public VirtualMachineTests()
     {
-        _vm = new VirtualMachine(Mock.Of<IOutputWriter>());
+        _vm = new VirtualMachine(Substitute.For<IOutputWriter>());
     }
 
     [Fact]
     public void CorrectPrintToOutTest()
     {
-        var writer = new Mock<IOutputWriter>();
-        writer.Setup(x => x.WriteLine(It.IsAny<object?>()))
-            .Verifiable();
+        var writer = Substitute.For<IOutputWriter>();
 
-        var exParams = new Mock<IExecuteParams>();
-        exParams.Setup(x => x.CallStack).Returns(new Stack<Call>());
-        exParams.Setup(x => x.Frames).Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
-        exParams.Setup(x => x.Arguments).Returns(new Queue<object?>());
-        exParams.Setup(x => x.Writer).Returns(writer.Object);
+        var exParams = Substitute.For<IExecuteParams>();
+        exParams.CallStack.Returns(new Stack<Call>());
+        exParams.Frames.Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
+        exParams.Arguments.Returns(new Queue<object?>());
+        exParams.Writer.Returns(writer);
 
         var print = new Print(new Constant(223))
         {
             Address = new HashAddress(1)
         };
 
-        print.Execute(exParams.Object);
-        writer.Verify(x => x.WriteLine(
-            It.Is<object?>(v => v!.Equals(223))
-        ), Times.Once());
+        print.Execute(exParams);
+        writer.Received(1).WriteLine(223);
     }
 
     [Fact]
@@ -76,7 +70,7 @@ public class VirtualMachineTests
     [Fact]
     public void VirtualMachineHandlesRecursionTest()
     {
-        var halt = new Mock<Halt>().Trackable();
+        var halt = HaltTrackable();
         var factorial = new FunctionInfo("fact");
         var program = new AddressedInstructions
         {
@@ -100,24 +94,23 @@ public class VirtualMachineTests
             {
                 Left = "fa6"
             },
-            halt.Object
+            halt
         };
         
         _vm.Run(program);
         Assert.Empty(_vm.ExecuteParams.CallStack);
         Assert.Empty(_vm.ExecuteParams.Arguments);
-        halt.Verify(x => x.Execute(
-            It.Is<IExecuteParams>(
+        halt.Received(1).Execute(
+            Arg.Is<IExecuteParams>(
                 vm =>
-                    Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720)),
-            Times.Once());
+                    Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720));
         _vm.ExecuteParams.Frames.Pop();
     }
 
     [Fact]
     public void CreateArrayReservesCertainSpaceTest()
     {
-        var vm = new ExecuteParams(Mock.Of<IOutputWriter>());
+        var vm = new ExecuteParams(Substitute.For<IOutputWriter>());
         vm.Frames.Push(new Frame(new HashAddress(0)));
             
         var createArray = new CreateArray("arr", 6)
@@ -145,20 +138,28 @@ public class VirtualMachineTests
     [Fact]
     public void ObjectCreationTest()
     {
-        var halt = new Mock<Halt>().Trackable();
+        var halt = HaltTrackable();
         AddressedInstructions program =
         [
             new CreateObject("obj"),
             new DotAssignment("obj", new Constant("prop"), new Constant(null, "null")),
-            halt.Object
+            halt
         ];
             
         _vm.Run(program);
-        halt.Verify(x => x.Execute(
-            It.Is<IExecuteParams>(
+        halt.Received(1).Execute(
+            Arg.Is<IExecuteParams>(
                 vm =>
-                    ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null)),
-            Times.Once());
+                    ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null));
         _vm.ExecuteParams.Frames.Pop();
+    }
+
+    public static Halt HaltTrackable()
+    {
+        var halt = Substitute.For<Halt>();
+        halt.Execute(default!)
+            .ReturnsForAnyArgs(new HashAddress(seed: 0));
+        halt.End.Returns(true);
+        return halt;
     }
 }

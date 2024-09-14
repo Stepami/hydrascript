@@ -2,7 +2,6 @@ using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
-using Moq;
 using Xunit;
 
 namespace HydraScript.Tests.Unit.FrontEnd;
@@ -17,10 +16,9 @@ public class StructureTests
             new("MyToken"),
             new("OneToSeven")
         };
-        var provider = new Mock<ITokenTypesProvider>();
-        provider.Setup(x => x.GetTokenTypes())
-            .Returns(tokenTypes);
-        var structure = new Structure<GeneratedRegexContainer>(provider.Object);
+        var provider = Substitute.For<ITokenTypesProvider>();
+        provider.GetTokenTypes().Returns(tokenTypes);
+        var structure = new Structure<GeneratedRegexContainer>(provider);
 
         var expectedText = string.Join(
             '\n',
