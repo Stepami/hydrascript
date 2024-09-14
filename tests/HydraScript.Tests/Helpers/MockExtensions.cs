@@ -14,17 +14,11 @@ public static class MockExtensions
         return halt;
     }
 
-    public static Mock<IExecutableInstruction> ToInstructionMock(this int number)
+    public static IExecutableInstruction ToInstructionMock(this int number)
     {
-        var result = new Mock<IExecutableInstruction>();
-        result.SetupAllProperties();
-        
-        result.Setup(x => x.GetHashCode())
-            .Returns(number);
-
-        result.Setup(x => x.ToString())
-            .Returns(number.ToString());
-
+        var result = Substitute.For<IExecutableInstruction>();
+        result.GetHashCode().Returns(number);
+        result.ToString().Returns(number.ToString());
         return result;
     }
 }

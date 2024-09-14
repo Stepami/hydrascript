@@ -70,18 +70,18 @@ public class AddressedInstructionsTests
     public void GetEnumeratorTests()
     {
         AddressedInstructions collection = [];
-        collection.Add(1.ToInstructionMock().Object);
+        collection.Add(1.ToInstructionMock());
 
         AddressedInstructions collectionToAdd =
         [
-            2.ToInstructionMock().Object,
-            3.ToInstructionMock().Object,
-            4.ToInstructionMock().Object
+            2.ToInstructionMock(),
+            3.ToInstructionMock(),
+            4.ToInstructionMock()
         ];
 
         collection.AddRange(collectionToAdd);
 
-        collection.Add(5.ToInstructionMock().Object);
+        collection.Add(5.ToInstructionMock());
 
         Assert.Collection(
             collection.Select(x => x.ToString()),
