@@ -1,6 +1,5 @@
 using HydraScript.Application.StaticAnalysis;
 using HydraScript.Application.StaticAnalysis.Impl;
-using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;
 using Xunit;
@@ -26,9 +25,9 @@ public class FunctionWithUndefinedReturnStorageTests
 
         var decl = new FunctionDeclaration(
             name: new IdentifierReference(functionName),
-            returnTypeValue: Mock.Of<TypeValue>(),
-            arguments: new List<PropertyTypeValue>(),
-            new BlockStatement(new List<StatementListItem>()));
+            returnTypeValue: Substitute.For<TypeValue>(),
+            arguments: [],
+            new BlockStatement([]));
 
         storage.Save(symbol, decl);
 

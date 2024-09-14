@@ -18,6 +18,6 @@ public class InstructionsTests
     {
         var @goto = new Goto(new Label("1"));
         @goto.SetJump(new Label("5"));
-        Assert.Equal(new Label("5"), @goto.Execute(Mock.Of<IExecuteParams>()));
+        Assert.Equal(new Label("5"), @goto.Execute(Substitute.For<IExecuteParams>()));
     }
 }
