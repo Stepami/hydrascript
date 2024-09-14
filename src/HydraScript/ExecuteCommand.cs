@@ -2,9 +2,9 @@ using System.CommandLine;
 
 namespace HydraScript;
 
-public class ExecuteCommand : RootCommand
+internal class ExecuteCommand : RootCommand
 {
-    public ExecuteCommand() : base("HydraScript interpreter")
+    internal ExecuteCommand() : base("HydraScript interpreter")
     {
         PathArgument = new Argument<FileInfo>(
             name: "path",
@@ -18,6 +18,6 @@ public class ExecuteCommand : RootCommand
         AddOption(DumpOption);
     }
 
-    public Argument<FileInfo> PathArgument { get; }
-    public Option<bool> DumpOption { get; }
+    internal Argument<FileInfo> PathArgument { get; }
+    internal Option<bool> DumpOption { get; }
 }

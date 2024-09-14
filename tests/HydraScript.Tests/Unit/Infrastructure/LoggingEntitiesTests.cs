@@ -2,7 +2,7 @@ using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Infrastructure;
-using HydraScript.Infrastructure.Logging;
+using HydraScript.Infrastructure.Dumping;
 using Microsoft.Extensions.Options;
 using Xunit;
 
@@ -37,7 +37,7 @@ public class LoggingEntitiesTests
                     It.IsAny<string>()))
             .Verifiable();
 
-        var loggingLexer = new LoggingLexer(
+        var loggingLexer = new DumpingLexer(
             lexer.Object,
             _fileSystem.Object,
             inputFile: Options.Create(new InputFile { Info = new FileInfo("file") }));
@@ -65,7 +65,7 @@ public class LoggingEntitiesTests
             It.IsAny<string>(), It.IsAny<string>()
         )).Verifiable();
 
-        var loggingParser = new LoggingParser(parser.Object, _fileSystem.Object);
+        var loggingParser = new DumpingParser(parser.Object, _fileSystem.Object);
         _ = loggingParser.Parse("");
 
         _file.Verify(

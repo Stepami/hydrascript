@@ -6,14 +6,15 @@ using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 return GetRunner(ConfigureHost).Invoke(args);
 
-public static partial class Program
+internal static partial class Program
 {
-    public static readonly ExecuteCommand Command = new();
+    internal static readonly ExecuteCommand Command = new();
 
-    public static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
+    internal static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
     {
         var builder = new CommandLineBuilder(Command)
             .UseHost(Host.CreateDefaultBuilder, configureHost);
@@ -25,7 +26,10 @@ public static partial class Program
     private static void ConfigureHost(IHostBuilder builder) => builder
         .ConfigureServices((context, services) =>
         {
-            services.AddLogging(c => c.ClearProviders());
+            services.AddLogging(c => c.ClearProviders()
+                .AddConsole(options => options.FormatterName = nameof(SimplestConsoleFormatter))
+                .AddConsoleFormatter<SimplestConsoleFormatter, ConsoleFormatterOptions>());
+            services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
             var parseResult = context.GetInvocationContext().ParseResult;
             var fileInfo = parseResult.GetValueForArgument(Command.PathArgument);
             var dump = parseResult.GetValueForOption(Command.DumpOption);

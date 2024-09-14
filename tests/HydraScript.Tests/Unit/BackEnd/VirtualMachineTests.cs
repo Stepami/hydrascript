@@ -18,13 +18,13 @@ public class VirtualMachineTests
 
     public VirtualMachineTests()
     {
-        _vm = new VirtualMachine(TextWriter.Null);
+        _vm = new VirtualMachine(Mock.Of<IOutputWriter>());
     }
 
     [Fact]
     public void CorrectPrintToOutTest()
     {
-        var writer = new Mock<TextWriter>();
+        var writer = new Mock<IOutputWriter>();
         writer.Setup(x => x.WriteLine(It.IsAny<object?>()))
             .Verifiable();
 
@@ -116,7 +116,7 @@ public class VirtualMachineTests
     [Fact]
     public void CreateArrayReservesCertainSpaceTest()
     {
-        var vm = new ExecuteParams(Console.Out);
+        var vm = new ExecuteParams(Mock.Of<IOutputWriter>());
         vm.Frames.Push(new Frame(new HashAddress(0)));
             
         var createArray = new CreateArray("arr", 6)

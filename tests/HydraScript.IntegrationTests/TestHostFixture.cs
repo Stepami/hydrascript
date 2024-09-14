@@ -10,28 +10,40 @@ namespace HydraScript.IntegrationTests;
 
 public class TestHostFixture : IDisposable
 {
-    public readonly TextWriter Writer = new StringWriter();
+    private readonly List<string> _logMessages = [];
 
-    public Parser GetRunner(ITestOutputHelper testOutputHelper) =>
+    public readonly string[] InMemoryScript = ["file.js"];
+    public IReadOnlyCollection<string> LogMessages => _logMessages;
+
+    public Parser GetRunner(
+        ITestOutputHelper testOutputHelper,
+        Action<IServiceCollection>? configureTestServices = null) =>
         Program.GetRunner(configureHost: builder => builder
-                .ConfigureLogging(x =>
-                {
-                    x.ClearProviders();
-                    x.AddXUnit(testOutputHelper);
-                })
+                .ConfigureLogging(x => x.ClearProviders()
+                    .AddXUnit(testOutputHelper)
+                    .AddFakeLogging(options =>
+                    {
+                        options.OutputSink = logMessage => _logMessages.Add(logMessage);
+                        options.OutputFormatter = fakeLogRecord =>
+                            fakeLogRecord.Level switch
+                            {
+                                LogLevel.Error => $"{fakeLogRecord.Message} {fakeLogRecord.Exception?.Message}",
+                                _ => fakeLogRecord.ToString()
+                            };
+                    }))
                 .ConfigureServices((context, services) =>
                 {
-                    var parseResult = context.GetInvocationContext().ParseResult;
-                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
-                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
+                    services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
+                    var fileInfo = context.GetInvocationContext().ParseResult
+                        .GetValueForArgument(Program.Command.PathArgument);
                     services
                         .AddDomain()
                         .AddApplication()
-                        .AddInfrastructure(dump, fileInfo);
-                    services.AddSingleton(Writer);
+                        .AddInfrastructure(dump: false, fileInfo);
+                    configureTestServices?.Invoke(services);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
             useDefault: false);
 
-    public void Dispose() => Writer.Dispose();
+    public void Dispose() => _logMessages.Clear();
 }

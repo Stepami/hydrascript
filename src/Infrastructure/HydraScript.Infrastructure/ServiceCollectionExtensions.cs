@@ -7,7 +7,7 @@ using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl;
-using HydraScript.Infrastructure.Logging;
+using HydraScript.Infrastructure.Dumping;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
-        services.AddSingleton(Console.Out);
+        services.AddSingleton<IOutputWriter, LoggingWriter>();
         services.AddSingleton<IVirtualMachine, VirtualMachine>();
 
         return services;
@@ -48,9 +48,9 @@ public static class ServiceCollectionExtensions
 
         if (dump)
         {
-            services.Decorate<ILexer, LoggingLexer>();
-            services.Decorate<IParser, LoggingParser>();
-            services.Decorate<IVirtualMachine, LoggingVirtualMachine>();
+            services.Decorate<ILexer, DumpingLexer>();
+            services.Decorate<IParser, DumpingParser>();
+            services.Decorate<IVirtualMachine, DumpingVirtualMachine>();
         }
     }
 } 
