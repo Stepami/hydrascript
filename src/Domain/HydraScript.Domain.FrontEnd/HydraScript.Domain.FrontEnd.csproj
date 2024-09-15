@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <PackageReference Include="Visitor.NET" />
-    <PackageReference Include="Visitor.NET.AutoVisitableGen" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Visitor.NET" />
+        <PackageReference Include="Visitor.NET.AutoVisitableGen" />
+    </ItemGroup>
 
 </Project>
