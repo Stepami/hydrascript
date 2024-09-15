@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj"/>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.CommandLine"/>
-        <PackageReference Include="System.CommandLine.Hosting"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="System.CommandLine.Hosting" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="HydraScript.IntegrationTests"/>
-    </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="HydraScript.IntegrationTests" />
+  </ItemGroup>
 
 </Project>
