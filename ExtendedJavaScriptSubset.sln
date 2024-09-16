@@ -70,6 +70,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{FB8F6EE1-1942-46D6-954E-9A1647BBDF10}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3F131901-A9EC-451A-B7E9-726887CFE5FB}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+		tests\Directory.Packages.props = tests\Directory.Packages.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{A280C99E-0112-4F3C-A5E9-B793F2D9898E}"
 EndProject
@@ -94,12 +98,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator", "src\Infrastructure\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj", "{74D1495B-12A4-4E1A-ABE0-93029ECDC5FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator.Tests", "tests\HydraScript.Infrastructure.LexerRegexGenerator.Tests\HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj", "{829111AD-4A5C-4B3D-AC28-208309CE10D6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{98E4E203-5E21-4ADD-A59B-8752CF971344}"
-	ProjectSection(SolutionItems) = preProject
-		tests\Directory.Build.props = tests\Directory.Build.props
-		tests\Directory.Packages.props = tests\Directory.Packages.props
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +168,5 @@ Global
 		{1CE98127-3027-4BD4-AAA3-63A589B09E73} = {3F131901-A9EC-451A-B7E9-726887CFE5FB}
 		{74D1495B-12A4-4E1A-ABE0-93029ECDC5FE} = {B7DDF6C9-B67C-430A-948A-A380EF68DEF1}
 		{829111AD-4A5C-4B3D-AC28-208309CE10D6} = {3F131901-A9EC-451A-B7E9-726887CFE5FB}
-		{98E4E203-5E21-4ADD-A59B-8752CF971344} = {86CF2A2F-4DFE-48E7-B062-EF824730916A}
 	EndGlobalSection
 EndGlobal
