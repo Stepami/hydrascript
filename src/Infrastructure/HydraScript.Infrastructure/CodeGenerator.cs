@@ -14,7 +14,7 @@ internal class CodeGenerator : ICodeGenerator
 
     public CodeGenerator(
         IStaticAnalyzer staticAnalyzer,
-        [FromKeyedServices("instructions")]
+        [FromKeyedServices(CodeGeneratorType.General)]
         IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> visitor)
     {
         _staticAnalyzer = staticAnalyzer;

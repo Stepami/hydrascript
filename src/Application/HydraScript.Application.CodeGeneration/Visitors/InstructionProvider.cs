@@ -29,7 +29,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
     public InstructionProvider(
         IValueDtoConverter valueDtoConverter,
-        [FromKeyedServices("expression-instructions")]
+        [FromKeyedServices(CodeGeneratorType.Expression)]
         IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> expressionVisitor)
     {
         _valueDtoConverter = valueDtoConverter;
