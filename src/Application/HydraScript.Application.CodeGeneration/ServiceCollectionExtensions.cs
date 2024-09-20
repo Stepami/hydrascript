@@ -13,10 +13,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IValueDtoConverter, ValueDtoConverter>();
         services.AddKeyedSingleton<
             IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions>,
-            InstructionProvider>("instructions");
+            InstructionProvider>(CodeGeneratorType.General);
         services.AddKeyedSingleton<
             IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions>,
-            ExpressionInstructionProvider>("expression-instructions");
+            ExpressionInstructionProvider>(CodeGeneratorType.Expression);
         return services;
     }
 }
