@@ -14,4 +14,8 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.FrontEnd\HydraScript.Domain.FrontEnd.csproj" />
+    </ItemGroup>
+
 </Project>
