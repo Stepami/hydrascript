@@ -28,10 +28,7 @@ namespace HydraScript.Infrastructure;
 internal partial class PatternContainer
 {{
     [StringSyntax(StringSyntaxAttribute.Regex)]
-    public const string Value =
-        """"""
-            {pattern}
-        """""";
+    public const string Value = """"""{pattern}"""""";
 }}
 ";
 
