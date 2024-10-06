@@ -211,7 +211,7 @@ HydraScript file.js --dump
 
 ### Источники:
 
-1. Курсы "Конструирование Компиляторов" и "Генерация Оптимального Кода" кафедры ИУ-9 МГТУ им. Н.Э. Баумана @bmstu-iu9
+1. Курсы "Конструирование Компиляторов" и "Генерация Оптимального Кода" кафедры ИУ-9 МГТУ им. Н.Э. Баумана [@bmstu-iu9](https://www.github.com/bmstu-iu9)
 2. [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 3. [DragonBook](https://suif.stanford.edu/dragonbook/)
 4. [Stanford CS143 Lectures](https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/)
