@@ -1,19 +1,16 @@
 using System.CommandLine.Parsing;
 using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace HydraScript.IntegrationTests.ErrorPrograms;
 
-public class VariableInitializationTests(
-    TestHostFixture fixture,
-    ITestOutputHelper testOutputHelper) : IClassFixture<TestHostFixture>
+public class VariableInitializationTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
     [Theory, MemberData(nameof(VariableInitializationScripts))]
     public void VariableWithoutTypeDeclared_AccessedBeforeInitialization_ExitCodeHydraScriptError(string script)
     {
         var runner = fixture.GetRunner(
-            testOutputHelper,
-            configureTestServices: services => services.SetupInMemoryScript(script));
+            configureTestServices: services =>
+                services.SetupInMemoryScript(script));
         var code = runner.Invoke(fixture.InMemoryScript);
         code.Should().Be(ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()

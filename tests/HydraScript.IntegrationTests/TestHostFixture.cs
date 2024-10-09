@@ -1,6 +1,7 @@
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 using HydraScript.Infrastructure;
+using MartinCostello.Logging.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -8,19 +9,25 @@ using Xunit.Abstractions;
 
 namespace HydraScript.IntegrationTests;
 
-public class TestHostFixture : IDisposable
+public class TestHostFixture(
+    Xunit.DependencyInjection.ITestOutputHelperAccessor accessor) :
+    IDisposable, ITestOutputHelperAccessor
 {
     private readonly List<string> _logMessages = [];
 
     public readonly string[] InMemoryScript = ["file.js"];
     public IReadOnlyCollection<string> LogMessages => _logMessages;
 
-    public Parser GetRunner(
-        ITestOutputHelper testOutputHelper,
-        Action<IServiceCollection>? configureTestServices = null) =>
+    public ITestOutputHelper? OutputHelper
+    {
+        get => accessor.Output;
+        set { }
+    }
+
+    public Parser GetRunner(Action<IServiceCollection>? configureTestServices = null) =>
         Program.GetRunner(configureHost: builder => builder
                 .ConfigureLogging(x => x.ClearProviders()
-                    .AddXUnit(testOutputHelper)
+                    .AddXUnit(this)
                     .AddFakeLogging(options =>
                     {
                         options.OutputSink = logMessage => _logMessages.Add(logMessage);

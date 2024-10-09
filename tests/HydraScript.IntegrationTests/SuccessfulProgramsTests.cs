@@ -1,17 +1,14 @@
 using System.CommandLine.Parsing;
 using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace HydraScript.IntegrationTests;
 
-public class SuccessfulProgramsTests(
-    TestHostFixture fixture,
-    ITestOutputHelper testOutputHelper) : IClassFixture<TestHostFixture>
+public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
     [Theory, MemberData(nameof(SuccessfulProgramsNames))]
     public void Invoke_NoError_ReturnCodeIsZero(string fileName)
     {
-        var runner = fixture.GetRunner(testOutputHelper);
+        var runner = fixture.GetRunner();
         var code = runner.Invoke([$"Samples/{fileName}"]);
         code.Should().Be(ExitCodes.Success);
     }
