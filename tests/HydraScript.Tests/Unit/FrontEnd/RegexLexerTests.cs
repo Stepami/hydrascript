@@ -1,5 +1,6 @@
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
+using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
 using HydraScript.Tests.TestData;
 using Xunit;
@@ -43,5 +44,13 @@ public class RegexLexerTests
             ";
         var tokens = _regexLexer.GetTokens(text);
         Assert.DoesNotContain(_regexLexer.Structure.FindByTag("Comment"), tokens.Select(x => x.Type));
+    }
+
+    [Theory, ClassData(typeof(LexerKeywordInsideIdentData))]
+    public void GetTokens_KeywordInsideIdent_Ident(string input)
+    {
+        var tokens = _regexLexer.GetTokens(input);
+        var token = tokens.First();
+        token.Type.Should().Be(new TokenType("Ident"));
     }
 }

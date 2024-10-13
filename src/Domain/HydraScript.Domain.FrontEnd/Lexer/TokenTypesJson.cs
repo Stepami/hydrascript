@@ -31,12 +31,12 @@ public static class TokenTypesJson
             },
             {
                 "tag": "NullLiteral",
-                "pattern": "null",
+                "pattern": "(?<![a-zA-Z0-9])(null)(?![a-zA-Z0-9])",
                 "priority": 4
             },
             {
                 "tag": "BooleanLiteral",
-                "pattern": "true|false",
+                "pattern": "(?<![a-zA-Z0-9])(true|false)(?![a-zA-Z0-9])",
                 "priority": 5
             },
             {
@@ -46,7 +46,7 @@ public static class TokenTypesJson
             },
             {
                 "tag": "Keyword",
-                "pattern": "let|const|function|if|else|while|break|continue|return|as|type",
+                "pattern": "(?<![a-zA-Z0-9])(let|const|function|if|else|while|break|continue|return|as|type)(?![a-zA-Z0-9])",
                 "priority": 11
             },
             {

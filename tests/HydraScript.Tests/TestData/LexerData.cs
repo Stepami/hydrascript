@@ -1,27 +1,36 @@
-using System.Collections;
+using Xunit;
 
 namespace HydraScript.Tests.TestData;
 
-public class LexerSuccessData : IEnumerable<object[]>
+public class LexerSuccessData : TheoryData<string>
 {
-    public IEnumerator<object[]> GetEnumerator()
+    public LexerSuccessData()
     {
-        yield return new object[] { "a + b - c return while do" };
-        yield return new object[] { "=> abc null true false" };
-        yield return new object[] { "{ . } , ( ) [] =?:" };
+        Add("a + b - c return while do");
+        Add("=> abc null true false");
+        Add("{ . } , ( ) [] =?:");
     }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
-public class LexerFailData : IEnumerable<object[]>
+public class LexerFailData : TheoryData<string>
 {
-    public IEnumerator<object[]> GetEnumerator()
+    public LexerFailData()
     {
-        yield return new object[] { "a + v $$$" };
-        yield return new object[] { "kkk &" };
-        yield return new object[] { "|| |" };
+        Add("a + v $$$");
+        Add("kkk &");
+        Add("|| |");
     }
+}
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+public class LexerKeywordInsideIdentData : TheoryData<string>
+{
+    public LexerKeywordInsideIdentData()
+    {
+        Add("constExpr");
+        Add("letVarConst");
+        Add("nullObj");
+        Add("trueStmt");
+        Add("falseStmt");
+        Add("returnResult");
+    }
 }
