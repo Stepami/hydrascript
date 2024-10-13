@@ -21,3 +21,16 @@ public class LexerFailData : TheoryData<string>
         Add("|| |");
     }
 }
+
+public class LexerKeywordInsideIdentData : TheoryData<string>
+{
+    public LexerKeywordInsideIdentData()
+    {
+        Add("constExpr");
+        Add("letVarConst");
+        Add("nullObj");
+        Add("trueStmt");
+        Add("falseStmt");
+        Add("returnResult");
+    }
+}
