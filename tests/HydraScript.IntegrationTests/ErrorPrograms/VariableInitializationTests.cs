@@ -1,5 +1,4 @@
 using System.CommandLine.Parsing;
-using FluentAssertions;
 
 namespace HydraScript.IntegrationTests.ErrorPrograms;
 
