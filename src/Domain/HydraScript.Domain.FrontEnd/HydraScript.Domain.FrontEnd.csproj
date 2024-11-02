@@ -2,7 +2,7 @@
 
     <ItemGroup>
         <PackageReference Include="Visitor.NET" />
-        <PackageReference Include="Visitor.NET.AutoVisitableGen" />
+        <PackageReference Include="Visitor.NET.AutoVisitableGen" PrivateAssets="all" />
     </ItemGroup>
 
 </Project>
