@@ -404,7 +404,7 @@ public class TopDownParser : IParser
         var member = MemberExpression();
         if (CurrentIs("LeftParen"))
         {
-            var lp = Expect("LeftParen");
+            Expect("LeftParen");
             var expressions = new List<Expression>();
             if (CurrentIs("Ident") || CurrentIsLiteral() ||
                 CurrentIs("LeftParen") || CurrentIsOperator("-") ||
@@ -420,9 +420,9 @@ public class TopDownParser : IParser
                 expressions.Add(Expression());
             }
 
-            Expect("RightParen");
+            var rp = Expect("RightParen");
             return new CallExpression((member as MemberExpression)!, expressions)
-                { Segment = lp.Segment };
+                { Segment = member.Segment + rp.Segment };
         }
 
         return member;
@@ -436,7 +436,7 @@ public class TopDownParser : IParser
             !CurrentIs("Assign") && !CurrentIs("LeftParen"))
             return primary;
 
-        var identRef = primary as IdentifierReference;
+        var identRef = (primary as IdentifierReference)!;
         var accessChain = new List<AccessExpression>();
         while (CurrentIs("LeftBracket") || CurrentIs("Dot"))
         {
@@ -464,9 +464,12 @@ public class TopDownParser : IParser
         }
 
         return new MemberExpression(
-            identRef!,
+            identRef,
             accessChain.FirstOrDefault(),
-            tail: accessChain.LastOrDefault());
+            tail: accessChain.LastOrDefault())
+        {
+            Segment = identRef.Segment
+        };
     }
 
     private Expression CastExpression()

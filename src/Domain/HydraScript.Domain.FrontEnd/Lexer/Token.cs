@@ -34,6 +34,17 @@ public record Segment(Coordinates Start, Coordinates End)
 
     public static implicit operator string(Segment segment) =>
         segment.ToString();
+
+    public static implicit operator Segment(string segment)
+    {
+        var coords = segment.Split("-")
+            .Select(x => x[1..^1].Replace(" ", string.Empty))
+            .Select(x => x.Split(',').Select(int.Parse).ToArray())
+            .ToArray();
+        return new Segment(
+            new Coordinates(coords[0][0], coords[0][1]),
+            new Coordinates(coords[1][0], coords[1][1]));
+    }
 }
     
 [ExcludeFromCodeCoverage]
