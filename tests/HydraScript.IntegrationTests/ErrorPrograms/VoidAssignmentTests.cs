@@ -20,5 +20,7 @@ public class VoidAssignmentTests(TestHostFixture fixture) : IClassFixture<TestHo
             services => services.SetupInMemoryScript(script));
         var code = runner.Invoke(fixture.InMemoryScript);
         code.Should().Be(ExitCodes.HydraScriptError);
+        fixture.LogMessages.Should()
+            .Contain(x => x.Contains("Cannot assign void"));
     }
 }
