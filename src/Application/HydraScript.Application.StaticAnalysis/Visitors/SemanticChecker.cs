@@ -262,7 +262,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(LexicalDeclaration visitable)
     {
-        Type undefined = "undefined";
+        Type undefined = "undefined", @void = "void";
 
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
@@ -272,6 +272,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             var sourceType = assignment.Source.Accept(This);
             if (sourceType.Equals(undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
+            if (sourceType.Equals(@void))
+                throw new CannotAssignVoid(assignment.Source.Segment);
             if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
