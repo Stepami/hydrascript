@@ -1,7 +1,6 @@
 using HydraScript.Application.StaticAnalysis;
 using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
-using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl.Symbols;
 using Xunit;
 using BlockStatement = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements.BlockStatement;
