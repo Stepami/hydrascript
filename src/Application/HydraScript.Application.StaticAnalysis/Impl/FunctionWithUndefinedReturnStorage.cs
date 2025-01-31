@@ -25,10 +25,6 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
         _declarations.Remove(symbol.Id);
     }
 
-    public IEnumerable<FunctionDeclaration> Flush() => _declarations
-        .Select(x =>
-        {
-            _declarations.Remove(x.Key);
-            return x.Value;
-        });
+    public IEnumerable<FunctionDeclaration> Flush() => _declarations.Keys.ToList()
+        .Select(x => _declarations.Extract(x));
 }
