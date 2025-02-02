@@ -35,6 +35,7 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
             "quicksort.js",
             "range.js",
             "recur.js",
+            "scope.js",
             "searchinll.js",
             "settable.js",
             "squareroot.js",

@@ -103,6 +103,10 @@
             <Link>Samples\recur.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\scope.js">
+            <Link>Samples\scope.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\searchinll.js">
             <Link>Samples\searchinll.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
