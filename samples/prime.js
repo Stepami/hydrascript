@@ -14,6 +14,4 @@ function prime(x: number): boolean {
     return true
 }
 
-let b = prime(13)
-
-print(b as string)
+>>> prime(13)

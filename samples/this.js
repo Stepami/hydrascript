@@ -5,7 +5,7 @@ type ObjType = {
 }
 
 function toString(obj: ObjType): string {
-    let s = "object obj:\n"
+    let s = "object obj: "
     return s + (obj as string)
 }
 
@@ -15,4 +15,4 @@ let obj: ObjType = {
     str: "field";
 }
 
-print(obj.toString())
+>>> obj.toString()

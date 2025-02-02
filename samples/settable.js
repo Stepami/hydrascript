@@ -5,7 +5,7 @@ type settable = {
 function setprop(obj: settable, str: string) {
     obj.prop = str
     if (obj.prop == "1") {
-        print("prop is one")
+        >>>"prop is one"
     }
 }
 
@@ -15,4 +15,4 @@ let obj: settable = {
 
 obj.setprop("1")
 obj.setprop("2")
-print(obj as string)
+>>>obj

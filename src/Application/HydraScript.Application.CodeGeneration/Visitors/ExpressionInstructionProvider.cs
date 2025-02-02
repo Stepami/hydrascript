@@ -260,60 +260,47 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     {
         if (visitable.IsEmptyCall)
             return [];
+
         var methodCall = !visitable.Empty();
-        if (visitable.Id.Name is "print" && !methodCall)
+        string functionId;
+        AddressedInstructions result = [];
+
+        if (methodCall)
         {
-            var param = visitable.Parameters[0];
-            
-            if (param is PrimaryExpression prim)
-                return [new Print(_valueDtoConverter.Convert(prim.ToValueDto()))];
-            
-            var result = param.Accept(This);
-            var last = new Name(result.OfType<Simple>().Last().Left!);
-            result.Add(new Print(last));
-            
-            return result;
+            var memberInstructions = visitable.Member.Accept(This);
+            var lastMemberInstruction = (DotRead)memberInstructions[memberInstructions.End];
+            memberInstructions.Remove(lastMemberInstruction);
+            result.AddRange(memberInstructions);
+
+            functionId = lastMemberInstruction.Property;
         }
         else
         {
-            string functionId;
-            AddressedInstructions result = [];
-            if (methodCall)
-            {
-                var memberInstructions = visitable.Member.Accept(This);
-                var lastMemberInstruction = (DotRead)memberInstructions[memberInstructions.End];
-                memberInstructions.Remove(lastMemberInstruction);
-                result.AddRange(memberInstructions);
+            functionId = visitable.Id;
+        }
 
-                functionId = lastMemberInstruction.Property;
-            }
+        if (methodCall)
+        {
+            var caller = result.Any() ? result.OfType<Simple>().Last().Left! : visitable.Id;
+            result.Add(new PushParameter(new Name(caller)));
+        }
+
+        foreach (var expr in visitable.Parameters)
+        {
+            if (expr is PrimaryExpression primary)
+                result.Add(new PushParameter(_valueDtoConverter.Convert(primary.ToValueDto())));
             else
             {
-                functionId = visitable.Id;
+                result.AddRange(expr.Accept(This));
+                var id = result.OfType<Simple>().Last().Left!;
+                result.Add(new PushParameter(new Name(id)));
             }
-            var functionInfo = new FunctionInfo(functionId);
-
-            if (methodCall)
-            {
-                var caller = result.Any() ? result.OfType<Simple>().Last().Left! : visitable.Id;
-                result.Add(new PushParameter(new Name(caller)));
-            }
-            foreach (var expr in visitable.Parameters)
-            {
-                if (expr is PrimaryExpression primary)
-                    result.Add(new PushParameter(_valueDtoConverter.Convert(primary.ToValueDto())));
-                else
-                {
-                    result.AddRange(expr.Accept(This));
-                    var id = result.OfType<Simple>().Last().Left!;
-                    result.Add(new PushParameter(new Name(id)));
-                }
-            }
-
-            result.Add(new CallFunction(
-                functionInfo,
-                visitable.HasReturnValue));
-            return result;
         }
+
+        result.Add(new CallFunction(
+            new FunctionInfo(functionId),
+            visitable.HasReturnValue));
+
+        return result;
     }
 }

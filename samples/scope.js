@@ -7,4 +7,4 @@ x = {
     x: 1;
 }
 
-print(x.x as string)
+>>>x.x

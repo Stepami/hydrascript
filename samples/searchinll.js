@@ -26,7 +26,7 @@ function searchEven(n: node): number {
     let h = n
     while (h != null) {
         let d = h.data
-        print(d as string)
+        >>>d
         if (d % 2 == 0) {
             return d
         }
@@ -36,5 +36,5 @@ function searchEven(n: node): number {
 }
 
 let j = searchEven(head)
-print("found Even:")
-print(j as string)
+>>>"found Even:"
+>>>j

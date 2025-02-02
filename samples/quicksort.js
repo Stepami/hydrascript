@@ -41,4 +41,4 @@ function quickSort(values: ints) {
 
 let numbers = [6,2,4,3,7,1,5,]
 quickSort(numbers)
-print(numbers as string)
+>>>numbers

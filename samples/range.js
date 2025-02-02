@@ -12,5 +12,4 @@ function range(n: int): ints {
     return r
 }
 
-let r1to6 = range(6)
-print(r1to6 as string)
+>>> range(6)

@@ -37,7 +37,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<CastAsExpression, Type>,
     IVisitor<CallExpression, Type>,
     IVisitor<FunctionDeclaration, Type>,
-    IVisitor<BlockStatement, Type>
+    IVisitor<BlockStatement, Type>,
+    IVisitor<PrintStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
@@ -500,6 +501,12 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     {
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
+        return "undefined";
+    }
+
+    public Type Visit(PrintStatement visitable)
+    {
+        visitable.Expression.Accept(This);
         return "undefined";
     }
 }

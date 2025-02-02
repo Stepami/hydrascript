@@ -15,5 +15,4 @@ function lcm(a: number, b: number): number {
     return (abs(a * b)) / (gcd(a, b))
 }
 
-let l = lcm(1280, 720)
-print(l as string)
+>>> lcm(1280, 720)

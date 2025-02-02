@@ -9,6 +9,4 @@ function gcd(a: number, b: number): number {
     return gcd(bb, aa % bb)
 }
 
-let g = gcd(1280, 720)
-
-print(g as string)
+>>> gcd(1280, 720)

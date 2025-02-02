@@ -17,6 +17,4 @@ function fastPow(base: number, power: number): number {
     return multiplier * multiplier * base
 }
 
-let p = fastPow(13, 3)
-
-print(p as string)
+>>> fastPow(13, 3)
