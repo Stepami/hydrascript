@@ -11,20 +11,21 @@ namespace HydraScript.Tests.Unit.IR;
 
 public class FunctionWithUndefinedReturnStorageTests
 {
-    const string functionName = nameof(functionName);
+    private const string FunctionName = nameof(FunctionName);
+
     [Fact]
     public void StorageIsEmptyAfterFlushTest()
     {
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
         var symbol = new FunctionSymbol(
-            id: functionName,
+            id: FunctionName,
             parameters: [],
             "undefined",
             isEmpty: false);
 
         var decl = new FunctionDeclaration(
-            name: new IdentifierReference(functionName),
+            name: new IdentifierReference(FunctionName),
             returnTypeValue: Substitute.For<TypeValue>(),
             arguments: [],
             new BlockStatement([]));
@@ -41,30 +42,29 @@ public class FunctionWithUndefinedReturnStorageTests
     public void StorageIsCorrectOrderTest()
     {
         FunctionDeclaration[] declarations = [
-            new FunctionDeclaration(
-                name: new IdentifierReference(functionName),
+            new(
+                name: new IdentifierReference(FunctionName),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
-            new FunctionDeclaration(
-                name: new IdentifierReference(functionName),
+            new(
+                name: new IdentifierReference(FunctionName),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
-            new FunctionDeclaration(
-                name: new IdentifierReference(functionName),
+            new(
+                name: new IdentifierReference(FunctionName),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
-            new FunctionDeclaration(
-                name: new IdentifierReference(functionName),
+            new(
+                name: new IdentifierReference(FunctionName),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
-                new BlockStatement([]))
-        ];
+                new BlockStatement([]))];
         
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
