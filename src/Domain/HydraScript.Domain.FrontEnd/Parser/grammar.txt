@@ -10,6 +10,7 @@ Statement -> BlockStatement
              ContinueStatement
              BreakStatement
              ReturnStatement
+             PrintStatement
              
 Declaration -> LexicalDeclaration
                FunctionDeclaration
@@ -63,6 +64,8 @@ ContinueStatement -> 'continue'
 BreakStatement -> 'break'
 
 ReturnStatement -> 'return' Expression?
+
+PrintStatement -> '>>>' Expression
 
 TypeDeclaration -> 'type' "Ident" = TypeValue
 TypeValue -> TypeValueBase TypeValueSuffix*

@@ -74,7 +74,7 @@ public class TopDownParser : IParser
             CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
             CurrentIs("LeftCurl") || CurrentIsKeyword("return") || CurrentIsKeyword("break") ||
             CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while") ||
-            CurrentIsKeyword("type")
+            CurrentIsKeyword("type") || CurrentIs("Print")
         )
         {
             statementList.Add(StatementListItem());
@@ -96,47 +96,37 @@ public class TopDownParser : IParser
 
     private Statement Statement()
     {
-        if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") || CurrentIsOperator("-") ||
+        if (CurrentIs("Ident") || CurrentIsLiteral() ||
+            CurrentIs("LeftParen") || CurrentIsOperator("-") ||
             CurrentIsOperator("!") || CurrentIsOperator("~"))
-        {
             return ExpressionStatement();
-        }
 
         if (CurrentIs("LeftCurl"))
-        {
             return BlockStatement();
-        }
 
         if (CurrentIsKeyword("return"))
-        {
             return ReturnStatement();
-        }
 
         if (CurrentIsKeyword("break"))
-        {
             return new InsideStatementJump(InsideStatementJump.Break)
             {
                 Segment = Expect("Keyword", "break").Segment
             };
-        }
 
         if (CurrentIsKeyword("continue"))
-        {
             return new InsideStatementJump(InsideStatementJump.Continue)
             {
                 Segment = Expect("Keyword", "continue").Segment
             };
-        }
 
         if (CurrentIsKeyword("if"))
-        {
             return IfStatement();
-        }
 
         if (CurrentIsKeyword("while"))
-        {
             return WhileStatement();
-        }
+
+        if (CurrentIs("Print"))
+            return PrintStatement();
 
         return null!;
     }
@@ -193,6 +183,12 @@ public class TopDownParser : IParser
         Expect("RightParen");
         var stmt = Statement();
         return new WhileStatement(expr, stmt) {Segment = token.Segment};
+    }
+
+    private PrintStatement PrintStatement()
+    {
+        Expect("Print");
+        return new PrintStatement(Expression());
     }
 
     private TypeDeclaration TypeDeclaration()
