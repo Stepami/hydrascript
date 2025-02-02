@@ -721,7 +721,7 @@ public class TopDownParser : IParser
 
             Expect("Colon");
             var expr = Expression();
-            properties.Add(new Property(id, expr));
+            properties.Add(new Property(id, expr) { Segment = idToken.Segment });
 
             Expect("SemiColon");
         }
