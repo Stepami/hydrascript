@@ -24,7 +24,7 @@ public class VariableInitializationTests(TestHostFixture fixture) : IClassFixtur
                 """
                 let x = f()
                 function f() {
-                    print(x as string)
+                    >>>x
                     return 5
                 }
                 """;
@@ -32,7 +32,7 @@ public class VariableInitializationTests(TestHostFixture fixture) : IClassFixtur
                 """
                 let x: number = f()
                 function f() {
-                    print(x as string)
+                    >>>x
                     return 5
                 }
                 """;

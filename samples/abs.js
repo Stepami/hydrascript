@@ -5,5 +5,4 @@ function abs(x: number): number {
 }
 
 let x = -10
-let a = abs(x)
-print(a as string)
+>>> abs(x)

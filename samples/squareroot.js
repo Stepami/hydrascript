@@ -18,6 +18,4 @@ function sqrt(num: number): number {
     return guess
 }
 
-let sr = sqrt(3)
-
-print(sr as string)
+>>> sqrt(3)

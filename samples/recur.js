@@ -20,9 +20,9 @@ let n: number
 n = 6
 let fa6 = fact(6)
 let fa6s = fa6 as string
-print("fact(6) = " + fa6s)
+>>> "fact(6) = " + fa6s
 
 n = 9
 let fi9 = fib(9)
 let fi9s = fi9 as string
-print("fib(9) = " + fi9s)
+>>> "fib(9) = " + fi9s

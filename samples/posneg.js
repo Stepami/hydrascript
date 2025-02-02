@@ -8,9 +8,9 @@ function negative(x: number): boolean {
 
 let x = 0
 if (positive(x)) {
-    print("positive")
+    >>>"positive"
 } else if (negative(x)) {
-    print("negative")
+    >>>"negative"
 } else {
-    print("zero")
+    >>>"zero"
 }

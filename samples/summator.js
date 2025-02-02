@@ -12,5 +12,4 @@ let summator: summable = {
     y: 2;
 }
 
-let s = summator.sum()
-print(s as string)
+>>> summator.sum()

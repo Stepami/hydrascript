@@ -42,7 +42,6 @@ linkedList.append(3)
 linkedList.append(5)
 linkedList.append(7)
 
-print(linkedList as string)
+>>>linkedList
 
-let odds = linkedList.getOdd()
-print(odds as string)
+>>> linkedList.getOdd()

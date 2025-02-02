@@ -12,4 +12,4 @@ let a: A = {
     };
 }
 
-print(a as string)
+>>>a

@@ -14,5 +14,4 @@ let obj2: withEquals = {
     prop: 2;
 }
 
-let res = obj1.equals(obj2)
-print(res as string)
+>>> obj1.equals(obj2)
