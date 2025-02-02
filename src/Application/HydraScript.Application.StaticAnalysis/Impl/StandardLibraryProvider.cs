@@ -18,14 +18,6 @@ internal class StandardLibraryProvider : IStandardLibraryProvider
         foreach (var type in _provider.GetDefaultTypes())
             library.AddSymbol(new TypeSymbol(type));
 
-        var print = new FunctionSymbol(
-            "print",
-            [new VariableSymbol("str", "string")],
-            "void",
-            isEmpty: false);
-
-        library.AddSymbol(print);
-
         var symbolTable = new SymbolTable();
         symbolTable.AddOpenScope(library);
         return symbolTable;
