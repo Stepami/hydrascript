@@ -5,7 +5,7 @@ namespace HydraScript.IntegrationTests.ErrorPrograms;
 public class VariableInitializationTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
     [Theory, MemberData(nameof(VariableInitializationScripts))]
-    public void VariableWithoutTypeDeclared_AccessedBeforeInitialization_ExitCodeHydraScriptError(string script)
+    public void VariableWithoutTypeDeclared_AccessedBeforeInitialization_HydraScriptError(string script)
     {
         var runner = fixture.GetRunner(
             configureTestServices: services =>
@@ -36,7 +36,9 @@ public class VariableInitializationTests(TestHostFixture fixture) : IClassFixtur
                     return 5
                 }
                 """;
-            return new TheoryData<string>([variableWithoutTypeDeclared, typedVariableDeclared]);
+            return new TheoryData<string>([
+                variableWithoutTypeDeclared,
+                typedVariableDeclared]);
         }
     }
 }

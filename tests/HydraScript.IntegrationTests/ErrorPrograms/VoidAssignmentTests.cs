@@ -5,7 +5,7 @@ namespace HydraScript.IntegrationTests.ErrorPrograms;
 public class VoidAssignmentTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
     [Fact]
-    public void FunctionDeclared_VoidReturnAssigned_ExitCodeHydraScriptError()
+    public void FunctionDeclared_VoidReturnAssigned_HydraScriptError()
     {
         const string script =
             """
