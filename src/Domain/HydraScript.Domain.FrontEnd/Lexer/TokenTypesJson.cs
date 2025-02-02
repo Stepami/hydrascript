@@ -50,9 +50,14 @@ public static class TokenTypesJson
                 "priority": 11
             },
             {
+                "tag": "Print",
+                "pattern": "[>]{3}",
+                "priority": 12
+            },
+            {
                 "tag": "Operator",
                 "pattern": "[+]{1,2}|[-]|[*]|[\/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}|[~]|[:]{2}",
-                "priority": 12
+                "priority": 13
             },
             {
                 "tag": "Comma",
