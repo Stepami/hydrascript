@@ -157,7 +157,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (visitable.Expressions.Count == 0)
             return new ArrayType(new Any());
 
-        var type = visitable.First().Accept(This);
+        var type = visitable[0].Accept(This);
         if (visitable.Expressions.All(e => e.Accept(This).Equals(type)))
             return new ArrayType(type);
 
@@ -169,6 +169,14 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var properties = visitable.Properties.Select(prop =>
         {
             var propType = prop.Expression.Accept(This);
+
+            if (propType is NullType &&
+                (visitable.ChildOf<AssignmentExpression>(
+                     x => x.ChildOf<LexicalDeclaration>() && x.DestinationType is null) ||
+                 visitable.ChildOf<ReturnStatement>(x => x.ChildOf<FunctionDeclaration>(
+                     decl => decl.ReturnTypeValue is TypeIdentValue { TypeId.Name: "undefined" }))))
+                throw new CannotAssignNullWhenUndefined(prop.Segment);
+
             var propSymbol = propType switch
             {
                 ObjectType objectType => new ObjectSymbol(prop.Id, objectType),
@@ -279,6 +287,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                     assignment.Segment,
                     left: registeredSymbol.Type,
                     right: sourceType);
+            if (sourceType is NullType && registeredSymbol.Type.Equals(undefined))
+                throw new CannotAssignNullWhenUndefined(assignment.Segment);
 
             var actualType = registeredSymbol.Type.Equals(undefined)
                 ? sourceType
@@ -479,6 +489,9 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var hasReturnStatement = visitable.HasReturnStatement();
         if (!symbol.Type.Equals(@void) && !hasReturnStatement)
             throw new FunctionWithoutReturnStatement(visitable.Segment);
+
+        if (symbol.Type is NullType)
+            throw new CannotAssignNullWhenUndefined(visitable.Segment);
 
         return symbol.Type;
     }

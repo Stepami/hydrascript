@@ -16,7 +16,7 @@ function append(lst: list, item: number) {
 
 function getOdd(lst: list): number[] {
     let result: number[]
-    let n = lst.head
+    let n: node = lst.head
     while (n != null) {
         if (n.data % 2 != 0) {
             let i = n.data
