@@ -22,7 +22,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     IVisitor<ReturnStatement, AddressedInstructions>,
     IVisitor<FunctionDeclaration, AddressedInstructions>,
     IVisitor<WhileStatement, AddressedInstructions>,
-    IVisitor<IfStatement, AddressedInstructions>
+    IVisitor<IfStatement, AddressedInstructions>,
+    IVisitor<PrintStatement, AddressedInstructions>
 {
     private readonly IValueDtoConverter _valueDtoConverter;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
@@ -216,6 +217,21 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
             .ToList().ForEach(g => g.SetJump(endBlockLabel));
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
+
+        return result;
+    }
+
+    public AddressedInstructions Visit(PrintStatement visitable)
+    {
+        AddressedInstructions result = [];
+
+        if (visitable.Expression is PrimaryExpression prim)
+            result.Add(new AsString(_valueDtoConverter.Convert(prim.ToValueDto())));
+        else
+            result.AddRange(visitable.Expression.Accept(_expressionVisitor));
+
+        var last = new Name(result.OfType<Simple>().Last().Left!);
+        result.Add(new Print(last));
 
         return result;
     }
