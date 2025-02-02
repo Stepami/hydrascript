@@ -48,8 +48,6 @@ jobs:
         config: 
           - os: ubuntu-latest
             rid: linux-x64
-          - os: macos-latest-large
-            rid: osx-x64
           - os: macos-latest
             rid: osx-arm64
           - os: windows-latest
