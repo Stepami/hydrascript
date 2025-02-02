@@ -16,5 +16,14 @@ public partial class ObjectLiteral : ComplexLiteral
         _properties.ForEach(prop => prop.Parent = this);
     }
 
+    /// <summary>Стратегия "блока" - углубление скоупа</summary>
+    /// <param name="scope">Новый скоуп</param>
+    public override void InitScope(Scope? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        Scope = scope;
+        Scope.AddOpenScope(Parent.Scope);
+    }
+
     protected override string NodeRepresentation() => "{}";
 }
