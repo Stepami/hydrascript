@@ -41,14 +41,22 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
         return result;
     }
 
-    public bool ChildOf<T>() where T : IAbstractSyntaxTreeNode
+    /// <summary>
+    /// Метод возвращает <c>true</c>, если узел - потомок заданного типа и выполняется заданное условие.<br/>
+    /// В случае, когда условие не задано, проверяется просто соответствие типов.
+    /// </summary>
+    /// <param name="condition">Условие для родителя</param>
+    /// <typeparam name="T">Проверяемый тип родителя</typeparam>
+    public bool ChildOf<T>(Predicate<T>? condition = null) where T : IAbstractSyntaxTreeNode
     {
         var parent = Parent;
         while (parent != default!)
         {
-            if (parent is T)
+            if (parent is T node)
             {
-                return true;
+                return condition is not null
+                    ? condition(node)
+                    : true;
             }
 
             parent = parent.Parent;
