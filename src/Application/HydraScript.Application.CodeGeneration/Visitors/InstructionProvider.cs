@@ -228,10 +228,13 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         if (visitable.Expression is PrimaryExpression prim)
             result.Add(new AsString(_valueDtoConverter.Convert(prim.ToValueDto())));
         else
+        {
             result.AddRange(visitable.Expression.Accept(_expressionVisitor));
+            var name = new Name(result.OfType<Simple>().Last().Left!);
+            result.Add(new AsString(name));
+        }
 
-        var last = new Name(result.OfType<Simple>().Last().Left!);
-        result.Add(new Print(last));
+        result.Add(new Print(new Name((result[result.End] as AsString)!.Left!)));
 
         return result;
     }
