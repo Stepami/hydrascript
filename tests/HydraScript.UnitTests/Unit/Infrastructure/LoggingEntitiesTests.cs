@@ -6,7 +6,7 @@ using HydraScript.Infrastructure.Dumping;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.Infrastructure;
+namespace HydraScript.UnitTests.Unit.Infrastructure;
 
 public class LoggingEntitiesTests
 {

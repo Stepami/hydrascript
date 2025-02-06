@@ -7,7 +7,7 @@ using BlockStatement = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Stateme
 using FunctionDeclaration = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded.FunctionDeclaration;
 using IdentifierReference = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions.IdentifierReference;
 
-namespace HydraScript.Tests.Unit.IR;
+namespace HydraScript.UnitTests.Unit.IR;
 
 public class FunctionWithUndefinedReturnStorageTests
 {

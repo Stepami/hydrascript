@@ -8,7 +8,7 @@ using Literal = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.Pr
 using ScriptBody = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.ScriptBody;
 using TypeIdentValue = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.TypeIdentValue;
 
-namespace HydraScript.Tests.Unit.IR;
+namespace HydraScript.UnitTests.Unit.IR;
 
 public class AstNodeTests
 {

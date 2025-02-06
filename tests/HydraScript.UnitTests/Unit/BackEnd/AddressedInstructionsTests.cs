@@ -5,7 +5,7 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Values;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Unit.BackEnd;
 
 public class AddressedInstructionsTests
 {

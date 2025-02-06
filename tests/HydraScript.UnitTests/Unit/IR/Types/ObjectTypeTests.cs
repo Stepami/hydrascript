@@ -1,7 +1,7 @@
 using HydraScript.Domain.IR.Types;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.IR.Types;
+namespace HydraScript.UnitTests.Unit.IR.Types;
 
 public class ObjectTypeTests
 {

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript", "src\HydraScript\HydraScript.csproj", "{5DA79C0C-2B98-4E64-81EA-92AFFC5204D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Tests", "tests\HydraScript.Tests\HydraScript.Tests.csproj", "{F0DD56CB-C68A-4CDC-AA54-0A07342FE08B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.UnitTests", "tests\HydraScript.UnitTests\HydraScript.UnitTests.csproj", "{F0DD56CB-C68A-4CDC-AA54-0A07342FE08B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{86CF2A2F-4DFE-48E7-B062-EF824730916A}"
 	ProjectSection(SolutionItems) = preProject
@@ -98,7 +98,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.IntegrationTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator", "src\Infrastructure\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj", "{74D1495B-12A4-4E1A-ABE0-93029ECDC5FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator.Tests", "tests\HydraScript.Infrastructure.LexerRegexGenerator.Tests\HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj", "{829111AD-4A5C-4B3D-AC28-208309CE10D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator.UnitTests", "tests\HydraScript.Infrastructure.LexerRegexGenerator.UnitTests\HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj", "{829111AD-4A5C-4B3D-AC28-208309CE10D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
