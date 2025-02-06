@@ -4,7 +4,7 @@ using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.FrontEnd;
+namespace HydraScript.UnitTests.Unit.FrontEnd;
 
 public class StructureTests
 {

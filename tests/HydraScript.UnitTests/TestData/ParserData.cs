@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace HydraScript.Tests.TestData;
+namespace HydraScript.UnitTests.TestData;
 
 public class ParserSuccessTestData : IEnumerable<object[]>
 {

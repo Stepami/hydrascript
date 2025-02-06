@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using NSubstitute;
 using Xunit;
 
-namespace HydraScript.Infrastructure.LexerRegexGenerator.Tests;
+namespace HydraScript.Infrastructure.LexerRegexGenerator.UnitTests;
 
 public class PatternGeneratorTests
 {

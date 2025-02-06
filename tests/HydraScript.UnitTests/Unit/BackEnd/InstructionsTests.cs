@@ -1,10 +1,10 @@
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
-using HydraScript.Tests.TestData;
+using HydraScript.UnitTests.TestData;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Unit.BackEnd;
 
 public class InstructionsTests
 {

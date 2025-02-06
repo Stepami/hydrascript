@@ -53,14 +53,14 @@ jobs:
         run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Release -v n
       - name: Unit Tests
         run: |
-          dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests/HydraScript.Infrastructure.LexerRegexGenerator.Tests.csproj --no-build -v n
+          dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj --no-build -v n
           dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Unit"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request_target'
         uses: 5monkeys/cobertura-action@master
         with:
-          path: ./tests/HydraScript.Tests/coverage.cobertura.xml
+          path: ./tests/HydraScript.UnitTests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 20
           fail_below_threshold: true
@@ -72,7 +72,7 @@ jobs:
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
-          reports: './tests/HydraScript.Tests/coverage.cobertura.xml' 
+          reports: './tests/HydraScript.UnitTests/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
@@ -87,4 +87,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
-          path: ./src/HydraScript/bin/Release/net8.0
+          path: ./src/HydraScript/bin/Release/net9.0

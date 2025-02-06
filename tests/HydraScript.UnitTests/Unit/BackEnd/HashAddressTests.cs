@@ -1,7 +1,7 @@
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Unit.BackEnd;
 
 public class HashAddressTests
 {

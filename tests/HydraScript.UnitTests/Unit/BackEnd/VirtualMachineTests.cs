@@ -9,7 +9,7 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
 using Xunit;
 
-namespace HydraScript.Tests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Unit.BackEnd;
 
 public class VirtualMachineTests
 {
