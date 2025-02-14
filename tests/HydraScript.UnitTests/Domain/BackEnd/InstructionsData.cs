@@ -8,7 +8,7 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Wr
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
 
-namespace HydraScript.UnitTests.TestData;
+namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class InstructionsData : IEnumerable<object[]>
 {

@@ -1,8 +1,7 @@
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.FrontEnd;
+namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class TextCoordinateSystemComputerTests
 {

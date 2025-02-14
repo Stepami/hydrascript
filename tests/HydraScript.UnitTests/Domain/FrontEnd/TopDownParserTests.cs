@@ -2,10 +2,8 @@ using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl;
 using HydraScript.Infrastructure;
-using HydraScript.UnitTests.TestData;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.FrontEnd;
+namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class TopDownParserTests
 {

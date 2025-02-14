@@ -4,9 +4,8 @@ using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Infrastructure;
 using HydraScript.Infrastructure.Dumping;
 using Microsoft.Extensions.Options;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.Infrastructure;
+namespace HydraScript.UnitTests.Infrastructure;
 
 public class LoggingEntitiesTests
 {

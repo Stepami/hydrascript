@@ -1,6 +1,4 @@
-using Xunit;
-
-namespace HydraScript.UnitTests.TestData;
+namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class LexerSuccessData : TheoryData<string>
 {

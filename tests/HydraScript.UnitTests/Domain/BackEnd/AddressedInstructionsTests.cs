@@ -3,9 +3,8 @@ using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Values;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class AddressedInstructionsTests
 {

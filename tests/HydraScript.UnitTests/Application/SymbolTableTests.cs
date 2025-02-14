@@ -1,8 +1,7 @@
 using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.IR;
+namespace HydraScript.UnitTests.Application;
 
 public class SymbolTableTests
 {

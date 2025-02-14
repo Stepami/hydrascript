@@ -7,9 +7,8 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Cr
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class VirtualMachineTests
 {

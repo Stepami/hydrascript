@@ -1,13 +1,12 @@
 using HydraScript.Application.StaticAnalysis;
 using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 using HydraScript.Domain.IR.Impl.Symbols;
-using Xunit;
-using BlockStatement = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements.BlockStatement;
-using FunctionDeclaration = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded.FunctionDeclaration;
-using IdentifierReference = HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions.IdentifierReference;
 
-namespace HydraScript.UnitTests.Unit.IR;
+namespace HydraScript.UnitTests.Application;
 
 public class FunctionWithUndefinedReturnStorageTests
 {
