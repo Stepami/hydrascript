@@ -3,6 +3,7 @@
     <PropertyGroup>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
+        <NoWarn>RS1041</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,7 +12,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     </ItemGroup>
 
     <ItemGroup>

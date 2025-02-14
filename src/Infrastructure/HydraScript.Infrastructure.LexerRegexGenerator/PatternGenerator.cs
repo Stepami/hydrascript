@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace HydraScript.Infrastructure.LexerRegexGenerator;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public partial class PatternGenerator : IIncrementalGenerator
 {
     public ITokenTypesJsonStringProvider Provider { get; init; } = new DefaultTokenTypesJsonStringProvider();
