@@ -3,7 +3,7 @@
     <PropertyGroup>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
-        <NoWarn>RS1041</NoWarn>
+        <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Domain\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj" />
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj" PrivateAssets="all" OutputItemType="Analyzer" />
     </ItemGroup>
 
 </Project>

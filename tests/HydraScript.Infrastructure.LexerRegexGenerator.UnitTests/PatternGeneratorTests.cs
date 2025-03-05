@@ -1,37 +1,24 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NSubstitute;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HydraScript.Infrastructure.LexerRegexGenerator.UnitTests;
 
-public class PatternGeneratorTests
+public class PatternGeneratorTests(ITestOutputHelper output)
 {
-    [StringSyntax(StringSyntaxAttribute.Json)]
-    private const string JsonStringReplacement =
-        """
-        [
-            {
-                "tag": "Test2",
-                "pattern": "test2",
-                "priority": 2
-            },
-            {
-                "tag": "Test1",
-                "pattern": "test1",
-                "priority": 1
-            }
-        ]
-        """;
-
     [Fact]
     public void Initialize_PatternContainerMarked_CorrectlyGenerated()
     {
-        var provider = Substitute.For<ITokenTypesJsonStringProvider>();
-        provider.TokenTypesJsonString.Returns(JsonStringReplacement);
+        var provider = Substitute.For<ITokenTypesStreamProvider>();
+        provider.TokenTypesStream.Returns(
+        [
+            new(Tag: "Test2", Pattern: "test2", Priority: 2),
+            new(Tag: "Test1", Pattern: "test1", Priority: 1)
+        ]);
         var generator = new PatternGenerator
         {
             Provider = provider
@@ -64,6 +51,7 @@ internal partial class PatternContainer
 
 """";
 
+        output.WriteLine(generatedFileSyntax.GetText().ToString());
         Assert.Equal(
             expectedSource,
             generatedFileSyntax.GetText().ToString(),
@@ -72,7 +60,7 @@ internal partial class PatternContainer
 
     private static CSharpCompilation CreateCompilation(string source) =>
         CSharpCompilation.Create("compilation",
-            new[] { CSharpSyntaxTree.ParseText(source) },
-            new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+            [CSharpSyntaxTree.ParseText(source)],
+            [MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location)],
             new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 }
