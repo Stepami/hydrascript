@@ -5,4 +5,8 @@
         <PackageReference Include="Visitor.NET.AutoVisitableGen" PrivateAssets="all" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj" />
+    </ItemGroup>
+
 </Project>

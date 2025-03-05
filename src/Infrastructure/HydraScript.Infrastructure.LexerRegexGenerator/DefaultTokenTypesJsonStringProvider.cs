@@ -1,4 +1,4 @@
-using HydraScript.Domain.FrontEnd.Lexer;
+using HydraScript.Domain.Constants;
 
 namespace HydraScript.Infrastructure.LexerRegexGenerator;
 

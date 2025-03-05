@@ -1,6 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-
-namespace HydraScript.Domain.FrontEnd.Lexer;
+namespace HydraScript.Domain.Constants;
 
 public static class TokenTypesJson
 {

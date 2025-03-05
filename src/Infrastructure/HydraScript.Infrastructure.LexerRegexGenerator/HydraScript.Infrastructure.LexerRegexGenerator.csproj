@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Domain\HydraScript.Domain.FrontEnd\HydraScript.Domain.FrontEnd.csproj" />
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj" />
     </ItemGroup>
 
 </Project>

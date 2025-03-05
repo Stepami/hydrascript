@@ -4,6 +4,7 @@ using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
+using HydraScript.Domain.Constants;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
@@ -82,8 +83,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     {
         var jumpType = visitable.Keyword switch
         {
-            InsideStatementJump.Break => InsideStatementJumpType.Break,
-            InsideStatementJump.Continue => InsideStatementJumpType.Continue,
+            InsideStatementJumpKeyword.Break => InsideStatementJumpType.Break,
+            InsideStatementJumpKeyword.Continue => InsideStatementJumpType.Continue,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(visitable.Keyword), visitable.Keyword,
                 "Unsupported keyword inside loop")
