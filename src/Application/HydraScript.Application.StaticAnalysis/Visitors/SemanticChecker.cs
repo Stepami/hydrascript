@@ -1,4 +1,5 @@
 using HydraScript.Application.StaticAnalysis.Exceptions;
+using HydraScript.Domain.Constants;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
@@ -105,18 +106,18 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     {
         switch (visitable.Keyword)
         {
-            case InsideStatementJump.Break:
+            case InsideStatementJumpKeyword.Break:
                 if (!(visitable.ChildOf<IfStatement>() || visitable.ChildOf<WhileStatement>()))
                     throw new OutsideOfStatement(
                         visitable.Segment,
-                        keyword: InsideStatementJump.Break,
+                        visitable.Keyword,
                         statement: "if|while");
                 break;
-            case InsideStatementJump.Continue:
+            case InsideStatementJumpKeyword.Continue:
                 if (!visitable.ChildOf<WhileStatement>())
                     throw new OutsideOfStatement(
                         visitable.Segment,
-                        keyword: InsideStatementJump.Continue,
+                        visitable.Keyword,
                         statement: "while");
                 break;
         }
