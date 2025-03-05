@@ -6,10 +6,7 @@ public static class TokenTypes
         string Tag,
         string Pattern,
         int Priority,
-        bool CanIgnore = false)
-    {
-        internal string GetNamedRegex() => $"(?<{Tag}>{Pattern})";
-    }
+        bool CanIgnore = false);
 
     public static IEnumerable<Dto> Stream
     {
