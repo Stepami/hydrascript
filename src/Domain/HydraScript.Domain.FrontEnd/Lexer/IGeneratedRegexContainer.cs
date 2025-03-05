@@ -4,5 +4,5 @@ namespace HydraScript.Domain.FrontEnd.Lexer;
 
 public interface IGeneratedRegexContainer
 {
-    public static abstract Regex GetRegex();
+    public static abstract Regex Regex { get; }
 }
