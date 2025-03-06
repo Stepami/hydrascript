@@ -63,7 +63,7 @@ jobs:
         with:
           path: ./tests/HydraScript.IntegrationTests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 20
+          minimum_coverage: 80
           fail_below_threshold: true
           show_class_names: true
           show_missing: true

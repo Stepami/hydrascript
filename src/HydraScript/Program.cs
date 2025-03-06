@@ -1,6 +1,7 @@
 ﻿using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
+using System.Diagnostics.CodeAnalysis;
 using HydraScript;
 using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging.Console;
 
 return GetRunner(ConfigureHost).Invoke(args);
 
+[ExcludeFromCodeCoverage]
 internal static partial class Program
 {
     internal static readonly ExecuteCommand Command = new();

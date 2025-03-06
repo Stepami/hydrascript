@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Console;
 
 namespace HydraScript;
 
+[ExcludeFromCodeCoverage]
 internal class SimplestConsoleFormatter() : ConsoleFormatter(nameof(SimplestConsoleFormatter))
 {
     public override void Write<TState>(
