@@ -15,7 +15,10 @@ public class TestHostFixture(
 {
     private readonly List<string> _logMessages = [];
 
-    public readonly string[] InMemoryScript = ["file.js"];
+    public const string ScriptFileName = "file";
+    public readonly string[] InMemoryScript = [$"{ScriptFileName}.js"];
+    public readonly string[] InMemoryScriptWithDump = [$"{ScriptFileName}.js", "-d"];
+
     public IReadOnlyCollection<string> LogMessages => _logMessages;
 
     public ITestOutputHelper? OutputHelper
@@ -41,12 +44,13 @@ public class TestHostFixture(
                 .ConfigureServices((context, services) =>
                 {
                     services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
-                    var fileInfo = context.GetInvocationContext().ParseResult
-                        .GetValueForArgument(Program.Command.PathArgument);
+                    var parseResult = context.GetInvocationContext().ParseResult;
+                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
+                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
                     services
                         .AddDomain()
                         .AddApplication()
-                        .AddInfrastructure(dump: false, fileInfo);
+                        .AddInfrastructure(dump, fileInfo);
                     configureTestServices?.Invoke(services);
                 })
                 .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),

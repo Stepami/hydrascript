@@ -1,7 +1,6 @@
 using HydraScript.Domain.BackEnd.Impl.Addresses;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class HashAddressTests
 {
@@ -17,7 +16,7 @@ public class HashAddressTests
     }
     
     [Fact]
-    public void EqualsReturnsTrueForTwoSameOjectsWithSameSeed()
+    public void EqualsReturnsTrueForTwoSameObjectsWithSameSeed()
     {
         var address = new HashAddress(1);
 

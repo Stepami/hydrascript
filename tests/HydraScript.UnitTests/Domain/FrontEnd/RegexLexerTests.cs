@@ -1,11 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using AutoFixture.Xunit2;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
-using HydraScript.UnitTests.TestData;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.FrontEnd;
+namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class RegexLexerTests
 {
@@ -15,7 +16,7 @@ public class RegexLexerTests
 
     [Theory]
     [ClassData(typeof(LexerSuccessData))]
-    public void LexerDoesNotThrowTest(string text) => 
+    public void LexerDoesNotThrowTest(string text) =>
         Assert.Null(Record.Exception(() => _regexLexer.GetTokens(text)));
 
     [Theory]
@@ -33,15 +34,13 @@ public class RegexLexerTests
     }
 
     [Fact]
-    public void EmptyTextTest() => 
+    public void EmptyTextTest() =>
         Assert.NotEmpty(_regexLexer.GetTokens(""));
 
     [Fact]
     public void GetTokensSkipIgnorableTypesTest()
     {
-        const string text = @"
-                let x = 1 // int
-            ";
+        const string text = "let x = 1 // int";
         var tokens = _regexLexer.GetTokens(text);
         Assert.DoesNotContain(_regexLexer.Structure.FindByTag("Comment"), tokens.Select(x => x.Type));
     }
@@ -52,5 +51,34 @@ public class RegexLexerTests
         var tokens = _regexLexer.GetTokens(input);
         var token = tokens.First();
         token.Type.Should().Be(new TokenType("Ident"));
+    }
+
+    [Theory, AutoHydraScriptData]
+    public void GetTokens_MockedRegex_ValidOutput(
+        [MinLength(10), MaxLength(25)] TokenInput[] tokenInputs,
+        [Frozen] IStructure structure,
+        RegexLexer lexer)
+    {
+        var patterns = TokenInput.Pattern.Split('|');
+
+        structure.Regex.ReturnsForAnyArgs(
+            new Regex(string.Join('|', patterns.Select((x, i) => $"(?<TYPE{i}>{x})"))));
+        var tokenTypes = Enumerable.Range(0, patterns.Length)
+            .Select(x => new TokenType($"TYPE{x}"))
+            .ToList();
+
+        // ReSharper disable once GenericEnumeratorNotDisposed
+        structure.GetEnumerator()
+            .ReturnsForAnyArgs(_ => tokenTypes.GetEnumerator());
+
+        var tokens = lexer.GetTokens(
+            tokenInputs.Aggregate(
+                TokenInput.AdditiveIdentity,
+                (x, y) => x + y).Value);
+        for (var i = 0; i < tokenInputs.Length; i++)
+        {
+            tokens[i].Value.Should().BeEquivalentTo(tokenInputs[i].Value);
+            tokens[i].Type.Should().BeOneOf(tokenTypes);
+        }
     }
 }

@@ -1,7 +1,6 @@
 using HydraScript.Domain.IR.Types;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.IR.Types;
+namespace HydraScript.UnitTests.Domain.IR;
 
 public class ObjectTypeTests
 {
@@ -10,36 +9,32 @@ public class ObjectTypeTests
     {
         var number = new Type("number");
         var p2d1 = new ObjectType(
-            new PropertyType[]
-            {
+            [
                 new("x", number), 
                 new("y", number)
-            }
+            ]
         );
         var p2d2 = new ObjectType(
-            new PropertyType[]
-            {
+            [
                 new("y", number), 
                 new("x", number)
-            }
+            ]
         );
         Assert.Equal(p2d1, p2d2);
 
         var p3d1 = new ObjectType(
-            new PropertyType[]
-            {
+            [
                 new("a", number),
                 new("x", number),
                 new("y", number)
-            }
+            ]
         );
         var p3d2 = new ObjectType(
-            new PropertyType[]
-            {
+            [
                 new("y", number), 
                 new("x", number),
                 new("z", number)
-            }
+            ]
         );
         Assert.NotEqual(p3d1, p3d2);
         Assert.NotEqual(p3d2, p2d1);

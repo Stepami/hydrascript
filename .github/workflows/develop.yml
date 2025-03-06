@@ -52,17 +52,18 @@ jobs:
       - name: Build
         run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Release -v n
       - name: Unit Tests
+        run: dotnet test -c Release --no-build -v n --filter="Category=Unit"
+      - name: Integration Tests
         run: |
-          dotnet test -c Release ./tests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj --no-build -v n
-          dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Unit"
+          dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Integration"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request_target'
         uses: 5monkeys/cobertura-action@master
         with:
-          path: ./tests/HydraScript.UnitTests/coverage.cobertura.xml
+          path: ./tests/HydraScript.IntegrationTests/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 20
+          minimum_coverage: 80
           fail_below_threshold: true
           show_class_names: true
           show_missing: true
@@ -72,7 +73,7 @@ jobs:
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
-          reports: './tests/HydraScript.UnitTests/coverage.cobertura.xml' 
+          reports: './tests/HydraScript.IntegrationTests/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
@@ -80,8 +81,6 @@ jobs:
         with:
           name: CoverageReport   
           path: coverage-report
-      - name: Integration Tests
-        run: dotnet test -c Release --no-build -v n --filter="Category=Integration"
       - name: Upload Windows Build
         if: github.ref != 'refs/heads/master' && github.event_name == 'push'
         uses: actions/upload-artifact@v4

@@ -10,7 +10,7 @@ namespace HydraScript.Infrastructure.LexerRegexGenerator.UnitTests;
 
 public class PatternGeneratorTests(ITestOutputHelper output)
 {
-    [Fact]
+    [Fact, Trait("Category", "Unit")]
     public void Initialize_PatternContainerMarked_CorrectlyGenerated()
     {
         var provider = Substitute.For<ITokenTypesStreamProvider>();

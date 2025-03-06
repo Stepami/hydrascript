@@ -6,9 +6,12 @@ namespace HydraScript.IntegrationTests;
 
 internal static class ServiceCollectionTestExtensions
 {
-    internal static void SetupInMemoryScript(this IServiceCollection services, string script)
+    internal static void SetupInMemoryScript(
+        this IServiceCollection services,
+        string script,
+        IFileSystem? fileSystemMock = null)
     {
-        var fileSystem = Substitute.For<IFileSystem>();
+        var fileSystem = fileSystemMock ?? Substitute.For<IFileSystem>();
         var file = Substitute.For<IFile>();
         file.ReadAllText(default!).ReturnsForAnyArgs(script);
         fileSystem.File.ReturnsForAnyArgs(file);

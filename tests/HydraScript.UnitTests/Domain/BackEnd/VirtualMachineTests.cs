@@ -1,3 +1,4 @@
+using AutoFixture.Xunit2;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
@@ -7,29 +8,17 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Cr
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.BackEnd;
+namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class VirtualMachineTests
 {
-    private readonly IVirtualMachine _vm;
-
-    public VirtualMachineTests()
+    [Theory, AutoHydraScriptData]
+    public void CorrectPrintToOutTest([Frozen] IOutputWriter writer, IExecuteParams exParams)
     {
-        _vm = new VirtualMachine(Substitute.For<IOutputWriter>());
-    }
-
-    [Fact]
-    public void CorrectPrintToOutTest()
-    {
-        var writer = Substitute.For<IOutputWriter>();
-
-        var exParams = Substitute.For<IExecuteParams>();
         exParams.CallStack.Returns(new Stack<Call>());
-        exParams.Frames.Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
+        exParams.Frames.Returns(new Stack<Frame>([new Frame(new HashAddress(0))]));
         exParams.Arguments.Returns(new Queue<object?>());
-        exParams.Writer.Returns(writer);
 
         var print = new Print(new Constant(223))
         {
@@ -40,18 +29,18 @@ public class VirtualMachineTests
         writer.Received(1).WriteLine(223);
     }
 
-    [Fact]
-    public void ProgramWithoutHaltWillNotRunTest()
+    [Theory, AutoHydraScriptData]
+    public void ProgramWithoutHaltWillNotRunTest(VirtualMachine vm)
     {
         var program = new AddressedInstructions();
-        Assert.Throws<ArgumentNullException>(() => _vm.Run(program));
-        
+        Assert.Throws<ArgumentNullException>(() => vm.Run(program));
+
         program.Add(new Halt());
-        Assert.Null(Record.Exception(() => _vm.Run(program)));
+        Assert.Null(Record.Exception(() => vm.Run(program)));
     }
 
-    [Fact]
-    public void VirtualMachineFramesClearedAfterExecutionTest()
+    [Theory, AutoHydraScriptData]
+    public void VirtualMachineFramesClearedAfterExecutionTest(VirtualMachine vm)
     {
         AddressedInstructions program =
         [
@@ -62,13 +51,13 @@ public class VirtualMachineTests
             },
             new Halt()
         ];
-        
-        _vm.Run(program);
-        Assert.Empty(_vm.ExecuteParams.Frames);
+
+        vm.Run(program);
+        Assert.Empty(vm.ExecuteParams.Frames);
     }
 
-    [Fact]
-    public void VirtualMachineHandlesRecursionTest()
+    [Theory, AutoHydraScriptData]
+    public void VirtualMachineHandlesRecursionTest(VirtualMachine vm)
     {
         var halt = HaltTrackable();
         var factorial = new FunctionInfo("fact");
@@ -96,47 +85,46 @@ public class VirtualMachineTests
             },
             halt
         };
-        
-        _vm.Run(program);
-        Assert.Empty(_vm.ExecuteParams.CallStack);
-        Assert.Empty(_vm.ExecuteParams.Arguments);
+
+        vm.Run(program);
+        Assert.Empty(vm.ExecuteParams.CallStack);
+        Assert.Empty(vm.ExecuteParams.Arguments);
         halt.Received(1).Execute(
             Arg.Is<IExecuteParams>(
-                vm =>
-                    Convert.ToInt32(vm.Frames.Peek()["fa6"]) == 720));
-        _vm.ExecuteParams.Frames.Pop();
+                vmParam =>
+                    Convert.ToInt32(vmParam.Frames.Peek()["fa6"]) == 720));
+        vm.ExecuteParams.Frames.Pop();
     }
 
-    [Fact]
-    public void CreateArrayReservesCertainSpaceTest()
+    [Theory, AutoHydraScriptData]
+    public void CreateArrayReservesCertainSpaceTest(ExecuteParams vm)
     {
-        var vm = new ExecuteParams(Substitute.For<IOutputWriter>());
         vm.Frames.Push(new Frame(new HashAddress(0)));
-            
+
         var createArray = new CreateArray("arr", 6)
         {
             Address = new HashAddress(1)
         };
         createArray.Execute(vm);
-        Assert.Equal(6, ((List<object>) vm.Frames.Peek()["arr"]!).Count);
+        Assert.Equal(6, ((List<object>)vm.Frames.Peek()["arr"]!).Count);
 
         var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0))
         {
             Address = new HashAddress(2)
         };
         indexAssignment.Execute(vm);
-        Assert.Equal(0, ((List<object>) vm.Frames.Peek()["arr"]!)[0]);
+        Assert.Equal(0, ((List<object>)vm.Frames.Peek()["arr"]!)[0]);
 
         var removeFromArray = new RemoveFromArray("arr", new Constant(5))
         {
             Address = new HashAddress(3)
         };
         removeFromArray.Execute(vm);
-        Assert.Equal(5, ((List<object>) vm.Frames.Peek()["arr"]!).Count);
+        Assert.Equal(5, ((List<object>)vm.Frames.Peek()["arr"]!).Count);
     }
 
-    [Fact]
-    public void ObjectCreationTest()
+    [Theory, AutoHydraScriptData]
+    public void ObjectCreationTest(VirtualMachine vm)
     {
         var halt = HaltTrackable();
         AddressedInstructions program =
@@ -145,16 +133,16 @@ public class VirtualMachineTests
             new DotAssignment("obj", new Constant("prop"), new Constant(null, "null")),
             halt
         ];
-            
-        _vm.Run(program);
+
+        vm.Run(program);
         halt.Received(1).Execute(
             Arg.Is<IExecuteParams>(
-                vm =>
-                    ((Dictionary<string, object?>)vm.Frames.Peek()["obj"]!)["prop"] == null));
-        _vm.ExecuteParams.Frames.Pop();
+                vmParam =>
+                    ((Dictionary<string, object?>)vmParam.Frames.Peek()["obj"]!)["prop"] == null));
+        vm.ExecuteParams.Frames.Pop();
     }
 
-    public static Halt HaltTrackable()
+    private static Halt HaltTrackable()
     {
         var halt = Substitute.For<Halt>();
         halt.Execute(default!)

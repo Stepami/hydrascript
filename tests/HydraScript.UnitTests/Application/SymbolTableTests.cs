@@ -1,20 +1,14 @@
 using HydraScript.Domain.IR;
 using HydraScript.Domain.IR.Impl;
-using Xunit;
 
-namespace HydraScript.UnitTests.Unit.IR;
+namespace HydraScript.UnitTests.Application;
 
 public class SymbolTableTests
 {
-    [Fact]
-    public void FindSymbolTest()
+    [Theory, AutoHydraScriptData]
+    public void FindSymbolTest(ISymbol symbol)
     {
-        const string id = "ident";
-        var type = new Type(id);
-
-        var symbol = Substitute.For<ISymbol>();
-        symbol.Id.Returns(id);
-        symbol.Type.Returns(type);
+        var id = symbol.Id;
 
         var outerScope = new SymbolTable();
         var innerScope = new SymbolTable();
