@@ -18,8 +18,4 @@
         <InternalsVisibleTo Include="HydraScript.IntegrationTests" />
     </ItemGroup>
 
-    <PropertyGroup>
-        <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
-    </PropertyGroup>
-
 </Project>
