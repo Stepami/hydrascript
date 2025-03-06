@@ -53,13 +53,14 @@ public class RegexLexerTests
         token.Type.Should().Be(new TokenType("Ident"));
     }
 
-    [Theory, AutoData]
-    public void GetTokens_MockedRegex_ValidOutput([MinLength(10), MaxLength(25)] TokenInput[] tokenInputs)
+    [Theory, AutoHydraScriptData]
+    public void GetTokens_MockedRegex_ValidOutput(
+        [MinLength(10), MaxLength(25)] TokenInput[] tokenInputs,
+        [Frozen] IStructure structure,
+        RegexLexer lexer)
     {
         var patterns = TokenInput.Pattern.Split('|');
 
-        var structure = Substitute.For<IStructure>();
-        var lexer = new RegexLexer(structure, new TextCoordinateSystemComputer());
         structure.Regex.ReturnsForAnyArgs(
             new Regex(string.Join('|', patterns.Select((x, i) => $"(?<TYPE{i}>{x})"))));
         var tokenTypes = Enumerable.Range(0, patterns.Length)

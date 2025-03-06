@@ -13,7 +13,7 @@ public class AstNodeTests
     {
         var lexicalDecl = new LexicalDeclaration(false);
         List<StatementListItem> stmtItemList = [lexicalDecl];
-        // ReSharper disable once UnusedVariable
+
         var func = new FunctionDeclaration(
             name: new IdentifierReference(name: Guid.NewGuid().ToString()),
             new TypeIdentValue(

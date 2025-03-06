@@ -29,4 +29,12 @@ public class StructureTests
             ]);
         Assert.Equal(expectedText, structure.ToString());
     }
+
+    [Theory, AutoHydraScriptData]
+    public void GetTokenTypes_NoMatterWhat_AlwaysHaveEopAndError(Structure<DummyContainer> structure)
+    {
+        var tokenTypes = structure.ToList();
+        List<TokenType> expected = [new EndOfProgramType(), new ErrorType()];
+        tokenTypes.Should().Contain(expected);
+    }
 }
