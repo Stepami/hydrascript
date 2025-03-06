@@ -6,6 +6,7 @@
         <PackageReference Include="Fare" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="PolymorphicContracts.AutoFixture" />
+        <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>
 
     <ItemGroup>
