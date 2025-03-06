@@ -3,7 +3,7 @@
     <PropertyGroup>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
-        <NoWarn>RS1041</NoWarn>
+        <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,11 +11,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Domain\HydraScript.Domain.FrontEnd\HydraScript.Domain.FrontEnd.csproj" />
+      <ProjectReference Include="..\..\Domain\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj" PrivateAssets="all" OutputItemType="Analyzer" />
     </ItemGroup>
 
 </Project>

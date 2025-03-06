@@ -11,6 +11,7 @@
     <ItemGroup>
         <PackageReference Include="System.CommandLine" />
         <PackageReference Include="System.CommandLine.Hosting" />
+        <PackageReference Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>

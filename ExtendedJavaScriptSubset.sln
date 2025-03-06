@@ -100,6 +100,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Infrastructure.LexerRegexGenerator.UnitTests", "tests\HydraScript.Infrastructure.LexerRegexGenerator.UnitTests\HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj", "{829111AD-4A5C-4B3D-AC28-208309CE10D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydraScript.Domain.Constants", "src\Domain\HydraScript.Domain.Constants\HydraScript.Domain.Constants.csproj", "{E3E558A3-1999-48F9-B53D-2E583C18F000}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +152,10 @@ Global
 		{829111AD-4A5C-4B3D-AC28-208309CE10D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829111AD-4A5C-4B3D-AC28-208309CE10D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829111AD-4A5C-4B3D-AC28-208309CE10D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3E558A3-1999-48F9-B53D-2E583C18F000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3E558A3-1999-48F9-B53D-2E583C18F000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3E558A3-1999-48F9-B53D-2E583C18F000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3E558A3-1999-48F9-B53D-2E583C18F000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{54CBE5A7-3C3E-44ED-B877-7B08A818083B} = {86CF2A2F-4DFE-48E7-B062-EF824730916A}
@@ -169,5 +175,6 @@ Global
 		{1CE98127-3027-4BD4-AAA3-63A589B09E73} = {3F131901-A9EC-451A-B7E9-726887CFE5FB}
 		{74D1495B-12A4-4E1A-ABE0-93029ECDC5FE} = {B7DDF6C9-B67C-430A-948A-A380EF68DEF1}
 		{829111AD-4A5C-4B3D-AC28-208309CE10D6} = {3F131901-A9EC-451A-B7E9-726887CFE5FB}
+		{E3E558A3-1999-48F9-B53D-2E583C18F000} = {F0FC6D23-F932-4C11-8D0F-07894FC61511}
 	EndGlobalSection
 EndGlobal

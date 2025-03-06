@@ -14,7 +14,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
         .Concat([new EndOfProgramType(), new ErrorType()])
         .ToFrozenDictionary(x => x.Tag);
 
-    public Regex Regex { get; } = TContainer.GetRegex();
+    public Regex Regex { get; } = TContainer.Regex;
 
     public TokenType FindByTag(string tag) =>
         Types[tag];
