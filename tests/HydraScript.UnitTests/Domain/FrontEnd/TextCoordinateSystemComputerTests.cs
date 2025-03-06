@@ -5,7 +5,7 @@ namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class TextCoordinateSystemComputerTests
 {
-    private ITextCoordinateSystemComputer _sut = new TextCoordinateSystemComputer();
+    private readonly TextCoordinateSystemComputer _sut = new();
 
     [Fact]
     public void GetLines_NoNewLine_SingleIndexResult()
@@ -55,7 +55,7 @@ public class TextCoordinateSystemComputerTests
     }
 
     public static TheoryData<IReadOnlyList<int>> EmptySystems =>
-        new([[], [-1]]);
+        new([], [-1]);
 
     [Fact]
     public void GetCoordinates_NotEmptySystem_CorrectCoordinatesReturned()

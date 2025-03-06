@@ -1,5 +1,4 @@
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
-using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl;
 using HydraScript.Infrastructure;
 
@@ -7,7 +6,7 @@ namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public class TopDownParserTests
 {
-    private readonly IParser _parser = new TopDownParser(new RegexLexer(
+    private readonly TopDownParser _parser = new(new RegexLexer(
         new Structure<GeneratedRegexContainer>(new TokenTypesProvider()),
         new TextCoordinateSystemComputer()));
 

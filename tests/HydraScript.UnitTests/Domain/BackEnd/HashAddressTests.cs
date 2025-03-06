@@ -16,7 +16,7 @@ public class HashAddressTests
     }
     
     [Fact]
-    public void EqualsReturnsTrueForTwoSameOjectsWithSameSeed()
+    public void EqualsReturnsTrueForTwoSameObjectsWithSameSeed()
     {
         var address = new HashAddress(1);
 

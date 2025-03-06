@@ -12,12 +12,7 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 
 public class VirtualMachineTests
 {
-    private readonly IVirtualMachine _vm;
-
-    public VirtualMachineTests()
-    {
-        _vm = new VirtualMachine(Substitute.For<IOutputWriter>());
-    }
+    private readonly VirtualMachine _vm = new(Substitute.For<IOutputWriter>());
 
     [Fact]
     public void CorrectPrintToOutTest()
@@ -26,7 +21,7 @@ public class VirtualMachineTests
 
         var exParams = Substitute.For<IExecuteParams>();
         exParams.CallStack.Returns(new Stack<Call>());
-        exParams.Frames.Returns(new Stack<Frame>(new[] { new Frame(new HashAddress(0)) }));
+        exParams.Frames.Returns(new Stack<Frame>([new Frame(new HashAddress(0))]));
         exParams.Arguments.Returns(new Queue<object?>());
         exParams.Writer.Returns(writer);
 
@@ -153,7 +148,7 @@ public class VirtualMachineTests
         _vm.ExecuteParams.Frames.Pop();
     }
 
-    public static Halt HaltTrackable()
+    private static Halt HaltTrackable()
     {
         var halt = Substitute.For<Halt>();
         halt.Execute(default!)

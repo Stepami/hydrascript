@@ -37,9 +37,7 @@ public class RegexLexerTests
     [Fact]
     public void GetTokensSkipIgnorableTypesTest()
     {
-        const string text = @"
-                let x = 1 // int
-            ";
+        const string text = @"let x = 1 // int";
         var tokens = _regexLexer.GetTokens(text);
         Assert.DoesNotContain(_regexLexer.Structure.FindByTag("Comment"), tokens.Select(x => x.Type));
     }
