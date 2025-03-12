@@ -4,6 +4,17 @@
 
 ## "Расширенное подмножество ЯП JavaScript"
 
+### Скачать
+
+Файл интерпретатора собирается в рамках релиза на три платформы:
+- Windows (x64)
+- MacOS (arm64 Apple Silicon)
+- Linux (x64)
+
+Скачать нужную версию можно со страницы соответствующего релиза
+
+[Последний релиз доступен по этой ссылке](https://github.com/Stepami/hydrascript/releases/latest)
+
 ### Вводная информация
 
 За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
