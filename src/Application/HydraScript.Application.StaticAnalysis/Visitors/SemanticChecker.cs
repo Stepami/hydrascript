@@ -138,7 +138,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(IdentifierReference visitable)
     {
-        var symbol = _symbolTables[visitable.Scope].FindSymbol<ISymbol>(visitable.Name);
+        var symbol = _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(visitable.Name);
         if (symbol is { Initialized: false })
             throw new AccessBeforeInitialization(visitable);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
