@@ -5,12 +5,10 @@ public class VariableSymbol(
     Type type,
     bool readOnly = false) : Symbol(id, type)
 {
-    private bool _initialized = readOnly;
-
     public bool ReadOnly { get; } = readOnly;
-    public override bool Initialized => _initialized;
+    public bool Initialized { get; private set; } = readOnly;
 
-    public void Initialize() => _initialized = true;
+    public void Initialize() => Initialized = true;
 
     public override string ToString() =>
         $"{(ReadOnly ? "const " : "")}{Id}: {Type}";
