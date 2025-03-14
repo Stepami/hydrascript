@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 
@@ -32,14 +33,8 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     public IAbstractSyntaxTreeNode this[int index] =>
         Children[index];
 
-    public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes()
-    {
-        List<IAbstractSyntaxTreeNode> result = [this];
-        for (var index = 0; index < Children.Count; index++)
-            result.AddRange(Children[index].GetAllNodes());
+    public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes() => new TraverseEnumerator(this).ToList();
 
-        return result;
-    }
 
     public bool ChildOf<T>() where T : IAbstractSyntaxTreeNode
     {
@@ -63,4 +58,60 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     protected abstract string NodeRepresentation();
     public override string ToString() =>
         $"{GetHashCode()} [label=\"{NodeRepresentation()}\"]";
+
+    public struct TraverseEnumerator : 
+        IEnumerator<IAbstractSyntaxTreeNode>, 
+        IEnumerable<IAbstractSyntaxTreeNode>
+    {
+        [ThreadStatic] private static Stack<IAbstractSyntaxTreeNode>? _buffer;
+
+        private IAbstractSyntaxTreeNode _current;
+        public IAbstractSyntaxTreeNode Current
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _current;
+        }
+
+        private readonly Stack<IAbstractSyntaxTreeNode> _stack;
+        public TraverseEnumerator(IAbstractSyntaxTreeNode parent)
+        {
+            var stack = _buffer ?? new Stack<IAbstractSyntaxTreeNode>(128);
+            _buffer = null;
+
+            foreach(var child in parent)
+                stack.Push(child);
+
+            _stack = stack;
+            _current = null!;
+        }
+        public bool MoveNext()
+        {
+            var stack = _stack;
+            if(stack.Count == 0)
+                return false;
+
+            var current = _stack.Pop();
+
+            foreach(var child in current)
+                stack.Push(child);
+
+            _current = current;
+            return true;
+        }
+
+        public void Dispose()
+        {
+            _stack.Clear();
+            _buffer = _stack;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TraverseEnumerator GetEnumerator() => this;
+        public void Reset() { }
+        IEnumerator<IAbstractSyntaxTreeNode> IEnumerable<IAbstractSyntaxTreeNode>.GetEnumerator() => this;
+
+        IEnumerator IEnumerable.GetEnumerator() => this;
+
+        object IEnumerator.Current => Current;
+    }
 }
