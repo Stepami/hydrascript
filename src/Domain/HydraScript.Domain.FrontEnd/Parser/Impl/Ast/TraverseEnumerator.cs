@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast
 {
+    /// <summary>
+    /// Post in Telegram: https://t.me/csharp_gepard/89
+    /// </summary>
     public struct TraverseEnumerator :
             IEnumerator<IAbstractSyntaxTreeNode>,
             IEnumerable<IAbstractSyntaxTreeNode>
