@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast
 {
     /// <summary>
     /// Post in Telegram: https://t.me/csharp_gepard/89
     /// </summary>
-    public struct TraverseEnumerator :
+    internal struct TraverseEnumerator :
             IEnumerator<IAbstractSyntaxTreeNode>,
             IEnumerable<IAbstractSyntaxTreeNode>
     {
