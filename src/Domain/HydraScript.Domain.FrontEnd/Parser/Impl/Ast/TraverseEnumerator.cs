@@ -11,7 +11,7 @@ internal struct TraverseEnumerator :
     IEnumerable<IAbstractSyntaxTreeNode>
 {
     [ThreadStatic]
-    private static Stack<IAbstractSyntaxTreeNode>? _buffer;
+    private static Queue<IAbstractSyntaxTreeNode>? _buffer;
 
     private IAbstractSyntaxTreeNode _current;
 
@@ -21,30 +21,29 @@ internal struct TraverseEnumerator :
         get => _current;
     }
 
-    private readonly Stack<IAbstractSyntaxTreeNode> _stack;
+    private readonly Queue<IAbstractSyntaxTreeNode> _queue;
 
     public TraverseEnumerator(IAbstractSyntaxTreeNode parent)
     {
-        var stack = _buffer ?? new Stack<IAbstractSyntaxTreeNode>(128);
+        var queue = _buffer ?? new Queue<IAbstractSyntaxTreeNode>(128);
         _buffer = null;
 
-        for (int i = 0; i < parent.Count; i++)
-            stack.Push(parent[i]);
+        queue.Enqueue(parent);
 
-        _stack = stack;
+        _queue = queue;
         _current = null!;
     }
 
     public bool MoveNext()
     {
-        var stack = _stack;
-        if (stack.Count == 0)
+        var queue = _queue;
+        if (queue.Count == 0)
             return false;
 
-        var current = _stack.Pop();
+        var current = _queue.Dequeue();
 
         for (int i = 0; i < current.Count; i++)
-            stack.Push(current[i]);
+            queue.Enqueue(current[i]);
 
         _current = current;
         return true;
@@ -52,8 +51,8 @@ internal struct TraverseEnumerator :
 
     public void Dispose()
     {
-        _stack.Clear();
-        _buffer = _stack;
+        _queue.Clear();
+        _buffer = _queue;
     }
 
     public void Reset()
