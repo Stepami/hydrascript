@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 
@@ -33,8 +32,8 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     public IAbstractSyntaxTreeNode this[int index] =>
         Children[index];
 
-    public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes() => new TraverseEnumerator(this).ToList();
-
+    public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes() =>
+        new TraverseEnumerator(this).ToList();
 
     /// <summary>
     /// Метод возвращает <c>true</c>, если узел - потомок заданного типа и выполняется заданное условие.<br/>
