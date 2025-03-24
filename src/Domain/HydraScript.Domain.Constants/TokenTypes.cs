@@ -2,7 +2,7 @@ namespace HydraScript.Domain.Constants;
 
 public static class TokenTypes
 {
-    public record Dto(
+    public record struct Dto(
         string Tag,
         string Pattern,
         int Priority,
