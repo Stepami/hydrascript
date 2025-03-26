@@ -14,19 +14,19 @@ public class SymbolTable : ISymbolTable
 
     /// <inheritdoc cref="ISymbolTable.AddSymbol"/>
     public void AddSymbol(ISymbol symbol) =>
-        _symbols[symbol.Id] = symbol;
+        _symbols[symbol.Id.Value] = symbol;
 
     /// <inheritdoc cref="ISymbolTable.FindSymbol{TSymbol}"/>
-    public TSymbol? FindSymbol<TSymbol>(string id)
+    public TSymbol? FindSymbol<TSymbol>(ISymbolId id)
         where TSymbol : class, ISymbol
     {
-        var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
+        var hasInsideTheScope = _symbols.TryGetValue(id.Value, out var symbol);
         return !hasInsideTheScope
             ? _openScope?.FindSymbol<TSymbol>(id)
             : symbol as TSymbol;
     }
 
     /// <inheritdoc cref="ISymbolTable.ContainsSymbol"/>
-    public bool ContainsSymbol(string id) =>
-        _symbols.ContainsKey(id);
+    public bool ContainsSymbol(ISymbolId id) =>
+        _symbols.ContainsKey(id.Value);
 }
