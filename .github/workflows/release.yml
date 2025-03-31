@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - 'release'
-      
+
 jobs:
   create-release:
     name: Create release
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:
       determined_version: ${{ steps.version_step.outputs.majorMinorPatch }}
+      publish_version: ${{ steps.version_step.outputs.publishVersion }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,10 +20,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-         dotnet-version: 7.0.x
+          dotnet-version: 7.0.x
       - name: Determine Version
         id: version_step
-        run: echo "majorMinorPatch=$( git describe --tags --abbrev=0 )" >> $GITHUB_OUTPUT
+        run: |
+          tag=$( git describe --tags --abbrev=0 )
+          echo "majorMinorPatch=$tag" >> $GITHUB_OUTPUT
+          echo "publishVersion=${tag:1}" >> $GITHUB_OUTPUT
       - name: Setup GitReleaseManager
         uses: gittools/actions/gitreleasemanager/setup@v3.0.0
         with:
@@ -43,7 +47,7 @@ jobs:
       determined_version: ${{ needs.create-release.outputs.determined_version }}
     strategy:
       matrix:
-        config: 
+        config:
           - os: ubuntu-latest
             rid: linux-x64
           - os: macos-latest
@@ -66,9 +70,8 @@ jobs:
           versionSpec: '0.18.x'
       - name: Publish
         run: |
-          tag=${{ needs.create-release.outputs.determined_version }}
           mkdir output
-          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${tag:1} --self-contained false -o ./output
+          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${{ needs.create-release.outputs.publish_version }} --self-contained false -o ./output
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
@@ -93,7 +96,7 @@ jobs:
         uses: gittools/actions/gitreleasemanager/setup@v3.0.0
         with:
           versionSpec: '0.18.x'
-      - name: Publish release with GitReleaseManager  
+      - name: Publish release with GitReleaseManager
         uses: gittools/actions/gitreleasemanager/publish@v3.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
