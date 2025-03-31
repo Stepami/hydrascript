@@ -1,7 +1,7 @@
 namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class TypeSymbol(Type type, string? id = null) :
-    Symbol("type " + (id ?? type.ToString()), type)
+    Symbol(id ?? type.ToString(), type)
 {
     public override bool Equals(object? obj) =>
         obj is TypeSymbol typeSymbol &&
