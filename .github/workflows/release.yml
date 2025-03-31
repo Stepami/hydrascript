@@ -33,8 +33,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: 'Stepami'
           repository: 'hydrascript'
-          milestone: 'v${{ steps.version_step.outputs.majorMinorPatch }}'
-          name: 'v${{ steps.version_step.outputs.majorMinorPatch }}'
+          milestone: ${{ steps.version_step.outputs.majorMinorPatch }}
+          name: ${{ steps.version_step.outputs.majorMinorPatch }}
 
   upload-release-assets:
     name: Upload release assets
@@ -76,7 +76,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: 'Stepami'
           repository: 'hydrascript'
-          milestone: 'v${{ needs.create-release.outputs.determined_version }}'
+          milestone: ${{ needs.create-release.outputs.determined_version }}
           assets: ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
 
   publish-release:
@@ -98,11 +98,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: 'Stepami'
           repository: 'hydrascript'
-          milestone: 'v${{ needs.upload-release-assets.outputs.determined_version }}'
+          milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
       - name: Close release with GitReleaseManager
         uses: gittools/actions/gitreleasemanager/close@v3.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: 'Stepami'
           repository: 'hydrascript'
-          milestone: 'v${{ needs.upload-release-assets.outputs.determined_version }}'
+          milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
