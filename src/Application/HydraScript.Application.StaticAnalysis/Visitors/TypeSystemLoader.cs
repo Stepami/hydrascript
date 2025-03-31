@@ -2,6 +2,7 @@ using HydraScript.Application.StaticAnalysis.Exceptions;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
+using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
@@ -43,7 +44,7 @@ internal class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     public VisitUnit Visit(TypeDeclaration visitable)
     {
         var symbolTable = _symbolTables[visitable.Scope];
-        if (symbolTable.ContainsSymbol(visitable.TypeId) ||
+        if (symbolTable.ContainsSymbol(new TypeSymbolId(visitable.TypeId)) ||
             _provider.Contains(visitable.TypeId.Name))
             throw new DeclarationAlreadyExists(visitable.TypeId);
 
