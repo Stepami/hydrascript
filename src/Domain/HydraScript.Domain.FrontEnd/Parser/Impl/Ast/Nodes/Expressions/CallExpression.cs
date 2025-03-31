@@ -16,6 +16,8 @@ public partial class CallExpression : LeftHandSideExpression
     public bool IsEmptyCall { get; set; }
     public bool HasReturnValue { get; set; }
 
+    public string ComputedFunctionAddress { get; set; } = default!;
+
     public CallExpression(MemberExpression member, IEnumerable<Expression> expressions)
     {
         Member = member;

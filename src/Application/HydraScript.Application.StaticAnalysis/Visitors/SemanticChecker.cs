@@ -420,6 +420,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 ?? throw new UnknownIdentifierReference(visitable.Id);
         }
 
+        visitable.ComputedFunctionAddress = functionSymbol.Id.ToString();
         visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
 

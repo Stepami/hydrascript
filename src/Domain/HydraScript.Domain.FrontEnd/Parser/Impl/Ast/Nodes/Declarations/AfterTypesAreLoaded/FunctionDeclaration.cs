@@ -17,6 +17,8 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public BlockStatement Statements { get; }
     public bool IsEmpty => Statements.Count == 0;
 
+    public string ComputedFunctionAddress { get; set; } = default!;
+
     public FunctionDeclaration(
         IdentifierReference name,
         TypeValue returnTypeValue,

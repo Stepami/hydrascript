@@ -71,8 +71,9 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             new VariableSymbol(
                 name: x.Key,
                 x.TypeValue.Accept(_typeBuilder))).ToList();
-        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(
-                new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type))))
+        var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
+        visitable.ComputedFunctionAddress = functionSymbolId.ToString();
+        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(functionSymbolId))
             throw new DeclarationAlreadyExists(visitable.Name);
 
         for (var i = 0; i < parameters.Count; i++)
