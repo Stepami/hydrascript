@@ -29,6 +29,8 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
             "lcm.js",
             "linkedlist.js",
             "objeditread.js",
+            "overload.js",
+            "overload_object.js",
             "posneg.js",
             "prime.js",
             "primefactor.js",

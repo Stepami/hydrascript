@@ -80,6 +80,14 @@
             <Link>Samples\objeditread.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\overload.js">
+            <Link>Samples\overload.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\..\samples\overload_object.js">
+            <Link>Samples\overload_object.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\posneg.js">
             <Link>Samples\posneg.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
