@@ -3,10 +3,10 @@ using System.Text;
 namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class FunctionSymbol(
-    string id,
+    string name,
     IEnumerable<ISymbol> parameters,
     Type type,
-    bool isEmpty) : Symbol(id, type)
+    bool isEmpty) : Symbol(name, type)
 {
     private Type _returnType = type;
     /// <summary>Тип возврата функции</summary>
