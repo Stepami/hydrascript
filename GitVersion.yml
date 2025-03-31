@@ -1,9 +1,4 @@
 mode: Mainline
-branches:
-  release:
-    tag: ''
-    regex: ^release$
-    increment: None
 ignore:
   sha: []
 merge-message-formats: {}
