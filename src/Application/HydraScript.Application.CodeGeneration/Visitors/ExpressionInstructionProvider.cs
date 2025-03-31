@@ -262,7 +262,6 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             return [];
 
         var methodCall = !visitable.Empty();
-        string functionId;
         AddressedInstructions result = [];
 
         if (methodCall)
@@ -271,12 +270,6 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             var lastMemberInstruction = (DotRead)memberInstructions[memberInstructions.End];
             memberInstructions.Remove(lastMemberInstruction);
             result.AddRange(memberInstructions);
-
-            functionId = lastMemberInstruction.Property;
-        }
-        else
-        {
-            functionId = visitable.Id;
         }
 
         if (methodCall)
@@ -298,7 +291,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         }
 
         result.Add(new CallFunction(
-            new FunctionInfo(functionId),
+            new FunctionInfo(visitable.ComputedFunctionAddress),
             visitable.HasReturnValue));
 
         return result;

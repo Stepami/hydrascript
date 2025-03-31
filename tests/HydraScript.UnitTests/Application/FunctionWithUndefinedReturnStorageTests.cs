@@ -18,7 +18,7 @@ public class FunctionWithUndefinedReturnStorageTests
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
         var symbol = new FunctionSymbol(
-            id: FunctionName,
+            name: FunctionName,
             parameters: [],
             "undefined",
             isEmpty: false);
@@ -68,13 +68,13 @@ public class FunctionWithUndefinedReturnStorageTests
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
         var removable = new FunctionSymbol(
-            id: "key2",
+            name: "key2",
             parameters: [],
             "undefined",
             isEmpty: false);
 
         storage.Save(new FunctionSymbol(
-            id: "key1",
+            name: "key1",
             parameters: [],
             "undefined",
             isEmpty: false), declaration: declarations[0]);
@@ -82,13 +82,13 @@ public class FunctionWithUndefinedReturnStorageTests
         storage.Save(removable, declaration: declarations[1]);
 
         storage.Save(new FunctionSymbol(
-            id: "key3",
+            name: "key3",
             parameters: [],
             "undefined",
             isEmpty: false), declaration: declarations[2]);
 
         storage.Save(new FunctionSymbol(
-            id: "key4",
+            name: "key4",
             parameters: [],
             "undefined",
             isEmpty: false), declaration: declarations[3]);

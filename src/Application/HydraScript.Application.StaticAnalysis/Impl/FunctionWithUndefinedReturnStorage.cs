@@ -1,11 +1,12 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
+using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
 
 internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturnStorage
 {
-    private readonly OrderedDictionary<string, FunctionDeclaration> _declarations = [];
+    private readonly OrderedDictionary<FunctionSymbolId, FunctionDeclaration> _declarations = [];
 
     public void Save(FunctionSymbol symbol, FunctionDeclaration declaration)
     {

@@ -32,5 +32,6 @@ public partial class AsString(IValue value) : Simple(value)
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(double))]
     [JsonSerializable(typeof(string))]
+    [JsonSerializable(typeof(int))]
     private partial class AsStringSerializationContext : JsonSerializerContext;
 }

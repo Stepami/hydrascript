@@ -4,6 +4,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Types;
 
@@ -43,7 +44,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            if (_symbolTables[visitable.Scope].ContainsSymbol(assignment.Destination.Id))
+            if (_symbolTables[visitable.Scope].ContainsSymbol(new VariableSymbolId(assignment.Destination.Id)))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
             var destinationType = assignment.DestinationType?.Accept(
@@ -66,18 +67,21 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
-        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(visitable.Name))
+        var parameters = visitable.Arguments.Select(x =>
+            new VariableSymbol(
+                name: x.Key,
+                x.TypeValue.Accept(_typeBuilder))).ToList();
+        var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
+        visitable.ComputedFunctionAddress = functionSymbolId.ToString();
+        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(functionSymbolId))
             throw new DeclarationAlreadyExists(visitable.Name);
 
-        var parameters = visitable.Arguments.Select(x =>
+        for (var i = 0; i < parameters.Count; i++)
         {
-            var arg = new VariableSymbol(
-                id: x.Key,
-                x.TypeValue.Accept(_typeBuilder));
+            var arg = parameters[i];
             arg.Initialize();
             _symbolTables[visitable.Scope].AddSymbol(arg);
-            return arg;
-        }).ToList();
+        }
 
         var functionSymbol = new FunctionSymbol(
             visitable.Name,

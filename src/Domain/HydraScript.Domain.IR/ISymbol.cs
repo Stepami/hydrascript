@@ -2,6 +2,7 @@ namespace HydraScript.Domain.IR;
 
 public interface ISymbol
 {
-    public string Id { get; }
+    public SymbolId Id { get; }
+    public string Name { get; }
     public Type Type { get; }
 }

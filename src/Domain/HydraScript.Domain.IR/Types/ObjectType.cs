@@ -1,15 +1,16 @@
 using System.Text;
+using HydraScript.Domain.IR.Impl.SymbolIds;
 
 namespace HydraScript.Domain.IR.Types;
 
 public class ObjectType : NullableType
 {
     private readonly Dictionary<string, Type> _properties;
-    private readonly HashSet<string> _methods;
+    private readonly List<FunctionSymbolId> _methods = [];
     private readonly ObjectTypeHasher _hasher;
     private readonly ObjectTypePrinter _serializer;
 
-    public string LastAccessedMethod { get; private set; } = default!;
+    public string LastAccessedMethodName { get; private set; } = default!;
 
     public ObjectType(IEnumerable<PropertyType> properties)
     {
@@ -18,7 +19,6 @@ public class ObjectType : NullableType
             .ToDictionary(
                 x => x.Id,
                 x => x.Type);
-        _methods = new HashSet<string>();
 
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
@@ -30,13 +30,13 @@ public class ObjectType : NullableType
         private set => _properties[id] = value!;
     }
 
-    public void AddMethod(string methodName) =>
+    public void AddMethod(FunctionSymbolId methodName) =>
         _methods.Add(methodName);
 
     public bool HasMethod(string methodName)
     {
-        LastAccessedMethod = methodName;
-        return _methods.Contains(methodName);
+        LastAccessedMethodName = methodName;
+        return _methods.Any(x => x.HasName(methodName));
     }
 
     public override void ResolveReference(

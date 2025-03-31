@@ -118,7 +118,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         if (!visitable.Statements.Any())
             return [];
 
-        var functionInfo = new FunctionInfo(visitable.Name);
+        var functionInfo = new FunctionInfo(visitable.ComputedFunctionAddress);
 
         var result = new AddressedInstructions
         {
