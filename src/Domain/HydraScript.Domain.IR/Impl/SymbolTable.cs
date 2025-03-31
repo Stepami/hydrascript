@@ -2,7 +2,7 @@ namespace HydraScript.Domain.IR.Impl;
 
 public class SymbolTable : ISymbolTable
 {
-    private readonly Dictionary<string, ISymbol> _symbols = [];
+    private readonly Dictionary<SymbolId, ISymbol> _symbols = [];
     private ISymbolTable? _openScope;
 
     /// <inheritdoc cref="ISymbolTable.AddOpenScope"/>
@@ -17,7 +17,7 @@ public class SymbolTable : ISymbolTable
         _symbols[symbol.Id] = symbol;
 
     /// <inheritdoc cref="ISymbolTable.FindSymbol{TSymbol}"/>
-    public TSymbol? FindSymbol<TSymbol>(string id)
+    public TSymbol? FindSymbol<TSymbol>(SymbolId id)
         where TSymbol : class, ISymbol
     {
         var hasInsideTheScope = _symbols.TryGetValue(id, out var symbol);
@@ -27,6 +27,6 @@ public class SymbolTable : ISymbolTable
     }
 
     /// <inheritdoc cref="ISymbolTable.ContainsSymbol"/>
-    public bool ContainsSymbol(string id) =>
+    public bool ContainsSymbol(SymbolId id) =>
         _symbols.ContainsKey(id);
 }
