@@ -140,6 +140,10 @@
             <Link>Samples\vec2d.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\xxx.js">
+            <Link>Samples\xxx.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

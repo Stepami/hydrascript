@@ -44,5 +44,6 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
             "this.js",
             "typeresolving.js",
             "vec2d.js",
+            "xxx.js"
         ]);
 }
