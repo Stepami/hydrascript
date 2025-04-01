@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="HydraScript.UnitTests" />
+        <InternalsVisibleTo Include="HydraScript.IntegrationTests" />
     </ItemGroup>
 
 </Project>

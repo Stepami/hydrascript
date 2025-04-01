@@ -52,5 +52,7 @@ public static class ServiceCollectionExtensions
             services.Decorate<IParser, DumpingParser>();
             services.Decorate<IVirtualMachine, DumpingVirtualMachine>();
         }
+
+        services.AddSingleton<Executor>();
     }
 } 

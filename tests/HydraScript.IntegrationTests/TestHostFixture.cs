@@ -1,10 +1,9 @@
-using System.CommandLine.Hosting;
-using System.CommandLine.Parsing;
+using System.IO.Abstractions;
 using HydraScript.Infrastructure;
 using MartinCostello.Logging.XUnit;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NSubstitute;
 using Xunit.Abstractions;
 
 namespace HydraScript.IntegrationTests;
@@ -13,11 +12,21 @@ public class TestHostFixture(
     Xunit.DependencyInjection.ITestOutputHelperAccessor accessor) :
     IDisposable, ITestOutputHelperAccessor
 {
+    public record Options(
+        string FileName = ScriptFileName + ".js",
+        bool Dump = false,
+        bool MockFileSystem = true,
+        string InMemoryScript = "");
+
+    public class Runner(IServiceProvider serviceProvider, Executor executor)
+    {
+        public IServiceProvider ServiceProvider => serviceProvider;
+        public int Invoke() => executor.Invoke();
+    }
+
     private readonly List<string> _logMessages = [];
 
     public const string ScriptFileName = "file";
-    public readonly string[] InMemoryScript = [$"{ScriptFileName}.js"];
-    public readonly string[] InMemoryScriptWithDump = [$"{ScriptFileName}.js", "-d"];
 
     public IReadOnlyCollection<string> LogMessages => _logMessages;
 
@@ -27,34 +36,44 @@ public class TestHostFixture(
         set { }
     }
 
-    public Parser GetRunner(Action<IServiceCollection>? configureTestServices = null) =>
-        Program.GetRunner(configureHost: builder => builder
-                .ConfigureLogging(x => x.ClearProviders()
+    public Runner GetRunner(Options options, Action<IServiceCollection>? configureTestServices = null)
+    {
+        var serviceProvider = Program.GetServiceProvider(
+            new FileInfo(options.FileName),
+            options.Dump,
+            services =>
+            {
+                services.AddLogging(x => x.ClearProviders()
                     .AddXUnit(this)
-                    .AddFakeLogging(options =>
+                    .AddFakeLogging(fakeLogOptions =>
                     {
-                        options.OutputSink = logMessage => _logMessages.Add(logMessage);
-                        options.OutputFormatter = fakeLogRecord =>
+                        fakeLogOptions.OutputSink = logMessage => _logMessages.Add(logMessage);
+                        fakeLogOptions.OutputFormatter = fakeLogRecord =>
                             fakeLogRecord.Level switch
                             {
                                 LogLevel.Error => $"{fakeLogRecord.Message} {fakeLogRecord.Exception?.Message}",
                                 _ => fakeLogRecord.ToString()
                             };
-                    }))
-                .ConfigureServices((context, services) =>
+                    }));
+
+                if (options.MockFileSystem)
                 {
-                    services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
-                    var parseResult = context.GetInvocationContext().ParseResult;
-                    var fileInfo = parseResult.GetValueForArgument(Program.Command.PathArgument);
-                    var dump = parseResult.GetValueForOption(Program.Command.DumpOption);
-                    services
-                        .AddDomain()
-                        .AddApplication()
-                        .AddInfrastructure(dump, fileInfo);
-                    configureTestServices?.Invoke(services);
-                })
-                .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>(),
-            useDefault: false);
+                    var fileSystem = Substitute.For<IFileSystem>();
+                    services.AddSingleton(fileSystem);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.InMemoryScript))
+                {
+                    var sourceCodeProvider = Substitute.For<ISourceCodeProvider>();
+                    sourceCodeProvider.GetText().ReturnsForAnyArgs(options.InMemoryScript);
+                    services.AddSingleton(sourceCodeProvider);
+                }
+
+                configureTestServices?.Invoke(services);
+            });
+        var executor = serviceProvider.GetRequiredService<Executor>();
+        return new Runner(serviceProvider, executor);
+    }
 
     public void Dispose() => _logMessages.Clear();
 }

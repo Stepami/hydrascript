@@ -1,45 +1,44 @@
-﻿using System.CommandLine.Builder;
-using System.CommandLine.Hosting;
-using System.CommandLine.Parsing;
+﻿using System.CommandLine.Parsing;
 using System.Diagnostics.CodeAnalysis;
 using HydraScript;
 using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
-return GetRunner(ConfigureHost).Invoke(args);
+return CliParser.Parse(GetCommand(), args).Invoke();
 
 [ExcludeFromCodeCoverage]
 internal static partial class Program
 {
-    internal static readonly ExecuteCommand Command = new();
-
-    internal static Parser GetRunner(Action<IHostBuilder> configureHost, bool useDefault = true)
+    private static ExecuteCommand GetCommand()
     {
-        var builder = new CommandLineBuilder(Command)
-            .UseHost(Host.CreateDefaultBuilder, configureHost);
-        if (useDefault)
-            builder = builder.UseDefaults();
-        return builder.Build();
+        ExecuteCommand command = new();
+        command.SetAction(parseResult =>
+        {
+            var fileInfo = parseResult.GetValue(command.PathArgument)!;
+            var dump = parseResult.GetValue(command.DumpOption);
+            var serviceProvider = GetServiceProvider(fileInfo, dump);
+            var executor = serviceProvider.GetRequiredService<Executor>();
+            return executor.Invoke();
+        });
+        return command;
     }
 
-    private static void ConfigureHost(IHostBuilder builder) => builder
-        .ConfigureServices((context, services) =>
-        {
-            services.AddLogging(c => c.ClearProviders()
-                .AddConsole(options => options.FormatterName = nameof(SimplestConsoleFormatter))
-                .AddConsoleFormatter<SimplestConsoleFormatter, ConsoleFormatterOptions>());
-            services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
-            var parseResult = context.GetInvocationContext().ParseResult;
-            var fileInfo = parseResult.GetValueForArgument(Command.PathArgument);
-            var dump = parseResult.GetValueForOption(Command.DumpOption);
-            services
-                .AddDomain()
-                .AddApplication()
-                .AddInfrastructure(dump, fileInfo);
-        })
-        .UseDefaultServiceProvider((_, options) => options.ValidateScopes = true)
-        .UseCommandHandler<ExecuteCommand, ExecuteCommandHandler>();
+    internal static IServiceProvider GetServiceProvider(
+        FileInfo fileInfo,
+        bool dump,
+        Action<IServiceCollection>? configureServices = null)
+    {
+        var services = new ServiceCollection();
+        services.AddLogging(c => c.ClearProviders()
+            .AddConsole(options => options.FormatterName = nameof(SimplestConsoleFormatter))
+            .AddConsoleFormatter<SimplestConsoleFormatter, ConsoleFormatterOptions>());
+        services
+            .AddDomain()
+            .AddApplication()
+            .AddInfrastructure(dump, fileInfo);
+        configureServices?.Invoke(services);
+        return services.BuildServiceProvider();
+    }
 }

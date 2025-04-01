@@ -2,22 +2,24 @@ using System.CommandLine;
 
 namespace HydraScript;
 
-internal class ExecuteCommand : RootCommand
+internal class ExecuteCommand : CliRootCommand
 {
     internal ExecuteCommand() : base("HydraScript interpreter")
     {
-        PathArgument = new Argument<FileInfo>(
-            name: "path",
-            description: "Path to input file");
-        AddArgument(PathArgument);
+        PathArgument = new CliArgument<FileInfo>(name: "path")
+        {
+            Description = "Path to input file"
+        };
+        Add(PathArgument);
 
-        DumpOption = new Option<bool>(
-            ["-d", "--dump"],
-            getDefaultValue: () => false,
-            description: "Show dump data of interpreter");
-        AddOption(DumpOption);
+        DumpOption = new CliOption<bool>(name: "--dump", aliases: ["-d", "/d"])
+        {
+            Description = "Show dump data of interpreter",
+            DefaultValueFactory = _ => false
+        };
+        Add(DumpOption);
     }
 
-    internal Argument<FileInfo> PathArgument { get; }
-    internal Option<bool> DumpOption { get; }
+    internal CliArgument<FileInfo> PathArgument { get; }
+    internal CliOption<bool> DumpOption { get; }
 }

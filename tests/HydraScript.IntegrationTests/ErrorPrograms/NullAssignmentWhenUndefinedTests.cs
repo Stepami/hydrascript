@@ -1,4 +1,4 @@
-using System.CommandLine.Parsing;
+using HydraScript.Infrastructure;
 
 namespace HydraScript.IntegrationTests.ErrorPrograms;
 
@@ -7,11 +7,9 @@ public class NullAssignmentWhenUndefinedTests(TestHostFixture fixture) : IClassF
     [Theory, MemberData(nameof(NullAssignmentScripts))]
     public void NullAssignment_UndefinedDestinationOrReturnType_HydraScriptError(string script)
     {
-        var runner = fixture.GetRunner(
-            configureTestServices: services =>
-                services.SetupInMemoryScript(script));
-        var code = runner.Invoke(fixture.InMemoryScript);
-        code.Should().Be(ExitCodes.HydraScriptError);
+        var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
+        var code = runner.Invoke();
+        code.Should().Be(Executor.ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()
             .Contain(x => x.Contains("Cannot assign 'null' when type is undefined"));
     }
