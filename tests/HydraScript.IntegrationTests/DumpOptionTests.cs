@@ -1,5 +1,5 @@
-using System.CommandLine.Parsing;
 using System.IO.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
 namespace HydraScript.IntegrationTests;
@@ -9,12 +9,10 @@ public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFi
     [Fact]
     public void Invoke_DumpOptionPassed_FilesCreated()
     {
-        var fileSystemMock = Substitute.For<IFileSystem>();
-        var runner = fixture.GetRunner(
-            configureTestServices: services =>
-                services.SetupInMemoryScript(script: string.Empty, fileSystemMock));
-        runner.Invoke(fixture.InMemoryScriptWithDump);
+        var runner = fixture.GetRunner(new TestHostFixture.Options(Dump: true));
+        runner.Invoke();
 
+        var fileSystemMock = runner.ServiceProvider.GetRequiredService<IFileSystem>();
         fileSystemMock.File.Received(1)
             .WriteAllText(
                 TestHostFixture.ScriptFileName + ".tokens",
