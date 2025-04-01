@@ -25,7 +25,7 @@ public class FunctionSymbol(
         _returnType = returnType;
 
     public override string ToString() =>
-        new StringBuilder($"function {Id}(")
+        new StringBuilder($"function {Name}(")
             .AppendJoin(',', Parameters)
             .Append($") => {Type}")
             .ToString();

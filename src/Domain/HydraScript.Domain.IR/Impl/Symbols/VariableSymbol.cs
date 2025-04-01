@@ -15,5 +15,5 @@ public class VariableSymbol(
     public void Initialize() => Initialized = true;
 
     public override string ToString() =>
-        $"{(ReadOnly ? "const " : "")}{Id}: {Type}";
+        $"{(ReadOnly ? "const " : "")}{Name}: {Type}";
 }

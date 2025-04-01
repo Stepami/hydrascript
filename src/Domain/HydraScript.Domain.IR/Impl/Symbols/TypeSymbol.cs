@@ -9,11 +9,11 @@ public class TypeSymbol(Type type, string? name = null) :
 
     public override bool Equals(object? obj) =>
         obj is TypeSymbol typeSymbol &&
-        Id == typeSymbol.Id && Type.Equals(typeSymbol.Type);
+        Name == typeSymbol.Name && Type.Equals(typeSymbol.Type);
 
     public override int GetHashCode() =>
-        HashCode.Combine(Id, Type);
+        HashCode.Combine(Name, Type);
 
     public override string ToString() =>
-        $"type {Id} = {Type}";
+        $"type {Name} = {Type}";
 }
