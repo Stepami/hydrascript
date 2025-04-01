@@ -1,8 +1,8 @@
-namespace HydraScript.Domain.IR.Impl.SymbolIds;
+namespace HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 public class FunctionSymbolId(
     string name,
-    IEnumerable<Type> parameters) : SymbolId
+    IEnumerable<Type> parameters) : SymbolId<FunctionSymbol>
 {
     protected override string Value { get; } =
         $"function {name}({string.Join(", ", parameters)})";

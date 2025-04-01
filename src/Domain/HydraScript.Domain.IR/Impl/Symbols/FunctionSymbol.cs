@@ -1,5 +1,5 @@
 using System.Text;
-using HydraScript.Domain.IR.Impl.SymbolIds;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Impl.Symbols;
 

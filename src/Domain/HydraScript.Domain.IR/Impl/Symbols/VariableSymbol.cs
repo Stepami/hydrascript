@@ -1,4 +1,4 @@
-using HydraScript.Domain.IR.Impl.SymbolIds;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Impl.Symbols;
 
@@ -7,7 +7,7 @@ public class VariableSymbol(
     Type type,
     bool readOnly = false) : Symbol(name, type)
 {
-    public override SymbolId Id { get; } = new VariableSymbolId(name);
+    public override VariableSymbolId Id { get; } = new(name);
 
     public bool ReadOnly { get; } = readOnly;
     public bool Initialized { get; private set; } = readOnly;

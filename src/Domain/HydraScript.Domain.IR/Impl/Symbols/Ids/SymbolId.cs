@@ -1,4 +1,4 @@
-namespace HydraScript.Domain.IR;
+namespace HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 public abstract class SymbolId<TSymbol> : ISymbolId<TSymbol>
     where TSymbol : class, ISymbol
