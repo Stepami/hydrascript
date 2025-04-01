@@ -16,7 +16,7 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
     public FunctionDeclaration Get(FunctionSymbol symbol)
     {
         if (!_declarations.Remove(symbol.Id, out var declaration))
-            throw new InvalidOperationException(message: "Cannot get function that has not been saved");
+            throw new InvalidOperationException(message: $"Cannot get {symbol} that has not been saved");
 
         return declaration;
     }

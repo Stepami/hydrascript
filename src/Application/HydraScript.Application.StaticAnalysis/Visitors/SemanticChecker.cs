@@ -410,13 +410,17 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         {
             var objectType = (ObjectType)visitable.Member.Accept(This);
             var availableMethods = _methodStorage.GetAvailableMethods(objectType);
-            functionSymbol = availableMethods[new FunctionSymbolId(objectType.LastAccessedMethodName, [objectType, ..parameters])];
+            var methodKey = new FunctionSymbolId(objectType.LastAccessedMethodName, [objectType, ..parameters]);
+            functionSymbol =
+                availableMethods.GetValueOrDefault(methodKey)
+                ?? throw new UnknownFunctionOverload(visitable.Id, methodKey);
         }
         else
         {
+            var functionKey = new FunctionSymbolId(visitable.Id, parameters);
             functionSymbol =
-                _symbolTables[visitable.Scope].FindSymbol(new FunctionSymbolId(visitable.Id, parameters))
-                ?? throw new UnknownIdentifierReference(visitable.Id);
+                _symbolTables[visitable.Scope].FindSymbol(functionKey)
+                ?? throw new UnknownFunctionOverload(visitable.Id, functionKey);
         }
 
         visitable.ComputedFunctionAddress = functionSymbol.Id.ToString();
