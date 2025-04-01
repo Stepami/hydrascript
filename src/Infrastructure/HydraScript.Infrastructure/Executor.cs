@@ -1,21 +1,18 @@
-using System.CommandLine.Invocation;
 using HydraScript.Application.CodeGeneration;
 using HydraScript.Application.StaticAnalysis.Exceptions;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Parser;
-using HydraScript.Infrastructure;
 
-namespace HydraScript;
+namespace HydraScript.Infrastructure;
 
-internal class ExecuteCommandHandler(
+public class Executor(
     ISourceCodeProvider sourceCodeProvider,
     IParser parser,
     ICodeGenerator codeGenerator,
-    IVirtualMachine virtualMachine) : ICommandHandler
+    IVirtualMachine virtualMachine)
 {
-
-    public int Invoke(InvocationContext context)
+    public int Invoke()
     {
         var writer = virtualMachine.ExecuteParams.Writer;
         try
@@ -39,6 +36,12 @@ internal class ExecuteCommandHandler(
         }
     }
 
-    public Task<int> InvokeAsync(InvocationContext context) =>
-        Task.FromResult(Invoke(context));
+    internal static class ExitCodes
+    {
+        public const int Success = 0;
+
+        public const int HydraScriptError = 1;
+
+        public const int DotnetRuntimeError = 2;
+    }
 }
