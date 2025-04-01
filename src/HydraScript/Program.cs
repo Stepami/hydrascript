@@ -11,7 +11,7 @@ return CliParser.Parse(GetCommand(), args).Invoke();
 [ExcludeFromCodeCoverage]
 internal static partial class Program
 {
-    internal static ExecuteCommand GetCommand()
+    private static ExecuteCommand GetCommand()
     {
         ExecuteCommand command = new();
         command.SetAction(parseResult =>
@@ -38,6 +38,7 @@ internal static partial class Program
             .AddDomain()
             .AddApplication()
             .AddInfrastructure(dump, fileInfo);
+        configureServices?.Invoke(services);
         return services.BuildServiceProvider();
     }
 }
