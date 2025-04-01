@@ -10,7 +10,7 @@ internal class SimplestConsoleFormatter() : ConsoleFormatter(nameof(SimplestCons
 {
     public override void Write<TState>(
         in LogEntry<TState> logEntry,
-        IExternalScopeProvider scopeProvider,
+        IExternalScopeProvider? scopeProvider,
         TextWriter textWriter)
     {
         if (logEntry.LogLevel is LogLevel.Error)
