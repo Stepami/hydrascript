@@ -74,7 +74,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
         if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(functionSymbolId))
-            throw new DeclarationAlreadyExists(visitable.Name);
+            throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
 
         for (var i = 0; i < parameters.Count; i++)
         {
