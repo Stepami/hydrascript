@@ -1,4 +1,4 @@
-using System.CommandLine.Parsing;
+using HydraScript.Infrastructure;
 
 namespace HydraScript.IntegrationTests.ErrorPrograms;
 
@@ -19,7 +19,7 @@ public class VoidAssignmentTests(TestHostFixture fixture) : IClassFixture<TestHo
         var runner = fixture.GetRunner(configureTestServices:
             services => services.SetupInMemoryScript(script));
         var code = runner.Invoke(fixture.InMemoryScript);
-        code.Should().Be(ExitCodes.HydraScriptError);
+        code.Should().Be(Executor.ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()
             .Contain(x => x.Contains("Cannot assign void"));
     }

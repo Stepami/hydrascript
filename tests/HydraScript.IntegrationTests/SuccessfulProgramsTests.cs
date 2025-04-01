@@ -1,4 +1,4 @@
-using System.CommandLine.Parsing;
+using HydraScript.Infrastructure;
 
 namespace HydraScript.IntegrationTests;
 
@@ -9,7 +9,7 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
     {
         var runner = fixture.GetRunner();
         var code = runner.Invoke([$"Samples/{fileName}"]);
-        code.Should().Be(ExitCodes.Success);
+        code.Should().Be(Executor.ExitCodes.Success);
     }
 
     public static TheoryData<string> SuccessfulProgramsNames =>
