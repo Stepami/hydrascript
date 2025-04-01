@@ -9,9 +9,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" />
         <PackageReference Include="System.CommandLine" />
-        <PackageReference Include="System.CommandLine.Hosting" />
-        <PackageReference Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>
