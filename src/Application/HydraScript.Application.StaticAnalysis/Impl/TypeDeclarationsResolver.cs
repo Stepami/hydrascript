@@ -1,6 +1,6 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
-using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
 
@@ -33,7 +33,7 @@ internal class TypeDeclarationsResolver(
             var declarationToResolve = _declarationsToResolve.Dequeue();
 
             var typeSymbol = symbolTables[declarationToResolve.Scope]
-                .FindSymbol<TypeSymbol>(new TypeSymbolId(declarationToResolve.TypeId))!;
+                .FindSymbol(new TypeSymbolId(declarationToResolve.TypeId))!;
 
             var resolvingCandidates = symbolTables[declarationToResolve.Scope]
                 .GetAvailableSymbols()

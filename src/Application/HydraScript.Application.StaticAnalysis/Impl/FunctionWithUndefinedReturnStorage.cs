@@ -1,6 +1,6 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
-using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
 

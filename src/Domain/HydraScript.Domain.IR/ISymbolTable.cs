@@ -23,12 +23,12 @@ public interface ISymbolTable
     /// Поиск эффективного символа
     /// </summary>
     /// <param name="id">Идентификатор символа</param>
-    public TSymbol? FindSymbol<TSymbol>(SymbolId id)
+    public TSymbol? FindSymbol<TSymbol>(ISymbolId<TSymbol> id)
         where TSymbol : class, ISymbol;
 
     /// <summary>
     /// Проверка наличия собственного символа
     /// </summary>
     /// <param name="id">Идентификатор символа</param>
-    public bool ContainsSymbol(SymbolId id);
+    public bool ContainsSymbol(ISymbolId<ISymbol> id);
 }

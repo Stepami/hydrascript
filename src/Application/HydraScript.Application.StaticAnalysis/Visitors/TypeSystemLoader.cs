@@ -2,8 +2,8 @@ using HydraScript.Application.StaticAnalysis.Exceptions;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
-using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
 

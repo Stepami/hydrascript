@@ -15,7 +15,7 @@ public class SymbolTableTests
         outerScope.AddSymbol(symbol);
         innerScope.AddOpenScope(outerScope);
 
-        Assert.NotNull(innerScope.FindSymbol<ISymbol>(id));
+        Assert.NotNull(innerScope.FindSymbol(id));
         Assert.True(outerScope.ContainsSymbol(id));
     }
 }

@@ -9,8 +9,8 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessExpres
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
-using HydraScript.Domain.IR.Impl.SymbolIds;
 using HydraScript.Domain.IR.Impl.Symbols;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using HydraScript.Domain.IR.Types;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
@@ -138,7 +138,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(IdentifierReference visitable)
     {
-        var symbol = _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(new VariableSymbolId(visitable.Name));
+        var symbol = _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(visitable.Name));
         if (symbol is { Initialized: false })
             throw new AccessBeforeInitialization(visitable);
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
@@ -277,9 +277,9 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
-            var registeredSymbol = _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(
-                new VariableSymbolId(assignment.Destination.Id))!;
+            var registeredSymbol = _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(assignment.Destination.Id))!;
             var sourceType = assignment.Source.Accept(This);
+
             if (sourceType.Equals(undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
             if (sourceType.Equals(@void))
@@ -325,8 +325,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         }
 
         var symbol =
-            _symbolTables[visitable.Scope].FindSymbol<VariableSymbol>(
-                new VariableSymbolId(visitable.Destination.Id)) ??
+            _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(visitable.Destination.Id)) ??
             throw new UnknownIdentifierReference(visitable.Destination.Id);
 
         if (symbol.ReadOnly)
@@ -416,7 +415,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             functionSymbol =
-                _symbolTables[visitable.Scope].FindSymbol<FunctionSymbol>(new FunctionSymbolId(visitable.Id, parameters))
+                _symbolTables[visitable.Scope].FindSymbol(new FunctionSymbolId(visitable.Id, parameters))
                 ?? throw new UnknownIdentifierReference(visitable.Id);
         }
 
@@ -454,7 +453,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(FunctionDeclaration visitable)
     {
         var parameters = visitable.Arguments.Select(x => x.TypeValue.Accept(_typeBuilder)).ToList();
-        var symbol = _symbolTables[visitable.Scope].FindSymbol<FunctionSymbol>(new FunctionSymbolId(visitable.Name, parameters))!;
+        var symbol = _symbolTables[visitable.Scope].FindSymbol(new FunctionSymbolId(visitable.Name, parameters))!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 
