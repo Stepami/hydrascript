@@ -8,7 +8,7 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
     [ClassData(typeof(SuccessfulPrograms))]
     public void Invoke_NoError_ReturnCodeIsZero(string relativePathToFile)
     {
-        var runner = fixture.GetRunner(
+        using var runner = fixture.GetRunner(
             new TestHostFixture.Options(
                 FileName: relativePathToFile,
                 MockFileSystem: false));

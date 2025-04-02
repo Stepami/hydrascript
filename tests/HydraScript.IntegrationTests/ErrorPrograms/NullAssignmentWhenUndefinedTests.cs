@@ -7,7 +7,7 @@ public class NullAssignmentWhenUndefinedTests(TestHostFixture fixture) : IClassF
     [Theory, MemberData(nameof(NullAssignmentScripts))]
     public void NullAssignment_UndefinedDestinationOrReturnType_HydraScriptError(string script)
     {
-        var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
+        using var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
         var code = runner.Invoke();
         code.Should().Be(Executor.ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()

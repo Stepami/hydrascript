@@ -16,7 +16,7 @@ public class VoidAssignmentTests(TestHostFixture fixture) : IClassFixture<TestHo
                 }
                 let x = func(true)
             """;
-        var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
+        using var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
         var code = runner.Invoke();
         code.Should().Be(Executor.ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()

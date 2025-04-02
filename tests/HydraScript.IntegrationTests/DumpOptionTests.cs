@@ -9,7 +9,7 @@ public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFi
     [Fact]
     public void Invoke_DumpOptionPassed_FilesCreated()
     {
-        var runner = fixture.GetRunner(new TestHostFixture.Options(Dump: true));
+        using var runner = fixture.GetRunner(new TestHostFixture.Options(Dump: true));
         runner.Invoke();
 
         var fileSystemMock = runner.ServiceProvider.GetRequiredService<IFileSystem>();

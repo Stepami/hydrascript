@@ -18,10 +18,15 @@ public class TestHostFixture(
         bool MockFileSystem = true,
         string InMemoryScript = "");
 
-    public class Runner(IServiceProvider serviceProvider, Executor executor)
+    public class Runner(ServiceProvider serviceProvider, Executor executor): IDisposable
     {
-        public IServiceProvider ServiceProvider => serviceProvider;
+        public ServiceProvider ServiceProvider => serviceProvider;
         public int Invoke() => executor.Invoke();
+
+        public void Dispose()
+        {
+            serviceProvider.Dispose();
+        }
     }
 
     private readonly List<string> _logMessages = [];
