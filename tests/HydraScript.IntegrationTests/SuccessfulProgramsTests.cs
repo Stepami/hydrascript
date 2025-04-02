@@ -5,7 +5,7 @@ namespace HydraScript.IntegrationTests;
 public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
     [Theory]
-    [ClassData(typeof(SamplesScriptsData))]
+    [ClassData(typeof(SuccessfulPrograms))]
     public void Invoke_NoError_ReturnCodeIsZero(string relativePathToFile)
     {
         var runner = fixture.GetRunner(
@@ -16,9 +16,9 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
         code.Should().Be(Executor.ExitCodes.Success);
     }
 
-    public class SamplesScriptsData : TheoryData<string>
+    public class SuccessfulPrograms : TheoryData<string>
     {
-        public SamplesScriptsData()
+        public SuccessfulPrograms()
         {
             AddRange(Directory.GetFiles("Samples"));
         }
