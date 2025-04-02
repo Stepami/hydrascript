@@ -48,11 +48,16 @@ public static class ServiceCollectionExtensions
 
         if (dump)
         {
-            services.Decorate<ILexer, DumpingLexer>();
-            services.Decorate<IParser, DumpingParser>();
-            services.Decorate<IVirtualMachine, DumpingVirtualMachine>();
+            services.AddKeyedSingleton<ILexer, RegexLexer>(DecoratorKey.Value);
+            services.AddSingleton<ILexer, DumpingLexer>();
+
+            services.AddKeyedSingleton<IParser, TopDownParser>(DecoratorKey.Value);
+            services.AddSingleton<IParser, DumpingParser>();
+
+            services.AddKeyedSingleton<IVirtualMachine, VirtualMachine>(DecoratorKey.Value);
+            services.AddSingleton<IVirtualMachine, DumpingVirtualMachine>();
         }
 
         services.AddSingleton<Executor>();
     }
-} 
+}

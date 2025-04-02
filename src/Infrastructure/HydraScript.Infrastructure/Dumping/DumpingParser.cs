@@ -1,9 +1,12 @@
 using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Parser;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HydraScript.Infrastructure.Dumping;
 
-internal class DumpingParser(IParser parser, IFileSystem fileSystem) : IParser
+internal class DumpingParser(
+    [FromKeyedServices(DecoratorKey.Value)] IParser parser, 
+    IFileSystem fileSystem) : IParser
 {
     public IAbstractSyntaxTree Parse(string text)
     {

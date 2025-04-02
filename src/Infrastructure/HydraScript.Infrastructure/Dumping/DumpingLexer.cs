@@ -1,11 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using HydraScript.Domain.FrontEnd.Lexer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace HydraScript.Infrastructure.Dumping;
 
 internal class DumpingLexer(
+    [FromKeyedServices(DecoratorKey.Value)]
     ILexer lexer,
     IFileSystem fileSystem,
     IOptions<InputFile> inputFile) : ILexer
