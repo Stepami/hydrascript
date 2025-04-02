@@ -3,11 +3,17 @@ using Microsoft.Extensions.Logging;
 
 namespace HydraScript.Infrastructure;
 
-internal class LoggingWriter(ILogger<LoggingWriter> logger) : IOutputWriter
+internal partial class LoggingWriter(ILogger<LoggingWriter> logger) : IOutputWriter
 {
-    public void WriteLine(object? obj) =>
-        logger.LogInformation("{Object}", obj);
+    [LoggerMessage(
+        EventId = 0,
+        Level = LogLevel.Information,
+        Message = "`{obj}`")]
+    public partial void WriteLine(object? obj);
 
-    public void WriteError(Exception e, string message) =>
-        logger.LogError(e, "{Message}", message);
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Error,
+        Message = "`{message}`")]
+    public partial void WriteError(Exception e, string message);
 }
