@@ -4,51 +4,23 @@ namespace HydraScript.IntegrationTests;
 
 public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
-    [Theory, MemberData(nameof(SuccessfulProgramsNames))]
-    public void Invoke_NoError_ReturnCodeIsZero(string fileName)
+    [Theory]
+    [ClassData(typeof(SuccessfulPrograms))]
+    public void Invoke_NoError_ReturnCodeIsZero(string relativePathToFile)
     {
         var runner = fixture.GetRunner(
             new TestHostFixture.Options(
-                FileName: $"Samples/{fileName}",
+                FileName: relativePathToFile,
                 MockFileSystem: false));
         var code = runner.Invoke();
         code.Should().Be(Executor.ExitCodes.Success);
     }
 
-    public static TheoryData<string> SuccessfulProgramsNames =>
-        new(
-        [
-            "abs.js",
-            "arraddremove.js",
-            "arreditread.js",
-            "ceil.js",
-            "cycled.js",
-            "defaultarray.js",
-            "equals.js",
-            "exprtest.js",
-            "fastpow.js",
-            "forwardref.js",
-            "gcd.js",
-            "lcm.js",
-            "linkedlist.js",
-            "objeditread.js",
-            "overload.js",
-            "overload_object.js",
-            "posneg.js",
-            "prime.js",
-            "primefactor.js",
-            "quicksort.js",
-            "range.js",
-            "recur.js",
-            "scope.js",
-            "searchinll.js",
-            "settable.js",
-            "squareroot.js",
-            "summator.js",
-            "tern.js",
-            "this.js",
-            "typeresolving.js",
-            "vec2d.js",
-            "xxx.js"
-        ]);
+    public class SuccessfulPrograms : TheoryData<string>
+    {
+        public SuccessfulPrograms()
+        {
+            AddRange(Directory.GetFiles("Samples"));
+        }
+    }
 }
