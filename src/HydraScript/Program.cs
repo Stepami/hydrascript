@@ -18,14 +18,14 @@ internal static partial class Program
         {
             var fileInfo = parseResult.GetValue(command.PathArgument)!;
             var dump = parseResult.GetValue(command.DumpOption);
-            var serviceProvider = GetServiceProvider(fileInfo, dump);
+            using var serviceProvider = GetServiceProvider(fileInfo, dump);
             var executor = serviceProvider.GetRequiredService<Executor>();
             return executor.Invoke();
         });
         return command;
     }
 
-    internal static IServiceProvider GetServiceProvider(
+    internal static ServiceProvider GetServiceProvider(
         FileInfo fileInfo,
         bool dump,
         Action<IServiceCollection>? configureServices = null)
