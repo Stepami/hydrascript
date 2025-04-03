@@ -71,7 +71,7 @@ jobs:
       - name: Publish
         run: |
           mkdir output
-          dotnet publish ./src/HydraScript/HydraScript.csproj -c Release -r ${{ matrix.config.rid }} -p:PublishSingleFile=true -p:DebugType=embedded -p:Version=${{ needs.create-release.outputs.publish_version }} --self-contained false -o ./output
+          dotnet publish ./src/HydraScript/HydraScript.csproj -r ${{ matrix.config.rid }} -p:Version=${{ needs.create-release.outputs.publish_version }} -o ./output
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
