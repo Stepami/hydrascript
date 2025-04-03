@@ -1,7 +1,9 @@
 using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HydraScript;
 
+[ExcludeFromCodeCoverage]
 internal class ExecuteCommand : CliRootCommand
 {
     internal ExecuteCommand() : base("HydraScript interpreter")
