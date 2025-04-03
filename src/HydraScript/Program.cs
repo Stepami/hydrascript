@@ -25,6 +25,16 @@ internal static partial class Program
         return command;
     }
 
+    private const string SuppressMessage = $"{nameof(ConsoleFormatterOptions)} is used";
+
+    [UnconditionalSuppressMessage(
+        category: "ReflectionAnalysis",
+        checkId: "IL2026:RequiresUnreferencedCode",
+        Justification = SuppressMessage)]
+    [UnconditionalSuppressMessage(
+        category: "AotAnalysis",
+        checkId: "IL3050:RequiresDynamicCode",
+        Justification = SuppressMessage)]
     internal static ServiceProvider GetServiceProvider(
         FileInfo fileInfo,
         bool dump,
