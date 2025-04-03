@@ -19,7 +19,7 @@
 
 За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 
-[Лексическая структура](src/Domain/HydraScript.Domain.FrontEnd/Lexer/TokenTypesJson.cs)
+[Лексическая структура](src/Domain/HydraScript.Domain.Constants/TokenTypes.cs)
 
 [Грамматика](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
 
@@ -78,7 +78,6 @@ let i = 1 // интерпретатор выведет тип из выраже�
 let j: number // запишет значение по умолчанию в переменную
 let k: number = 1 // полностью явное объявление
 ```
-#### Функции
 
 #### Объекты
 ```
@@ -204,7 +203,7 @@ let obj = {}
 После клонирования репозитория идём в папку проекта `HydraScript`.
 
 Там выполняем команду:
-```dotnet publish ./src/HydraScript/HydraScript.csproj -r <RUNTIME_IDENTIFIER> -p:PublishSingleFile=true -p:DebugType=embedded --self-contained false -o <OUTPUT_DIRECTORY>```
+```dotnet publish ./src/HydraScript/HydraScript.csproj -r <RUNTIME_IDENTIFIER> -o <OUTPUT_DIRECTORY>```
 
 Список идентификаторов рантайма лежит [тут](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids)
 
