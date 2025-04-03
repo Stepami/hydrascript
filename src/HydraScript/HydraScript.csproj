@@ -2,6 +2,15 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
+        <PublishAot>true</PublishAot>
+        <PublishSingleFile>true</PublishSingleFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <OptimizationPreference>Size</OptimizationPreference>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <StackTraceSupport>false</StackTraceSupport>
+        <UseSystemResourceKeys>true</UseSystemResourceKeys>
     </PropertyGroup>
 
     <ItemGroup>
