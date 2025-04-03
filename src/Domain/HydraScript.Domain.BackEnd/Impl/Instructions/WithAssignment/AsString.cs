@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,7 +11,8 @@ public partial class AsString(IValue value) : Simple(value)
         WriteIndented = true,
         ReferenceHandler = ReferenceHandler.IgnoreCycles,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals
+        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     });
     
     public override IAddress Execute(IExecuteParams executeParams)
