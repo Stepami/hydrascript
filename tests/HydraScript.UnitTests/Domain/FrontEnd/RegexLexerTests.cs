@@ -1,14 +1,14 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using AutoFixture.Xunit2;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
+using Xunit.Abstractions;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
-public class RegexLexerTests
+public class RegexLexerTests(ITestOutputHelper output)
 {
     private readonly RegexLexer _regexLexer = new(
         new Structure<GeneratedRegexContainer>(new TokenTypesProvider()),
@@ -55,10 +55,11 @@ public class RegexLexerTests
 
     [Theory, AutoHydraScriptData]
     public void GetTokens_MockedRegex_ValidOutput(
-        [MinLength(10), MaxLength(25)] TokenInput[] tokenInputs,
+        LexerInput input,
         [Frozen] IStructure structure,
         RegexLexer lexer)
     {
+        output.WriteLine(input.ToString());
         var patterns = TokenInput.Pattern.Split('|');
 
         structure.Regex.ReturnsForAnyArgs(
@@ -71,13 +72,11 @@ public class RegexLexerTests
         structure.GetEnumerator()
             .ReturnsForAnyArgs(_ => tokenTypes.GetEnumerator());
 
-        var tokens = lexer.GetTokens(
-            tokenInputs.Aggregate(
-                TokenInput.AdditiveIdentity,
-                (x, y) => x + y).Value);
-        for (var i = 0; i < tokenInputs.Length; i++)
+        var tokens = lexer.GetTokens(input.ToString());
+        for (var i = 0; i < input.Count; i++)
         {
-            tokens[i].Value.Should().BeEquivalentTo(tokenInputs[i].Value);
+            output.WriteLine(tokens[i].ToString());
+            tokens[i].Value.Should().BeEquivalentTo(input[i]);
             tokens[i].Type.Should().BeOneOf(tokenTypes);
         }
     }
