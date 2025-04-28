@@ -119,6 +119,14 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         }
 
         _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol);
+        if (indexOfFirstDefaultArgument is not -1)
+        {
+            for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
+            {
+                var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
+                _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol, overload);
+            }
+        }
         return visitable.Statements.Accept(This);
     }
 }
