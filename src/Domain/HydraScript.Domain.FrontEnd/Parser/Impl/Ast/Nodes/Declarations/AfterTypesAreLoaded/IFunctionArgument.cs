@@ -7,6 +7,8 @@ public interface IFunctionArgument
     public string Name { get; }
 
     public TypeValue TypeValue { get; }
+
+    public bool Default => false;
 }
 
 public record NamedArgument(
@@ -22,6 +24,8 @@ public record DefaultValueArgument(
     Literal Value) : IFunctionArgument
 {
     public TypeValue TypeValue { get; } = Value.Type;
+
+    public bool Default => true;
 
     public override string ToString() =>
         $"{Name} = {Value}";

@@ -67,6 +67,21 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
+        var indexOfFirstDefaultArgument = visitable.Arguments
+            .Select((x, i) => new { Argument = x, Index = i })
+            .FirstOrDefault(pair => pair.Argument.Default)?.Index ?? -1;
+        if (indexOfFirstDefaultArgument is not -1)
+        {
+            for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
+            {
+                if (!visitable.Arguments[i].Default)
+                    throw new NamedArgumentAfterDefaultValueArgument(
+                        visitable.Segment,
+                        function: visitable.Name,
+                        visitable.Arguments[i]);
+            }
+        }
+
         var parameters = visitable.Arguments.Select(x =>
             new VariableSymbol(
                 x.Name,
