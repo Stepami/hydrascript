@@ -129,8 +129,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
             }
         };
 
-        foreach (var (id, _) in visitable.Arguments)
-            result.Add(new PopParameter(id));
+        foreach (var arg in visitable.Arguments)
+            result.Add(new PopParameter(arg.Name));
 
         result.AddRange(visitable.Statements.Accept(This));
         if (!visitable.HasReturnStatement())

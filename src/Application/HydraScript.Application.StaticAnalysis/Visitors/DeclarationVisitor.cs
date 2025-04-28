@@ -69,7 +69,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     {
         var parameters = visitable.Arguments.Select(x =>
             new VariableSymbol(
-                name: x.Key,
+                x.Name,
                 x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
