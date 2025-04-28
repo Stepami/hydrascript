@@ -22,12 +22,12 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public FunctionDeclaration(
         IdentifierReference name,
         TypeValue returnTypeValue,
-        IReadOnlyList<IFunctionArgument> arguments,
+        List<IFunctionArgument> arguments,
         BlockStatement blockStatement)
     {
         Name = name;
         ReturnTypeValue = returnTypeValue;
-        _arguments = new List<IFunctionArgument>(arguments);
+        _arguments = arguments;
 
         Statements = blockStatement;
         Statements.Parent = this;
