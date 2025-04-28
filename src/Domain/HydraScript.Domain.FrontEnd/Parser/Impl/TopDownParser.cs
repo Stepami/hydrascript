@@ -287,13 +287,13 @@ public class TopDownParser : IParser
         var ident = Expect("Ident");
 
         Expect("LeftParen");
-        var args = new List<PropertyTypeValue>();
+        var args = new List<NamedArgument>();
         if (CurrentIs("Ident"))
         {
             var arg = Expect("Ident").Value;
             Expect("Colon");
             var type = TypeValue();
-            args.Add(new PropertyTypeValue(arg, type));
+            args.Add(new NamedArgument(arg, type));
         }
 
         while (CurrentIs("Comma"))
@@ -302,7 +302,7 @@ public class TopDownParser : IParser
             var arg = Expect("Ident").Value;
             Expect("Colon");
             var type = TypeValue();
-            args.Add(new PropertyTypeValue(arg, type));
+            args.Add(new NamedArgument(arg, type));
         }
 
         var rp = Expect("RightParen");

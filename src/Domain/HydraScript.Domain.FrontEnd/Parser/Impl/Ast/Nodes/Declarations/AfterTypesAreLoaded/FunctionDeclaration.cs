@@ -6,13 +6,13 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTy
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
-    private readonly List<PropertyTypeValue> _arguments;
+    private readonly List<IFunctionArgument> _arguments;
 
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children => [Statements];
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
-    public IReadOnlyList<PropertyTypeValue> Arguments => _arguments;
+    public IReadOnlyList<IFunctionArgument> Arguments => _arguments;
 
     public BlockStatement Statements { get; }
     public bool IsEmpty => Statements.Count == 0;
@@ -22,12 +22,12 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public FunctionDeclaration(
         IdentifierReference name,
         TypeValue returnTypeValue,
-        List<PropertyTypeValue> arguments,
+        IReadOnlyList<IFunctionArgument> arguments,
         BlockStatement blockStatement)
     {
         Name = name;
         ReturnTypeValue = returnTypeValue;
-        _arguments = arguments;
+        _arguments = new List<IFunctionArgument>(arguments);
 
         Statements = blockStatement;
         Statements.Parent = this;
