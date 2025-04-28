@@ -4,7 +4,7 @@
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
         <PackageReference Include="AutoFixture.Xunit2" />
         <PackageReference Include="Fare" />
-        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="AwesomeAssertions" />
         <PackageReference Include="PolymorphicContracts.AutoFixture" />
         <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>

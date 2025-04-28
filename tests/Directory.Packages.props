@@ -12,7 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Fare" Version="2.2.1" />
-    <PackageVersion Include="FluentAssertions" Version="7.1.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="8.1.0" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.5.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.3.0" />
