@@ -427,12 +427,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
 
-        if (functionSymbol.Parameters.Count != visitable.Parameters.Count + (methodCall ? 1 : 0))
-            throw new WrongNumberOfArguments(
-                visitable.Segment,
-                expected: functionSymbol.Parameters.Count,
-                actual: visitable.Parameters.Count);
-
         visitable.Parameters.Zip(parameters).Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..])
             .ToList().ForEach(pair =>
             {
