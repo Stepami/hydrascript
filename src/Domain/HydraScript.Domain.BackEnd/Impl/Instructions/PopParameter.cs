@@ -14,6 +14,6 @@ public class PopParameter(string parameter, object? defaultValue = null) : Instr
 
     protected override string ToStringInternal() =>
         defaultValue is null
-        ? $"PopParameter {parameter}"
-        : $"PopParameter {parameter} {defaultValue}";
+            ? $"PopParameter {parameter}"
+            : $"PopParameter {parameter} {defaultValue}";
 }
