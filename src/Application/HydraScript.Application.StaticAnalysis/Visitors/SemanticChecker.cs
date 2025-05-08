@@ -475,7 +475,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var wrongReturn = returnStatements
-                .FirstOrDefault(x => !x.Type.Equals(symbol.Type));
+                .FirstOrDefault(x => !symbol.Type.Equals(x.Type));
             if (wrongReturn is not null)
                 throw new WrongReturnType(
                     wrongReturn.Statement.Segment,
