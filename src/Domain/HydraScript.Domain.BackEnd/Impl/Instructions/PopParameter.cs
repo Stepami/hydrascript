@@ -1,14 +1,19 @@
 namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
-public class PopParameter(string parameter) : Instruction
+public class PopParameter(string parameter, object? defaultValue = null) : Instruction
 {
     public override IAddress Execute(IExecuteParams executeParams)
     {
-        var argument = executeParams.Arguments.Dequeue();
-        executeParams.Frames.Peek()[parameter] = argument;
+        var frame = executeParams.Frames.Peek();
+        if (executeParams.Arguments.TryDequeue(out var argument))
+            frame[parameter] = argument;
+        else
+            frame[parameter] = defaultValue;
         return Address.Next;
     }
 
     protected override string ToStringInternal() =>
-        $"PopParameter {parameter}";
+        defaultValue is null
+        ? $"PopParameter {parameter}"
+        : $"PopParameter {parameter} {defaultValue}";
 }

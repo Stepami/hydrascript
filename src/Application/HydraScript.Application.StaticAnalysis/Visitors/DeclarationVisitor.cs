@@ -69,12 +69,12 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     {
         var indexOfFirstDefaultArgument = visitable.Arguments
             .Select((x, i) => new { Argument = x, Index = i })
-            .FirstOrDefault(pair => pair.Argument.Default)?.Index ?? -1;
+            .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
         if (indexOfFirstDefaultArgument is not -1)
         {
             for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
             {
-                if (!visitable.Arguments[i].Default)
+                if (visitable.Arguments[i] is not DefaultValueArgument)
                     throw new NamedArgumentAfterDefaultValueArgument(
                         visitable.Segment,
                         function: visitable.Name,
