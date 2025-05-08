@@ -48,6 +48,10 @@
             <Link>Samples\defaultarray.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\defaultparams.js">
+            <Link>Samples\defaultparams.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\equals.js">
             <Link>Samples\equals.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
