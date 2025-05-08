@@ -58,7 +58,7 @@ jobs:
           dotnet test -c Debug /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Integration"
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
-        if: github.event_name == 'pull_request_target'
+        if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
           path: ./tests/HydraScript.IntegrationTests/coverage.cobertura.xml
