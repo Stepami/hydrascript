@@ -67,19 +67,18 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
+        var parentTable = _symbolTables[visitable.Parent.Scope];
         var indexOfFirstDefaultArgument = visitable.Arguments
             .Select((x, i) => new { Argument = x, Index = i })
             .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
-        if (indexOfFirstDefaultArgument is not -1)
+        for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
         {
-            for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
-            {
-                if (visitable.Arguments[i] is not DefaultValueArgument)
-                    throw new NamedArgumentAfterDefaultValueArgument(
-                        visitable.Segment,
-                        function: visitable.Name,
-                        visitable.Arguments[i]);
-            }
+            if (i is -1) break;
+            if (visitable.Arguments[i] is not DefaultValueArgument)
+                throw new NamedArgumentAfterDefaultValueArgument(
+                    visitable.Segment,
+                    function: visitable.Name,
+                    visitable.Arguments[i]);
         }
 
         var parameters = visitable.Arguments.Select(x =>
@@ -88,7 +87,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
                 x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
-        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(functionSymbolId))
+        if (parentTable.ContainsSymbol(functionSymbolId))
             throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
 
         for (var i = 0; i < parameters.Count; i++)
@@ -118,15 +117,19 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
                 functionSymbol.DefineReturnType("void");
         }
 
-        _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol);
-        if (indexOfFirstDefaultArgument is not -1)
+        parentTable.AddSymbol(functionSymbol);
+        for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
         {
-            for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
+            if (i is -1) break;
+            var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
+            var existing = parentTable.FindSymbol(overload);
+            parentTable.AddSymbol(functionSymbol, overload);
+            if (existing is not null && existing < functionSymbol)
             {
-                var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
-                _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol, overload);
+                parentTable.AddSymbol(existing, overload);
             }
         }
+
         return visitable.Statements.Accept(This);
     }
 }

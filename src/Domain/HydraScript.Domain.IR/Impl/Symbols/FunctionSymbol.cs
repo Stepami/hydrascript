@@ -31,4 +31,10 @@ public class FunctionSymbol(
             .AppendJoin(',', Parameters)
             .Append($") => {Type}")
             .ToString();
+
+    public static bool operator <(FunctionSymbol left, FunctionSymbol right) =>
+        left.Parameters.Count < right.Parameters.Count;
+
+    public static bool operator >(FunctionSymbol left, FunctionSymbol right) =>
+        left.Parameters.Count > right.Parameters.Count;
 }
