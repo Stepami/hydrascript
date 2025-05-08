@@ -72,6 +72,10 @@
             <Link>Samples\gcd.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\jump.js">
+            <Link>Samples\jump.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\lcm.js">
             <Link>Samples\lcm.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
