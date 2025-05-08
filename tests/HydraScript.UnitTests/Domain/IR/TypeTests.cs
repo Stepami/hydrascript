@@ -10,8 +10,10 @@ public class TypeTests
     {
         var number = new Type("number");
         var arrayOfNumbers = new ArrayType(number);
+        var nullableNumber = new NullableType(number);
         Assert.False(arrayOfNumbers.Equals(number));
         Assert.False(number.Equals(arrayOfNumbers));
+        Assert.True(nullableNumber.Equals(number));
     }
 
     [Fact]

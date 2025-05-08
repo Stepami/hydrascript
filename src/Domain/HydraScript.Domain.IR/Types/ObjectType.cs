@@ -3,7 +3,7 @@ using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Types;
 
-public class ObjectType : NullableType
+public class ObjectType : Type
 {
     private readonly Dictionary<string, Type> _properties;
     private readonly List<FunctionSymbolId> _methods = [];

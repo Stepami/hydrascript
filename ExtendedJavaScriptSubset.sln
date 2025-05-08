@@ -71,6 +71,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{04AB
 		samples\overload_object.js = samples\overload_object.js
 		samples\overload.js = samples\overload.js
 		samples\defaultparams.js = samples\defaultparams.js
+		samples\nullable.js = samples\nullable.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{FB8F6EE1-1942-46D6-954E-9A1647BBDF10}"

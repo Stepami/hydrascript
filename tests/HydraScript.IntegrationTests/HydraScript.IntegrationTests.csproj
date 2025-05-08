@@ -80,6 +80,10 @@
             <Link>Samples\linkedlist.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\..\samples\nullable.js">
+            <Link>Samples\nullable.js</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\samples\objeditread.js">
             <Link>Samples\objeditread.js</Link>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
