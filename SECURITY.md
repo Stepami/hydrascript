@@ -3,7 +3,7 @@
 ## Supported Versions
 
 | Version | Supported          |
-| ------- | ------------------ |
+|---------|--------------------|
 | > 1.0   | :white_check_mark: |
 
 ## Reporting a Vulnerability
@@ -15,4 +15,4 @@ Security issues and bugs should be reported privately via email to stepami@mail.
 ## When Should I Report a Vulnerability?
 
 - You think you discovered a potential security vulnerability
-- You are unsure how a vulnerability affects YTsaurus
+- You are unsure how a vulnerability affects HydraScript
