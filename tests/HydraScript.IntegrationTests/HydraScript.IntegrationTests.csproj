@@ -42,6 +42,9 @@
         <None Update="Samples\defaultarray.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\defaultparams.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\equals.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -57,10 +60,16 @@
         <None Update="Samples\gcd.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\jump.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\lcm.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Samples\linkedlist.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Samples\nullable.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Samples\objeditread.js">
