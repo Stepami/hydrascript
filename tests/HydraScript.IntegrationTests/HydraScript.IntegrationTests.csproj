@@ -3,7 +3,7 @@
     <PropertyGroup>
         <NoWarn>CA1816</NoWarn>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="AwesomeAssertions" />
         <PackageReference Include="MartinCostello.Logging.XUnit" />
@@ -24,146 +24,102 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\..\samples\abs.js">
-            <Link>Samples\abs.js</Link>
+        <None Update="Samples\abs.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\arraddremove.js">
-            <Link>Samples\arraddremove.js</Link>
+        </None>
+        <None Update="Samples\arraddremove.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\arreditread.js">
-            <Link>Samples\arreditread.js</Link>
+        </None>
+        <None Update="Samples\arreditread.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\ceil.js">
-            <Link>Samples\ceil.js</Link>
+        </None>
+        <None Update="Samples\ceil.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\cycled.js">
-            <Link>Samples\cycled.js</Link>
+        </None>
+        <None Update="Samples\cycled.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\defaultarray.js">
-            <Link>Samples\defaultarray.js</Link>
+        </None>
+        <None Update="Samples\defaultarray.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\defaultparams.js">
-            <Link>Samples\defaultparams.js</Link>
+        </None>
+        <None Update="Samples\equals.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\equals.js">
-            <Link>Samples\equals.js</Link>
+        </None>
+        <None Update="Samples\exprtest.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\exprtest.js">
-            <Link>Samples\exprtest.js</Link>
+        </None>
+        <None Update="Samples\fastpow.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\fastpow.js">
-            <Link>Samples\fastpow.js</Link>
+        </None>
+        <None Update="Samples\forwardref.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\forwardref.js">
-            <Link>Samples\forwardref.js</Link>
+        </None>
+        <None Update="Samples\gcd.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\gcd.js">
-            <Link>Samples\gcd.js</Link>
+        </None>
+        <None Update="Samples\lcm.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\jump.js">
-            <Link>Samples\jump.js</Link>
+        </None>
+        <None Update="Samples\linkedlist.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\lcm.js">
-            <Link>Samples\lcm.js</Link>
+        </None>
+        <None Update="Samples\objeditread.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\linkedlist.js">
-            <Link>Samples\linkedlist.js</Link>
+        </None>
+        <None Update="Samples\overload.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\nullable.js">
-            <Link>Samples\nullable.js</Link>
+        </None>
+        <None Update="Samples\overload_object.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\objeditread.js">
-            <Link>Samples\objeditread.js</Link>
+        </None>
+        <None Update="Samples\posneg.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\overload.js">
-            <Link>Samples\overload.js</Link>
+        </None>
+        <None Update="Samples\prime.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\overload_object.js">
-            <Link>Samples\overload_object.js</Link>
+        </None>
+        <None Update="Samples\primefactor.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\posneg.js">
-            <Link>Samples\posneg.js</Link>
+        </None>
+        <None Update="Samples\quicksort.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\prime.js">
-            <Link>Samples\prime.js</Link>
+        </None>
+        <None Update="Samples\range.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\primefactor.js">
-            <Link>Samples\primefactor.js</Link>
+        </None>
+        <None Update="Samples\recur.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\quicksort.js">
-            <Link>Samples\quicksort.js</Link>
+        </None>
+        <None Update="Samples\scope.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\range.js">
-            <Link>Samples\range.js</Link>
+        </None>
+        <None Update="Samples\searchinll.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\recur.js">
-            <Link>Samples\recur.js</Link>
+        </None>
+        <None Update="Samples\settable.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\scope.js">
-            <Link>Samples\scope.js</Link>
+        </None>
+        <None Update="Samples\squareroot.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\searchinll.js">
-            <Link>Samples\searchinll.js</Link>
+        </None>
+        <None Update="Samples\summator.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\settable.js">
-            <Link>Samples\settable.js</Link>
+        </None>
+        <None Update="Samples\tern.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\squareroot.js">
-            <Link>Samples\squareroot.js</Link>
+        </None>
+        <None Update="Samples\this.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\summator.js">
-            <Link>Samples\summator.js</Link>
+        </None>
+        <None Update="Samples\typeresolving.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\tern.js">
-            <Link>Samples\tern.js</Link>
+        </None>
+        <None Update="Samples\vec2d.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\this.js">
-            <Link>Samples\this.js</Link>
+        </None>
+        <None Update="Samples\xxx.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\typeresolving.js">
-            <Link>Samples\typeresolving.js</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\vec2d.js">
-            <Link>Samples\vec2d.js</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\samples\xxx.js">
-            <Link>Samples\xxx.js</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
+        </None>
     </ItemGroup>
 
 </Project>

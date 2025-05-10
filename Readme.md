@@ -23,7 +23,7 @@
 
 [Грамматика](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
 
-[Рабочие примеры](samples)
+[Рабочие примеры](tests/HydraScript.IntegrationTests/Samples)
 
 ### Цели проекта
 1. Частично реализовать JavaScript с объектами и статической структурной типизацией, избавившись от таких понятий, как `constructor`, `class`, `interface`
