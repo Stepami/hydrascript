@@ -38,6 +38,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         _expressionVisitor = expressionVisitor;
     }
 
+    public override AddressedInstructions Visit(IAbstractSyntaxTreeNode visitable) => [];
+
     public AddressedInstructions Visit(ScriptBody visitable)
     {
         var result = new AddressedInstructions();
@@ -51,8 +53,6 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
         return result;
     }
-
-    public override AddressedInstructions DefaultVisit { get; } = [];
 
     public AddressedInstructions Visit(LexicalDeclaration visitable)
     {

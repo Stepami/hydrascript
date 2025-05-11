@@ -64,7 +64,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _typeBuilder = typeBuilder;
     }
 
-    public override Type DefaultVisit => "undefined";
+    public override Type Visit(IAbstractSyntaxTreeNode visitable) => "undefined";
 
     public Type Visit(ScriptBody visitable)
     {
