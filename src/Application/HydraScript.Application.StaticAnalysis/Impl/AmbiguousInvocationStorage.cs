@@ -20,4 +20,6 @@ internal class AmbiguousInvocationStorage : IAmbiguousInvocationStorage
         if (candidates.Count > 0)
             throw new AmbiguousInvocation(segment, candidates);
     }
+
+    public void Clear(FunctionSymbolId invocation) => _invocations.Remove(invocation);
 }

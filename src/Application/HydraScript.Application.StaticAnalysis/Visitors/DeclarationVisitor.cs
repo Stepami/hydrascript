@@ -74,21 +74,13 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         var indexOfFirstDefaultArgument = visitable.Arguments
             .Select((x, i) => new { Argument = x, Index = i })
             .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
-        for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
-        {
-            if (i is -1) break;
-            if (visitable.Arguments[i] is not DefaultValueArgument)
-                throw new NamedArgumentAfterDefaultValueArgument(
-                    visitable.Segment,
-                    function: visitable.Name,
-                    visitable.Arguments[i]);
-        }
 
         var parameters = visitable.Arguments.Select(x =>
             new VariableSymbol(
                 x.Name,
                 x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
+        _ambiguousInvocations.Clear(functionSymbolId);
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
         var functionSymbol = new FunctionSymbol(
             visitable.Name,
@@ -127,6 +119,12 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
         {
             if (i is -1) break;
+            if (visitable.Arguments[i] is not DefaultValueArgument)
+                throw new NamedArgumentAfterDefaultValueArgument(
+                    visitable.Segment,
+                    function: visitable.Name,
+                    visitable.Arguments[i]);
+
             var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
             var existing = parentTable.FindSymbol(overload);
             parentTable.AddSymbol(functionSymbol, overload);
