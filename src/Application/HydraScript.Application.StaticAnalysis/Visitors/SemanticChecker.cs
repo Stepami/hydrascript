@@ -46,6 +46,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IComputedTypesStorage _computedTypes;
+    private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
@@ -54,6 +55,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
         IComputedTypesStorage computedTypes,
+        IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
         _calculator = calculator;
@@ -61,6 +63,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
         _computedTypes = computedTypes;
+        _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
     }
 
@@ -411,6 +414,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             var objectType = (ObjectType)visitable.Member.Accept(This);
             var availableMethods = _methodStorage.GetAvailableMethods(objectType);
             var methodKey = new FunctionSymbolId(objectType.LastAccessedMethodName, [objectType, ..parameters]);
+            _ambiguousInvocations.CheckCandidatesAndThrow(visitable.Segment, methodKey);
             functionSymbol =
                 availableMethods.GetValueOrDefault(methodKey)
                 ?? throw new UnknownFunctionOverload(visitable.Id, methodKey);
@@ -418,6 +422,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var functionKey = new FunctionSymbolId(visitable.Id, parameters);
+            _ambiguousInvocations.CheckCandidatesAndThrow(visitable.Segment, functionKey);
             functionSymbol =
                 _symbolTables[visitable.Scope].FindSymbol(functionKey)
                 ?? throw new UnknownFunctionOverload(visitable.Id, functionKey);

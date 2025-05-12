@@ -21,6 +21,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IJavaScriptTypesProvider, JavaScriptTypesProvider>();
         services.AddSingleton<IDefaultValueForTypeCalculator, DefaultValueForTypeCalculator>();
 
+        services.AddSingleton<IAmbiguousInvocationStorage, AmbiguousInvocationStorage>();
+
         services.AddSingleton<IVisitor<TypeValue, Type>, TypeBuilder>();
 
         services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, SymbolTableInitializer>();

@@ -17,17 +17,20 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
+    private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
+        IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
+        _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
     }
 
@@ -127,6 +130,12 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             if (existing is not null && existing < functionSymbol)
             {
                 parentTable.AddSymbol(existing, overload);
+            }
+
+            if (existing is not null && !existing.Id.Equals(overload))
+            {
+                _ambiguousInvocations.WriteCandidate(overload, existing.Id);
+                _ambiguousInvocations.WriteCandidate(overload, functionSymbolId);
             }
         }
 
