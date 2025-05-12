@@ -38,6 +38,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         _expressionVisitor = expressionVisitor;
     }
 
+    public override AddressedInstructions Visit(IAbstractSyntaxTreeNode visitable) => [];
+
     public AddressedInstructions Visit(ScriptBody visitable)
     {
         var result = new AddressedInstructions();
@@ -51,8 +53,6 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
         return result;
     }
-
-    public override AddressedInstructions DefaultVisit { get; } = [];
 
     public AddressedInstructions Visit(LexicalDeclaration visitable)
     {
@@ -129,8 +129,14 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
             }
         };
 
-        foreach (var (id, _) in visitable.Arguments)
-            result.Add(new PopParameter(id));
+        for (var i = 0; i < visitable.Arguments.Count; i++)
+        {
+            var arg = visitable.Arguments[i];
+            if (arg is DefaultValueArgument @default)
+                result.Add(new PopParameter(arg.Name, @default.Info.Value));
+            else
+                result.Add(new PopParameter(arg.Name));
+        }
 
         result.AddRange(visitable.Statements.Accept(This));
         if (!visitable.HasReturnStatement())

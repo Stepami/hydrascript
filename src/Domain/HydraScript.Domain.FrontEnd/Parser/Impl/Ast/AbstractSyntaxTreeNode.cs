@@ -60,7 +60,7 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     }
 
     public virtual TReturn Accept<TReturn>(IVisitor<IAbstractSyntaxTreeNode, TReturn> visitor) =>
-        visitor.DefaultVisit;
+        visitor.Visit(this);
 
     protected abstract string NodeRepresentation();
     public override string ToString() =>

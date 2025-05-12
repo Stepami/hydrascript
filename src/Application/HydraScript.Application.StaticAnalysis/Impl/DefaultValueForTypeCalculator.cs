@@ -12,6 +12,8 @@ internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
 
     public object? GetDefaultValueForType(Type type)
     {
+        if (type is NullableType)
+            return null;
         if (type.Equals(_boolean))
             return false;
         if (type.Equals(_number))

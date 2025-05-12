@@ -20,6 +20,14 @@ public interface ISymbolTable
     public void AddSymbol(ISymbol symbol);
 
     /// <summary>
+    /// Добавление собственного символа в область видимости по заданному ключу
+    /// </summary>
+    /// <param name="symbol">Собственный символ</param>
+    /// <param name="symbolId">Заданный ключ</param>
+    public void AddSymbol<TSymbol>(TSymbol symbol, ISymbolId<TSymbol> symbolId)
+        where TSymbol : class, ISymbol;
+
+    /// <summary>
     /// Поиск эффективного символа
     /// </summary>
     /// <param name="id">Идентификатор символа</param>

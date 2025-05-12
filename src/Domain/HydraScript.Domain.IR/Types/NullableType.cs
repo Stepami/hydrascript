@@ -1,16 +1,8 @@
 namespace HydraScript.Domain.IR.Types;
 
-public class NullableType : Type
+public class NullableType(Type type) : Type($"{type}?")
 {
-    public Type Type { get; private set; } = default!;
-
-    public NullableType(Type type) :
-        base($"{type}?") =>
-        Type = type;
-
-    protected NullableType()
-    {
-    }
+    public Type Type { get; private set; } = type;
 
     public override void ResolveReference(
         Type reference,
@@ -28,7 +20,7 @@ public class NullableType : Type
         if (obj is NullableType that)
             return Equals(Type, that.Type);
 
-        return obj is NullType or Any;
+        return obj is NullType or Any || (obj is Type type && type.Equals(Type));
     }
 
     public override int GetHashCode() =>

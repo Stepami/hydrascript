@@ -12,9 +12,14 @@ public class SymbolTable : ISymbolTable
     public IEnumerable<ISymbol> GetAvailableSymbols() =>
         _symbols.Values.Concat(_openScope?.GetAvailableSymbols() ?? []);
 
-    /// <inheritdoc cref="ISymbolTable.AddSymbol"/>
+    /// <inheritdoc cref="ISymbolTable.AddSymbol(ISymbol)"/>
     public void AddSymbol(ISymbol symbol) =>
         _symbols[symbol.Id] = symbol;
+
+    /// <inheritdoc cref="ISymbolTable.AddSymbol{TSymbol}(TSymbol, ISymbolId{TSymbol})"/>
+    public void AddSymbol<TSymbol>(TSymbol symbol, ISymbolId<TSymbol> symbolId)
+        where TSymbol : class, ISymbol =>
+        _symbols[symbolId] = symbol;
 
     /// <inheritdoc cref="ISymbolTable.FindSymbol{TSymbol}"/>
     public TSymbol? FindSymbol<TSymbol>(ISymbolId<TSymbol> id)

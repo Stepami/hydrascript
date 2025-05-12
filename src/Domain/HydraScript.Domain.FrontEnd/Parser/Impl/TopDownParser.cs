@@ -287,22 +287,25 @@ public class TopDownParser : IParser
         var ident = Expect("Ident");
 
         Expect("LeftParen");
-        var args = new List<PropertyTypeValue>();
-        if (CurrentIs("Ident"))
+        var args = new List<IFunctionArgument>();
+        while (CurrentIs("Ident"))
         {
             var arg = Expect("Ident").Value;
-            Expect("Colon");
-            var type = TypeValue();
-            args.Add(new PropertyTypeValue(arg, type));
-        }
+            if (CurrentIs("Colon"))
+            {
+                Expect("Colon");
+                var type = TypeValue();
+                args.Add(new NamedArgument(arg, type));
+            }
+            else if (CurrentIs("Assign"))
+            {
+                Expect("Assign");
+                var value = Literal();
+                args.Add(new DefaultValueArgument(arg, value));
+            }
 
-        while (CurrentIs("Comma"))
-        {
-            Expect("Comma");
-            var arg = Expect("Ident").Value;
-            Expect("Colon");
-            var type = TypeValue();
-            args.Add(new PropertyTypeValue(arg, type));
+            if (!CurrentIs("RightParen"))
+                Expect("Comma");
         }
 
         var rp = Expect("RightParen");

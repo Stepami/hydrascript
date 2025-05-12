@@ -46,6 +46,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IComputedTypesStorage _computedTypes;
+    private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
@@ -54,6 +55,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
         IComputedTypesStorage computedTypes,
+        IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
         _calculator = calculator;
@@ -61,10 +63,11 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
         _computedTypes = computedTypes;
+        _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
     }
 
-    public override Type DefaultVisit => "undefined";
+    public override Type Visit(IAbstractSyntaxTreeNode visitable) => "undefined";
 
     public Type Visit(ScriptBody visitable)
     {
@@ -411,6 +414,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             var objectType = (ObjectType)visitable.Member.Accept(This);
             var availableMethods = _methodStorage.GetAvailableMethods(objectType);
             var methodKey = new FunctionSymbolId(objectType.LastAccessedMethodName, [objectType, ..parameters]);
+            _ambiguousInvocations.CheckCandidatesAndThrow(visitable.Segment, methodKey);
             functionSymbol =
                 availableMethods.GetValueOrDefault(methodKey)
                 ?? throw new UnknownFunctionOverload(visitable.Id, methodKey);
@@ -418,6 +422,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var functionKey = new FunctionSymbolId(visitable.Id, parameters);
+            _ambiguousInvocations.CheckCandidatesAndThrow(visitable.Segment, functionKey);
             functionSymbol =
                 _symbolTables[visitable.Scope].FindSymbol(functionKey)
                 ?? throw new UnknownFunctionOverload(visitable.Id, functionKey);
@@ -426,12 +431,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         visitable.ComputedFunctionAddress = functionSymbol.Id.ToString();
         visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
-
-        if (functionSymbol.Parameters.Count != visitable.Parameters.Count + (methodCall ? 1 : 0))
-            throw new WrongNumberOfArguments(
-                visitable.Segment,
-                expected: functionSymbol.Parameters.Count,
-                actual: visitable.Parameters.Count);
 
         visitable.Parameters.Zip(parameters).Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..])
             .ToList().ForEach(pair =>
@@ -481,7 +480,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         else
         {
             var wrongReturn = returnStatements
-                .FirstOrDefault(x => !x.Type.Equals(symbol.Type));
+                .FirstOrDefault(x => !symbol.Type.Equals(x.Type));
             if (wrongReturn is not null)
                 throw new WrongReturnType(
                     wrongReturn.Statement.Segment,

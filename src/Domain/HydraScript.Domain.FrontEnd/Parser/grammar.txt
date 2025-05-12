@@ -87,6 +87,7 @@ Typed -> Type Initializer?
 Initializer -> '=' Expression
 
 FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement
-FunctionParameters -> ParameterDeclaration (',' ParameterDeclaration)*
-ParameterDeclaration -> "Ident" Type
+FunctionParameters -> (ParameterDeclaration ',')*
+ParameterDeclaration -> "Ident" (Type | DefaultValue)
 Type -> ':' TypeValue
+DefaultValue -> '=' Literal

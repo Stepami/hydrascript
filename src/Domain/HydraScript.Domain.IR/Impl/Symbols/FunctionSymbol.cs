@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
@@ -24,9 +25,16 @@ public class FunctionSymbol(
     public void DefineReturnType(Type returnType) =>
         _returnType = returnType;
 
+    [ExcludeFromCodeCoverage]
     public override string ToString() =>
         new StringBuilder($"function {Name}(")
             .AppendJoin(',', Parameters)
             .Append($") => {Type}")
             .ToString();
+
+    public static bool operator <(FunctionSymbol left, FunctionSymbol right) =>
+        left.Parameters.Count < right.Parameters.Count;
+
+    public static bool operator >(FunctionSymbol left, FunctionSymbol right) =>
+        left.Parameters.Count > right.Parameters.Count;
 }

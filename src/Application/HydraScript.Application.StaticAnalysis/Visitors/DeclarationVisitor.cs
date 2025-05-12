@@ -17,17 +17,20 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
+    private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
+        IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
+        _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
     }
 
@@ -67,14 +70,28 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
+        var parentTable = _symbolTables[visitable.Parent.Scope];
+        var indexOfFirstDefaultArgument = visitable.Arguments
+            .Select((x, i) => new { Argument = x, Index = i })
+            .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
+
         var parameters = visitable.Arguments.Select(x =>
             new VariableSymbol(
-                name: x.Key,
+                x.Name,
                 x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
+        _ambiguousInvocations.Clear(functionSymbolId);
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
-        if (_symbolTables[visitable.Parent.Scope].ContainsSymbol(functionSymbolId))
-            throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
+        var functionSymbol = new FunctionSymbol(
+            visitable.Name,
+            parameters,
+            visitable.ReturnTypeValue.Accept(_typeBuilder),
+            visitable.IsEmpty);
+        if (parentTable.ContainsSymbol(functionSymbolId))
+        {
+            if (!(parentTable.FindSymbol(functionSymbolId)! > functionSymbol))
+                throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
+        }
 
         for (var i = 0; i < parameters.Count; i++)
         {
@@ -83,11 +100,6 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             _symbolTables[visitable.Scope].AddSymbol(arg);
         }
 
-        var functionSymbol = new FunctionSymbol(
-            visitable.Name,
-            parameters,
-            visitable.ReturnTypeValue.Accept(_typeBuilder),
-            visitable.IsEmpty);
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
         {
@@ -103,7 +115,31 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
                 functionSymbol.DefineReturnType("void");
         }
 
-        _symbolTables[visitable.Parent.Scope].AddSymbol(functionSymbol);
+        parentTable.AddSymbol(functionSymbol);
+        for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
+        {
+            if (i is -1) break;
+            if (visitable.Arguments[i] is not DefaultValueArgument)
+                throw new NamedArgumentAfterDefaultValueArgument(
+                    visitable.Segment,
+                    function: visitable.Name,
+                    visitable.Arguments[i]);
+
+            var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
+            var existing = parentTable.FindSymbol(overload);
+            parentTable.AddSymbol(functionSymbol, overload);
+            if (existing is not null && existing < functionSymbol)
+            {
+                parentTable.AddSymbol(existing, overload);
+            }
+
+            if (existing is not null && !existing.Id.Equals(overload))
+            {
+                _ambiguousInvocations.WriteCandidate(overload, existing.Id);
+                _ambiguousInvocations.WriteCandidate(overload, functionSymbolId);
+            }
+        }
+
         return visitable.Statements.Accept(This);
     }
 }
