@@ -90,8 +90,16 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
                 x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
+        var functionSymbol = new FunctionSymbol(
+            visitable.Name,
+            parameters,
+            visitable.ReturnTypeValue.Accept(_typeBuilder),
+            visitable.IsEmpty);
         if (parentTable.ContainsSymbol(functionSymbolId))
-            throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
+        {
+            if (!(parentTable.FindSymbol(functionSymbolId)! > functionSymbol))
+                throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
+        }
 
         for (var i = 0; i < parameters.Count; i++)
         {
@@ -100,11 +108,6 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             _symbolTables[visitable.Scope].AddSymbol(arg);
         }
 
-        var functionSymbol = new FunctionSymbol(
-            visitable.Name,
-            parameters,
-            visitable.ReturnTypeValue.Accept(_typeBuilder),
-            visitable.IsEmpty);
         if (parameters is [{ Type: ObjectType objectType }, ..] &&
             visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
         {

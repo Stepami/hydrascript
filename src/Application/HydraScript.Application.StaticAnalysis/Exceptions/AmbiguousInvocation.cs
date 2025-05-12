@@ -9,4 +9,4 @@ public class AmbiguousInvocation(
     IReadOnlyCollection<FunctionSymbolId> candidates) :
     SemanticException(
         segment,
-        $"Candidates are:\n{string.Join('\n', candidates)}");
+        $"Ambiguous Invocation - Candidates are:\n{string.Join('\n', candidates)}");
