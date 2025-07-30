@@ -87,11 +87,8 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             parameters,
             visitable.ReturnTypeValue.Accept(_typeBuilder),
             visitable.IsEmpty);
-        if (parentTable.ContainsSymbol(functionSymbolId))
-        {
-            if (!(parentTable.FindSymbol(functionSymbolId)! > functionSymbol))
-                throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
-        }
+        if (functionSymbolId.Equals(parentTable.FindSymbol(functionSymbolId)?.Id))
+            throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
 
         for (var i = 0; i < parameters.Count; i++)
         {
