@@ -1,0 +1,50 @@
+<Solution>
+  <Folder Name="/SolutionItems/">
+    <File Path=".gitignore" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="GitVersion.yml" />
+    <File Path="hydrascript-logo.jpg" />
+    <File Path="LICENSE" />
+    <File Path="NuGet.config" />
+    <File Path="Readme.md" />
+    <File Path="SECURITY.md" />
+  </Folder>
+  <Folder Name="/SolutionItems/GithubFolder/">
+    <File Path=".github/pull_request_template.md" />
+  </Folder>
+  <Folder Name="/SolutionItems/GithubFolder/IssueTemplate/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.md" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
+  </Folder>
+  <Folder Name="/SolutionItems/GithubFolder/Workflows/">
+    <File Path=".github/workflows/develop.yml" />
+    <File Path=".github/workflows/release.yml" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="src/HydraScript/HydraScript.csproj" />
+  </Folder>
+  <Folder Name="/Src/Application/">
+    <Project Path="src/Application/HydraScript.Application.CodeGeneration/HydraScript.Application.CodeGeneration.csproj" />
+    <Project Path="src/Application/HydraScript.Application.StaticAnalysis/HydraScript.Application.StaticAnalysis.csproj" />
+  </Folder>
+  <Folder Name="/Src/Domain/">
+    <Project Path="src/Domain/HydraScript.Domain.BackEnd/HydraScript.Domain.BackEnd.csproj" />
+    <Project Path="src/Domain/HydraScript.Domain.Constants/HydraScript.Domain.Constants.csproj" />
+    <Project Path="src/Domain/HydraScript.Domain.FrontEnd/HydraScript.Domain.FrontEnd.csproj" />
+    <Project Path="src/Domain/HydraScript.Domain.IR/HydraScript.Domain.IR.csproj" />
+  </Folder>
+  <Folder Name="/Src/Infrastructure/">
+    <Project Path="src/Infrastructure/HydraScript.Infrastructure.LexerRegexGenerator/HydraScript.Infrastructure.LexerRegexGenerator.csproj" />
+    <Project Path="src/Infrastructure/HydraScript.Infrastructure/HydraScript.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <File Path="tests/Directory.Build.props" />
+    <File Path="tests/Directory.Packages.props" />
+    <Project Path="tests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj" />
+    <Project Path="tests/HydraScript.IntegrationTests/HydraScript.IntegrationTests.csproj" />
+    <Project Path="tests/HydraScript.UnitTests/HydraScript.UnitTests.csproj" />
+  </Folder>
+</Solution>
