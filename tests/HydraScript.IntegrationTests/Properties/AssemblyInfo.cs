@@ -1,1 +1,1 @@
-[assembly: AssemblyTrait("Category", "Integration")]
+[assembly: Trait("Category", "Integration")]

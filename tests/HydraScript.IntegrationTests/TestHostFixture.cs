@@ -4,13 +4,10 @@ using MartinCostello.Logging.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Xunit.Abstractions;
 
 namespace HydraScript.IntegrationTests;
 
-public class TestHostFixture(
-    Xunit.DependencyInjection.ITestOutputHelperAccessor accessor) :
-    IDisposable, ITestOutputHelperAccessor
+public class TestHostFixture : IDisposable, ITestOutputHelperAccessor
 {
     public record Options(
         string FileName = ScriptFileName + ".js",
@@ -37,7 +34,7 @@ public class TestHostFixture(
 
     public ITestOutputHelper? OutputHelper
     {
-        get => accessor.Output;
+        get => TestContext.Current.TestOutputHelper;
         set { }
     }
 

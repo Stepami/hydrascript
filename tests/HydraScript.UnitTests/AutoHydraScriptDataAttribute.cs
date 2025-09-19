@@ -1,6 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.IR;

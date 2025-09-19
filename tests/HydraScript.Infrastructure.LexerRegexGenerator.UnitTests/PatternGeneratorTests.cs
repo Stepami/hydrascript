@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NSubstitute;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace HydraScript.Infrastructure.LexerRegexGenerator.UnitTests;
 
@@ -13,6 +12,7 @@ public class PatternGeneratorTests(ITestOutputHelper output)
     [Fact, Trait("Category", "Unit")]
     public void Initialize_PatternContainerMarked_CorrectlyGenerated()
     {
+        var ct = TestContext.Current.CancellationToken;
         var provider = Substitute.For<ITokenTypesStreamProvider>();
         provider.TokenTypesStream.Returns(
         [
@@ -25,8 +25,11 @@ public class PatternGeneratorTests(ITestOutputHelper output)
         };
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 
-        driver = driver.RunGeneratorsAndUpdateCompilation(CreateCompilation(string.Empty), out var outputCompilation,
-            out var diagnostics);
+        driver = driver.RunGeneratorsAndUpdateCompilation(
+            CreateCompilation(string.Empty),
+            out var outputCompilation,
+            out var diagnostics,
+            ct);
         Debug.Assert(diagnostics.IsEmpty);
         Debug.Assert(outputCompilation.SyntaxTrees.Count() == 2);
 
@@ -51,10 +54,10 @@ internal partial class PatternContainer
 
 """";
 
-        output.WriteLine(generatedFileSyntax.GetText().ToString());
+        output.WriteLine(generatedFileSyntax.GetText(ct).ToString());
         Assert.Equal(
             expectedSource,
-            generatedFileSyntax.GetText().ToString(),
+            generatedFileSyntax.GetText(ct).ToString(),
             ignoreLineEndingDifferences: true);
     }
 

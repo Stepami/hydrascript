@@ -1,1 +1,1 @@
-[assembly: AssemblyTrait("Category", "Unit")]
+[assembly: Trait("Category", "Unit")]
