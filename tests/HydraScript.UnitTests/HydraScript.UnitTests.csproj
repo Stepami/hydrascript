@@ -2,7 +2,7 @@
 
     <ItemGroup>
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
-        <PackageReference Include="AutoFixture.Xunit2" />
+        <PackageReference Include="AutoFixture.Xunit3" />
         <PackageReference Include="Fare" />
         <PackageReference Include="AwesomeAssertions" />
         <PackageReference Include="PolymorphicContracts.AutoFixture" />
