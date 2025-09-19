@@ -1,6 +1,6 @@
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
-public class LexerSuccessData : TheoryData<string>
+public sealed class LexerSuccessData : TheoryData<string>
 {
     public LexerSuccessData()
     {
@@ -10,7 +10,7 @@ public class LexerSuccessData : TheoryData<string>
     }
 }
 
-public class LexerFailData : TheoryData<string>
+public sealed class LexerFailData : TheoryData<string>
 {
     public LexerFailData()
     {
@@ -20,7 +20,7 @@ public class LexerFailData : TheoryData<string>
     }
 }
 
-public class LexerKeywordInsideIdentData : TheoryData<string>
+public sealed class LexerKeywordInsideIdentData : TheoryData<string>
 {
     public LexerKeywordInsideIdentData()
     {

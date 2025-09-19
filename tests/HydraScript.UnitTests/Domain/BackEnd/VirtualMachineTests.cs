@@ -1,4 +1,4 @@
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl;
 using HydraScript.Domain.BackEnd.Impl.Addresses;

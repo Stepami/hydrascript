@@ -1,10 +1,9 @@
 using System.Text.RegularExpressions;
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 using HydraScript.Infrastructure;
-using Xunit.Abstractions;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
