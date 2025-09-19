@@ -1,1 +1,0 @@
-[assembly: Trait("Category", "Integration")]

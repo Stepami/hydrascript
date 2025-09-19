@@ -52,16 +52,16 @@ jobs:
       - name: Build
         run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Debug -v n
       - name: Unit Tests
-        run: dotnet test -c Debug --no-build -v n --filter="Category=Unit"
+        run: dotnet test -c Debug --no-build -v n -- --filter-trait Category=Unit --ignore-exit-code 8
       - name: Integration Tests
         run: |
-          dotnet test -c Debug /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-build -v n --filter="Category=Integration"
+          dotnet test tests/HydraScript.IntegrationTests -c Debug --no-build -v n -- --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
-          path: ./tests/HydraScript.IntegrationTests/coverage.cobertura.xml
+          path: ./tests/HydraScript.IntegrationTests/bin/Debug/net9.0/TestResults/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 80
           fail_below_threshold: true
@@ -73,7 +73,7 @@ jobs:
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
         with:
-          reports: './tests/HydraScript.IntegrationTests/coverage.cobertura.xml' 
+          reports: './tests/HydraScript.IntegrationTests/bin/Debug/net9.0/TestResults/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
