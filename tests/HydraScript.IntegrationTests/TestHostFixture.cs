@@ -1,14 +1,14 @@
 using System.IO.Abstractions;
 using HydraScript.Infrastructure;
-using MartinCostello.Logging.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace HydraScript.IntegrationTests;
 
-public class TestHostFixture : IDisposable, ITestOutputHelperAccessor
+public class TestHostFixture : IDisposable
 {
+    public const string ScriptFileName = "file";
     public record Options(
         string FileName = ScriptFileName + ".js",
         bool Dump = false,
@@ -27,16 +27,7 @@ public class TestHostFixture : IDisposable, ITestOutputHelperAccessor
     }
 
     private readonly List<string> _logMessages = [];
-
-    public const string ScriptFileName = "file";
-
     public IReadOnlyCollection<string> LogMessages => _logMessages;
-
-    public ITestOutputHelper? OutputHelper
-    {
-        get => TestContext.Current.TestOutputHelper;
-        set { }
-    }
 
     public Runner GetRunner(Options options, Action<IServiceCollection>? configureTestServices = null)
     {
@@ -46,7 +37,7 @@ public class TestHostFixture : IDisposable, ITestOutputHelperAccessor
             services =>
             {
                 services.AddLogging(x => x.ClearProviders()
-                    .AddXUnit(this)
+                    .AddXUnit(new ImplicitTestOutputHelperAccessor())
                     .AddFakeLogging(fakeLogOptions =>
                     {
                         fakeLogOptions.OutputSink = logMessage => _logMessages.Add(logMessage);
