@@ -21,11 +21,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 9.0.x
       - name: Setup GitVersion
@@ -71,7 +71,7 @@ jobs:
           show_branch: true
           only_changed_files: true
       - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.1
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.15
         with:
           reports: './tests/HydraScript.IntegrationTests/bin/Debug/net9.0/TestResults/coverage.cobertura.xml' 
           targetdir: './coverage-report' 

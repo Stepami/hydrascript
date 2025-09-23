@@ -14,13 +14,11 @@ jobs:
       publish_version: ${{ steps.version_step.outputs.publishVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 7.0.x
+        uses: actions/setup-dotnet@v5
       - name: Determine Version
         id: version_step
         run: |
@@ -28,15 +26,14 @@ jobs:
           echo "majorMinorPatch=$tag" >> $GITHUB_OUTPUT
           echo "publishVersion=${tag:1}" >> $GITHUB_OUTPUT
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
         with:
-          versionSpec: '0.18.x'
+          versionSpec: '0.20.x'
       - name: Create release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/create@v3.0.0
+        uses: gittools/actions/gitreleasemanager/create@v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: 'Stepami'
-          repository: 'hydrascript'
+          repository: 'Stepami/hydrascript'
           milestone: ${{ steps.version_step.outputs.majorMinorPatch }}
           name: ${{ steps.version_step.outputs.majorMinorPatch }}
 
@@ -57,17 +54,15 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
-            7.0.x
-            9.0.x
+          dotnet-version: '9.0.x'
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
         with:
-          versionSpec: '0.18.x'
+          versionSpec: '0.20.x'
       - name: Publish
         run: |
           mkdir output
@@ -75,11 +70,10 @@ jobs:
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/addasset@v3.0.0
+        uses: gittools/actions/gitreleasemanager/addasset@v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: 'Stepami'
-          repository: 'hydrascript'
+          repository: 'Stepami/hydrascript'
           milestone: ${{ needs.create-release.outputs.determined_version }}
           assets: ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
 
@@ -89,24 +83,20 @@ jobs:
     needs: upload-release-assets
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 7.0.x
+        uses: actions/setup-dotnet@v5
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v3.0.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
         with:
-          versionSpec: '0.18.x'
+          versionSpec: '0.20.x'
       - name: Publish release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/publish@v3.0.0
+        uses: gittools/actions/gitreleasemanager/publish@v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: 'Stepami'
-          repository: 'hydrascript'
+          repository: 'Stepami/hydrascript'
           milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
       - name: Close release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/close@v3.0.0
+        uses: gittools/actions/gitreleasemanager/close@v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: 'Stepami'
-          repository: 'hydrascript'
+          repository: 'Stepami/hydrascript'
           milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
