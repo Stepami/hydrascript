@@ -2,7 +2,7 @@ using MartinCostello.Logging.XUnit;
 
 namespace HydraScript.IntegrationTests;
 
-public class ImplicitTestOutputHelperAccessor : ITestOutputHelperAccessor
+internal sealed class ImplicitTestOutputHelperAccessor : ITestOutputHelperAccessor
 {
     public ITestOutputHelper? OutputHelper
     {
