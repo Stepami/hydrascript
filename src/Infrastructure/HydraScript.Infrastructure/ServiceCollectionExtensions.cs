@@ -33,7 +33,7 @@ public static class ServiceCollectionExtensions
         .AddStaticAnalysis()
         .AddCodeGeneration();
 
-    public static void AddInfrastructure(
+    public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         bool dump,
         FileInfo inputFileInfo)
@@ -59,5 +59,7 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddSingleton<Executor>();
+
+        return services;
     }
 }

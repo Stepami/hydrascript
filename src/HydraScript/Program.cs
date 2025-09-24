@@ -35,10 +35,7 @@ internal static partial class Program
         category: "AotAnalysis",
         checkId: "IL3050:RequiresDynamicCode",
         Justification = SuppressMessage)]
-    internal static ServiceProvider GetServiceProvider(
-        FileInfo fileInfo,
-        bool dump,
-        Action<IServiceCollection>? configureServices = null)
+    private static ServiceProvider GetServiceProvider(FileInfo fileInfo, bool dump)
     {
         var services = new ServiceCollection();
         services.AddLogging(c => c.ClearProviders()
@@ -48,7 +45,6 @@ internal static partial class Program
             .AddDomain()
             .AddApplication()
             .AddInfrastructure(dump, fileInfo);
-        configureServices?.Invoke(services);
         return services.BuildServiceProvider();
     }
 }

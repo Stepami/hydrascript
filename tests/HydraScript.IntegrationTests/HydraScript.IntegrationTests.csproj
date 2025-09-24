@@ -6,9 +6,10 @@
 
     <ItemGroup>
         <PackageReference Include="AwesomeAssertions" />
-        <PackageReference Include="MartinCostello.Logging.XUnit.v3" />
         <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" />
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+        <PackageReference Include="Serilog.Extensions.Logging" />
+        <PackageReference Include="Serilog.Sinks.XUnit3" />
     </ItemGroup>
 
     <ItemGroup>
