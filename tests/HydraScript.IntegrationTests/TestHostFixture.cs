@@ -3,6 +3,8 @@ using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Serilog;
+using Serilog.Sinks.XUnit3;
 
 namespace HydraScript.IntegrationTests;
 
@@ -31,39 +33,40 @@ public class TestHostFixture : IDisposable
 
     public Runner GetRunner(Options options, Action<IServiceCollection>? configureTestServices = null)
     {
-        var serviceProvider = Program.GetServiceProvider(
-            new FileInfo(options.FileName),
-            options.Dump,
-            services =>
+        var services = new ServiceCollection()
+            .AddDomain()
+            .AddApplication()
+            .AddInfrastructure(options.Dump, new FileInfo(options.FileName));
+        const string serilogTemplate = "[{Timestamp:HH:mm:ss} {Level:u} [{SourceContext}]] {Message:lj} {Exception}";
+        services.AddLogging(x => x.ClearProviders()
+            .AddSerilog(new LoggerConfiguration().WriteTo.XUnit3TestOutput(serilogTemplate).CreateLogger())
+            .AddFakeLogging(fakeLogOptions =>
             {
-                services.AddLogging(x => x.ClearProviders()
-                    .AddXUnit(new ImplicitTestOutputHelperAccessor())
-                    .AddFakeLogging(fakeLogOptions =>
+                fakeLogOptions.OutputSink = logMessage => _logMessages.Add(logMessage);
+                fakeLogOptions.OutputFormatter = fakeLogRecord =>
+                    fakeLogRecord.Level switch
                     {
-                        fakeLogOptions.OutputSink = logMessage => _logMessages.Add(logMessage);
-                        fakeLogOptions.OutputFormatter = fakeLogRecord =>
-                            fakeLogRecord.Level switch
-                            {
-                                LogLevel.Error => $"{fakeLogRecord.Message} {fakeLogRecord.Exception?.Message}",
-                                _ => fakeLogRecord.ToString()
-                            };
-                    }));
+                        LogLevel.Error => $"{fakeLogRecord.Message} {fakeLogRecord.Exception?.Message}",
+                        _ => fakeLogRecord.ToString()
+                    };
+            }));
 
-                if (options.MockFileSystem)
-                {
-                    var fileSystem = Substitute.For<IFileSystem>();
-                    services.AddSingleton(fileSystem);
-                }
+        if (options.MockFileSystem)
+        {
+            var fileSystem = Substitute.For<IFileSystem>();
+            services.AddSingleton(fileSystem);
+        }
 
-                if (!string.IsNullOrWhiteSpace(options.InMemoryScript))
-                {
-                    var sourceCodeProvider = Substitute.For<ISourceCodeProvider>();
-                    sourceCodeProvider.GetText().ReturnsForAnyArgs(options.InMemoryScript);
-                    services.AddSingleton(sourceCodeProvider);
-                }
+        if (!string.IsNullOrWhiteSpace(options.InMemoryScript))
+        {
+            var sourceCodeProvider = Substitute.For<ISourceCodeProvider>();
+            sourceCodeProvider.GetText().ReturnsForAnyArgs(options.InMemoryScript);
+            services.AddSingleton(sourceCodeProvider);
+        }
 
-                configureTestServices?.Invoke(services);
-            });
+        configureTestServices?.Invoke(services);
+
+        var serviceProvider = services.BuildServiceProvider();
         var executor = serviceProvider.GetRequiredService<Executor>();
         return new Runner(serviceProvider, executor);
     }
