@@ -39,4 +39,9 @@ public interface ISymbolTable
     /// </summary>
     /// <param name="id">Идентификатор символа</param>
     public bool ContainsSymbol(ISymbolId<ISymbol> id);
+
+    /// <summary>
+    /// Очистка таблицы символов
+    /// </summary>
+    public void Clear();
 }

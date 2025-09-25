@@ -21,4 +21,13 @@ internal class SymbolTableStorage : ISymbolTableStorage
         symbolTable.AddOpenScope(_symbolTables[scope.OpenScope.Id]);
         _symbolTables[scope.Id] = symbolTable;
     }
+
+    public void Clear()
+    {
+        foreach (var scopeId in _symbolTables.Keys)
+        {
+            _symbolTables[scopeId].Clear();
+        }
+        _symbolTables.Clear();
+    }
 }

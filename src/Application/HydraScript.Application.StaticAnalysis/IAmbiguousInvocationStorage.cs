@@ -9,4 +9,6 @@ public interface IAmbiguousInvocationStorage
     void CheckCandidatesAndThrow(string segment, FunctionSymbolId invocation);
 
     void Clear(FunctionSymbolId invocation);
+
+    void Clear();
 }
