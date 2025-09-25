@@ -5,4 +5,6 @@ public interface IComputedTypesStorage
     public Guid Save(Type computedType);
 
     public Type Get(Guid computedTypeGuid);
+
+    public void Clear();
 }

@@ -10,4 +10,6 @@ public interface ISymbolTableStorage
     public void Init(Scope scope, ISymbolTable symbolTable);
 
     public void InitWithOpenScope(Scope scope);
+
+    public void Clear();
 }

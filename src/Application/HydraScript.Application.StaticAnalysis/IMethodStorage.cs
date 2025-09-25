@@ -9,4 +9,6 @@ public interface IMethodStorage
     public void BindMethod(ObjectType objectType, FunctionSymbol method);
 
     public IReadOnlyDictionary<FunctionSymbolId, FunctionSymbol> GetAvailableMethods(ObjectType objectType);
+
+    public void Clear();
 }

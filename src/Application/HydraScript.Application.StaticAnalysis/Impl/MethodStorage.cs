@@ -18,4 +18,13 @@ internal class MethodStorage : IMethodStorage
 
     public IReadOnlyDictionary<FunctionSymbolId, FunctionSymbol> GetAvailableMethods(ObjectType objectType) =>
         _bindings.GetValueOrDefault(objectType, new Dictionary<FunctionSymbolId, FunctionSymbol>());
+
+    public void Clear()
+    {
+        foreach (var objectType in _bindings.Keys)
+        {
+            _bindings[objectType].Clear();
+        }
+        _bindings.Clear();
+    }
 }

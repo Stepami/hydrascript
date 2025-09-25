@@ -46,7 +46,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HydraScript.Infrastructure;
 
-internal partial class PatternContainer
+internal class PatternContainer
 {
     [StringSyntax(StringSyntaxAttribute.Regex)]
     public const string Value = """(?<Test1>test1)|(?<Test2>test2)|(?<ERROR>\S+)""";

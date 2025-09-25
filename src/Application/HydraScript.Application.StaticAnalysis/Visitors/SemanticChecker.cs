@@ -77,6 +77,11 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         foreach (var funcDecl in _functionStorage.Flush())
             funcDecl.Accept(This);
 
+        _methodStorage.Clear();
+        _symbolTables.Clear();
+        _computedTypes.Clear();
+        _ambiguousInvocations.Clear();
+        
         return "undefined";
     }
 

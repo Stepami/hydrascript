@@ -34,4 +34,11 @@ public class SymbolTable : ISymbolTable
     /// <inheritdoc cref="ISymbolTable.ContainsSymbol"/>
     public bool ContainsSymbol(ISymbolId<ISymbol> id) =>
         _symbols.ContainsKey(id);
+
+    /// <inheritdoc cref="ISymbolTable.Clear"/>
+    public void Clear()
+    {
+        _symbols.Clear();
+        _openScope?.Clear();
+    }
 }

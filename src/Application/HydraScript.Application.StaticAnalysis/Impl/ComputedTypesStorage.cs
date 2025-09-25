@@ -13,4 +13,6 @@ internal class ComputedTypesStorage : IComputedTypesStorage
 
     public Type Get(Guid computedTypeGuid) =>
         _computedTypes[computedTypeGuid];
+
+    public void Clear() => _computedTypes.Clear();
 }

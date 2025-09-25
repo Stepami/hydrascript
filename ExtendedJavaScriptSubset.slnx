@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Benchmarks/">
+    <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" Type="Classic C#" />
+    <File Path="benchmarks\Readme.md" />
+  </Folder>
   <Folder Name="/SolutionItems/">
     <File Path=".gitignore" />
     <File Path="CODE_OF_CONDUCT.md" />
@@ -41,10 +45,10 @@
     <Project Path="src/Infrastructure/HydraScript.Infrastructure/HydraScript.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Tests/">
-    <File Path="tests/Directory.Build.props" />
-    <File Path="tests/Directory.Packages.props" />
     <Project Path="tests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests.csproj" />
     <Project Path="tests/HydraScript.IntegrationTests/HydraScript.IntegrationTests.csproj" />
     <Project Path="tests/HydraScript.UnitTests/HydraScript.UnitTests.csproj" />
+    <File Path="tests/Directory.Build.props" />
+    <File Path="tests/Directory.Packages.props" />
   </Folder>
 </Solution>

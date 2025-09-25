@@ -23,7 +23,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HydraScript.Infrastructure;
 
-internal partial class PatternContainer
+internal class PatternContainer
 {{
     [StringSyntax(StringSyntaxAttribute.Regex)]
     public const string Value = """"""{pattern}"""""";

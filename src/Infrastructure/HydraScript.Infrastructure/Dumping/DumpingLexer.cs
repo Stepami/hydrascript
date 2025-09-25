@@ -10,17 +10,15 @@ internal class DumpingLexer(
     [FromKeyedServices(DecoratorKey.Value)]
     ILexer lexer,
     IFileSystem fileSystem,
-    IOptions<InputFile> inputFile) : ILexer
+    IOptions<FileInfo> inputFile) : ILexer
 {
-    private readonly InputFile _inputFile = inputFile.Value;
-
     [ExcludeFromCodeCoverage]
     public IStructure Structure => lexer.Structure;
 
     public List<Token> GetTokens(string text)
     {
         var tokens = lexer.GetTokens(text);
-        var fileName = _inputFile.Info.Name.Split(".js")[0];
+        var fileName = inputFile.Value.Name.Split(".js")[0];
         fileSystem.File.WriteAllText(
             $"{fileName}.tokens",
             lexer.ToString());

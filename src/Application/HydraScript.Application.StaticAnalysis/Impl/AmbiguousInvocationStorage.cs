@@ -22,4 +22,6 @@ internal class AmbiguousInvocationStorage : IAmbiguousInvocationStorage
     }
 
     public void Clear(FunctionSymbolId invocation) => _invocations.Remove(invocation);
+
+    public void Clear() => _invocations.Clear();
 }
