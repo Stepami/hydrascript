@@ -10,13 +10,11 @@ public interface ISourceCodeProvider
 
 internal class SourceCodeProvider(
     IFileSystem fileSystem,
-    IOptions<InputFile> inputFile) : ISourceCodeProvider
+    IOptions<FileInfo> inputFile) : ISourceCodeProvider
 {
-    private readonly InputFile _inputFile = inputFile.Value;
-
     public string GetText()
     {
-        var inputFilePath = _inputFile.Info.FullName;
+        var inputFilePath = inputFile.Value.FullName;
         return fileSystem.File.ReadAllText(inputFilePath);
     }
 }
