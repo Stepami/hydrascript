@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Benchmarks/">
     <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" Type="Classic C#" />
+    <File Path="benchmarks\Readme.md" />
   </Folder>
   <Folder Name="/SolutionItems/">
     <File Path=".gitignore" />
