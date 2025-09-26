@@ -1,19 +1,18 @@
 using HydraScript.Domain.BackEnd;
 using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace HydraScript.Infrastructure;
 
 internal partial class LoggingWriter(ILogger<LoggingWriter> logger) : IOutputWriter
 {
-    [LoggerMessage(
-        EventId = 0,
-        Level = LogLevel.Information,
-        Message = "{obj}")]
-    public partial void WriteLine(object? obj);
+    [ZLoggerMessage(Level = LogLevel.Information, Message = "{obj}")]
+    private static partial void WriteLine(ILogger<LoggingWriter> logger, object? obj);
 
-    [LoggerMessage(
-        EventId = 1,
-        Level = LogLevel.Error,
-        Message = "{message}")]
-    public partial void WriteError(Exception e, string message);
+    public void WriteLine(object? obj) => WriteLine(logger, obj);
+
+    [ZLoggerMessage(Level = LogLevel.Error, Message = "{message}")]
+    private static partial void WriteError(ILogger<LoggingWriter> logger, Exception e, string message);
+
+    public void WriteError(Exception e, string message) => WriteError(logger, e, message);
 }

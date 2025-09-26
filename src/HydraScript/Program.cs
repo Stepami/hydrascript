@@ -4,7 +4,7 @@ using HydraScript;
 using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using ZLogger;
 
 return CliParser.Parse(GetCommand(), args).Invoke();
 
@@ -25,26 +25,11 @@ internal static partial class Program
         return command;
     }
 
-    private const string SuppressMessage = $"{nameof(ConsoleFormatterOptions)} is used";
-
-    [UnconditionalSuppressMessage(
-        category: "ReflectionAnalysis",
-        checkId: "IL2026:RequiresUnreferencedCode",
-        Justification = SuppressMessage)]
-    [UnconditionalSuppressMessage(
-        category: "AotAnalysis",
-        checkId: "IL3050:RequiresDynamicCode",
-        Justification = SuppressMessage)]
-    private static ServiceProvider GetServiceProvider(FileInfo fileInfo, bool dump)
-    {
-        var services = new ServiceCollection();
-        services.AddLogging(c => c.ClearProviders()
-            .AddConsole(options => options.FormatterName = nameof(SimplestConsoleFormatter))
-            .AddConsoleFormatter<SimplestConsoleFormatter, ConsoleFormatterOptions>());
-        services
+    private static ServiceProvider GetServiceProvider(FileInfo fileInfo, bool dump) =>
+        new ServiceCollection()
+            .AddLogging(c => c.ClearProviders().AddZLoggerConsole())
             .AddDomain()
             .AddApplication()
-            .AddInfrastructure(dump, fileInfo);
-        return services.BuildServiceProvider();
-    }
+            .AddInfrastructure(dump, fileInfo)
+            .BuildServiceProvider();
 }
