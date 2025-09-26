@@ -17,7 +17,7 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
         _text = text;
         _lines = computer.GetLines(_text);
 
-        return this.Where(t => !t.Type.CanIgnore()).ToList();
+        return this.ToList();
     }
 
     public IEnumerator<Token> GetEnumerator()
@@ -28,7 +28,7 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
             {
                 var group = match.Groups[type.Tag];
 
-                if (!group.Success) continue;
+                if (!group.Success || type.CanIgnore()) continue;
 
                 var value = group.Value;
                 var segment = new Segment(
