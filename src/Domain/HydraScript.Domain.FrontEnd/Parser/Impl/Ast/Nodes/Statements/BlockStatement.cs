@@ -8,8 +8,6 @@ public partial class BlockStatement : Statement
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
 
-    public IReadOnlyList<StatementListItem> StatementList => _statementList;
-
     public BlockStatement(IEnumerable<StatementListItem> statementList)
     {
         _statementList = new List<StatementListItem>(statementList);
