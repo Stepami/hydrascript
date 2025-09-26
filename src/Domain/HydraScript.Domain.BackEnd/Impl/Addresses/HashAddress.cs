@@ -1,3 +1,5 @@
+using Cysharp.Text;
+
 namespace HydraScript.Domain.BackEnd.Impl.Addresses;
 
 public class HashAddress(int seed) : IAddress
@@ -17,7 +19,7 @@ public class HashAddress(int seed) : IAddress
             {
                 var baseName = $"{unchecked((uint)GetHashCode())}{_id:N}";
                 var nameArray = Random.Shared.GetItems(baseName.AsSpan(), 10);
-                _name = "_t" + new string(nameArray);
+                _name = ZString.Concat("_t", new string(nameArray));
             }
 
             return _name;

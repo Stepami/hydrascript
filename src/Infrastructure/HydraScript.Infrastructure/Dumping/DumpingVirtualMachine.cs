@@ -16,9 +16,7 @@ internal class DumpingVirtualMachine(
     public void Run(AddressedInstructions instructions)
     {
         var fileName = inputFile.Value.Name.Split(".js")[0];
-        fileSystem.File.WriteAllLines(
-            $"{fileName}.tac",
-            instructions.Select(i => i.ToString()!));
+        fileSystem.File.WriteAllText($"{fileName}.tac", instructions.ToString());
 
         virtualMachine.Run(instructions);
     }

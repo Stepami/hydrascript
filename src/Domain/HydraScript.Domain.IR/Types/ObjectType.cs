@@ -1,4 +1,4 @@
-using System.Text;
+using Cysharp.Text;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Types;
@@ -141,7 +141,8 @@ public class ObjectType : Type
             if (!objectType.Equals(_reference))
                 _visited.Add(objectType);
 
-            var sb = new StringBuilder("{");
+            using var zsb = ZString.CreateStringBuilder();
+            zsb.Append('{');
             foreach (var key in objectType._properties.Keys)
             {
                 var type = objectType[key];
@@ -157,30 +158,33 @@ public class ObjectType : Type
                         : printedType;
                 }
 
-                sb.Append(prop).Append(';');
+                zsb.AppendFormat("{0};", prop);
             }
+            zsb.Append('}');
 
-            return sb.Append('}').ToString();
+            return zsb.ToString();
         }
 
         private string PrintArrayType(ArrayType arrayType)
         {
-            var sb = new StringBuilder();
-            sb.Append(arrayType.Type.Equals(_reference)
+            using var zsb = ZString.CreateStringBuilder();
+            zsb.Append(arrayType.Type.Equals(_reference)
                 ? "@this"
                 : Print(arrayType.Type));
+            zsb.Append("[]");
 
-            return sb.Append("[]").ToString();
+            return zsb.ToString();
         }
 
         private string PrintNullableType(NullableType nullableType)
         {
-            var sb = new StringBuilder();
-            sb.Append(nullableType.Type.Equals(_reference)
+            using var zsb = ZString.CreateStringBuilder();
+            zsb.Append(nullableType.Type.Equals(_reference)
                 ? "@this"
                 : Print(nullableType.Type));
+            zsb.Append('?');
 
-            return sb.Append('?').ToString();
+            return zsb.ToString();
         }
     }
 }

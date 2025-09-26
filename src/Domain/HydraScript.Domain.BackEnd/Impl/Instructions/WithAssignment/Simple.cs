@@ -1,3 +1,5 @@
+using Cysharp.Text;
+
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 
 public class Simple : Instruction
@@ -67,7 +69,7 @@ public class Simple : Instruction
             object? lValue = Right.left.Get(frame), rValue = Right.right!.Get(frame);
             frame[Left!] = _operator switch
             {
-                "+" when lValue is string => lValue.ToString() + rValue,
+                "+" when lValue is string => ZString.Concat(lValue, rValue),
                 "+" => Convert.ToDouble(lValue) + Convert.ToDouble(rValue),
                 "-" => Convert.ToDouble(lValue) - Convert.ToDouble(rValue),
                 "*" => Convert.ToDouble(lValue) * Convert.ToDouble(rValue),

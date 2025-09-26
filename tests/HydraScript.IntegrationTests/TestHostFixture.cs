@@ -37,7 +37,7 @@ public class TestHostFixture : IDisposable
             .AddDomain()
             .AddApplication()
             .AddInfrastructure(options.Dump, new FileInfo(options.FileName));
-        const string serilogTemplate = "[{Timestamp:HH:mm:ss} {Level:u} [{SourceContext}]] {Message:lj} {Exception}";
+        const string serilogTemplate = "[{Timestamp:HH:mm:ss} {Level:u} [{SourceContext}]]{NewLine}{Message:lj} {Exception}";
         services.AddLogging(x => x.ClearProviders()
             .AddSerilog(new LoggerConfiguration().WriteTo.XUnit3TestOutput(serilogTemplate).CreateLogger())
             .AddFakeLogging(fakeLogOptions =>

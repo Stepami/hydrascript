@@ -1,4 +1,4 @@
-using System.Text;
+using Cysharp.Text;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 
@@ -8,18 +8,20 @@ internal class AbstractSyntaxTree(IAbstractSyntaxTreeNode root) : IAbstractSynta
 
     public override string ToString()
     {
-        var tree = new StringBuilder("digraph ast {\n");
+        using var tree = ZString.CreateStringBuilder();
+        tree.Append("digraph ast {\n");
         var nodes = Root.GetAllNodes();
         for (var i = 0; i < nodes.Count; i++)
         {
             var node = nodes[i];
-            tree.Append('\t').Append(node).Append('\n');
+            tree.AppendFormat("\t{0}\n", node);
             for (var j = 0; j < node.Count; j++)
             {
                 var child = node[j];
-                tree.Append($"\t{node.GetHashCode()}->{child.GetHashCode()}\n");
+                tree.AppendFormat("\t{0}->{1}\n", node.GetHashCode(), child.GetHashCode());
             }
         }
-        return tree.Append("}\n").ToString();
+        tree.Append("}\n");
+        return tree.ToString();
     }
 }
