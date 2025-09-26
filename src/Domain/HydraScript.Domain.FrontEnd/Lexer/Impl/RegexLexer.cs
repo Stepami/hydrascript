@@ -24,8 +24,9 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
     {
         foreach (Match match in Structure.Regex.Matches(_text))
         {
-            foreach (var type in Structure)
+            for (var i = 0; i < Structure.Count; i++)
             {
+                var type = Structure[i];
                 var group = match.Groups[type.Tag];
 
                 if (!group.Success || type.CanIgnore()) continue;

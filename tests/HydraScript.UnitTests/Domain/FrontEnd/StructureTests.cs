@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
@@ -14,7 +15,7 @@ public class StructureTests
         {
             new("MyToken"),
             new("OneToSeven")
-        };
+        }.ToFrozenDictionary(x => x.Tag);
         var provider = Substitute.For<ITokenTypesProvider>();
         provider.GetTokenTypes().Returns(tokenTypes);
         var structure = new Structure<GeneratedRegexContainer>(provider);
