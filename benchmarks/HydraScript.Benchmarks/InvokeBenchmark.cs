@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Diagnostics.CodeAnalysis;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using HydraScript.Benchmarks;
 using HydraScript.Infrastructure;
@@ -6,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+
+[assembly: ExcludeFromCodeCoverage]
 
 BenchmarkRunner.Run<InvokeBenchmark>();
 
