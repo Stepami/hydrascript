@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using HydraScript.Domain.BackEnd;
 using Microsoft.Extensions.Logging;
 using ZLogger;
 
 namespace HydraScript.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 internal partial class LoggingWriter(ILogger<LoggingWriter> logger) : IOutputWriter
 {
     [ZLoggerMessage(Level = LogLevel.Information, Message = "{obj}")]
