@@ -3,6 +3,7 @@
     <ItemGroup>
         <PackageReference Include="Visitor.NET" />
         <PackageReference Include="Visitor.NET.AutoVisitableGen" PrivateAssets="all" />
+        <PackageReference Include="ZString" />
     </ItemGroup>
 
     <ItemGroup>

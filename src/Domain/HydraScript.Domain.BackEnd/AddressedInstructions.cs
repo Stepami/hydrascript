@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Text;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 
 namespace HydraScript.Domain.BackEnd;
@@ -79,4 +80,7 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
 
     IEnumerator IEnumerable.GetEnumerator() =>
         GetEnumerator();
+
+    public override string ToString() =>
+        ZString.Join<IExecutableInstruction>('\n', this);
 }

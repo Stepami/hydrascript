@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using Cysharp.Text;
 
 namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
@@ -47,6 +48,5 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
     [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public override string ToString() =>
-        string.Join('\n', this);
+    public override string ToString() => ZString.Join<Token>('\n', this);
 }

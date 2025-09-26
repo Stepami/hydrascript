@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Text.RegularExpressions;
+using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
 namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
@@ -19,10 +19,7 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
     public TokenType FindByTag(string tag) =>
         Types[tag];
 
-    public override string ToString() =>
-        new StringBuilder()
-            .AppendJoin('\n', this)
-            .ToString();
+    public override string ToString() => ZString.Join<TokenType>('\n', this);
 
     // ReSharper disable once NotDisposedResourceIsReturned
     public IEnumerator<TokenType> GetEnumerator() =>

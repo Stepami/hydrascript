@@ -1,3 +1,4 @@
+using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 
@@ -56,5 +57,5 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public IReadOnlyCollection<ReturnStatement> ReturnStatements { get; }
 
     protected override string NodeRepresentation() =>
-        "function " + Name;
+        ZString.Concat("function", ' ', Name);
 }

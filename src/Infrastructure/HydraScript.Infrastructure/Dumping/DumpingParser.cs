@@ -11,8 +11,7 @@ internal class DumpingParser(
     public IAbstractSyntaxTree Parse(string text)
     {
         var ast = parser.Parse(text);
-        var astDot = ast.ToString();
-        fileSystem.File.WriteAllText("ast.dot", astDot);
+        fileSystem.File.WriteAllText("ast.dot", ast.ToString());
         return ast;
     }
 }

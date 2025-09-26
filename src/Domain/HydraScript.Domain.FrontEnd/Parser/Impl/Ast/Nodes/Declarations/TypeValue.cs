@@ -1,3 +1,4 @@
+using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
@@ -39,5 +40,5 @@ public partial record ObjectTypeValue(
     IEnumerable<PropertyTypeValue> Properties) : TypeValue
 {
     public override string ToString() =>
-        $"{{{string.Join(';', Properties)}}}";
+        $"{{{ZString.Join(';', Properties)}}}";
 }

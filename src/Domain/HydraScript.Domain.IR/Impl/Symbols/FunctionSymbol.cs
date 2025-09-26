@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using Cysharp.Text;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Impl.Symbols;
@@ -26,11 +26,14 @@ public class FunctionSymbol(
         _returnType = returnType;
 
     [ExcludeFromCodeCoverage]
-    public override string ToString() =>
-        new StringBuilder($"function {Name}(")
-            .AppendJoin(',', Parameters)
-            .Append($") => {Type}")
-            .ToString();
+    public override string ToString()
+    {
+        using var zsb = ZString.CreateStringBuilder();
+        zsb.AppendFormat("function {0}(", Name);
+        zsb.AppendJoin(',', Parameters);
+        zsb.AppendFormat(") => {0}", Type);
+        return zsb.ToString();
+    }
 
     public static bool operator <(FunctionSymbol left, FunctionSymbol right) =>
         left.Parameters.Count < right.Parameters.Count;
