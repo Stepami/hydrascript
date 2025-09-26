@@ -47,6 +47,6 @@ public class TypeTests
         var calculator = new DefaultValueForTypeCalculator();
         Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
         Assert.Null(calculator.GetDefaultValueForType(new NullType()));
-        Assert.Null(calculator.GetDefaultValueForType(new ObjectType(new List<PropertyType>())));
+        Assert.Null(calculator.GetDefaultValueForType(new ObjectType([])));
     }
 }

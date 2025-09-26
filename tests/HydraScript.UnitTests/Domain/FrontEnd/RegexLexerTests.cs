@@ -67,9 +67,8 @@ public class RegexLexerTests(ITestOutputHelper output)
             .Select(x => new TokenType($"TYPE{x}"))
             .ToList();
 
-        // ReSharper disable once GenericEnumeratorNotDisposed
-        structure.GetEnumerator()
-            .ReturnsForAnyArgs(_ => tokenTypes.GetEnumerator());
+        structure.Count.Returns(tokenTypes.Count);
+        structure[Arg.Any<int>()].Returns(callInfo => tokenTypes[callInfo.Arg<int>()]);
 
         var tokens = lexer.GetTokens(input.ToString());
         for (var i = 0; i < input.Count; i++)

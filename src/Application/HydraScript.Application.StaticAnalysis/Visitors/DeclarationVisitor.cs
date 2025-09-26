@@ -7,6 +7,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpre
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using HydraScript.Domain.IR.Types;
+using ZLinq;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
 
@@ -71,14 +72,15 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
         var parentTable = _symbolTables[visitable.Parent.Scope];
-        var indexOfFirstDefaultArgument = visitable.Arguments
+        var indexOfFirstDefaultArgument = visitable.Arguments.AsValueEnumerable()
             .Select((x, i) => new { Argument = x, Index = i })
             .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
 
-        var parameters = visitable.Arguments.Select(x =>
-            new VariableSymbol(
-                x.Name,
-                x.TypeValue.Accept(_typeBuilder))).ToList();
+        var parameters = visitable.Arguments.AsValueEnumerable()
+            .Select(x =>
+                new VariableSymbol(
+                    x.Name,
+                    x.TypeValue.Accept(_typeBuilder))).ToList();
         var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
         _ambiguousInvocations.Clear(functionSymbolId);
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();

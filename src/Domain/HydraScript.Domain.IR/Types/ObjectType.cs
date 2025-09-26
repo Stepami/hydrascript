@@ -12,14 +12,9 @@ public class ObjectType : Type
 
     public string LastAccessedMethodName { get; private set; } = default!;
 
-    public ObjectType(IEnumerable<PropertyType> properties)
+    public ObjectType(Dictionary<string, Type> properties)
     {
-        _properties = properties
-            .OrderBy(x => x.Id)
-            .ToDictionary(
-                x => x.Id,
-                x => x.Type);
-
+        _properties = properties;
         _hasher = new ObjectTypeHasher(this);
         _serializer = new ObjectTypePrinter(this);
     }

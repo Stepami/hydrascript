@@ -10,4 +10,4 @@ Job=InProcess  Toolchain=InProcessEmitToolchain
 ```
 | Method |     Mean |     Error |    StdDev |     Gen0 |     Gen1 | Allocated |
 |--------|---------:|----------:|----------:|---------:|---------:|----------:|
-| Invoke | 8.748 ms | 0.1720 ms | 0.2574 ms | 828.1250 | 343.7500 |  10.06 MB |
+| Invoke | 8.369 ms | 0.1315 ms | 0.1230 ms | 812.5000 | 218.7500 |   9.79 MB |

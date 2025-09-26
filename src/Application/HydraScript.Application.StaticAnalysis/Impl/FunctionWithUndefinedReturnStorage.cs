@@ -8,10 +8,8 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
 {
     private readonly OrderedDictionary<FunctionSymbolId, FunctionDeclaration> _declarations = [];
 
-    public void Save(FunctionSymbol symbol, FunctionDeclaration declaration)
-    {
+    public void Save(FunctionSymbol symbol, FunctionDeclaration declaration) =>
         _declarations[symbol.Id] = declaration;
-    }
 
     public FunctionDeclaration Get(FunctionSymbol symbol)
     {
@@ -21,10 +19,7 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
         return declaration;
     }
 
-    public void RemoveIfPresent(FunctionSymbol symbol)
-    {
-        _declarations.Remove(symbol.Id);
-    }
+    public void RemoveIfPresent(FunctionSymbol symbol) => _declarations.Remove(symbol.Id);
 
     public IEnumerable<FunctionDeclaration> Flush() => _declarations.Keys.ToList()
         .Select(x =>

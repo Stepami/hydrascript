@@ -25,17 +25,16 @@ public class StructureTests
             [
                 "MyToken",
                 "OneToSeven",
-                "EOP",
-                "ERROR"
             ]);
         Assert.Equal(expectedText, structure.ToString());
     }
 
     [Theory, AutoHydraScriptData]
-    public void GetTokenTypes_NoMatterWhat_AlwaysHaveEopAndError(Structure<DummyContainer> structure)
+    public void GetTokenTypes_Always_ReturnFromProvider(ITokenTypesProvider provider)
     {
-        var tokenTypes = structure.ToList();
         List<TokenType> expected = [new EndOfProgramType(), new ErrorType()];
-        tokenTypes.Should().Contain(expected);
+        provider.GetTokenTypes().Returns(expected.ToFrozenDictionary(x => x.Tag));
+        var structure = new Structure<GeneratedRegexContainer>(provider);
+        structure.Should().BeEquivalentTo(expected);
     }
 }

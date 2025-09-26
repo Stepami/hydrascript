@@ -11,6 +11,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesA
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 using Microsoft.Extensions.DependencyInjection;
+using ZLinq;
 
 namespace HydraScript.Application.CodeGeneration.Visitors;
 
@@ -168,7 +169,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         }
 
         result.AddRange(visitable.Statement.Accept(This));
-        result.OfType<Goto>().Where(g => g.JumpType is not null)
+        result.AsValueEnumerable()
+            .OfType<Goto>().Where(g => g.JumpType is not null)
             .ToList().ForEach(g =>
             {
                 // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
@@ -220,7 +222,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         if (visitable.HasElseBlock())
             result.AddRange(visitable.Else?.Accept(This) ?? []);
 
-        result.OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
+        result.AsValueEnumerable()
+            .OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
             .ToList().ForEach(g => g.SetJump(endBlockLabel));
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
