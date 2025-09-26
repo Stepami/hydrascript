@@ -12,6 +12,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+using ZLinq;
 
 namespace HydraScript.Application.CodeGeneration.Visitors;
 
@@ -75,9 +76,11 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
         var result = new AddressedInstructions { createObject };
 
-        result.AddRange(visitable.Properties
-            .SelectMany(property =>
-                property.Accept(This)));
+        var propInstructions =
+            visitable.Properties.AsValueEnumerable()
+                .SelectMany(property => property.Accept(This));
+        foreach (var propInstruction in propInstructions)
+            result.Add(propInstruction);
 
         return result;
     }
@@ -278,8 +281,9 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             result.Add(new PushParameter(new Name(caller)));
         }
 
-        foreach (var expr in visitable.Parameters)
+        for (var i = 0; i < visitable.Parameters.Count; i++)
         {
+            var expr = visitable.Parameters[i];
             if (expr is PrimaryExpression primary)
                 result.Add(new PushParameter(_valueDtoConverter.Convert(primary.ToValueDto())));
             else

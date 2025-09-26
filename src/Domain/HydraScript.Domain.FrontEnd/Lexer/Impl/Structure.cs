@@ -10,9 +10,7 @@ namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
     where TContainer : IGeneratedRegexContainer
 {
-    private FrozenDictionary<string, TokenType> Types { get; } = provider.GetTokenTypes()
-        .Concat([new EndOfProgramType(), new ErrorType()])
-        .ToFrozenDictionary(x => x.Tag);
+    private FrozenDictionary<string, TokenType> Types { get; } = provider.GetTokenTypes();
 
     public Regex Regex { get; } = TContainer.Regex;
 
@@ -27,4 +25,8 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
 
     [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public int Count => Types.Values.Length;
+
+    public TokenType this[int index] => Types.Values[index];
 }

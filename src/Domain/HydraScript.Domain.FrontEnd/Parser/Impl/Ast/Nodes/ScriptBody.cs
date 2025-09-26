@@ -8,8 +8,6 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
 
-    public IReadOnlyList<StatementListItem> StatementList => _statementList;
-
     public ScriptBody(IEnumerable<StatementListItem> statementList)
     {
         _statementList = new List<StatementListItem>(statementList);

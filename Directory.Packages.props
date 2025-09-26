@@ -14,6 +14,7 @@
     <PackageVersion Include="System.IO.Abstractions" Version="22.0.16" />
     <PackageVersion Include="Visitor.NET" Version="4.2.0" />
     <PackageVersion Include="Visitor.NET.AutoVisitableGen" Version="1.5.2" />
+    <PackageVersion Include="ZLinq" Version="1.5.2" />
     <PackageVersion Include="ZLogger" Version="2.5.10" />
     <PackageVersion Include="ZString" Version="2.6.0" />
   </ItemGroup>

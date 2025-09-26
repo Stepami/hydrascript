@@ -52,10 +52,13 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
         _instructions.Add(newNode, instruction);
     }
 
-    public void AddRange(IEnumerable<IExecutableInstruction> instructions)
+    public void AddRange(AddressedInstructions instructions)
     {
-        foreach (var instruction in instructions)
-            AddWithAddress(instruction, instruction.Address);
+        // ReSharper disable once ConstantConditionalAccessQualifier
+        for (var address = instructions.Start; address != null; address = address?.Next)
+        {
+            AddWithAddress(instructions[address], address);
+        }
     }
 
     public void Remove(IExecutableInstruction instruction)
@@ -75,11 +78,9 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
     }
 
     public IEnumerator<IExecutableInstruction> GetEnumerator() =>
-        _addresses.Select(address => this[address])
-            .GetEnumerator();
+        _addresses.Select(address => this[address]).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() =>
-        GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public override string ToString() =>
         ZString.Join<IExecutableInstruction>('\n', this);

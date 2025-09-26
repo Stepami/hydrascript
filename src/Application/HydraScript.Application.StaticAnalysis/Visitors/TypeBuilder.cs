@@ -2,6 +2,7 @@ using HydraScript.Application.StaticAnalysis.Exceptions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using HydraScript.Domain.IR.Types;
+using ZLinq;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
 
@@ -33,12 +34,13 @@ internal class TypeBuilder : VisitorBase<TypeValue, Type>,
     }
 
     public ObjectType Visit(ObjectTypeValue visitable) =>
-        new(visitable.Properties
+        new(visitable.Properties.AsValueEnumerable()
             .Select(x =>
             {
                 x.TypeValue.Scope = visitable.Scope;
                 return new PropertyType(
                     Id: x.Key,
                     x.TypeValue.Accept(This));
-            }));
+            }).OrderBy(x => x.Id)
+            .ToDictionary(x => x.Id, x => x.Type));
 }

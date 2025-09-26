@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
+using ZLinq;
 
 namespace HydraScript.Domain.FrontEnd.Lexer;
 
@@ -37,9 +38,9 @@ public record Segment(Coordinates Start, Coordinates End)
 
     public static implicit operator Segment(string segment)
     {
-        var coords = segment.Split("-")
+        var coords = segment.Split("-").AsValueEnumerable()
             .Select(x => x[1..^1].Replace(" ", string.Empty))
-            .Select(x => x.Split(',').Select(int.Parse).ToArray())
+            .Select(x => x.Split(',').AsValueEnumerable().Select(int.Parse).ToArray())
             .ToArray();
         return new Segment(
             new Coordinates(coords[0][0], coords[0][1]),

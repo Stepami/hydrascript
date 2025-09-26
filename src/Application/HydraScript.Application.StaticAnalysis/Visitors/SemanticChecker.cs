@@ -12,6 +12,7 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using HydraScript.Domain.IR.Types;
+using ZLinq;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
 
@@ -176,7 +177,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(ObjectLiteral visitable)
     {
-        var properties = visitable.Properties.Select(prop =>
+        var properties = visitable.Properties.AsValueEnumerable().Select(prop =>
         {
             var propType = prop.Expression.Accept(This);
 
@@ -195,7 +196,9 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             propSymbol.Initialize();
             _symbolTables[visitable.Scope].AddSymbol(propSymbol);
             return new PropertyType(prop.Id, propType);
-        });
+        }).OrderBy(x => x.Id).ToDictionary(
+            x => x.Id,
+            x => x.Type);
         var objectLiteralType = new ObjectType(properties);
         return objectLiteralType;
     }
@@ -437,7 +440,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         visitable.IsEmptyCall = functionSymbol.IsEmpty;
         var functionReturnType = functionSymbol.Type;
 
-        visitable.Parameters.Zip(parameters).Zip(functionSymbol.Parameters.ToArray()[(methodCall ? 1 : 0)..])
+        visitable.Parameters.AsValueEnumerable()
+            .Zip(parameters).Zip(functionSymbol.Parameters.AsValueEnumerable().Skip(methodCall ? 1 : 0))
             .ToList().ForEach(pair =>
             {
                 var ((expr, actualType), expected) = pair;

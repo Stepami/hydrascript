@@ -31,9 +31,8 @@ public class FunctionWithUndefinedReturnStorageTests
 
         storage.Save(symbol, decl);
 
-        var declarations = storage.Flush();
+        var declarations = storage.Flush().ToArray();
         Assert.Contains(decl, declarations);
-        
         Assert.Empty(storage.Flush());
     }
 

@@ -3,7 +3,7 @@ using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
 
 namespace HydraScript.Domain.FrontEnd.Lexer;
 
-public interface IStructure : IEnumerable<TokenType>
+public interface IStructure : IReadOnlyList<TokenType>
 {
     public Regex Regex { get; }
 

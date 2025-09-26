@@ -17,18 +17,19 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
         _text = text;
         _lines = computer.GetLines(_text);
 
-        return this.Where(t => !t.Type.CanIgnore()).ToList();
+        return this.ToList();
     }
 
     public IEnumerator<Token> GetEnumerator()
     {
         foreach (Match match in Structure.Regex.Matches(_text))
         {
-            foreach (var type in Structure)
+            for (var i = 0; i < Structure.Count; i++)
             {
+                var type = Structure[i];
                 var group = match.Groups[type.Tag];
 
-                if (!group.Success) continue;
+                if (!group.Success || type.CanIgnore()) continue;
 
                 var value = group.Value;
                 var segment = new Segment(
