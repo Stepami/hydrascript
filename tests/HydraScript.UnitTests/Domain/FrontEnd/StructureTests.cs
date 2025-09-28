@@ -2,7 +2,6 @@ using System.Collections.Frozen;
 using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
-using HydraScript.Infrastructure;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
