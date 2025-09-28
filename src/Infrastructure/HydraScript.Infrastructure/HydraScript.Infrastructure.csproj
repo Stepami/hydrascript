@@ -6,13 +6,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"
-                          PrivateAssets="all"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Options" />

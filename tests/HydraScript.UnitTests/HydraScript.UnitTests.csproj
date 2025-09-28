@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\HydraScript\HydraScript.csproj" />
     </ItemGroup>
 
 </Project>

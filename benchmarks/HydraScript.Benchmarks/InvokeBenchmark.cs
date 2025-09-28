@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using HydraScript.Benchmarks;
 using HydraScript.Infrastructure;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 BenchmarkRunner.Run<InvokeBenchmark>();
 
-[InProcess, MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net90), MemoryDiagnoser]
 public class InvokeBenchmark
 {
     private ServiceProvider? _provider;
@@ -20,11 +21,7 @@ public class InvokeBenchmark
     private readonly UpdatableFileOptions _updatableFileOptions = new(new FileInfo(nameof(FileInfo)));
 
     private readonly IReadOnlyList<FileInfo> _scriptPaths =
-        Directory.GetFiles(
-                Path.Combine(
-                    paths: Enumerable.Repeat("..", 6).ToArray()
-                        .Concat(["hydrascript", "tests", "HydraScript.IntegrationTests", "Samples"])
-                        .ToArray()))
+        Directory.GetFiles("Samples")
             .Select(x => new FileInfo(x))
             .ToArray();
 
@@ -33,7 +30,7 @@ public class InvokeBenchmark
     {
         _provider = new ServiceCollection()
             .AddLogging(x => x.ClearProviders().AddProvider(NullLoggerProvider.Instance))
-            .AddDomain()
+            .AddDomain<GeneratedRegexContainer>()
             .AddApplication()
             .AddInfrastructure(dump: false, _updatableFileOptions.Value)
             .AddSingleton<IOptions<FileInfo>>(_updatableFileOptions)

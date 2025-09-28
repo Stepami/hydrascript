@@ -1,6 +1,5 @@
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
 using HydraScript.Domain.FrontEnd.Parser.Impl;
-using HydraScript.Infrastructure;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 

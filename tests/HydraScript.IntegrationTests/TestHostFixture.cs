@@ -34,7 +34,7 @@ public class TestHostFixture : IDisposable
     public Runner GetRunner(Options options, Action<IServiceCollection>? configureTestServices = null)
     {
         var services = new ServiceCollection()
-            .AddDomain()
+            .AddDomain<GeneratedRegexContainer>()
             .AddApplication()
             .AddInfrastructure(options.Dump, new FileInfo(options.FileName));
         const string serilogTemplate = "[{Timestamp:HH:mm:ss} {Level:u} [{SourceContext}]]{NewLine}{Message:lj} {Exception}";
