@@ -37,15 +37,16 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         bool dump,
-        FileInfo inputFileInfo)
+        FileInfo fileInfo)
     {
         services.AddSingleton<IFileSystem, FileSystem>();
-        services.AddSingleton(Options.Create(inputFileInfo));
+        services.AddSingleton(Options.Create(fileInfo));
 
         services.AddSingleton<IStaticAnalyzer, StaticAnalyzer>();
         services.AddSingleton<ICodeGenerator, CodeGenerator>();
 
         services.AddSingleton<ISourceCodeProvider, SourceCodeProvider>();
+        services.AddSingleton<IDumpingService, DumpingService>();
 
         if (dump)
         {
