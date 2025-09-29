@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <LangVersion>latest</LangVersion>
+        <BuildInParallel>false</BuildInParallel>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
