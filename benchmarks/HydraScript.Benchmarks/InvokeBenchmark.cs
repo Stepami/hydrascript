@@ -13,7 +13,9 @@ using Microsoft.Extensions.Options;
 
 BenchmarkRunner.Run<InvokeBenchmark>();
 
-[SimpleJob(RuntimeMoniker.Net90), MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net90)]
+[SimpleJob(RuntimeMoniker.NativeAot90)]
+[MemoryDiagnoser]
 public class InvokeBenchmark
 {
     private ServiceProvider? _provider;
