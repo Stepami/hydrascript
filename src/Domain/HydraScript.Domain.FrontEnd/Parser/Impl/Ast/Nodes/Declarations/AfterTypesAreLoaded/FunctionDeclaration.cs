@@ -57,5 +57,5 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public IReadOnlyCollection<ReturnStatement> ReturnStatements { get; }
 
     protected override string NodeRepresentation() =>
-        ZString.Concat("function", ' ', Name);
+        ZString.Concat<string, char, string>("function", ' ', Name);
 }
