@@ -1,23 +1,18 @@
-using System.IO.Abstractions;
 using HydraScript.Domain.BackEnd;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace HydraScript.Infrastructure.Dumping;
 
 internal class DumpingVirtualMachine(
     [FromKeyedServices(DecoratorKey.Value)]
     IVirtualMachine virtualMachine,
-    IFileSystem fileSystem,
-    IOptions<FileInfo> inputFile) : IVirtualMachine
+    IDumpingService dumpingService) : IVirtualMachine
 {
     public IExecuteParams ExecuteParams => virtualMachine.ExecuteParams;
 
     public void Run(AddressedInstructions instructions)
     {
-        var fileName = inputFile.Value.Name.Split(".js")[0];
-        fileSystem.File.WriteAllText($"{fileName}.tac", instructions.ToString());
-
+        dumpingService.Dump(instructions.ToString(), "tac");
         virtualMachine.Run(instructions);
     }
 }

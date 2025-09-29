@@ -24,15 +24,15 @@ public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFi
         runner.Invoke();
         fileSystemMock.File.Received(1)
             .WriteAllText(
-                TestHostFixture.ScriptFileName + ".tokens",
+                Arg.Is<string>(s => s.EndsWith(TestHostFixture.ScriptFileName + ".tokens")),
                 Arg.Any<string>());
         fileSystemMock.File.Received(1)
             .WriteAllText(
-                "ast.dot",
+                Arg.Is<string>(s => s.EndsWith(TestHostFixture.ScriptFileName + ".dot")),
                 Arg.Any<string>());
         fileSystemMock.File.Received(1)
             .WriteAllText(
-                TestHostFixture.ScriptFileName + ".tac",
+                Arg.Is<string>(s => s.EndsWith(TestHostFixture.ScriptFileName + ".tac")),
                 Arg.Any<string>());
     }
 }
