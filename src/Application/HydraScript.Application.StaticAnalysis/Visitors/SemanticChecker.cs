@@ -256,7 +256,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             "++" when lType is ArrayType { Type: Any } && rType is ArrayType { Type: Any } =>
                 throw new CannotDefineType(visitable.Segment),
             "++" => lType is ArrayType lArrType && rType is ArrayType rArrType
-                ? lArrType.Type is Any ? rArrType.Type : lArrType.Type
+                ? lArrType.Type is not Any ? lArrType : rArrType.Type is not Any ? rArrType : throw new CannotDefineType(visitable.Segment)
                 : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
             "::" when lType is not ArrayType =>
                 throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
