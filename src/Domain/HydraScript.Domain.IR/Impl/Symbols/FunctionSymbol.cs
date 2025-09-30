@@ -6,7 +6,7 @@ namespace HydraScript.Domain.IR.Impl.Symbols;
 
 public class FunctionSymbol(
     string name,
-    IReadOnlyCollection<ISymbol> parameters,
+    IReadOnlyList<ISymbol> parameters,
     Type type,
     bool isEmpty) : Symbol(name, type)
 {
@@ -19,7 +19,7 @@ public class FunctionSymbol(
     /// </summary>
     public override FunctionSymbolId Id { get; } = new(name, parameters.Select(x => x.Type));
 
-    public IReadOnlyList<ISymbol> Parameters { get; } = new List<ISymbol>(parameters);
+    public IReadOnlyList<ISymbol> Parameters { get; } = parameters;
     public bool IsEmpty { get; } = isEmpty;
 
     public void DefineReturnType(Type returnType) =>

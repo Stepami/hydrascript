@@ -256,7 +256,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             "++" when lType is ArrayType { Type: Any } && rType is ArrayType { Type: Any } =>
                 throw new CannotDefineType(visitable.Segment),
             "++" => lType is ArrayType lArrType && rType is ArrayType rArrType
-                ? new List<ArrayType> { lArrType, rArrType }.First(x => x.Type is not Any)
+                ? lArrType.Type is Any ? rArrType.Type : lArrType.Type
                 : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
             "::" when lType is not ArrayType =>
                 throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
@@ -464,7 +464,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var parameters = visitable.Arguments.Select(x => x.TypeValue.Accept(_typeBuilder)).ToList();
+        var parameters = visitable.Arguments.Select(x => x.TypeValue.Accept(_typeBuilder));
         var symbol = _symbolTables[visitable.Scope].FindSymbol(new FunctionSymbolId(visitable.Name, parameters))!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);

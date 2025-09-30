@@ -36,8 +36,7 @@ public record PropertyTypeValue(
 }
 
 [AutoVisitable<TypeValue>]
-public partial record ObjectTypeValue(
-    IEnumerable<PropertyTypeValue> Properties) : TypeValue
+public partial record ObjectTypeValue(List<PropertyTypeValue> Properties) : TypeValue
 {
     public override string ToString() =>
         $"{{{ZString.Join(';', Properties)}}}";

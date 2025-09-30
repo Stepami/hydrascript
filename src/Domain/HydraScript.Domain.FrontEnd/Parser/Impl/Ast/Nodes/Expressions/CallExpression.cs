@@ -18,12 +18,12 @@ public partial class CallExpression : LeftHandSideExpression
 
     public string ComputedFunctionAddress { get; set; } = default!;
 
-    public CallExpression(MemberExpression member, IEnumerable<Expression> expressions)
+    public CallExpression(MemberExpression member, List<Expression> expressions)
     {
         Member = member;
         Member.Parent = this;
 
-        _parameters = new List<Expression>(expressions);
+        _parameters = expressions;
         _parameters.ForEach(expr => expr.Parent = this);
     }
 

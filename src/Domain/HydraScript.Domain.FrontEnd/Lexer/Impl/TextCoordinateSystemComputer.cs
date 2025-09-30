@@ -27,7 +27,7 @@ public class TextCoordinateSystemComputer : ITextCoordinateSystemComputer
             indices.Add(start + index);
         }
 
-        return indices.ToList();
+        return indices;
     }
 
     /// <inheritdoc/>

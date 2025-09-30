@@ -10,9 +10,9 @@ public partial class ObjectLiteral : ComplexLiteral
 
     public IReadOnlyList<Property> Properties => _properties;
 
-    public ObjectLiteral(IEnumerable<Property> properties)
+    public ObjectLiteral(List<Property> properties)
     {
-        _properties = new List<Property>(properties);
+        _properties = properties;
         _properties.ForEach(prop => prop.Parent = this);
     }
 

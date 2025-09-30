@@ -21,11 +21,13 @@ internal class FunctionWithUndefinedReturnStorage : IFunctionWithUndefinedReturn
 
     public void RemoveIfPresent(FunctionSymbol symbol) => _declarations.Remove(symbol.Id);
 
-    public IEnumerable<FunctionDeclaration> Flush() => _declarations.Keys.ToList()
-        .Select(x =>
+    public IEnumerable<FunctionDeclaration> Flush()
+    {
+        IReadOnlyList<FunctionSymbolId> keys = _declarations.Keys;
+        while (keys.Count > 0)
         {
-            var decl = _declarations[x];
-            _declarations.Remove(x);
-            return decl;
-        });
+            yield return _declarations[keys[0]];
+            _declarations.Remove(keys[0]);
+        }
+    }
 }

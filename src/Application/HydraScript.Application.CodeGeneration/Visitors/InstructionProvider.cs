@@ -11,7 +11,6 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesA
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 using Microsoft.Extensions.DependencyInjection;
-using ZLinq;
 
 namespace HydraScript.Application.CodeGeneration.Visitors;
 
@@ -169,9 +168,9 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         }
 
         result.AddRange(visitable.Statement.Accept(This));
-        result.AsValueEnumerable()
-            .OfType<Goto>().Where(g => g.JumpType is not null)
-            .ToList().ForEach(g =>
+        for (var address = result.Start; address != null; address = address?.Next)
+        {
+            if (result[address] is Goto { JumpType: not null } g)
             {
                 // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (g.JumpType)
@@ -183,7 +182,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
                         g.SetJump(startBlockLabel);
                         break;
                 }
-            });
+            }
+        }
         result.Add(new Goto(startBlockLabel));
 
         result.Add(new EndBlock(BlockType.Loop, blockId), endBlockLabel.Name);
@@ -222,9 +222,11 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         if (visitable.HasElseBlock())
             result.AddRange(visitable.Else?.Accept(This) ?? []);
 
-        result.AsValueEnumerable()
-            .OfType<Goto>().Where(g => g.JumpType is InsideStatementJumpType.Break)
-            .ToList().ForEach(g => g.SetJump(endBlockLabel));
+        for (var address = result.Start; address != null; address = address?.Next)
+        {
+            if (result[address] is Goto { JumpType: InsideStatementJumpType.Break } g)
+                g.SetJump(endBlockLabel);
+        }
 
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 

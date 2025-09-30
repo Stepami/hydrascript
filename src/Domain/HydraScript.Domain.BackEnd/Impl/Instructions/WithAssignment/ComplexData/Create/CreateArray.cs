@@ -7,7 +7,10 @@ public class CreateArray(string id, int size) : Simple(id)
     public override IAddress Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        frame[_id] = new object[size].ToList();
+        var list = new List<object>(size * 2);
+        for (var i = 0; i < size; i++)
+            list.Add(null!);
+        frame[_id] = list;
         return Address.Next;
     }
 

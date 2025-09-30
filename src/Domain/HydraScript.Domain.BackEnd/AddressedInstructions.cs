@@ -54,7 +54,6 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
 
     public void AddRange(AddressedInstructions instructions)
     {
-        // ReSharper disable once ConstantConditionalAccessQualifier
         for (var address = instructions.Start; address != null; address = address?.Next)
         {
             AddWithAddress(instructions[address], address);
