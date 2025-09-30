@@ -41,25 +41,25 @@ public class FunctionWithUndefinedReturnStorageTests
     {
         FunctionDeclaration[] declarations = [
             new(
-                name: new IdentifierReference(FunctionName),
+                name: new IdentifierReference(FunctionName + "1"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
             new(
-                name: new IdentifierReference(FunctionName),
+                name: new IdentifierReference(FunctionName + "2"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
             new(
-                name: new IdentifierReference(FunctionName),
+                name: new IdentifierReference(FunctionName + "3"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([])),
 
             new(
-                name: new IdentifierReference(FunctionName),
+                name: new IdentifierReference(FunctionName + "4"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
                 new BlockStatement([]))];

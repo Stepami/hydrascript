@@ -12,7 +12,7 @@ public class CallFunction(
 
     public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = new Frame(Address.Next, executeParams.Frames.Peek());
+        var frame = new Frame(Address.Next!, executeParams.Frames.Peek());
         executeParams.CallStack.Push(new Call(Address, function, Left));
         executeParams.Frames.Push(frame);
         return function.Start;

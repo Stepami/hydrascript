@@ -5,8 +5,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class CastAsExpression : Expression
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        [Expression];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public Expression Expression { get; }
     public TypeValue Cast { get; }
@@ -17,6 +16,8 @@ public partial class CastAsExpression : Expression
         Expression.Parent = this;
 
         Cast = cast;
+
+        Children = [Expression];
     }
 
     /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>

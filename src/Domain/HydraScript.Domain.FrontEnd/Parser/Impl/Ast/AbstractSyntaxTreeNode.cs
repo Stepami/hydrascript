@@ -5,9 +5,9 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 
 public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
 {
-    public IAbstractSyntaxTreeNode Parent { get; set; } = default!;
+    public IAbstractSyntaxTreeNode Parent { get; set; } = null!;
 
-    public Scope Scope { get; protected set; } = default!;
+    public Scope Scope { get; protected set; } = null!;
 
     /// <summary>Базовая стратегия - инициализация через родительский узел</summary>
     /// <param name="scope">Обязательно <c>null</c></param>

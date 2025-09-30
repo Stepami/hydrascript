@@ -5,7 +5,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 
 public abstract record TypeValue : IVisitable<TypeValue>
 {
-    public Scope Scope { get; set; } = default!;
+    public Scope Scope { get; set; } = null!;
     public abstract TReturn Accept<TReturn>(IVisitor<TypeValue, TReturn> visitor);
 }
 
@@ -36,8 +36,7 @@ public record PropertyTypeValue(
 }
 
 [AutoVisitable<TypeValue>]
-public partial record ObjectTypeValue(
-    IEnumerable<PropertyTypeValue> Properties) : TypeValue
+public partial record ObjectTypeValue(List<PropertyTypeValue> Properties) : TypeValue
 {
     public override string ToString() =>
         $"{{{ZString.Join(';', Properties)}}}";

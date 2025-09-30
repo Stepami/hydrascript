@@ -15,7 +15,7 @@ public partial class AsString(IValue value) : Simple(value)
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     });
     
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         frame[Left!] = JsonSerializer.Serialize(

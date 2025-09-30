@@ -10,9 +10,9 @@ public partial class ArrayLiteral : ComplexLiteral
 
     public IReadOnlyList<Expression> Expressions => _expressions;
 
-    public ArrayLiteral(IEnumerable<Expression> expressions)
+    public ArrayLiteral(List<Expression> expressions)
     {
-        _expressions = new List<Expression>(expressions);
+        _expressions = expressions;
         _expressions.ForEach(expr => expr.Parent = this);
     }
 

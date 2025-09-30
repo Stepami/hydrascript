@@ -3,8 +3,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class IfStatement : Statement
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        Else is not null ? [Test, Then, Else] : [Test, Then];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public Expression Test { get; }
     public Statement Then { get; }
@@ -23,6 +22,8 @@ public partial class IfStatement : Statement
             Else = @else;
             Else.Parent = this;
         }
+
+        Children = Else is not null ? [Test, Then, Else] : [Test, Then];
     }
 
     public bool Empty() => this is

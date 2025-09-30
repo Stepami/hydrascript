@@ -2,7 +2,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
 public class RemoveFromArray(string id, IValue index) : Instruction
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         if (frame[id] is List<object> list)

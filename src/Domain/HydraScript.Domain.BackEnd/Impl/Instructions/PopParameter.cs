@@ -2,7 +2,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
 public class PopParameter(string parameter, object? defaultValue = null) : Instruction
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         if (executeParams.Arguments.TryDequeue(out var argument))

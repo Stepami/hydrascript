@@ -8,9 +8,9 @@ public partial class BlockStatement : Statement
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
 
-    public BlockStatement(IEnumerable<StatementListItem> statementList)
+    public BlockStatement(List<StatementListItem> statementList)
     {
-        _statementList = new List<StatementListItem>(statementList);
+        _statementList = statementList;
         _statementList.ForEach(item => item.Parent = this);
     }
 

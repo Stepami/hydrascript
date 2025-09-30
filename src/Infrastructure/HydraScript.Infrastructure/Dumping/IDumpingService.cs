@@ -20,7 +20,7 @@ internal sealed class DumpingService(
         var fileName = fileNameWithExtension.Replace(originalFileExtension, string.Empty);
         var path = Path.Combine(
             fileInfo.Value.DirectoryName ?? string.Empty,
-            ZString.Concat(fileName, ".", fileExtension));
+            ZString.Concat(fileName, '.', fileExtension));
         fileSystem.File.WriteAllText(path, contents);
     }
 }

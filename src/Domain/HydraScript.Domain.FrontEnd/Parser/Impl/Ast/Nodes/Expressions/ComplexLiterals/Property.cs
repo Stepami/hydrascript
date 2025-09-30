@@ -5,8 +5,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexL
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class Property : Expression
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        [Id, Expression];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public IdentifierReference Id { get; }
     public Expression Expression { get; }
@@ -21,6 +20,8 @@ public partial class Property : Expression
 
         Expression = expression;
         Expression.Parent = this;
+
+        Children = [Id, Expression];
     }
 
     public void Deconstruct(out string id, out Expression expr)

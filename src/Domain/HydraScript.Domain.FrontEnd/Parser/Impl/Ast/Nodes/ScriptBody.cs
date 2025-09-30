@@ -8,9 +8,9 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
         _statementList;
 
-    public ScriptBody(IEnumerable<StatementListItem> statementList)
+    public ScriptBody(List<StatementListItem> statementList)
     {
-        _statementList = new List<StatementListItem>(statementList);
+        _statementList = statementList;
         _statementList.ForEach(item => item.Parent = this);
     }
 

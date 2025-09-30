@@ -3,8 +3,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ConditionalExpression : Expression
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        [Test, Consequent, Alternate];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public Expression Test { get; }
     public Expression Consequent { get; }
@@ -19,6 +18,8 @@ public partial class ConditionalExpression : Expression
         Test.Parent = this;
         Consequent.Parent = this;
         Alternate.Parent = this;
+
+        Children = [Test, Consequent, Alternate];
     }
 
     protected override string NodeRepresentation() => "?:";

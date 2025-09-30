@@ -9,7 +9,7 @@ public class HashAddress(int seed) : IAddress
 
     private readonly Guid _id = Guid.NewGuid();
 
-    public IAddress Next { get; set; } = default!;
+    public IAddress? Next { get; set; }
 
     public string Name
     {

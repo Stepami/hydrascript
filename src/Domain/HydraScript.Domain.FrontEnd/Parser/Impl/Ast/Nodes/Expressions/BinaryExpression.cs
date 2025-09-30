@@ -3,8 +3,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class BinaryExpression : Expression
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        [Left, Right];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public Expression Left { get; }
     public string Operator { get; }
@@ -19,6 +18,8 @@ public partial class BinaryExpression : Expression
 
         Right = right;
         Right.Parent = this;
+
+        Children = [Left, Right];
     }
 
     protected override string NodeRepresentation() => Operator;

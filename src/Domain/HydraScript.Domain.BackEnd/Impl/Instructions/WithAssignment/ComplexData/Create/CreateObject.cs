@@ -4,7 +4,7 @@ public class CreateObject(string id) : Simple(id)
 {
     private readonly string _id = id;
 
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         frame[_id] = new Dictionary<string, object>();

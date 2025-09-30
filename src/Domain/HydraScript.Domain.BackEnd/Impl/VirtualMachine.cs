@@ -9,13 +9,11 @@ public class VirtualMachine(IOutputWriter writer) : IVirtualMachine
         ExecuteParams.Frames.Push(new Frame(instructions.Start));
 
         var address = instructions.Start;
-        while (!instructions[address].End)
+        while (address is not null)
         {
             var instruction = instructions[address];
             var jump = instruction.Execute(ExecuteParams);
             address = jump;
         }
-
-        instructions[address].Execute(ExecuteParams);
     }
 }

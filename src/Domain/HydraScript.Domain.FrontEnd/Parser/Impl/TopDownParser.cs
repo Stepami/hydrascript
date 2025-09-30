@@ -65,7 +65,7 @@ public class TopDownParser : IParser
     private ScriptBody Script() =>
         new(StatementList());
 
-    private IEnumerable<StatementListItem> StatementList()
+    private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
         while (

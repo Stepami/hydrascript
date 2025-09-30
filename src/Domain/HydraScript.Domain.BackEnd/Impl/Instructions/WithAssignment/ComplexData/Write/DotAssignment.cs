@@ -6,7 +6,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexDat
 public class DotAssignment(string @object, IValue property, IValue value)
     : Simple(left: @object, (property, value), "."), IWriteToComplexData
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         if (frame[Left!] is Dictionary<string, object> obj)
