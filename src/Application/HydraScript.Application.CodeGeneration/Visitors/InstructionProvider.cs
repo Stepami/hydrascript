@@ -168,7 +168,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         }
 
         result.AddRange(visitable.Statement.Accept(This));
-        for (var address = result.Start; address != null; address = address?.Next)
+        for (var address = result.Start; address != null; address = address.Next)
         {
             if (result[address] is Goto { JumpType: not null } g)
             {
@@ -222,7 +222,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         if (visitable.HasElseBlock())
             result.AddRange(visitable.Else?.Accept(This) ?? []);
 
-        for (var address = result.Start; address != null; address = address?.Next)
+        for (var address = result.Start; address != null; address = address.Next)
         {
             if (result[address] is Goto { JumpType: InsideStatementJumpType.Break } g)
                 g.SetJump(endBlockLabel);

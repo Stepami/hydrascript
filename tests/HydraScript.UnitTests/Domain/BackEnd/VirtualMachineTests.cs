@@ -30,13 +30,9 @@ public class VirtualMachineTests
     }
 
     [Theory, AutoHydraScriptData]
-    public void ProgramWithoutHaltWillNotRunTest(VirtualMachine vm)
+    public void Run_EmptyProgram_Success(VirtualMachine vm)
     {
-        var program = new AddressedInstructions();
-        Assert.Throws<ArgumentNullException>(() => vm.Run(program));
-
-        program.Add(new Halt());
-        Assert.Null(Record.Exception(() => vm.Run(program)));
+        Assert.Null(Record.Exception(() => vm.Run([])));
     }
 
     [Theory, AutoHydraScriptData]
@@ -144,10 +140,9 @@ public class VirtualMachineTests
 
     private static Halt HaltTrackable()
     {
+        IAddress? empty = null;
         var halt = Substitute.For<Halt>();
-        halt.Execute(default!)
-            .ReturnsForAnyArgs(new HashAddress(seed: 0));
-        halt.End.Returns(true);
+        halt.Execute(null!).ReturnsForAnyArgs(empty);
         return halt;
     }
 }

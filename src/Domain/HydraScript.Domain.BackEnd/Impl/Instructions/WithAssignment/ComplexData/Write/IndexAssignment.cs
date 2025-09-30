@@ -6,7 +6,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexDat
 public class IndexAssignment(string array, IValue index, IValue value)
     : Simple(left: array, right: (index, value), "[]"), IWriteToComplexData
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         if (frame[Left!] is List<object> list)

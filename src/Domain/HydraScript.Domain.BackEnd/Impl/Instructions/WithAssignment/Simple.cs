@@ -49,7 +49,7 @@ public class Simple : Instruction
     protected override void OnSetOfAddress(IAddress address) =>
         Left ??= address.Name;
 
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         if (Right.left == null)

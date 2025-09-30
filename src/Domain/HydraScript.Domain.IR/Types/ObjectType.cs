@@ -10,7 +10,7 @@ public class ObjectType : Type
     private readonly ObjectTypeHasher _hasher;
     private readonly ObjectTypePrinter _serializer;
 
-    public string LastAccessedMethodName { get; private set; } = default!;
+    public string LastAccessedMethodName { get; private set; } = string.Empty;
 
     public ObjectType(Dictionary<string, Type> properties)
     {

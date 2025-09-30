@@ -2,7 +2,7 @@ namespace HydraScript.Domain.IR.Types;
 
 public class Type
 {
-    private readonly string _name = default!;
+    private readonly string _name = string.Empty;
 
     protected Type()
     {

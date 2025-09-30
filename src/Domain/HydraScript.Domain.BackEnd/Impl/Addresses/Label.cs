@@ -4,7 +4,7 @@ public class Label(string name) : IAddress
 {
     public string Name { get; } = name;
 
-    public IAddress Next { get; set; } = default!;
+    public IAddress? Next { get; set; }
 
     public bool Equals(IAddress? other) =>
         other is Label label &&

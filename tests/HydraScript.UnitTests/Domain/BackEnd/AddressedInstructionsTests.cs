@@ -21,9 +21,9 @@ public class AddressedInstructionsTests
             new Halt()
         ];
 
-        instructions.Remove(instructions[instructions.Start.Next]);
+        instructions.Remove(instructions[instructions.Start.Next!]);
         
-        Assert.Same(instructions.Last(), instructions[instructions.Start.Next]);
+        Assert.Same(instructions.Last(), instructions[instructions.Start.Next!]);
     }
     
     [Fact]
@@ -60,7 +60,7 @@ public class AddressedInstructionsTests
         var prev = instructions.First();
         var next = instructions.Last();
 
-        Assert.Same(@new, instructions[prev.Address.Next]);
-        Assert.Same(next, instructions[@new.Address.Next]);
+        Assert.Same(@new, instructions[prev.Address.Next!]);
+        Assert.Same(next, instructions[@new.Address.Next!]);
     }
 }

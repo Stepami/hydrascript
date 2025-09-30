@@ -4,7 +4,7 @@ public class CreateArray(string id, int size) : Simple(id)
 {
     private readonly string _id = id;
 
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
         var list = new List<object>(size * 2);

@@ -2,7 +2,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
 public abstract class Instruction : IExecutableInstruction
 {
-    private IAddress _address = default!;
+    private IAddress _address = null!;
 
     public IAddress Address
     {
@@ -16,9 +16,7 @@ public abstract class Instruction : IExecutableInstruction
     
     protected virtual void OnSetOfAddress(IAddress address) { }
 
-    public abstract IAddress Execute(IExecuteParams executeParams);
-    
-    public virtual bool End => false;
+    public abstract IAddress? Execute(IExecuteParams executeParams);
 
     protected abstract string ToStringInternal();
 

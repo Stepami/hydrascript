@@ -1,23 +1,14 @@
 namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
-public abstract class BlockLabel : Instruction
+public abstract class BlockLabel(
+    BlockLabel.BlockPosition blockPosition,
+    BlockType blockType,
+    string blockId) : Instruction
 {
-    private readonly BlockPosition _blockPosition;
-    private readonly BlockType _blockType;
-    private readonly string _blockId;
-
-    protected BlockLabel(BlockPosition blockPosition, BlockType blockType, string blockId)
-    {
-        _blockPosition = blockPosition;
-        _blockType = blockType;
-        _blockId = blockId;
-    }
-
-    public override IAddress Execute(IExecuteParams executeParams) =>
-        Address.Next;
+    public override IAddress? Execute(IExecuteParams executeParams) => Address.Next;
 
     protected override string ToStringInternal() =>
-        $"{_blockPosition}{_blockType} {_blockId}";
+        $"{blockPosition}{blockType} {blockId}";
 
     protected enum BlockPosition
     {
@@ -33,14 +24,8 @@ public enum BlockType
     Condition
 }
 
-public class BeginBlock : BlockLabel
-{
-    public BeginBlock(BlockType blockType, string blockId) :
-        base(BlockPosition.Begin, blockType, blockId) { }
-}
+public class BeginBlock(BlockType blockType, string blockId) :
+    BlockLabel(BlockPosition.Begin, blockType, blockId);
 
-public class EndBlock : BlockLabel
-{
-    public EndBlock(BlockType blockType, string blockId) :
-        base(BlockPosition.End, blockType, blockId) { }
-}
+public class EndBlock(BlockType blockType, string blockId) :
+    BlockLabel(BlockPosition.End, blockType, blockId);
