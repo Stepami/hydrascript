@@ -5,8 +5,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class AssignmentExpression : Expression
 {
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        [Destination, Source];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public LeftHandSideExpression Destination { get; }
     public Expression Source { get; }
@@ -24,6 +23,8 @@ public partial class AssignmentExpression : Expression
         source.Parent = this;
 
         DestinationType = destinationType;
+
+        Children = [Destination, Source];
     }
 
     /// <inheritdoc cref="AbstractSyntaxTreeNode.InitScope"/>

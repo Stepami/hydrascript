@@ -9,7 +9,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 {
     private readonly List<IFunctionArgument> _arguments;
 
-    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children => [Statements];
+    protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
@@ -32,6 +32,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
         Statements = blockStatement;
         Statements.Parent = this;
+        Children = [Statements];
 
         ReturnStatements = Statements
             .GetAllNodes()

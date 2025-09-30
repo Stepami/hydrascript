@@ -11,5 +11,5 @@ Apple M1 Pro, 1 CPU, 10 logical and 10 physical cores
 ```
 | Method | Job           | Runtime       |     Mean |     Error |    StdDev |      Gen0 |     Gen1 | Allocated |
 |--------|---------------|---------------|---------:|----------:|----------:|----------:|---------:|----------:|
-| Invoke | .NET 9.0      | .NET 9.0      | 7.427 ms | 0.1477 ms | 0.1701 ms | 1593.7500 | 406.2500 |   9.57 MB |
-| Invoke | NativeAOT 9.0 | NativeAOT 9.0 | 7.215 ms | 0.0836 ms | 0.0699 ms | 1593.7500 | 453.1250 |   9.56 MB |
+| Invoke | .NET 9.0      | .NET 9.0      | 9.525 ms | 0.1615 ms | 0.1658 ms | 1562.5000 | 500.0000 |   9.37 MB |
+| Invoke | NativeAOT 9.0 | NativeAOT 9.0 | 7.321 ms | 0.0544 ms | 0.0509 ms | 1562.5000 | 468.7500 |   9.36 MB |
