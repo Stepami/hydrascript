@@ -8,12 +8,12 @@ internal class MethodStorage : IMethodStorage
 {
     private readonly Dictionary<ObjectType, Dictionary<FunctionSymbolId, FunctionSymbol>> _bindings = [];
 
-    public void BindMethod(ObjectType objectType, FunctionSymbol method)
+    public void BindMethod(ObjectType objectType, FunctionSymbol method, FunctionSymbolId overload)
     {
-        objectType.AddMethod(method.Id);
+        objectType.AddMethod(overload);
         if (!_bindings.ContainsKey(objectType))
             _bindings[objectType] = new Dictionary<FunctionSymbolId, FunctionSymbol>();
-        _bindings[objectType][method.Id] = method;
+        _bindings[objectType][overload] = method;
     }
 
     public IReadOnlyDictionary<FunctionSymbolId, FunctionSymbol> GetAvailableMethods(ObjectType objectType) =>
