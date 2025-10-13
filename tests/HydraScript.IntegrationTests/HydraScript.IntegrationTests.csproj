@@ -29,6 +29,9 @@
         <None Update="Samples\ceil.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\counter.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\cycled.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

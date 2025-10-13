@@ -99,11 +99,11 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             _symbolTables[visitable.Scope].AddSymbol(arg);
         }
 
-        if (parameters is [{ Type: ObjectType objectType }, ..] &&
-            visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
-        {
-            _methodStorage.BindMethod(objectType, functionSymbol);
-        }
+        var isMethod =
+            parameters is [{ Type: ObjectType }, ..] &&
+            visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..];
+        if (isMethod)
+            _methodStorage.BindMethod((parameters[0].Type as ObjectType)!, functionSymbol, functionSymbolId);
 
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
@@ -126,11 +126,12 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
             var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
             var existing = parentTable.FindSymbol(overload);
-            parentTable.AddSymbol(functionSymbol, overload);
-            if (existing is not null && existing < functionSymbol)
-            {
-                parentTable.AddSymbol(existing, overload);
-            }
+            var functionToAdd = existing is not null && existing < functionSymbol
+                ? existing
+                : functionSymbol;
+            parentTable.AddSymbol(functionToAdd, overload);
+            if (isMethod)
+                _methodStorage.BindMethod((parameters[0].Type as ObjectType)!, functionToAdd, overload);
 
             if (existing is not null && !existing.Id.Equals(overload))
             {

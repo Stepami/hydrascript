@@ -6,7 +6,7 @@ namespace HydraScript.Application.StaticAnalysis;
 
 public interface IMethodStorage
 {
-    public void BindMethod(ObjectType objectType, FunctionSymbol method);
+    public void BindMethod(ObjectType objectType, FunctionSymbol method, FunctionSymbolId overload);
 
     public IReadOnlyDictionary<FunctionSymbolId, FunctionSymbol> GetAvailableMethods(ObjectType objectType);
 
