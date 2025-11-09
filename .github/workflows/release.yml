@@ -26,11 +26,11 @@ jobs:
           echo "majorMinorPatch=$tag" >> $GITHUB_OUTPUT
           echo "publishVersion=${tag:1}" >> $GITHUB_OUTPUT
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
         with:
           versionSpec: '0.20.x'
       - name: Create release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/create@v4.1.0
+        uses: gittools/actions/gitreleasemanager/create@v4.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
@@ -60,7 +60,7 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
         with:
           versionSpec: '0.20.x'
       - name: Publish
@@ -70,7 +70,7 @@ jobs:
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/addasset@v4.1.0
+        uses: gittools/actions/gitreleasemanager/addasset@v4.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
@@ -85,17 +85,17 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.1.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
         with:
           versionSpec: '0.20.x'
       - name: Publish release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/publish@v4.1.0
+        uses: gittools/actions/gitreleasemanager/publish@v4.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
           milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
       - name: Close release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/close@v4.1.0
+        uses: gittools/actions/gitreleasemanager/close@v4.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'

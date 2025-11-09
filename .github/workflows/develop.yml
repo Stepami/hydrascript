@@ -29,14 +29,12 @@ jobs:
         with:
           dotnet-version: 9.0.x
       - name: Setup GitVersion
-        uses: gittools/actions/gitversion/setup@v3.0.0
+        uses: gittools/actions/gitversion/setup@v4.2.0
         with:
-          versionSpec: '5.12.0'
+          versionSpec: '6.4.x'
       - name: Determine Version
         id: version_step
-        uses: gittools/actions/gitversion/execute@v3.0.0
-        with:
-          useConfigFile: true
+        uses: gittools/actions/gitversion/execute@v4.2.0
       - name: Push New Version Tag
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
