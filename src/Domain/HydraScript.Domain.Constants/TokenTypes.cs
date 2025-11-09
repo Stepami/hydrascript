@@ -13,9 +13,15 @@ public static class TokenTypes
         get
         {
             yield return new(
-                Tag: "Comment",
+                Tag: "DoubleSlashComment",
                 Pattern: "[/]{2}.*",
                 Priority: 0,
+                CanIgnore: true);
+
+            yield return new(
+                Tag: "ShebangComment",
+                Pattern: "[#].*",
+                Priority: 1,
                 CanIgnore: true);
 
             yield return new(
