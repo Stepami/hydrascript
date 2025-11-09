@@ -1,4 +1,6 @@
-mode: Mainline
+workflow: GitHubFlow/v1
+strategies:
+  - Mainline
 ignore:
   sha: []
 merge-message-formats: {}
