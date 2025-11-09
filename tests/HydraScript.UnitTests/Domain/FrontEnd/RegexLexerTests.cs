@@ -36,11 +36,22 @@ public class RegexLexerTests(ITestOutputHelper output)
         Assert.NotEmpty(_regexLexer.GetTokens(""));
 
     [Fact]
-    public void GetTokensSkipIgnorableTypesTest()
+    public void GetTokens_IgnorableTypes_Skipped()
     {
         const string text = "let x = 1 // int";
         var tokens = _regexLexer.GetTokens(text);
-        Assert.DoesNotContain(_regexLexer.Structure.FindByTag("Comment"), tokens.Select(x => x.Type));
+        Assert.DoesNotContain(_regexLexer.Structure.FindByTag("DoubleSlashComment"), tokens.Select(x => x.Type));
+    }
+
+    [Fact]
+    public void GetTokens_Comments_EmptyList()
+    {
+        const string text = """
+            // double slash comment
+            # shebang comment
+            """;
+        var tokens = _regexLexer.GetTokens(text);
+        Assert.Empty(tokens.Except([new EndToken()]));
     }
 
     [Theory, ClassData(typeof(LexerKeywordInsideIdentData))]
