@@ -541,16 +541,32 @@ public class TopDownParser : IParser
     }
 
     /// <summary>
-    /// CastExpression -> ConditionalExpression 'as' 'string'
+    /// CastExpression -> WithExpression 'as' 'string'
     /// </summary>
     private Expression CastExpression()
     {
-        var cond = ConditionalExpression();
+        var withExpr = WithExpression();
         if (CurrentIsKeyword("as"))
         {
             var asKeyword = Expect("Keyword", "as");
             var type = TypeValue();
-            return new CastAsExpression(cond, type) {Segment = asKeyword.Segment};
+            return new CastAsExpression(withExpr, type) {Segment = asKeyword.Segment};
+        }
+
+        return withExpr;
+    }
+
+    /// <summary>
+    /// WithExpression -> ConditionalExpression 'with' ObjectLiteral
+    /// </summary>
+    private Expression WithExpression()
+    {
+        var cond = ConditionalExpression();
+        if (CurrentIsKeyword("with"))
+        {
+            var withKeyword = Expect("Keyword", "with");
+            var objectLiteral = ObjectLiteral();
+            return new WithExpression(cond, objectLiteral) {Segment = withKeyword.Segment};
         }
 
         return cond;
