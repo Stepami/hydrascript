@@ -5,6 +5,9 @@ on:
     branches:
       - 'release'
 
+permissions:
+  contents: write
+
 jobs:
   create-release:
     name: Create release
