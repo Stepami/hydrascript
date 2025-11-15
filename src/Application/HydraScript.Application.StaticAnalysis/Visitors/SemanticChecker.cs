@@ -26,8 +26,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<IdentifierReference, Type>,
     IVisitor<Literal, Type>,
     IVisitor<ImplicitLiteral, Type>,
-    IVisitor<ArrayLiteral, Type>,
-    IVisitor<ObjectLiteral, Type>,
+    IVisitor<ArrayLiteral, ArrayType>,
+    IVisitor<ObjectLiteral, ObjectType>,
     IVisitor<ConditionalExpression, Type>,
     IVisitor<BinaryExpression, Type>,
     IVisitor<UnaryExpression, Type>,
@@ -37,6 +37,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<IndexAccess, Type>,
     IVisitor<DotAccess, Type>,
     IVisitor<CastAsExpression, Type>,
+    IVisitor<WithExpression, ObjectType>,
     IVisitor<CallExpression, Type>,
     IVisitor<FunctionDeclaration, Type>,
     IVisitor<BlockStatement, Type>,
@@ -163,7 +164,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         return type;
     }
 
-    public Type Visit(ArrayLiteral visitable)
+    public ArrayType Visit(ArrayLiteral visitable)
     {
         if (visitable.Expressions.Count == 0)
             return new ArrayType(new Any());
@@ -175,7 +176,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         throw new WrongArrayLiteralDeclaration(visitable.Segment, type);
     }
 
-    public Type Visit(ObjectLiteral visitable)
+    public ObjectType Visit(ObjectLiteral visitable)
     {
         var properties = visitable.Properties.AsValueEnumerable().Select(prop =>
         {
@@ -396,6 +397,25 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 : throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
         visitable.ComputedTypeGuid = _computedTypes.Save(fieldType);
         return visitable.HasNext() ? visitable.Next?.Accept(This) ?? "undefined" : fieldType;
+    }
+
+    public ObjectType Visit(WithExpression visitable)
+    {
+        var exprType = visitable.Expression.Accept(This);
+
+        if (exprType is not ObjectType supersetObjectType)
+            throw new UnsupportedOperation(visitable.Segment, exprType, "with");
+
+        IVisitor<ObjectLiteral, ObjectType> objectLiteralVisitor = this;
+        var subsetObjectType = visitable.ObjectLiteral.Accept(objectLiteralVisitor);
+
+        if (!supersetObjectType.IsSubsetOf(subsetObjectType))
+            throw new IncompatibleTypesOfOperands(
+                visitable.Segment,
+                left: supersetObjectType,
+                right: subsetObjectType);
+
+        return supersetObjectType;
     }
 
     public Type Visit(CastAsExpression visitable)
