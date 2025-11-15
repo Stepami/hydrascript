@@ -24,6 +24,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     IVisitor<UnaryExpression, AddressedInstructions>,
     IVisitor<BinaryExpression, AddressedInstructions>,
     IVisitor<CastAsExpression, AddressedInstructions>,
+    IVisitor<WithExpression, AddressedInstructions>,
     IVisitor<ConditionalExpression, AddressedInstructions>,
     IVisitor<AssignmentExpression, AddressedInstructions>,
     IVisitor<MemberExpression, AddressedInstructions>,
@@ -35,6 +36,8 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
     public ExpressionInstructionProvider(IValueDtoConverter valueDtoConverter) =>
         _valueDtoConverter = valueDtoConverter;
+
+    public override AddressedInstructions Visit(IAbstractSyntaxTreeNode visitable) => [];
 
     public AddressedInstructions Visit(PrimaryExpression visitable) =>
         [new Simple(_valueDtoConverter.Convert(visitable.ToValueDto()))];
@@ -76,9 +79,8 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
         var result = new AddressedInstructions { createObject };
 
-        var propInstructions =
-            visitable.Properties.AsValueEnumerable()
-                .SelectMany(property => property.Accept(This));
+        var propInstructions = visitable.AsValueEnumerable()
+            .SelectMany(property => property.Accept(This));
         foreach (var propInstruction in propInstructions)
             result.Add(propInstruction);
 
@@ -155,6 +157,42 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         var last = new Name(result.OfType<Simple>().Last().Left!);
         result.Add(new AsString(last));
         
+        return result;
+    }
+
+    public AddressedInstructions Visit(WithExpression visitable)
+    {
+        if (visitable is { Expression: PrimaryExpression, ComputedCopiedProperties.Count: 0 })
+            return [];
+
+        var objectId = visitable.ObjectLiteral.Id;
+        var createObject = new CreateObject(objectId);
+
+        var result = new AddressedInstructions { createObject };
+
+        var propInstructions = visitable.ObjectLiteral
+            .AsValueEnumerable()
+            .SelectMany(property => property.Accept(This));
+        foreach (var propInstruction in propInstructions)
+            result.Add(propInstruction);
+
+        if (visitable.ComputedCopiedProperties.Count is 0)
+            return result;
+
+        result.AddRange(visitable.Expression is PrimaryExpression ? [] : visitable.Expression.Accept(This));
+
+        var copyFrom = visitable.Expression is PrimaryExpression primary
+            ? (Name)_valueDtoConverter.Convert(primary.ToValueDto())
+            : new Name(result.OfType<Simple>().Last().Left!);
+
+        for (var i = 0; i < visitable.ComputedCopiedProperties.Count; i++)
+        {
+            var property = new Constant(visitable.ComputedCopiedProperties[i]);
+            result.Add(new DotRead(copyFrom, property));
+            var read = result[result.End].Address.Name;
+            result.Add(new DotAssignment(objectId, property, new Name(read)));
+        }
+
         return result;
     }
 
