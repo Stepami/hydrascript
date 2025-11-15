@@ -34,6 +34,18 @@ public class ObjectType : Type
         return _methods.Any(x => x.HasName(methodName));
     }
 
+    public bool IsSubsetOf(ObjectType that)
+    {
+        foreach (var key in that._properties.Keys)
+        {
+            var hasProperty = _properties.TryGetValue(key, out var type);
+            if (!hasProperty || !that[key]!.Equals(type))
+                return false;
+        }
+
+        return true;
+    }
+
     public override void ResolveReference(
         Type reference,
         string refId,

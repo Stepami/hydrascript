@@ -118,4 +118,199 @@ public class ObjectTypeTests
 
         Assert.Contains("next: next;", linkedListType.ToString());
     }
+
+    [Fact]
+    public void IsSubsetOf_SubsetHasFewerProperties_ReturnsTrue()
+    {
+        // Arrange
+        var number = new Type("number");
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number,
+            ["z"] = number
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_SubsetHasSameProperties_ReturnsTrue()
+    {
+        // Arrange
+        var number = new Type("number");
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_SubsetHasExtraProperties_ReturnsFalse()
+    {
+        // Arrange
+        var number = new Type("number");
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number,
+            ["z"] = number
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_PropertyTypesMismatch_ReturnsFalse()
+    {
+        // Arrange
+        var number = new Type("number");
+        var stringType = new Type("string");
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = stringType
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_EmptySubset_ReturnsTrue()
+    {
+        // Arrange
+        var number = new Type("number");
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+        var emptySubsetType = new ObjectType(new Dictionary<string, Type>());
+
+        // Act
+        var result = supersetType.IsSubsetOf(emptySubsetType);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_SameObjectReference_ReturnsTrue()
+    {
+        // Arrange
+        var number = new Type("number");
+        var objectType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["x"] = number,
+            ["y"] = number
+        });
+
+        // Act
+        var result = objectType.IsSubsetOf(objectType);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_ComplexNestedTypes_ReturnsTrue()
+    {
+        // Arrange
+        var number = new Type("number");
+        var nestedObject = new ObjectType(new Dictionary<string, Type>
+        {
+            ["a"] = number,
+            ["b"] = number
+        });
+        var arrayType = new ArrayType(number);
+
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["nested"] = nestedObject,
+            ["array"] = arrayType,
+            ["simple"] = number
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["nested"] = nestedObject,
+            ["array"] = arrayType
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSubsetOf_ComplexNestedTypesMismatch_ReturnsFalse()
+    {
+        // Arrange
+        var number = new Type("number");
+        var nestedObject1 = new ObjectType(new Dictionary<string, Type>
+        {
+            ["a"] = number,
+            ["b"] = number
+        });
+        var nestedObject2 = new ObjectType(new Dictionary<string, Type>
+        {
+            ["a"] = number,
+            ["c"] = number
+        });
+
+        var supersetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["nested"] = nestedObject1
+        });
+        var subsetType = new ObjectType(new Dictionary<string, Type>
+        {
+            ["nested"] = nestedObject2
+        });
+
+        // Act
+        var result = supersetType.IsSubsetOf(subsetType);
+
+        // Assert
+        Assert.False(result);
+    }
 }
