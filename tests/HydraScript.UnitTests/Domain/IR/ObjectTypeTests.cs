@@ -118,4 +118,34 @@ public class ObjectTypeTests
 
         Assert.Contains("next: next;", linkedListType.ToString());
     }
+
+    [Theory, ClassData(typeof(IsSubsetOfData))]
+    public void IsSubsetOf_SpecificSubset_ReturnsExpectedResult(
+        ObjectType superset,
+        ObjectType subset,
+        bool expected)
+    {
+        // Act
+        var result = superset.IsSubsetOf(subset);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    [Theory, ClassData(typeof(CalculateDifferenceData))]
+    public void CalculateDifference_SpecificObjectType_ReturnsExpectedDifference(
+        ObjectType superset,
+        ObjectType subset,
+        IReadOnlyList<string> expected)
+    {
+        // Act
+        var result = superset.CalculateDifference(subset);
+
+        // Assert
+        Assert.Equal(expected.Count, result.Count);
+        foreach (var propertyName in expected)
+        {
+            Assert.Contains(propertyName, result);
+        }
+    }
 }

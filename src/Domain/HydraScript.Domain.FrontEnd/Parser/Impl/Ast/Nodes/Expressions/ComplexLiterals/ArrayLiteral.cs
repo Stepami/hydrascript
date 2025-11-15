@@ -10,6 +10,10 @@ public partial class ArrayLiteral : ComplexLiteral
 
     public IReadOnlyList<Expression> Expressions => _expressions;
 
+    public override string Id => Parent is AssignmentExpression assignment
+        ? assignment.Destination.Id
+        : NullId;
+
     public ArrayLiteral(List<Expression> expressions)
     {
         _expressions = expressions;

@@ -59,7 +59,7 @@ public static class TokenTypes
             yield return new(
                 Tag: "Keyword",
                 Pattern:
-                "(?<![a-zA-Z0-9])(let|const|function|if|else|while|break|continue|return|as|type)(?![a-zA-Z0-9])",
+                "(?<![a-zA-Z0-9])(let|const|function|if|else|while|break|continue|return|as|type|with)(?![a-zA-Z0-9])",
                 Priority: 11);
 
             yield return new(

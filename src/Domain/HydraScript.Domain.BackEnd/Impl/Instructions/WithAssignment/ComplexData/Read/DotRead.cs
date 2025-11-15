@@ -10,8 +10,6 @@ public class DotRead(Name @object, IValue property) : Simple(
 {
     private readonly IValue _property = property;
 
-    public string Property => (string)_property.Get(frame: null)!;
-
     public Simple ToAssignment(IValue value) =>
         new DotAssignment(@object.ToString(), _property, value);
 

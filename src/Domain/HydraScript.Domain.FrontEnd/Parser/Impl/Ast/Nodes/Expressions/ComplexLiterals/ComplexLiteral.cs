@@ -2,7 +2,16 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexL
 
 public abstract class ComplexLiteral : Expression
 {
-    public string Id => Parent is AssignmentExpression assignment
-        ? assignment.Destination.Id
-        : $"_t{GetHashCode()}";
+    private string? _nullId;
+
+    protected string NullId
+    {
+        get
+        {
+            _nullId ??= $"{GetHashCode()}";
+            return _nullId;
+        }
+    }
+
+    public abstract string Id { get; }
 }
