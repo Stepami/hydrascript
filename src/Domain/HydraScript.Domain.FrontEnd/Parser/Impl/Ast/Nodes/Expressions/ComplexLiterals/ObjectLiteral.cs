@@ -10,6 +10,20 @@ public partial class ObjectLiteral : ComplexLiteral
 
     public IReadOnlyList<Property> Properties => _properties;
 
+    public override string Id
+    {
+        get
+        {
+            if (Parent is AssignmentExpression assignment) 
+                return assignment.Destination.Id;
+
+            if (Parent is WithExpression{Parent:AssignmentExpression withAssignment})
+                return withAssignment.Destination.Id;
+
+            return NullId;
+        }
+    }
+
     public ObjectLiteral(List<Property> properties)
     {
         _properties = properties;
