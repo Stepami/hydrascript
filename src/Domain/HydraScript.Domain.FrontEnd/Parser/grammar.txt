@@ -22,7 +22,7 @@ ExpressionStatement -> Expression
 Expression -> CastExpression   
               AssignmentExpression
 
-CastExpression -> ConditionalExpression 'as' 'string'
+CastExpression -> WithExpression 'as' 'string'
 
 AssignmentExpression -> LeftHandSideExpression '=' Expression
 
@@ -33,6 +33,7 @@ MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
 
 Arguments -> '(' (Expression ',')* ')'
 
+WithExpression -> ConditionalExpression 'with' ObjectLiteral
 ConditionalExpression -> OrExpression ('?' Expression ':' Expression)?
 OrExpression -> AndExpression ('||' AndExpression)*
 AndExpression -> EqExpression ('&&' EqExpression)*
