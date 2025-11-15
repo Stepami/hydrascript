@@ -122,6 +122,9 @@
         <None Update="Samples\vec2d.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\with.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\xxx.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
