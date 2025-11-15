@@ -415,6 +415,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 left: supersetObjectType,
                 right: subsetObjectType);
 
+        visitable.ComputedCopiedProperties = supersetObjectType.CalculateDifference(subsetObjectType);
+
         return supersetObjectType;
     }
 

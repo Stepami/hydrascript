@@ -46,6 +46,13 @@ public class ObjectType : Type
         return true;
     }
 
+    public IReadOnlyList<string> CalculateDifference(ObjectType that)
+    {
+        return _properties.Keys
+            .Where(key => !that._properties.ContainsKey(key))
+            .ToList();
+    }
+
     public override void ResolveReference(
         Type reference,
         string refId,

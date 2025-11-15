@@ -10,6 +10,8 @@ public partial class WithExpression : Expression
     public Expression Expression { get; }
     public ObjectLiteral ObjectLiteral { get; }
 
+    public IReadOnlyList<string> ComputedCopiedProperties { get; set; } = [];
+
     public WithExpression(Expression expression, ObjectLiteral objectLiteral)
     {
         Expression = expression;
