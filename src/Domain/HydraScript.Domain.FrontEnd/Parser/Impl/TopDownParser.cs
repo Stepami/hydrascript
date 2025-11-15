@@ -62,9 +62,15 @@ public class TopDownParser : IParser
         CurrentIs("Operator") &&
         _tokens.Current.Value == @operator;
 
+    /// <summary>
+    /// Script -> StatementList
+    /// </summary>
     private ScriptBody Script() =>
         new(StatementList());
 
+    /// <summary>
+    /// StatementList -> StatementListItem*
+    /// </summary>
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
@@ -83,6 +89,9 @@ public class TopDownParser : IParser
         return statementList;
     }
 
+    /// <summary>
+    /// StatementListItem -> Statement | Declaration
+    /// </summary>
     private StatementListItem StatementListItem()
     {
         if (CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
@@ -94,6 +103,16 @@ public class TopDownParser : IParser
         return Statement();
     }
 
+    /// <summary>
+    /// Statement -> BlockStatement
+    ///              ExpressionStatement
+    ///              IfStatement
+    ///              WhileStatement
+    ///              ContinueStatement
+    ///              BreakStatement
+    ///              ReturnStatement
+    ///              PrintStatement
+    /// </summary>
     private Statement Statement()
     {
         if (CurrentIs("Ident") || CurrentIsLiteral() ||
@@ -131,6 +150,9 @@ public class TopDownParser : IParser
         return null!;
     }
 
+    /// <summary>
+    /// BlockStatement -> '{' StatementList '}'
+    /// </summary>
     private BlockStatement BlockStatement()
     {
         Expect("LeftCurl");
@@ -140,11 +162,17 @@ public class TopDownParser : IParser
         return block;
     }
 
+    /// <summary>
+    /// ExpressionStatement -> Expression
+    /// </summary>
     private ExpressionStatement ExpressionStatement()
     {
         return new(Expression());
     }
 
+    /// <summary>
+    /// ReturnStatement -> 'return' Expression?
+    /// </summary>
     private ReturnStatement ReturnStatement()
     {
         var ret = Expect("Keyword", "return");
@@ -158,6 +186,9 @@ public class TopDownParser : IParser
         return new ReturnStatement { Segment = ret.Segment };
     }
 
+    /// <summary>
+    /// IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
+    /// </summary>
     private IfStatement IfStatement()
     {
         var token = Expect("Keyword", "if");
@@ -175,6 +206,9 @@ public class TopDownParser : IParser
         return new IfStatement(expr, then) {Segment = token.Segment};
     }
 
+    /// <summary>
+    /// WhileStatement -> 'while' '(' Expression ')' Statement
+    /// </summary>
     private WhileStatement WhileStatement()
     {
         var token = Expect("Keyword", "while");
@@ -185,12 +219,18 @@ public class TopDownParser : IParser
         return new WhileStatement(expr, stmt) {Segment = token.Segment};
     }
 
+    /// <summary>
+    /// PrintStatement -> '>>>' Expression
+    /// </summary>
     private PrintStatement PrintStatement()
     {
         Expect("Print");
         return new PrintStatement(Expression());
     }
 
+    /// <summary>
+    /// TypeDeclaration -> 'type' "Ident" = TypeValue
+    /// </summary>
     private TypeDeclaration TypeDeclaration()
     {
         var typeWord = Expect("Keyword", "type");
@@ -204,6 +244,9 @@ public class TopDownParser : IParser
         return new TypeDeclaration(typeId, type) { Segment = typeWord.Segment + ident.Segment };
     }
 
+    /// <summary>
+    /// TypeValue -> TypeValueBase TypeValueSuffix*
+    /// </summary>
     private TypeValue TypeValue()
     {
         if (CurrentIs("Ident"))
@@ -240,6 +283,9 @@ public class TopDownParser : IParser
         return null!;
     }
 
+    /// <summary>
+    /// TypeValueSuffix -> '['']' | '?'
+    /// </summary>
     private TypeValue WithSuffix(TypeValue baseType)
     {
         var type = baseType;
@@ -261,6 +307,9 @@ public class TopDownParser : IParser
         return type;
     }
 
+    /// <summary>
+    /// Declaration -> LexicalDeclaration | FunctionDeclaration | TypeDeclaration
+    /// </summary>
     private Declaration Declaration()
     {
         if (CurrentIsKeyword("function"))
@@ -281,6 +330,9 @@ public class TopDownParser : IParser
         return null!;
     }
 
+    /// <summary>
+    /// FunctionDeclaration -> 'function' "Ident" '(' FunctionParameters? ')' Type? BlockStatement
+    /// </summary>
     private FunctionDeclaration FunctionDeclaration()
     {
         Expect("Keyword", "function");
@@ -325,6 +377,9 @@ public class TopDownParser : IParser
             { Segment = ident.Segment };
     }
 
+    /// <summary>
+    /// LexicalDeclaration -> LetOrConst "Ident" Initialization (',' "Ident" Initialization)*
+    /// </summary>
     private LexicalDeclaration LexicalDeclaration()
     {
         var readOnly = CurrentIsKeyword("const");
@@ -342,6 +397,11 @@ public class TopDownParser : IParser
         return declaration;
     }
 
+    /// <summary>
+    /// Initialization -> Typed | Initializer
+    /// Typed -> Type Initializer?
+    /// Initializer -> '=' Expression
+    /// </summary>
     private void AddToDeclaration(LexicalDeclaration declaration)
     {
         var ident = Expect("Ident");
@@ -386,6 +446,9 @@ public class TopDownParser : IParser
         declaration.AddAssignment(assignment);
     }
 
+    /// <summary>
+    /// Expression -> CastExpression | AssignmentExpression
+    /// </summary>
     private Expression Expression()
     {
         var expr = CastExpression();
@@ -398,6 +461,9 @@ public class TopDownParser : IParser
         return expr;
     }
 
+    /// <summary>
+    /// CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
+    /// </summary>
     private Expression CallExpression()
     {
         var member = MemberExpression();
@@ -427,6 +493,9 @@ public class TopDownParser : IParser
         return member;
     }
 
+    /// <summary>
+    /// MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
+    /// </summary>
     private Expression MemberExpression()
     {
         var primary = PrimaryExpression();
@@ -471,6 +540,9 @@ public class TopDownParser : IParser
         };
     }
 
+    /// <summary>
+    /// CastExpression -> ConditionalExpression 'as' 'string'
+    /// </summary>
     private Expression CastExpression()
     {
         var cond = ConditionalExpression();
@@ -484,6 +556,9 @@ public class TopDownParser : IParser
         return cond;
     }
 
+    /// <summary>
+    /// ConditionalExpression -> OrExpression ('?' Expression ':' Expression)?
+    /// </summary>
     private Expression ConditionalExpression()
     {
         var test = OrExpression();
@@ -502,6 +577,9 @@ public class TopDownParser : IParser
         return test;
     }
 
+    /// <summary>
+    /// OrExpression -> AndExpression ('||' AndExpression)*
+    /// </summary>
     private Expression OrExpression()
     {
         var left = AndExpression();
@@ -518,6 +596,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// AndExpression -> EqExpression ('&&' EqExpression)*
+    /// </summary>
     private Expression AndExpression()
     {
         var left = EqualityExpression();
@@ -534,6 +615,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// EqExpression -> RelExpression (('=='|'!=') RelExpression)*
+    /// </summary>
     private Expression EqualityExpression()
     {
         var left = RelationExpression();
@@ -550,6 +634,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// RelExpression -> AddExpression (('&lt;'|'&gt;'|'&#x2264;'|'&#x2265;') AddExpression)*
+    /// </summary>
     private Expression RelationExpression()
     {
         var left = AdditiveExpression();
@@ -567,6 +654,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// AddExpression -> MulExpression (('+'|'-') MulExpression)*
+    /// </summary>
     private Expression AdditiveExpression()
     {
         var left = MultiplicativeExpression();
@@ -583,6 +673,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
+    /// </summary>
     private Expression MultiplicativeExpression()
     {
         var left = UnaryExpression();
@@ -600,6 +693,9 @@ public class TopDownParser : IParser
         return left;
     }
 
+    /// <summary>
+    /// UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
+    /// </summary>
     private Expression UnaryExpression()
     {
         if (CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~"))
@@ -614,11 +710,17 @@ public class TopDownParser : IParser
         return LeftHandSideExpression();
     }
     
+    /// <summary>
+    /// LeftHandSideExpression -> MemberExpression | CallExpression
+    /// </summary>
     private Expression LeftHandSideExpression()
     {
         return CallExpression();
     }
 
+    /// <summary>
+    /// PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+    /// </summary>
     private Expression PrimaryExpression()
     {
         if (CurrentIs("LeftParen"))
@@ -658,6 +760,13 @@ public class TopDownParser : IParser
         return null!;
     }
 
+    /// <summary>
+    /// Literal -> "NullLiteral"
+    ///            "IntegerLiteral"
+    ///            "FloatLiteral"
+    ///            "StringLiteral"
+    ///            "BooleanLiteral"
+    /// </summary>
     private Literal Literal()
     {
         var segment = _tokens.Current.Segment;
@@ -708,6 +817,9 @@ public class TopDownParser : IParser
         };
     }
 
+    /// <summary>
+    /// ObjectLiteral -> '{' PropertyDefinitionList '}'
+    /// </summary>
     private ObjectLiteral ObjectLiteral()
     {
         Expect("LeftCurl");
@@ -728,6 +840,9 @@ public class TopDownParser : IParser
         return new ObjectLiteral(properties);
     }
 
+    /// <summary>
+    /// ArrayLiteral -> '[' ElementList ']'
+    /// </summary>
     private ArrayLiteral ArrayLiteral()
     {
         var lb = Expect("LeftBracket").Segment;
