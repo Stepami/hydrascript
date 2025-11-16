@@ -8,7 +8,8 @@ public class FunctionSymbol(
     string name,
     IReadOnlyList<ISymbol> parameters,
     Type type,
-    bool isEmpty) : Symbol(name, type)
+    bool isEmpty,
+    bool allCodePathsEndedWithReturn) : Symbol(name, type)
 {
     private Type _returnType = type;
     /// <summary>Тип возврата функции</summary>
@@ -21,6 +22,7 @@ public class FunctionSymbol(
 
     public IReadOnlyList<ISymbol> Parameters { get; } = parameters;
     public bool IsEmpty { get; } = isEmpty;
+    public bool AllCodePathsEndedWithReturn { get; } = allCodePathsEndedWithReturn;
 
     public void DefineReturnType(Type returnType) =>
         _returnType = returnType;

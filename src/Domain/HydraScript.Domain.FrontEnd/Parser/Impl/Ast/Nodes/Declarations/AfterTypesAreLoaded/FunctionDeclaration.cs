@@ -18,6 +18,9 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public BlockStatement Statements { get; }
     public bool IsEmpty => Statements.Count == 0;
 
+    public IReadOnlyList<ReturnStatement> ReturnStatements { get; set; } = [];
+    public bool HasReturnStatement => ReturnStatements.Count > 0;
+
     public string ComputedFunctionAddress { get; set; } = string.Empty;
 
     public FunctionDeclaration(
@@ -33,11 +36,6 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         Statements = blockStatement;
         Statements.Parent = this;
         Children = [Statements];
-
-        ReturnStatements = Statements
-            .GetAllNodes()
-            .OfType<ReturnStatement>()
-            .ToArray();
     }
 
     /// <summary>Стратегия "блока" - углубление скоупа</summary>
@@ -51,11 +49,6 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         _arguments.ForEach(x => x.TypeValue.Scope = Parent.Scope);
         ReturnTypeValue.Scope = Parent.Scope;
     }
-
-    public bool HasReturnStatement() =>
-        ReturnStatements.Count > 0;
-
-    public IReadOnlyCollection<ReturnStatement> ReturnStatements { get; }
 
     protected override string NodeRepresentation() =>
         ZString.Concat<string, char, string>("function", ' ', Name);
