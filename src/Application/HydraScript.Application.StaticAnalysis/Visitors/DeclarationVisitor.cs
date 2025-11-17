@@ -76,6 +76,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     {
         var returnAnalyzerResult = visitable.Accept(_returnAnalyzer);
         visitable.ReturnStatements = returnAnalyzerResult.ReturnStatements;
+        visitable.AllCodePathsEndedWithReturn = returnAnalyzerResult.CodePathEndedWithReturn;
 
         var parentTable = _symbolTables[visitable.Parent.Scope];
         var indexOfFirstDefaultArgument = visitable.Arguments.AsValueEnumerable()
@@ -94,8 +95,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             visitable.Name,
             parameters,
             visitable.ReturnTypeValue.Accept(_typeBuilder),
-            visitable.IsEmpty,
-            returnAnalyzerResult.CodePathEndedWithReturn);
+            visitable.IsEmpty);
         if (functionSymbolId.Equals(parentTable.FindSymbol(functionSymbolId)?.Id))
             throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
 

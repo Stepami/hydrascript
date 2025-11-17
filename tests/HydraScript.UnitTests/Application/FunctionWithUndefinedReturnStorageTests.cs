@@ -21,8 +21,7 @@ public class FunctionWithUndefinedReturnStorageTests
             name: FunctionName,
             parameters: [],
             "undefined",
-            isEmpty: false,
-            allCodePathsEndedWithReturn: false);
+            isEmpty: false);
 
         var decl = new FunctionDeclaration(
             name: new IdentifierReference(FunctionName),
@@ -71,15 +70,13 @@ public class FunctionWithUndefinedReturnStorageTests
             name: "key2",
             parameters: [],
             "undefined",
-            isEmpty: false,
-            allCodePathsEndedWithReturn: false);
+            isEmpty: false);
 
         storage.Save(new FunctionSymbol(
             name: "key1",
             parameters: [],
             "undefined",
-            isEmpty: false,
-            allCodePathsEndedWithReturn: false), declaration: declarations[0]);
+            isEmpty: false), declaration: declarations[0]);
 
         storage.Save(removable, declaration: declarations[1]);
 
@@ -87,15 +84,13 @@ public class FunctionWithUndefinedReturnStorageTests
             name: "key3",
             parameters: [],
             "undefined",
-            isEmpty: false,
-            allCodePathsEndedWithReturn: false), declaration: declarations[2]);
+            isEmpty: false), declaration: declarations[2]);
 
         storage.Save(new FunctionSymbol(
             name: "key4",
             parameters: [],
             "undefined",
-            isEmpty: false,
-            allCodePathsEndedWithReturn: false), declaration: declarations[3]);
+            isEmpty: false), declaration: declarations[3]);
 
         storage.RemoveIfPresent(removable);
 

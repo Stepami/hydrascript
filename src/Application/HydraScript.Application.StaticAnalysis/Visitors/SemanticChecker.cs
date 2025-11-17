@@ -510,7 +510,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             symbol.DefineReturnType(returnTypes.Single());
 
         Type @void = "void";
-        if (!symbol.Type.Equals(@void) && !symbol.AllCodePathsEndedWithReturn)
+        if (!symbol.Type.Equals(@void) && !visitable.AllCodePathsEndedWithReturn)
             throw new FunctionWithoutReturnStatement(visitable.Segment);
 
         if (symbol.Type is NullType)

@@ -20,6 +20,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
     public IReadOnlyList<ReturnStatement> ReturnStatements { get; set; } = [];
     public bool HasReturnStatement => ReturnStatements.Count > 0;
+    public bool AllCodePathsEndedWithReturn { get; set; }
 
     public string ComputedFunctionAddress { get; set; } = string.Empty;
 
