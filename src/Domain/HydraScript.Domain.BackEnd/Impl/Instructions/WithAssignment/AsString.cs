@@ -18,9 +18,12 @@ public partial class AsString(IValue value) : Simple(value)
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        frame[Left!] = JsonSerializer.Serialize(
-            value: Right.right!.Get(frame)!,
-            AsStringJsonContext.Object);
+        var value = Right.right!.Get(frame);
+        frame[Left!] = value is string
+            ? value
+            : JsonSerializer.Serialize(
+                value: Right.right!.Get(frame)!,
+                AsStringJsonContext.Object);
 
         return Address.Next;
     }

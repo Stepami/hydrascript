@@ -20,19 +20,22 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
+    private readonly IVisitor<FunctionDeclaration, ReturnAnalyzerResult> _returnAnalyzer;
 
     public DeclarationVisitor(
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
         IAmbiguousInvocationStorage ambiguousInvocations,
-        IVisitor<TypeValue, Type> typeBuilder)
+        IVisitor<TypeValue, Type> typeBuilder,
+        IVisitor<FunctionDeclaration, ReturnAnalyzerResult> returnAnalyzer)
     {
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
         _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
+        _returnAnalyzer = returnAnalyzer;
     }
 
     public override VisitUnit Visit(IAbstractSyntaxTreeNode visitable)
@@ -71,6 +74,10 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
 
     public VisitUnit Visit(FunctionDeclaration visitable)
     {
+        var returnAnalyzerResult = visitable.Accept(_returnAnalyzer);
+        visitable.ReturnStatements = returnAnalyzerResult.ReturnStatements;
+        visitable.AllCodePathsEndedWithReturn = returnAnalyzerResult.CodePathEndedWithReturn;
+
         var parentTable = _symbolTables[visitable.Parent.Scope];
         var indexOfFirstDefaultArgument = visitable.Arguments.AsValueEnumerable()
             .Select((x, i) => new { Argument = x, Index = i })
@@ -108,7 +115,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
         {
-            if (visitable.HasReturnStatement())
+            if (visitable.HasReturnStatement)
                 _functionStorage.Save(functionSymbol, visitable);
             else
                 functionSymbol.DefineReturnType("void");

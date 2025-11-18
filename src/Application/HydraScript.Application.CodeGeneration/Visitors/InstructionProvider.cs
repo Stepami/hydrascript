@@ -139,7 +139,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         }
 
         result.AddRange(visitable.Statements.Accept(This));
-        if (!visitable.HasReturnStatement())
+        if (!visitable.HasReturnStatement)
             result.Add(new Return());
 
         result.Add(new EndBlock(BlockType.Function, blockId: functionInfo.ToString()), functionInfo.End.Name);

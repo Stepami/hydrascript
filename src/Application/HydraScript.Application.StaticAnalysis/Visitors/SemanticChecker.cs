@@ -491,37 +491,26 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 
-        var returnStatements = visitable.ReturnStatements
-            .Select(x => new
-            {
-                Statement = x,
-                Type = x.Accept(This)
-            });
         Type undefined = "undefined";
-        if (symbol.Type.Equals(undefined))
+        HashSet<Type> returnTypes = [];
+        for (var i = 0; i < visitable.ReturnStatements.Count; i++)
         {
-            var returnStatementTypes = returnStatements
-                .GroupBy(x => x.Type)
-                .Select(x => x.Key)
-                .ToList();
-            if (returnStatementTypes.Count > 1)
+            var returnStatementType = visitable.ReturnStatements[i].Accept(This);
+            returnTypes.Add(returnStatementType);
+            if (returnTypes.Count > 1 && symbol.Type.Equals(undefined))
                 throw new CannotDefineType(visitable.Segment);
-            symbol.DefineReturnType(returnStatementTypes.ElementAtOrDefault(0) ?? "void");
-        }
-        else
-        {
-            var wrongReturn = returnStatements
-                .FirstOrDefault(x => !symbol.Type.Equals(x.Type));
-            if (wrongReturn is not null)
+            if (!symbol.Type.Equals(undefined) && !symbol.Type.Equals(returnStatementType))
                 throw new WrongReturnType(
-                    wrongReturn.Statement.Segment,
+                    visitable.ReturnStatements[i].Segment,
                     expected: symbol.Type,
-                    actual: wrongReturn.Type);
+                    actual: returnStatementType);
         }
 
+        if (symbol.Type.Equals(undefined))
+            symbol.DefineReturnType(returnTypes.Single());
+
         Type @void = "void";
-        var hasReturnStatement = visitable.HasReturnStatement();
-        if (!symbol.Type.Equals(@void) && !hasReturnStatement)
+        if (!symbol.Type.Equals(@void) && !visitable.AllCodePathsEndedWithReturn)
             throw new FunctionWithoutReturnStatement(visitable.Segment);
 
         if (symbol.Type is NullType)

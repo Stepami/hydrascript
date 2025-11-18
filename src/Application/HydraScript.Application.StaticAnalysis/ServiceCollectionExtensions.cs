@@ -2,6 +2,7 @@ using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Application.StaticAnalysis.Visitors;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations.AfterTypesAreLoaded;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HydraScript.Application.StaticAnalysis;
@@ -24,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAmbiguousInvocationStorage, AmbiguousInvocationStorage>();
 
         services.AddSingleton<IVisitor<TypeValue, Type>, TypeBuilder>();
+        services.AddSingleton<IVisitor<FunctionDeclaration, ReturnAnalyzerResult>, ReturnAnalyzer>();
 
         services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, SymbolTableInitializer>();
         services.AddSingleton<IVisitor<IAbstractSyntaxTreeNode>, TypeSystemLoader>();
