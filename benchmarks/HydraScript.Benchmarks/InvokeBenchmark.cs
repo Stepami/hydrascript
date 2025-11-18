@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace HydraScript.Benchmarks;
 
-[SimpleJob(RuntimeMoniker.Net80)]
+[SimpleJob(RuntimeMoniker.Net90)]
 [SimpleJob(RuntimeMoniker.Net10_0, baseline: true)]
 [MemoryDiagnoser]
 public class InvokeBenchmark
