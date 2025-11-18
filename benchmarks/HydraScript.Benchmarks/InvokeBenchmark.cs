@@ -13,8 +13,8 @@ using Microsoft.Extensions.Options;
 
 BenchmarkRunner.Run<InvokeBenchmark>();
 
-[SimpleJob(RuntimeMoniker.Net90)]
-[SimpleJob(RuntimeMoniker.NativeAot90)]
+[SimpleJob(RuntimeMoniker.Net10_0)]
+[SimpleJob(RuntimeMoniker.NativeAot10_0)]
 [MemoryDiagnoser]
 public class InvokeBenchmark
 {

@@ -27,7 +27,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
       - name: Setup GitVersion
         uses: gittools/actions/gitversion/setup@v4.2.0
         with:
@@ -59,7 +59,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: 5monkeys/cobertura-action@master
         with:
-          path: ./tests/HydraScript.IntegrationTests/bin/Debug/net9.0/TestResults/coverage.cobertura.xml
+          path: ./tests/HydraScript.IntegrationTests/bin/Debug/net10.0/TestResults/coverage.cobertura.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 80
           fail_below_threshold: true
@@ -71,7 +71,7 @@ jobs:
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.15
         with:
-          reports: './tests/HydraScript.IntegrationTests/bin/Debug/net9.0/TestResults/coverage.cobertura.xml' 
+          reports: './tests/HydraScript.IntegrationTests/bin/Debug/net10.0/TestResults/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
@@ -84,4 +84,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
-          path: ./src/HydraScript/bin/Debug/net9.0
+          path: ./src/HydraScript/bin/Debug/net10.0
