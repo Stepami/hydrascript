@@ -1,20 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Running;
-using HydraScript.Benchmarks;
 using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-[assembly: ExcludeFromCodeCoverage]
+namespace HydraScript.Benchmarks;
 
-BenchmarkRunner.Run<InvokeBenchmark>();
-
-[SimpleJob(RuntimeMoniker.Net90)]
-[SimpleJob(RuntimeMoniker.NativeAot90)]
+[SimpleJob(RuntimeMoniker.Net80)]
+[SimpleJob(RuntimeMoniker.Net10_0, baseline: true)]
 [MemoryDiagnoser]
 public class InvokeBenchmark
 {

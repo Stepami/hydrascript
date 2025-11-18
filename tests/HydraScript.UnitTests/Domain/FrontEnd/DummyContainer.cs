@@ -5,6 +5,13 @@ namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public partial class DummyContainer : IGeneratedRegexContainer
 {
-    [GeneratedRegex(TokenInput.Pattern)]
+#if NET10_0
+    [GeneratedRegex(TokenInput.Pattern, RegexOptions.Compiled)]
     public static partial Regex Regex { get; }
+#else
+    [GeneratedRegex(TokenInput.Pattern, RegexOptions.Compiled)]
+    public static partial Regex GetRegex();
+
+    public static Regex Regex { get; } = GetRegex();
+#endif
 }
