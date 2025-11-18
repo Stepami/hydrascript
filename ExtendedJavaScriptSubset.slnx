@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Benchmarks/">
-    <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" Type="Classic C#" />
+    <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" Type="C#" />
     <File Path="benchmarks\Readme.md" />
   </Folder>
   <Folder Name="/SolutionItems/">
@@ -12,7 +12,6 @@
     <File Path="GitVersion.yml" />
     <File Path="hydrascript-logo.jpg" />
     <File Path="LICENSE" />
-    <File Path="NuGet.config" />
     <File Path="Readme.md" />
     <File Path="SECURITY.md" />
   </Folder>
