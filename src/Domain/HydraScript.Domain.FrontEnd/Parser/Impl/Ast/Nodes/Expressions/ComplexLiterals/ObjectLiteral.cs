@@ -10,6 +10,8 @@ public partial class ObjectLiteral : ComplexLiteral
 
     public IReadOnlyList<Property> Properties => _properties;
 
+    protected override string NullIdPrefix => "obj";
+
     public override string Id
     {
         get

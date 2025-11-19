@@ -17,11 +17,8 @@ public partial class IfStatement : Statement
         Then = then;
         Then.Parent = this;
 
-        if (@else is not null)
-        {
-            Else = @else;
-            Else.Parent = this;
-        }
+        Else = @else;
+        Else?.Parent = this;
 
         Children = Else is not null ? [Test, Then, Else] : [Test, Then];
     }

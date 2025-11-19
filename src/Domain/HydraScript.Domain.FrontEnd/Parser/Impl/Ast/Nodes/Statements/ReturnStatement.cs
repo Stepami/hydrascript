@@ -10,10 +10,7 @@ public partial class ReturnStatement : Statement
     public ReturnStatement(Expression? expression = null)
     {
         Expression = expression;
-        if (Expression is not null)
-        {
-            Expression.Parent = this;
-        }
+        Expression?.Parent = this;
 
         Children = Expression is not null ? [Expression] : [];
     }

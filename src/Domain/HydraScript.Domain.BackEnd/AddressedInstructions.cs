@@ -43,8 +43,7 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
     private void AddWithAddress(IExecutableInstruction instruction, IAddress newAddress)
     {
         var last = _addresses.Last;
-        if (last is not null)
-            last.Value.Next = newAddress;
+        last?.Value.Next = newAddress;
 
         var newNode = _addresses.AddLast(newAddress);
         
@@ -66,10 +65,7 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
         var nodeToRemove = _addressToNode[address];
         
         var prev = nodeToRemove.Previous;
-        if (prev is not null)
-        {
-            prev.Value.Next = nodeToRemove.Next?.Value!;
-        }
+        prev?.Value.Next = nodeToRemove.Next?.Value!;
 
         _addressToNode.Remove(address);
         _instructions.Remove(nodeToRemove);

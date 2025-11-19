@@ -16,7 +16,7 @@ public partial record Token(TokenType Type, Segment Segment, string Value)
         return $"{Type} {Segment}: {displayValue}";
     }
 
-    [GeneratedRegex("\"")]
+    [GeneratedRegex("\"", RegexOptions.Compiled)]
     private static partial Regex Quotes();
 }
 

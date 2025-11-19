@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+        <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
         <PackageReference Include="AutoFixture.Xunit3" />
