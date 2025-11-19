@@ -80,9 +80,9 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         var result = new AddressedInstructions { createObject };
 
         var propInstructions = visitable.AsValueEnumerable()
-            .SelectMany(property => property.Accept(This));
-        foreach (var propInstruction in propInstructions)
-            result.Add(propInstruction);
+            .SelectMany(property => property.Accept(This))
+            .ToList();
+        result.AddRange(propInstructions);
 
         return result;
     }
@@ -162,19 +162,24 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
     public AddressedInstructions Visit(WithExpression visitable)
     {
-        if (visitable is { Expression: PrimaryExpression, ComputedCopiedProperties.Count: 0 })
-            return [];
-
         var objectId = visitable.ObjectLiteral.Id;
         var createObject = new CreateObject(objectId);
 
         var result = new AddressedInstructions { createObject };
 
+        if (visitable is { Expression: ObjectLiteral left, ObjectLiteral: {} right })
+        {
+            result.AddRange(left.AsValueEnumerable().Concat(right)
+                .SelectMany(property => property.Accept(This))
+                .ToList());
+            return result;
+        }
+
         var propInstructions = visitable.ObjectLiteral
             .AsValueEnumerable()
-            .SelectMany(property => property.Accept(This));
-        foreach (var propInstruction in propInstructions)
-            result.Add(propInstruction);
+            .SelectMany(property => property.Accept(This))
+            .ToList();
+        result.AddRange(propInstructions);
 
         if (visitable.ComputedCopiedProperties.Count is 0)
             return result;
