@@ -2,14 +2,12 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexL
 
 public abstract class ComplexLiteral : Expression
 {
-    private string? _nullId;
-
     protected string NullId
     {
         get
         {
-            _nullId ??= $"{GetHashCode()}";
-            return _nullId;
+            field ??= $"{GetHashCode()}";
+            return field;
         }
     }
 
