@@ -1,0 +1,10 @@
+<Project>
+
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="HydraScript.UnitTests"/>
+        <InternalsVisibleTo Include="HydraScript.IntegrationTests"/>
+    </ItemGroup>
+
+</Project>
