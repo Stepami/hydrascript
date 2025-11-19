@@ -50,10 +50,10 @@ jobs:
       - name: Build
         run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Debug -v n
       - name: Unit Tests
-        run: dotnet test -c Debug --no-build -v n -- --filter-trait Category=Unit --ignore-exit-code 8
+        run: dotnet test -c Debug --no-build -v n --filter-trait Category=Unit
       - name: Integration Tests
         run: |
-          dotnet test tests/HydraScript.IntegrationTests -c Debug --no-build -v n -- --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
+          dotnet test --project tests/HydraScript.IntegrationTests -c Debug --no-build -v n --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'

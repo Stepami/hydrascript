@@ -4,8 +4,8 @@
     <PropertyGroup>
         <IsTestProject>true</IsTestProject>
         <OutputType>Exe</OutputType>
-        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
         <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+        <TestingPlatformCommandLineArguments>--ignore-exit-code 8</TestingPlatformCommandLineArguments>
     </PropertyGroup>
 
     <ItemGroup>
