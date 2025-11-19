@@ -6,21 +6,15 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 
 public partial class AsString(IValue value) : Simple(value)
 {
-    private static readonly AsStringSerializationContext AsStringJsonContext = new(new JsonSerializerOptions
-    {
-        WriteIndented = true,
-        ReferenceHandler = ReferenceHandler.IgnoreCycles,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-    });
-    
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        frame[Left!] = JsonSerializer.Serialize(
-            value: Right.right!.Get(frame)!,
-            AsStringJsonContext.Object);
+        var value = Right.right!.Get(frame);
+        frame[Left!] = value is string
+            ? value
+            : JsonSerializer.Serialize(
+                value: Right.right!.Get(frame)!,
+                AsStringSerializationContext.Default.Object);
 
         return Address.Next;
     }
@@ -28,12 +22,27 @@ public partial class AsString(IValue value) : Simple(value)
     protected override string ToStringInternal() =>
         $"{Left} = {Right.right} as string";
 
-    [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization)]
+    [JsonSourceGenerationOptions(
+        GenerationMode = JsonSourceGenerationMode.Serialization,
+        PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
+        ReferenceHandler = JsonKnownReferenceHandler.IgnoreCycles,
+        WriteIndented = true)]
     [JsonSerializable(typeof(List<object>))]
     [JsonSerializable(typeof(Dictionary<string, object>))]
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(double))]
     [JsonSerializable(typeof(string))]
     [JsonSerializable(typeof(int))]
-    private partial class AsStringSerializationContext : JsonSerializerContext;
+    private sealed partial class AsStringSerializationContext : JsonSerializerContext
+    {
+        static AsStringSerializationContext()
+        {
+            Default = new AsStringSerializationContext(
+                new JsonSerializerOptions(Default.GeneratedSerializerOptions!)
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
+        }
+    }
 }

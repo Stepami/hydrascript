@@ -5,7 +5,6 @@ namespace HydraScript.Domain.BackEnd.Impl.Addresses;
 public class HashAddress(int seed) : IAddress
 {
     private readonly int _seed = seed;
-    private string? _name;
 
     private readonly Guid _id = Guid.NewGuid();
 
@@ -15,14 +14,14 @@ public class HashAddress(int seed) : IAddress
     {
         get
         {
-            if (_name is null)
+            if (field is null)
             {
                 var baseName = $"{unchecked((uint)GetHashCode())}{_id:N}";
                 var nameArray = Random.Shared.GetItems(baseName.AsSpan(), 10);
-                _name = ZString.Concat("_t", new string(nameArray));
+                field = ZString.Concat("_t", new string(nameArray));
             }
 
-            return _name;
+            return field;
         }
     }
 

@@ -31,8 +31,7 @@ public partial class AssignmentExpression : Expression
     public override void InitScope(Scope? scope = null)
     {
         base.InitScope(scope);
-        if (DestinationType is not null)
-            DestinationType.Scope = Scope;
+        DestinationType?.Scope = Scope;
     }
 
     protected override string NodeRepresentation() => "=";

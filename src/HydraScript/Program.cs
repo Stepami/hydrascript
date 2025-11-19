@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ZLogger;
 
-return CliParser.Parse(GetCommand(), args).Invoke();
+return CommandLineParser.Parse(GetCommand(), args).Invoke();
 
 [ExcludeFromCodeCoverage]
 internal static partial class Program
