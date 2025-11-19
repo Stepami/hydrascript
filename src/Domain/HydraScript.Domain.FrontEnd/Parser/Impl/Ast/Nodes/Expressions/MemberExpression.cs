@@ -28,10 +28,7 @@ public partial class MemberExpression : LeftHandSideExpression
         AccessExpression? tail) : this(identifierReference)
     {
         AccessChain = accessChain;
-        if (AccessChain is not null)
-        {
-            AccessChain.Parent = this;
-        }
+        AccessChain?.Parent = this;
 
         Tail = tail;
     }
