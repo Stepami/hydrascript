@@ -181,8 +181,8 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
         result.AddRange(visitable.Expression is PrimaryExpression ? [] : visitable.Expression.Accept(This));
 
-        var copyFrom = visitable.Expression is PrimaryExpression primary
-            ? (Name)_valueDtoConverter.Convert(primary.ToValueDto())
+        var copyFrom = visitable.Expression is IdentifierReference objectIdent
+            ? new Name(objectIdent)
             : new Name(result.OfType<Simple>().Last().Left!);
 
         for (var i = 0; i < visitable.ComputedCopiedProperties.Count; i++)
