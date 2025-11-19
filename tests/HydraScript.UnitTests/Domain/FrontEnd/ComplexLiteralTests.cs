@@ -2,12 +2,14 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiter
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
-public class ComplexLiteralTests
+public class ComplexLiteralTests(ITestOutputHelper testOutputHelper)
 {
     [Theory,  MemberData(nameof(StartsWithData))]
     public void Id_DifferentType_StartsWithExpected(ComplexLiteral complexLiteral, string expectedPrefix)
     {
-        complexLiteral.Id.Should().StartWith(expectedPrefix);
+        var complexLiteralId = complexLiteral.Id;
+        testOutputHelper.WriteLine(complexLiteralId);
+        complexLiteralId.Should().StartWith(expectedPrefix);
     }
 
     public static TheoryData<ComplexLiteral, string> StartsWithData =>
