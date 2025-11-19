@@ -46,7 +46,7 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
         last?.Value.Next = newAddress;
 
         var newNode = _addresses.AddLast(newAddress);
-        
+
         _addressToNode.Add(newAddress, newNode);
         _instructions.Add(newNode, instruction);
     }
@@ -59,11 +59,19 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
         }
     }
 
+    public void AddRange(IReadOnlyList<IExecutableInstruction> instructions)
+    {
+        for (var i = 0; i < instructions.Count; i++)
+        {
+            Add(instructions[i]);
+        }
+    }
+
     public void Remove(IExecutableInstruction instruction)
     {
         var address = instruction.Address;
         var nodeToRemove = _addressToNode[address];
-        
+
         var prev = nodeToRemove.Previous;
         prev?.Value.Next = nodeToRemove.Next?.Value!;
 
