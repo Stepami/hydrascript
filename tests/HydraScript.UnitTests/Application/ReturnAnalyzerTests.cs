@@ -29,7 +29,8 @@ public class ReturnAnalyzerTests
                     new IdentifierReference("b"),
                     new ReturnStatement(
                         new Literal(new TypeIdentValue(new IdentifierReference("number")), 1, "segment")))
-            ]));
+            ]),
+            indexOfFirstDefaultArgument: int.MaxValue);
 
         // Act
         var result = new ReturnAnalyzer().Visit(functionDeclaration);

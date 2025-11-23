@@ -7,6 +7,8 @@ public interface IFunctionArgument
     public string Name { get; }
 
     public TypeValue TypeValue { get; }
+
+    public ValueDto Info { get; }
 }
 
 public record NamedArgument(
@@ -15,6 +17,8 @@ public record NamedArgument(
 {
     public override string ToString() =>
         $"{Name}: {TypeValue}";
+
+    public ValueDto Info { get; } = ValueDto.NameDto(Name);
 }
 
 public record DefaultValueArgument : IFunctionArgument

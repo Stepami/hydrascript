@@ -27,7 +27,8 @@ public class FunctionWithUndefinedReturnStorageTests
             name: new IdentifierReference(FunctionName),
             returnTypeValue: Substitute.For<TypeValue>(),
             arguments: [],
-            new BlockStatement([]));
+            new BlockStatement([]),
+            indexOfFirstDefaultArgument: int.MaxValue);
 
         storage.Save(symbol, decl);
 
@@ -44,26 +45,30 @@ public class FunctionWithUndefinedReturnStorageTests
                 name: new IdentifierReference(FunctionName + "1"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
-                new BlockStatement([])),
+                new BlockStatement([]),
+                indexOfFirstDefaultArgument: int.MaxValue),
 
             new(
                 name: new IdentifierReference(FunctionName + "2"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
-                new BlockStatement([])),
+                new BlockStatement([]),
+                indexOfFirstDefaultArgument: int.MaxValue),
 
             new(
                 name: new IdentifierReference(FunctionName + "3"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
-                new BlockStatement([])),
+                new BlockStatement([]),
+                indexOfFirstDefaultArgument: int.MaxValue),
 
             new(
                 name: new IdentifierReference(FunctionName + "4"),
                 returnTypeValue: Substitute.For<TypeValue>(),
                 arguments: [],
-                new BlockStatement([]))];
-        
+                new BlockStatement([]),
+                indexOfFirstDefaultArgument: int.MaxValue)];
+
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
         var removable = new FunctionSymbol(

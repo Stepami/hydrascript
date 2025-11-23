@@ -7,7 +7,6 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpre
 using HydraScript.Domain.IR.Impl.Symbols;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using HydraScript.Domain.IR.Types;
-using ZLinq;
 
 namespace HydraScript.Application.StaticAnalysis.Visitors;
 
@@ -79,16 +78,16 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         visitable.AllCodePathsEndedWithReturn = returnAnalyzerResult.CodePathEndedWithReturn;
 
         var parentTable = _symbolTables[visitable.Parent.Scope];
-        var indexOfFirstDefaultArgument = visitable.Arguments.AsValueEnumerable()
-            .Select((x, i) => new { Argument = x, Index = i })
-            .FirstOrDefault(pair => pair.Argument is DefaultValueArgument)?.Index ?? -1;
 
-        var parameters = visitable.Arguments.AsValueEnumerable()
-            .Select(x =>
-                new VariableSymbol(
-                    x.Name,
-                    x.TypeValue.Accept(_typeBuilder))).ToList();
-        var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters.Select(x => x.Type));
+        var parameters = new List<Type>();
+        for (var i = 0; i < visitable.Arguments.Count; i++)
+        {
+            parameters.Add(visitable.Arguments[i].TypeValue.Accept(_typeBuilder));
+            var arg = new VariableSymbol(visitable.Arguments[i].Name, parameters[i]);
+            arg.Initialize();
+            _symbolTables[visitable.Scope].AddSymbol(arg);
+        }
+        var functionSymbolId = new FunctionSymbolId(visitable.Name, parameters);
         _ambiguousInvocations.Clear(functionSymbolId);
         visitable.ComputedFunctionAddress = functionSymbolId.ToString();
         var functionSymbol = new FunctionSymbol(
@@ -99,18 +98,8 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         if (functionSymbolId.Equals(parentTable.FindSymbol(functionSymbolId)?.Id))
             throw new OverloadAlreadyExists(visitable.Name, functionSymbolId);
 
-        for (var i = 0; i < parameters.Count; i++)
-        {
-            var arg = parameters[i];
-            arg.Initialize();
-            _symbolTables[visitable.Scope].AddSymbol(arg);
-        }
-
-        var isMethod =
-            parameters is [{ Type: ObjectType }, ..] &&
-            visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..];
-        if (isMethod)
-            _methodStorage.BindMethod((parameters[0].Type as ObjectType)!, functionSymbol, functionSymbolId);
+        if (parameters is [ObjectType methodOwner, ..] && visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
+            _methodStorage.BindMethod(methodOwner, functionSymbol, functionSymbolId);
 
         Type undefined = "undefined";
         if (functionSymbol.Type.Equals(undefined))
@@ -122,23 +111,22 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         }
 
         parentTable.AddSymbol(functionSymbol);
-        for (var i = indexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
+        for (var i = visitable.IndexOfFirstDefaultArgument; i < visitable.Arguments.Count; i++)
         {
-            if (i is -1) break;
-            if (visitable.Arguments[i] is not DefaultValueArgument)
+            if (visitable.Arguments[i].Info.Type is ValueDtoType.Name)
                 throw new NamedArgumentAfterDefaultValueArgument(
                     visitable.Segment,
                     function: visitable.Name,
                     visitable.Arguments[i]);
 
-            var overload = new FunctionSymbolId(visitable.Name, parameters[..i].Select(x => x.Type));
+            var overload = new FunctionSymbolId(visitable.Name, parameters[..i]);
             var existing = parentTable.FindSymbol(overload);
             var functionToAdd = existing is not null && existing < functionSymbol
                 ? existing
                 : functionSymbol;
             parentTable.AddSymbol(functionToAdd, overload);
-            if (isMethod)
-                _methodStorage.BindMethod((parameters[0].Type as ObjectType)!, functionToAdd, overload);
+            if (parameters is [ObjectType overloadOwner, ..] && visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
+                _methodStorage.BindMethod(overloadOwner, functionToAdd, overload);
 
             if (existing is not null && !existing.Id.Equals(overload))
             {
