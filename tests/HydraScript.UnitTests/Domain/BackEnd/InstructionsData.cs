@@ -98,7 +98,7 @@ public class InstructionsData : IEnumerable<object[]>
         ];
         yield return
         [
-            new PopParameter("param"),
+            new PopParameter("param", defaultValue: null),
             "PopParameter param"
         ];
         yield return

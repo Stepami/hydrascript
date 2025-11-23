@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
-public class PopParameter(string parameter, object? defaultValue = null) : Instruction
+public class PopParameter(string parameter, object? defaultValue) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {

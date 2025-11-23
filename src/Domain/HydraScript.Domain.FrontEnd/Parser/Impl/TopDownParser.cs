@@ -340,6 +340,7 @@ public class TopDownParser : IParser
 
         Expect("LeftParen");
         var args = new List<IFunctionArgument>();
+        var indexOfFirstDefaultArgument = int.MaxValue;
         while (CurrentIs("Ident"))
         {
             var arg = Expect("Ident").Value;
@@ -353,6 +354,9 @@ public class TopDownParser : IParser
             {
                 Expect("Assign");
                 var value = Literal();
+                indexOfFirstDefaultArgument = args.Count < indexOfFirstDefaultArgument
+                    ? args.Count
+                    : indexOfFirstDefaultArgument;
                 args.Add(new DefaultValueArgument(arg, value));
             }
 
@@ -373,7 +377,7 @@ public class TopDownParser : IParser
         }
 
         var name = new IdentifierReference(ident.Value) { Segment = ident.Segment };
-        return new FunctionDeclaration(name, returnType, args, BlockStatement())
+        return new FunctionDeclaration(name, returnType, args, BlockStatement(), indexOfFirstDefaultArgument)
             { Segment = ident.Segment };
     }
 

@@ -20,7 +20,8 @@ public class AstNodeTests
                 TypeId: new IdentifierReference(
                     name: Guid.NewGuid().ToString())),
             arguments: [],
-            new BlockStatement(stmtItemList));
+            new BlockStatement(stmtItemList),
+            indexOfFirstDefaultArgument: int.MaxValue);
 
         _ = new ScriptBody([func]);
 

@@ -466,9 +466,9 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             .Zip(parameters).Zip(functionSymbol.Parameters.AsValueEnumerable().Skip(methodCall ? 1 : 0))
             .ToList().ForEach(pair =>
             {
-                var ((expr, actualType), expected) = pair;
-                if (!actualType.Equals(expected.Type))
-                    throw new WrongTypeOfArgument(expr.Segment, expected.Type, actualType);
+                var ((expr, actualType), expectedType) = pair;
+                if (!actualType.Equals(expectedType))
+                    throw new WrongTypeOfArgument(expr.Segment, expectedType, actualType);
             });
 
         Type undefined = "undefined";
@@ -486,7 +486,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(FunctionDeclaration visitable)
     {
-        var parameters = visitable.Arguments.Select(x => x.TypeValue.Accept(_typeBuilder));
+        var parameters = visitable.Arguments.Select(x => x.TypeValue.Accept(_typeBuilder)).ToList();
         var symbol = _symbolTables[visitable.Scope].FindSymbol(new FunctionSymbolId(visitable.Name, parameters))!;
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
