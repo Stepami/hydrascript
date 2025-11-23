@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Lexer;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +13,10 @@ internal class DumpingLexer(
     [ExcludeFromCodeCoverage]
     public IStructure Structure => lexer.Structure;
 
-    public List<Token> GetTokens(string text)
+    public IEnumerable<Token> GetTokens(string text)
     {
-        var tokens = lexer.GetTokens(text);
-        dumpingService.Dump(lexer.ToString(), "tokens");
+        var tokens = lexer.GetTokens(text).ToList();
+        dumpingService.Dump(ZString.Join('\n', tokens), "tokens");
         return tokens;
     }
 }

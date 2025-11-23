@@ -1,28 +1,16 @@
-using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using Cysharp.Text;
 
 namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
-public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer computer) : ILexer, IEnumerable<Token>
+public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer computer) : ILexer
 {
-    private IReadOnlyList<int> _lines = [];
-    private string _text = "";
-
     public IStructure Structure { get; } = structure;
 
-    public List<Token> GetTokens(string text)
+    public IEnumerable<Token> GetTokens(string text)
     {
-        _text = text;
-        _lines = computer.GetLines(_text);
+        var lines = computer.GetLines(text);
 
-        return this.ToList();
-    }
-
-    public IEnumerator<Token> GetEnumerator()
-    {
-        foreach (Match match in Structure.Regex.Matches(_text))
+        foreach (Match match in Structure.Regex.Matches(text))
         {
             for (var i = 0; i < Structure.Count; i++)
             {
@@ -33,8 +21,8 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
 
                 var value = group.Value;
                 var segment = new Segment(
-                    computer.GetCoordinates(group.Index, _lines),
-                    computer.GetCoordinates(absoluteIndex: group.Index + group.Length, _lines));
+                    computer.GetCoordinates(group.Index, lines),
+                    computer.GetCoordinates(absoluteIndex: group.Index + group.Length, lines));
                 var token = new Token(type, segment, value);
 
                 if (type.Error()) throw new LexerException(token);
@@ -45,9 +33,4 @@ public class RegexLexer(IStructure structure, ITextCoordinateSystemComputer comp
 
         yield return new EndToken();
     }
-
-    [ExcludeFromCodeCoverage]
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    public override string ToString() => ZString.Join<Token>('\n', this);
 }

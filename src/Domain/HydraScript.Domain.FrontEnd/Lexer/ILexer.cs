@@ -4,5 +4,5 @@ public interface ILexer
 {
     public IStructure Structure { get; }
 
-    public List<Token> GetTokens(string text);
+    public IEnumerable<Token> GetTokens(string text);
 }

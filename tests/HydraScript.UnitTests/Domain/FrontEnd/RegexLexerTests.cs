@@ -20,15 +20,15 @@ public class RegexLexerTests(ITestOutputHelper output)
     [Theory]
     [ClassData(typeof(LexerFailData))]
     public void LexerThrowsErrorTest(string text) =>
-        Assert.Throws<LexerException>(() => _regexLexer.GetTokens(text));
+        Assert.Throws<LexerException>(() => _regexLexer.GetTokens(text).ToList());
 
     [Fact]
     public void LexerToStringCorrectTest()
     {
         const string text = "8";
-        var tokens = _regexLexer.GetTokens(text);
-        Assert.Contains("EOP", _regexLexer.ToString());
-        Assert.Equal("IntegerLiteral (1, 1)-(1, 2): 8", tokens.First().ToString());
+        var tokens = _regexLexer.GetTokens(text).ToList();
+        Assert.Contains("EOP", tokens[^1].ToString());
+        Assert.Equal("IntegerLiteral (1, 1)-(1, 2): 8", tokens[0].ToString());
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class RegexLexerTests(ITestOutputHelper output)
         structure.Count.Returns(tokenTypes.Count);
         structure[Arg.Any<int>()].Returns(callInfo => tokenTypes[callInfo.Arg<int>()]);
 
-        var tokens = lexer.GetTokens(input.ToString());
+        var tokens = lexer.GetTokens(input.ToString()).ToList();
         for (var i = 0; i < input.Count; i++)
         {
             output.WriteLine(tokens[i].ToString());
