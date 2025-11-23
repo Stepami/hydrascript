@@ -14,17 +14,14 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Statements;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl;
 
-public class TopDownParser : IParser
+public class TopDownParser(ILexer lexer) : IParser
 {
-    private TokensStream _tokens = new List<Token>();
-    private readonly ILexer _lexer;
-
-    public TopDownParser(ILexer lexer) => 
-        _lexer = lexer;
+    private IEnumerator<Token> _tokens = Enumerable.Empty<Token>().GetEnumerator();
 
     public IAbstractSyntaxTree Parse(string text)
     {
-        _tokens = _lexer.GetTokens(text);
+        _tokens = lexer.GetTokens(text).GetEnumerator();
+        _tokens.MoveNext();
 
         var root = Script();
         Expect(Eop.Tag);
@@ -45,7 +42,7 @@ public class TopDownParser : IParser
     }
 
     private bool CurrentIs(string tag) =>
-        _tokens.Current.Type == _lexer.Structure.FindByTag(tag);
+        _tokens.Current.Type == lexer.Structure.FindByTag(tag);
 
     private bool CurrentIsLiteral() =>
         CurrentIs("NullLiteral") ||
