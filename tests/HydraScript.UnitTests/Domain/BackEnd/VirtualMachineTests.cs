@@ -61,7 +61,7 @@ public class VirtualMachineTests
         {
             new Goto(factorial.End),
             { new BeginBlock(BlockType.Function, blockId: factorial.ToString()), factorial.Start.Name },
-            new PopParameter("n"),
+            new PopParameter("n", defaultValue: null),
             new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),

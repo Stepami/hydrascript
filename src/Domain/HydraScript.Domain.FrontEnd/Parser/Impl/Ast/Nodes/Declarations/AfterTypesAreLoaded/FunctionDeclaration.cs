@@ -14,6 +14,7 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     public IdentifierReference Name { get; }
     public TypeValue ReturnTypeValue { get; }
     public IReadOnlyList<IFunctionArgument> Arguments => _arguments;
+    public int IndexOfFirstDefaultArgument { get; }
 
     public BlockStatement Statements { get; }
     public bool IsEmpty => Statements.Count == 0;
@@ -28,11 +29,13 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
         IdentifierReference name,
         TypeValue returnTypeValue,
         List<IFunctionArgument> arguments,
-        BlockStatement blockStatement)
+        BlockStatement blockStatement,
+        int indexOfFirstDefaultArgument)
     {
         Name = name;
         ReturnTypeValue = returnTypeValue;
         _arguments = arguments;
+        IndexOfFirstDefaultArgument = indexOfFirstDefaultArgument;
 
         Statements = blockStatement;
         Statements.Parent = this;
