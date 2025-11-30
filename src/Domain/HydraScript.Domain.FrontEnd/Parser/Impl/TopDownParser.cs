@@ -59,6 +59,18 @@ public class TopDownParser(ILexer lexer) : IParser
         CurrentIs("Operator") &&
         _tokens.Current.Value == @operator;
 
+    private bool CurrentIsUnaryOperator() =>
+        CurrentIsOperator("-") || CurrentIsOperator("!") ||
+        CurrentIsOperator("~") || CurrentIsOperator("$");
+
+    private bool CurrentIsDeclaration() =>
+        CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
+        CurrentIsKeyword("const") || CurrentIsKeyword("type");
+
+    private bool CurrentIsExpression() =>
+        CurrentIs("Ident") || CurrentIsLiteral() || CurrentIsUnaryOperator() ||
+        CurrentIs("LeftParen") || CurrentIs("LeftCurl") || CurrentIs("LeftBracket");
+
     /// <summary>
     /// Script -> StatementList
     /// </summary>
@@ -71,14 +83,9 @@ public class TopDownParser(ILexer lexer) : IParser
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
-        while (
-            CurrentIsKeyword("function") || CurrentIsKeyword("let") || CurrentIsKeyword("const") ||
-            CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") ||
-            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
-            CurrentIs("LeftCurl") || CurrentIsKeyword("return") || CurrentIsKeyword("break") ||
-            CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while") ||
-            CurrentIsKeyword("type") || CurrentIs("Print")
-        )
+        while (CurrentIsDeclaration() || CurrentIsExpression() || CurrentIs("Print") ||
+               CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
+               CurrentIsKeyword("if") || CurrentIsKeyword("while"))
         {
             statementList.Add(StatementListItem());
         }
@@ -91,8 +98,7 @@ public class TopDownParser(ILexer lexer) : IParser
     /// </summary>
     private StatementListItem StatementListItem()
     {
-        if (CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
-            CurrentIsKeyword("const") || CurrentIsKeyword("type"))
+        if (CurrentIsDeclaration())
         {
             return Declaration();
         }
@@ -113,8 +119,7 @@ public class TopDownParser(ILexer lexer) : IParser
     private Statement Statement()
     {
         if (CurrentIs("Ident") || CurrentIsLiteral() ||
-            CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-            CurrentIsOperator("!") || CurrentIsOperator("~"))
+            CurrentIs("LeftParen") || CurrentIsUnaryOperator())
             return ExpressionStatement();
 
         if (CurrentIs("LeftCurl"))
@@ -173,9 +178,7 @@ public class TopDownParser(ILexer lexer) : IParser
     private ReturnStatement ReturnStatement()
     {
         var ret = Expect("Keyword", "return");
-        if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen")||
-            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
-            CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        if (CurrentIsExpression())
         {
             return new ReturnStatement(Expression()) { Segment = ret.Segment };
         }
@@ -472,10 +475,7 @@ public class TopDownParser(ILexer lexer) : IParser
         {
             Expect("LeftParen");
             var expressions = new List<Expression>();
-            if (CurrentIs("Ident") || CurrentIsLiteral() ||
-                CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-                CurrentIsOperator("!") || CurrentIsOperator("~") ||
-                CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+            if (CurrentIsExpression())
             {
                 expressions.Add(Expression());
             }
@@ -711,11 +711,11 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
+    /// UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~'|'$') UnaryExpression
     /// </summary>
     private Expression UnaryExpression()
     {
-        if (CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~"))
+        if (CurrentIsUnaryOperator())
         {
             var op = Expect("Operator");
             return new UnaryExpression(op.Value, UnaryExpression())
@@ -864,10 +864,7 @@ public class TopDownParser(ILexer lexer) : IParser
     {
         var lb = Expect("LeftBracket").Segment;
         var expressions = new List<Expression>();
-        while (CurrentIs("Ident") || CurrentIsLiteral() ||
-               CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-               CurrentIsOperator("!") || CurrentIsOperator("~") ||
-               CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        while (CurrentIsExpression())
         {
             expressions.Add(Expression());
             if (!CurrentIs("RightBracket"))
