@@ -353,7 +353,7 @@ public class TopDownParser(ILexer lexer) : IParser
             else if (CurrentIs("Assign"))
             {
                 Expect("Assign");
-                var value = Literal();
+                var value = LiteralNode();
                 indexOfFirstDefaultArgument = args.Count < indexOfFirstDefaultArgument
                     ? args.Count
                     : indexOfFirstDefaultArgument;
@@ -711,11 +711,11 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~'|'$') UnaryExpression
+    /// UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
     /// </summary>
     private Expression UnaryExpression()
     {
-        if (CurrentIsUnaryOperator())
+        if (CurrentIsUnaryOperator(expectEnv: false))
         {
             var op = Expect("Operator");
             return new UnaryExpression(op.Value, UnaryExpression())
@@ -761,7 +761,7 @@ public class TopDownParser(ILexer lexer) : IParser
 
         if (CurrentIsLiteral())
         {
-            return Literal();
+            return LiteralNode();
         }
 
         if (CurrentIs("LeftCurl"))
@@ -784,16 +784,13 @@ public class TopDownParser(ILexer lexer) : IParser
     ///            "StringLiteral"
     ///            "BooleanLiteral"
     /// </summary>
-    private Literal Literal()
+    private Literal LiteralNode()
     {
         var segment = _tokens.Current.Segment;
         if (CurrentIs("StringLiteral"))
         {
             var str = Expect("StringLiteral");
-            return new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "string")
-                        {Segment = str.Segment}),
+            return Literal.String(
                 value: Regex.Unescape(str.Value.Trim('"')),
                 segment,
                 label: str.Value
@@ -801,35 +798,21 @@ public class TopDownParser(ILexer lexer) : IParser
                     .Replace(@"""", @"\"""));
         }
 
+        if (CurrentIs("NullLiteral"))
+        {
+            Expect("NullLiteral");
+            return Literal.Null(segment);
+        }
+
         return _tokens.Current.Type.Tag switch
         {
-            "NullLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "null")
-                        { Segment = _tokens.Current.Segment }),
-                Expect("NullLiteral").Value == "null" ? null : string.Empty,
-                segment,
-                label: "null"),
-            "IntegerLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "number")
-                        { Segment = _tokens.Current.Segment }),
-                value: double.Parse(Expect("IntegerLiteral").Value),
-                segment),
-            "FloatLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "number")
-                        { Segment = _tokens.Current.Segment }),
+            "IntegerLiteral" => Literal.Number(value: double.Parse(Expect("IntegerLiteral").Value), segment),
+            "FloatLiteral" => Literal.Number(
                 value: double.Parse(
                     Expect("FloatLiteral").Value,
                     CultureInfo.InvariantCulture),
                 segment),
-            "BooleanLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "boolean")
-                        { Segment = _tokens.Current.Segment }),
-                value: bool.Parse(Expect("BooleanLiteral").Value),
-                segment),
+            "BooleanLiteral" => Literal.Boolean(value: bool.Parse(Expect("BooleanLiteral").Value), segment),
             _ => throw new ParserException("There are no more supported literals")
         };
     }

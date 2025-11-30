@@ -27,8 +27,7 @@ public class ReturnAnalyzerTests
             new BlockStatement([
                 new IfStatement(
                     new IdentifierReference("b"),
-                    new ReturnStatement(
-                        new Literal(new TypeIdentValue(new IdentifierReference("number")), 1, "segment")))
+                    new ReturnStatement(Literal.Number(1)))
             ]),
             indexOfFirstDefaultArgument: int.MaxValue);
 
