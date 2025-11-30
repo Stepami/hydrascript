@@ -11,7 +11,7 @@ public class TopDownParserTests
 
     [Theory]
     [ClassData(typeof(ParserSuccessTestData))]
-    public void ParserDoesNotThrowTest(string text)
+    public void Parse_Always_DoesNotThrow(string text)
     {
         var ex = Record.Exception(() => _parser.Parse(text));
         Assert.Null(ex);
