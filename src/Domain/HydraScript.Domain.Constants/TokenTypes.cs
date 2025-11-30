@@ -26,7 +26,7 @@ public static class TokenTypes
 
             yield return new(
                 Tag: "Ident",
-                Pattern: "[a-zA-Z][a-zA-Z0-9]*",
+                Pattern: "[a-zA-Z][a-zA-Z0-9_]*",
                 Priority: 50);
 
             yield return new(
@@ -69,7 +69,7 @@ public static class TokenTypes
 
             yield return new(
                 Tag: "Operator",
-                Pattern: "[+]{1,2}|[-]|[*]|[/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}|[~]|[:]{2}",
+                Pattern: "[+]{1,2}|[-]|[*]|[/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}|[~]|[:]{2}|[$]",
                 Priority: 13);
 
             yield return new(

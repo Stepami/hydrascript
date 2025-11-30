@@ -41,7 +41,7 @@ EqExpression -> RelExpression (('=='|'!=') RelExpression)*
 RelExpression -> AddExpression (('<'|'>'|'<='|'>=') AddExpression)*
 AddExpression -> MulExpression (('+'|'-') MulExpression)*
 MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
-UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
+UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~'|'$') UnaryExpression
 
 PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
 Literal -> "NullLiteral"
