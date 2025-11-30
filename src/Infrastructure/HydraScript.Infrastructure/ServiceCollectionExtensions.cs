@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
-        services.AddSingleton<IEnvironmentVariableProvider, SystemEnvironmentVariableProvider>();
+        services.AddSingleton(SystemEnvironmentVariableProvider.Instance);
         services.AddSingleton<IOutputWriter, LoggingWriter>();
         services.AddSingleton<IVirtualMachine, VirtualMachine>();
 

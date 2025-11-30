@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Serilog;
@@ -15,6 +16,7 @@ public class TestHostFixture : IDisposable
         string FileName = ScriptFileName + ".js",
         bool Dump = false,
         bool MockFileSystem = true,
+        bool MockEnv = true,
         string InMemoryScript = "");
 
     public class Runner(ServiceProvider serviceProvider, Executor executor): IDisposable
@@ -54,7 +56,13 @@ public class TestHostFixture : IDisposable
         if (options.MockFileSystem)
         {
             var fileSystem = Substitute.For<IFileSystem>();
-            services.AddSingleton(fileSystem);
+            services.Replace(ServiceDescriptor.Singleton(fileSystem));
+        }
+
+        if (options.MockEnv)
+        {
+            var env = Substitute.For<IEnvironmentVariableProvider>();
+            services.Replace(ServiceDescriptor.Singleton(env));
         }
 
         if (!string.IsNullOrWhiteSpace(options.InMemoryScript))
