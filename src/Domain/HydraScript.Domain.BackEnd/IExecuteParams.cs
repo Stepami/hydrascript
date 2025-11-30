@@ -6,4 +6,5 @@ public interface IExecuteParams
     public Stack<Frame> Frames { get; }
     public Queue<object?> Arguments { get; }
     public IOutputWriter Writer { get; }
+    public IEnvironmentVariableProvider EnvironmentVariableProvider { get; }
 }
