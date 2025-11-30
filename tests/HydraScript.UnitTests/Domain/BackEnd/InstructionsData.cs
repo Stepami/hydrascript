@@ -1,4 +1,3 @@
-using System.Collections;
 using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
@@ -10,123 +9,81 @@ using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.UnitTests.Domain.BackEnd;
 
-public class InstructionsData : IEnumerable<object[]>
+public class InstructionsData : TheoryData<IExecutableInstruction, string>
 {
-    public IEnumerator<object[]> GetEnumerator()
+    public InstructionsData()
     {
-        yield return
-        [
+        Add(
             new AsString(new Name("num"))
             {
                 Left = "str"
             },
-            "str = num as string"
-        ];
-        yield return
-        [
+            "str = num as string");
+        Add(
             new BeginBlock(BlockType.Function, blockId: "func")
             {
                 Address = new Label("Start_func")
             },
-            "Start_func:\n\tBeginFunction func"
-        ];
-        yield return
-        [
+            "Start_func:\n\tBeginFunction func");
+        Add(
             new CallFunction(new FunctionInfo("func"), false),
-            "Call func"
-        ];
-        yield return
-        [
+            "Call func");
+        Add(
             new CallFunction(new FunctionInfo("func"), true)
             {
                 Left = "ret"
             },
-            "ret = Call func"
-        ];
-        yield return
-        [
+            "ret = Call func");
+        Add(
             new CreateArray("arr", 5),
-            "array arr = [5]"
-        ];
-        yield return
-        [
+            "array arr = [5]");
+        Add(
             new CreateObject("obj"),
-            "object obj = {}"
-        ];
-        yield return
-        [
+            "object obj = {}");
+        Add(
             new DotAssignment("obj", new Constant("prop"), new Constant(3)),
-            "obj.prop = 3"
-        ];
-        yield return
-        [
+            "obj.prop = 3");
+        Add(
             new EndBlock(BlockType.Function, blockId: "func")
             {
                 Address = new Label("End_func")
             },
-            "End_func:\n\tEndFunction func"
-        ];
-        yield return
-        [
+            "End_func:\n\tEndFunction func");
+        Add(
             new Goto(new Label("10")),
-            "Goto 10"
-        ];
-        yield return
-        [
+            "Goto 10");
+        Add(
             new Halt(),
-            "End"
-        ];
-        yield return
-        [
+            "End");
+        Add(
             new IfNotGoto(new Name("test"), new Label("17")),
-            "IfNot test Goto 17"
-        ];
-        yield return
-        [
+            "IfNot test Goto 17");
+        Add(
             new IndexAssignment("arr", new Constant(1), new Constant(1)),
-            "arr[1] = 1"
-        ];
-        yield return
-        [
+            "arr[1] = 1");
+        Add(
             new Print(new Name("str")),
-            "Print str"
-        ];
-        yield return
-        [
+            "Print str");
+        Add(
             new PushParameter(new Name("value")),
-            "PushParameter value"
-        ];
-        yield return
-        [
+            "PushParameter value");
+        Add(
             new PopParameter("param", defaultValue: null),
-            "PopParameter param"
-        ];
-        yield return
-        [
+            "PopParameter param");
+        Add(
             new RemoveFromArray("arr", new Constant(0)),
-            "RemoveFrom arr at 0"
-        ];
-        yield return
-        [
+            "RemoveFrom arr at 0");
+        Add(
             new Return(),
-            "Return"
-        ];
-        yield return
-        [
+            "Return");
+        Add(
             new Return(new Name("result")),
-            "Return result"
-        ];
-        yield return
-        [
+            "Return result");
+        Add(
             new Simple("a", (new Name("b"), new Name("c")), "+"),
-            "a = b + c"
-        ];
-        yield return
-        [
+            "a = b + c");
+        Add(
             new Simple("b", (null, new Name("c")), "-"),
-            "b = -c"
-        ];
+            "b = -c");
     }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -39,5 +39,5 @@ public record PropertyTypeValue(
 public partial record ObjectTypeValue(List<PropertyTypeValue> Properties) : TypeValue
 {
     public override string ToString() =>
-        $"{{{ZString.Join(';', Properties)}}}";
+        ZString.Concat('{', ZString.Join(';', Properties), '}');
 }

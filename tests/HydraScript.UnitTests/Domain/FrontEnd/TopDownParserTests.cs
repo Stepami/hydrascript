@@ -13,11 +13,7 @@ public class TopDownParserTests
     [ClassData(typeof(ParserSuccessTestData))]
     public void ParserDoesNotThrowTest(string text)
     {
-        var ex = Record.Exception(() =>
-        {
-            // ReSharper disable once UnusedVariable
-            var ast = _parser.Parse(text);
-        });
+        var ex = Record.Exception(() => _parser.Parse(text));
         Assert.Null(ex);
     }
 }
