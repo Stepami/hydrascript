@@ -59,9 +59,9 @@ public class TopDownParser(ILexer lexer) : IParser
         CurrentIs("Operator") &&
         _tokens.Current.Value == @operator;
 
-    private bool CurrentIsUnaryOperator() =>
+    private bool CurrentIsUnaryOperator(bool expectEnv = true) =>
         CurrentIsOperator("-") || CurrentIsOperator("!") ||
-        CurrentIsOperator("~") || CurrentIsOperator("$");
+        CurrentIsOperator("~") || (expectEnv && CurrentIsOperator("$"));
 
     private bool CurrentIsDeclaration() =>
         CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
@@ -736,7 +736,8 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+    /// PrimaryExpression -> "Ident" | EnvVar | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+    /// EnvVar -> '$' "Ident"
     /// </summary>
     private Expression PrimaryExpression()
     {
@@ -751,12 +752,20 @@ public class TopDownParser(ILexer lexer) : IParser
         if (CurrentIs("Ident"))
         {
             var ident = Expect("Ident");
-            var id = new IdentifierReference(ident.Value)
+            return new IdentifierReference(ident.Value)
             {
                 Segment = ident.Segment
             };
+        }
 
-            return id;
+        if (CurrentIsOperator("$"))
+        {
+            var dollar =  Expect("Operator");
+            var ident = Expect("Ident");
+            return new EnvVarReference(ident.Value)
+            {
+                Segment = dollar.Segment + ident.Segment
+            };
         }
 
         if (CurrentIsLiteral())
