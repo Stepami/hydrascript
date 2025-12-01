@@ -5,15 +5,23 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryE
 [AutoVisitable<IAbstractSyntaxTreeNode>]
 public partial class ImplicitLiteral(TypeValue type) : AbstractLiteral(type)
 {
-    public object? ComputedDefaultValue { private get; set; }
+    private readonly object? _defaultValue = type switch
+    {
+        TypeIdentValue { TypeId.Name: "string" } => string.Empty,
+        TypeIdentValue { TypeId.Name: "number" } => 0,
+        TypeIdentValue { TypeId.Name: "boolean" } => false,
+        TypeIdentValue { TypeId.Name: "null" } or NullableTypeValue => null,
+        ArrayTypeValue => new List<object>(),
+        _ => new()
+    };
 
     protected override string NodeRepresentation() =>
         $"Implicit {Type}";
 
     public override ValueDto ToValueDto() =>
         ValueDto.ConstantDto(
-            ComputedDefaultValue,
-            ComputedDefaultValue is null
+            _defaultValue,
+            _defaultValue is null
                 ? "null"
-                : ComputedDefaultValue.ToString()!);
+                : _defaultValue.ToString()!);
 }

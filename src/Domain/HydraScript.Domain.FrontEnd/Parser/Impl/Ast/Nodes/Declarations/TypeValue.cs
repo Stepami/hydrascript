@@ -12,6 +12,12 @@ public abstract record TypeValue : IVisitable<TypeValue>
 [AutoVisitable<TypeValue>]
 public partial record TypeIdentValue(IdentifierReference TypeId) : TypeValue
 {
+    public static TypeValue String => new TypeIdentValue(new IdentifierReference("string"));
+    public static TypeValue Number => new TypeIdentValue(new IdentifierReference("number"));
+    public static TypeValue Boolean => new TypeIdentValue(new IdentifierReference("boolean"));
+    public static TypeValue Null => new TypeIdentValue(new IdentifierReference("null"));
+    public static TypeValue Undefined => new TypeIdentValue(new IdentifierReference("undefined"));
+
     public override string ToString() => TypeId;
 }
 

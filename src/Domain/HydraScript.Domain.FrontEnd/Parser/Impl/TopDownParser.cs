@@ -412,9 +412,7 @@ public class TopDownParser(ILexer lexer) : IParser
         var identRef = new IdentifierReference(ident.Value) { Segment = ident.Segment };
         var assignment = new AssignmentExpression(
                 new MemberExpression(identRef),
-                new ImplicitLiteral(
-                    new TypeIdentValue(
-                        new IdentifierReference("undefined"))))
+                new ImplicitLiteral(TypeIdentValue.Undefined))
             { Segment = ident.Segment };
 
         if (CurrentIs("Assign"))

@@ -22,8 +22,8 @@ public class ReturnAnalyzerTests
         // Arrange
         var functionDeclaration = new FunctionDeclaration(
             new IdentifierReference("f"),
-            new TypeIdentValue(new IdentifierReference("undefined")),
-            [new NamedArgument("b", new TypeIdentValue(new IdentifierReference("boolean")))],
+            TypeIdentValue.Undefined,
+            [new NamedArgument("b", TypeIdentValue.Boolean)],
             new BlockStatement([
                 new IfStatement(
                     new IdentifierReference("b"),
