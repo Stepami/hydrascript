@@ -1,4 +1,5 @@
 using HydraScript.Domain.FrontEnd.Lexer.Impl;
+using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
@@ -15,5 +16,13 @@ public class TopDownParserTests
     {
         var ex = Record.Exception(() => _parser.Parse(text));
         Assert.Null(ex);
+    }
+
+    [Theory]
+    [ClassData(typeof(ParserExpectedAstTestData))]
+    public void Parse_Always_Expected(string text, Action<IAbstractSyntaxTree> assert)
+    {
+        var actual = _parser.Parse(text);
+        assert(actual);
     }
 }

@@ -1,3 +1,7 @@
+using HydraScript.Domain.FrontEnd.Parser;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
 public sealed class ParserSuccessTestData : TheoryData<string>
@@ -17,5 +21,31 @@ public sealed class ParserSuccessTestData : TheoryData<string>
         Add("return {x:1;y:2;}");
         Add("while (~arr != 0) { arr::0 continue }");
         Add("if (!(true || (false && false))) { break } else { break }");
+    }
+}
+
+public sealed class ParserExpectedAstTestData : TheoryData<string, Action<IAbstractSyntaxTree>>
+{
+    public ParserExpectedAstTestData()
+    {
+        Add(
+            "$ENV_VAR = \"VALUE\"",
+            ast =>
+            {
+                var assignment = ast.Root.GetAllNodes().OfType<AssignmentExpression>().Single();
+                assignment.Destination.Id.Should().BeOfType<EnvVarReference>()
+                    .Which.Name.Should().Be("ENV_VAR");
+                assignment.Source.Should().BeOfType<Literal>();
+            });
+
+        Add(
+            "let envVarValue = $ENV_VAR",
+            ast =>
+            {
+                var assignment = ast.Root.GetAllNodes().OfType<AssignmentExpression>().Single();
+                assignment.Destination.Id.Name.Should().Be("envVarValue");
+                assignment.Source.Should().BeOfType<EnvVarReference>()
+                    .Which.Name.Should().Be("ENV_VAR");
+            });
     }
 }
