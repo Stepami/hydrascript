@@ -27,7 +27,7 @@ public class InvokeBenchmark
     {
         _provider = new ServiceCollection()
             .AddLogging(x => x.ClearProviders().AddProvider(NullLoggerProvider.Instance))
-            .AddDomain<GeneratedRegexContainer>()
+            .AddDomain()
             .AddApplication()
             .AddInfrastructure(dump: false, _updatableFileOptions.Value)
             .AddSingleton<IOptions<FileInfo>>(_updatableFileOptions)

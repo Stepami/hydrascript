@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+        <ProjectReference Include="..\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          PrivateAssets="all" />
         <ProjectReference Include="..\..\Application\HydraScript.Application.CodeGeneration\HydraScript.Application.CodeGeneration.csproj" />
         <ProjectReference Include="..\..\Application\HydraScript.Application.StaticAnalysis\HydraScript.Application.StaticAnalysis.csproj" />
     </ItemGroup>
