@@ -28,7 +28,7 @@ internal static partial class Program
     private static ServiceProvider GetServiceProvider(FileInfo fileInfo, bool dump) =>
         new ServiceCollection()
             .AddLogging(c => c.ClearProviders().AddZLoggerConsole())
-            .AddDomain<GeneratedRegexContainer>()
+            .AddDomain()
             .AddApplication()
             .AddInfrastructure(dump, fileInfo)
             .BuildServiceProvider();

@@ -1,8 +1,7 @@
 using System.Text.RegularExpressions;
 using HydraScript.Domain.FrontEnd.Lexer;
-using HydraScript.Infrastructure;
 
-namespace HydraScript;
+namespace HydraScript.Infrastructure;
 
 public sealed partial class GeneratedRegexContainer : IGeneratedRegexContainer
 {
