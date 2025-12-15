@@ -24,7 +24,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<ReturnStatement, Type>,
     IVisitor<ExpressionStatement, Type>,
     IVisitor<IdentifierReference, Type>,
-    IVisitor<AbstractLiteral, Type>,
+    IVisitor<Literal, Type>,
+    IVisitor<ImplicitLiteral, Type>,
     IVisitor<ArrayLiteral, ArrayType>,
     IVisitor<ObjectLiteral, ObjectType>,
     IVisitor<ConditionalExpression, Type>,
@@ -42,6 +43,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<BlockStatement, Type>,
     IVisitor<PrintStatement, Type>
 {
+    private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
@@ -50,6 +52,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
+        IDefaultValueForTypeCalculator calculator,
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
@@ -57,6 +60,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
+        _calculator = calculator;
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
@@ -150,8 +154,20 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
-    public Type Visit(AbstractLiteral visitable) =>
+    public Type Visit(Literal visitable) =>
         visitable.Type.Accept(_typeBuilder);
+
+    public Type Visit(ImplicitLiteral visitable)
+    {
+        var type = visitable.Type.Accept(_typeBuilder);
+        if (!visitable.IsDefined)
+        {
+            var definedValue = _calculator.GetDefaultValueForType(type);
+            visitable.SetValue(definedValue);
+        }
+
+        return type;
+    }
 
     public ArrayType Visit(ArrayLiteral visitable)
     {

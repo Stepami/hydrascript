@@ -13,11 +13,10 @@ public class ImplicitLiteralTests
     }
 
     [Fact]
-    public void ToValueDto_Undefined_DefaultValueIsNewObject()
+    public void ToValueDto_Undefined_DefaultValueIsUndefined()
     {
         var implicitLiteral = new ImplicitLiteral(TypeIdentValue.Undefined);
-        var actual = implicitLiteral.ToValueDto().Value;
-        actual.Should().BeOfType<object>();
+        implicitLiteral.IsDefined.Should().BeFalse();
     }
 
     public static TheoryData<ImplicitLiteral, object?> ToValueDtoData =>
