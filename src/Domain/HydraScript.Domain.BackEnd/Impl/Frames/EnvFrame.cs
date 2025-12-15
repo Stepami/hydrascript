@@ -1,4 +1,4 @@
-namespace HydraScript.Domain.BackEnd;
+namespace HydraScript.Domain.BackEnd.Impl.Frames;
 
 internal sealed class EnvFrame(IEnvironmentVariableProvider provider) : IFrame
 {
