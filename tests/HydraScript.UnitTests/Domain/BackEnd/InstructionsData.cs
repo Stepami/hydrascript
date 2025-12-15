@@ -18,7 +18,7 @@ public class InstructionsData : IEnumerable<object[]>
         [
             new AsString(new Name("num"))
             {
-                Left = "str"
+                Left = new Name("str")
             },
             "str = num as string"
         ];
@@ -39,23 +39,23 @@ public class InstructionsData : IEnumerable<object[]>
         [
             new CallFunction(new FunctionInfo("func"), true)
             {
-                Left = "ret"
+                Left = new Name("ret")
             },
             "ret = Call func"
         ];
         yield return
         [
-            new CreateArray("arr", 5),
+            new CreateArray(new Name("arr"), 5),
             "array arr = [5]"
         ];
         yield return
         [
-            new CreateObject("obj"),
+            new CreateObject(new Name("obj")),
             "object obj = {}"
         ];
         yield return
         [
-            new DotAssignment("obj", new Constant("prop"), new Constant(3)),
+            new DotAssignment(new Name("obj"), new Constant("prop"), new Constant(3)),
             "obj.prop = 3"
         ];
         yield return
@@ -83,7 +83,7 @@ public class InstructionsData : IEnumerable<object[]>
         ];
         yield return
         [
-            new IndexAssignment("arr", new Constant(1), new Constant(1)),
+            new IndexAssignment(new Name("arr"), new Constant(1), new Constant(1)),
             "arr[1] = 1"
         ];
         yield return
@@ -98,12 +98,12 @@ public class InstructionsData : IEnumerable<object[]>
         ];
         yield return
         [
-            new PopParameter("param", defaultValue: null),
+            new PopParameter(new Name("param"), defaultValue: null),
             "PopParameter param"
         ];
         yield return
         [
-            new RemoveFromArray("arr", new Constant(0)),
+            new RemoveFromArray(new Name("arr"), new Constant(0)),
             "RemoveFrom arr at 0"
         ];
         yield return
@@ -118,12 +118,12 @@ public class InstructionsData : IEnumerable<object[]>
         ];
         yield return
         [
-            new Simple("a", (new Name("b"), new Name("c")), "+"),
+            new Simple(new Name("a"), (new Name("b"), new Name("c")), "+"),
             "a = b + c"
         ];
         yield return
         [
-            new Simple("b", (null, new Name("c")), "-"),
+            new Simple(new Name("b"), (null, new Name("c")), "-"),
             "b = -c"
         ];
     }

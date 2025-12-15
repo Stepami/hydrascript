@@ -2,16 +2,17 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
 public class Return(IValue? value = null) : Instruction
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var frame = executeParams.Frames.Pop();
+        var callFrame = executeParams.Frames.Pop();
         var call = executeParams.CallStack.Pop();
         if (call.Where != null && value != null)
         {
-            executeParams.Frames.Peek()[call.Where] = value.Get(frame);
+            var frame = executeParams.Frames.Peek();
+            call.Where?.Set(frame, value.Get(callFrame));
         }
 
-        return frame.ReturnAddress;
+        return call.From.Next;
     }
 
     protected override string ToStringInternal() =>

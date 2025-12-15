@@ -3,13 +3,13 @@ using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
 
-public class IndexAssignment(string array, IValue index, IValue value)
+public class IndexAssignment(Name array, IValue index, IValue value)
     : Simple(left: array, right: (index, value), "[]"), IWriteToComplexData
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        if (frame[Left!] is List<object> list)
+        if (Left?.Get(frame) is List<object> list)
         {
             var index = Convert.ToInt32(Right.left!.Get(frame));
             list[index] = Right.right!.Get(frame)!;
@@ -19,7 +19,7 @@ public class IndexAssignment(string array, IValue index, IValue value)
     }
 
     public Simple ToSimple() =>
-        new IndexRead(new Name(Left!), Right.left!);
+        new IndexRead(Left!, Right.left!);
 
     protected override string ToStringInternal() =>
         $"{Left}[{Right.left}] = {Right.right}";

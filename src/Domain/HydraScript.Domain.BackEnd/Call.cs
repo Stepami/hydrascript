@@ -1,11 +1,12 @@
 using HydraScript.Domain.BackEnd.Impl.Addresses;
+using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.Domain.BackEnd;
 
 public record Call(
     IAddress From,
     FunctionInfo To,
-    string? Where = null)
+    Name? Where = null)
 {
     public override string ToString() =>
         $"{From}: {Where} => {To.Start}: {To.Id}";

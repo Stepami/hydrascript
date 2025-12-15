@@ -6,6 +6,9 @@ public class Name(string id) : IValue
 
     public object? Get(Frame? frame) => frame![_id];
 
+    public void Set(Frame? frame, object? value) =>
+        frame?[_id] = value;
+
     public override string ToString() => _id;
 
     public bool Equals(IValue? other) =>
