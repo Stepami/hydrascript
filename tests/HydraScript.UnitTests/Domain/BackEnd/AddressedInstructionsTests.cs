@@ -15,7 +15,7 @@ public class AddressedInstructionsTests
         [
             new AsString(new Constant(2))
             {
-                Left = "s"
+                Left = new Name("s")
             },
             new Print(new Name("s")),
             new Halt()
@@ -44,17 +44,17 @@ public class AddressedInstructionsTests
     {
         var instructions = new AddressedInstructions
         {
-            new Simple("a", (new Constant(1), new Constant(2)), "-"),
+            new Simple(new Name("a"), (new Constant(1), new Constant(2)), "-"),
             {
                 new AsString(new Constant(true))
-                    { Left = "s" },
+                    { Left = new Name("s") },
                 "as_str"
             },
             new Print(new Name("s"))
         };
 
         var old = instructions[new Label("as_str")];
-        var @new = new AsString(new Name("a")) { Left = "s" };
+        var @new = new AsString(new Name("a")) { Left = new Name("s") };
         instructions.Replace(old, @new);
 
         var prev = instructions.First();

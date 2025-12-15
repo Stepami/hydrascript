@@ -4,7 +4,7 @@ using HydraScript.Domain.BackEnd.Impl.Addresses;
 
 namespace HydraScript.Domain.BackEnd;
 
-public class AddressedInstructions : IEnumerable<IExecutableInstruction>
+public class AddressedInstructions : IReadOnlyCollection<IExecutableInstruction>
 {
     private readonly LinkedList<IAddress> _addresses = new();
     private readonly Dictionary<IAddress, LinkedListNode<IAddress>> _addressToNode = new();
@@ -84,6 +84,8 @@ public class AddressedInstructions : IEnumerable<IExecutableInstruction>
         _addresses.Select(address => this[address]).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public int Count => _addresses.Count;
 
     public override string ToString() =>
         ZString.Join<IExecutableInstruction>('\n', this);

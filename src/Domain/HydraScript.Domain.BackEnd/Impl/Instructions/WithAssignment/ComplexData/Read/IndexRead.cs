@@ -11,7 +11,7 @@ public class IndexRead(Name array, IValue index) : Simple(
     private readonly IValue _index = index;
 
     public Simple ToAssignment(IValue value) =>
-        new IndexAssignment(array.ToString(), _index, value);
+        new IndexAssignment(array, _index, value);
 
     public IExecutableInstruction ToInstruction() => this;
 

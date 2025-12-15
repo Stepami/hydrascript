@@ -1,11 +1,13 @@
+using HydraScript.Domain.BackEnd.Impl.Values;
+
 namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
-public class RemoveFromArray(string id, IValue index) : Instruction
+public class RemoveFromArray(Name id, IValue index) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        if (frame[id] is List<object> list)
+        if (id.Get(frame) is List<object> list)
         {
             list.RemoveAt(Convert.ToInt32(index.Get(frame)));
         }

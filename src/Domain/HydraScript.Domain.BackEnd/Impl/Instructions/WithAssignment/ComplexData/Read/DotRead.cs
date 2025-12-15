@@ -9,7 +9,7 @@ public class DotRead(Name @object, Constant property) : Simple(
     rightValue: property), IReadFromComplexData
 {
     public Simple ToAssignment(IValue value) =>
-        new DotAssignment(@object.ToString(), property, value);
+        new DotAssignment(@object, property, value);
 
     public IExecutableInstruction ToInstruction() => this;
 

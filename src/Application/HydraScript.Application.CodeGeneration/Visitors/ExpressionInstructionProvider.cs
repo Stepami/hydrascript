@@ -46,7 +46,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     {
         var arraySize = visitable.Expressions.Count;
 
-        var arrayName = visitable.Id;
+        var arrayName = new Name(visitable.Id);
         var createArray = new CreateArray(arrayName, arraySize);
 
         var result = new AddressedInstructions { createArray };
@@ -64,7 +64,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             else
             {
                 result.AddRange(expression.Accept(This));
-                var last = new Name(result.OfType<Simple>().Last().Left!);
+                var last = result.OfType<Simple>().Last().Left!;
                 result.Add(new IndexAssignment(arrayName, index, last));
             }
         }
@@ -75,7 +75,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     public AddressedInstructions Visit(ObjectLiteral visitable)
     {
         var objectId = visitable.Id;
-        var createObject = new CreateObject(objectId);
+        var createObject = new CreateObject(new Name(objectId));
 
         var result = new AddressedInstructions { createObject };
 
@@ -89,7 +89,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
     public AddressedInstructions Visit(Property visitable)
     {
-        var objectId = visitable.Object.Id;
+        var objectId = new Name(visitable.Object.Id);
 
         var (id, expression) = visitable;
         var propertyId = new Constant(id);
@@ -101,7 +101,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
                 _valueDtoConverter.Convert(primary.ToValueDto()))];
 
         var instructions = expression.Accept(This);
-        var last = new Name(instructions.OfType<Simple>().Last().Left!);
+        var last = instructions.OfType<Simple>().Last().Left!;
         instructions.Add(new DotAssignment(objectId, propertyId, last));
 
         return instructions;
@@ -113,7 +113,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             return [new Simple(visitable.Operator, _valueDtoConverter.Convert(primary.ToValueDto()))];
         
         var result = visitable.Expression.Accept(This);
-        var last = new Name(result.OfType<Simple>().Last().Left!);
+        var last = result.OfType<Simple>().Last().Left!;
         result.Add(new Simple(visitable.Operator, last));
         
         return result;
@@ -122,7 +122,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     public AddressedInstructions Visit(BinaryExpression visitable)
     {
         if (visitable is { Left: IdentifierReference arr, Right: PrimaryExpression primary, Operator: "::" })
-            return [new RemoveFromArray(arr.Name, index: _valueDtoConverter.Convert(primary.ToValueDto()))];
+            return [new RemoveFromArray(new Name(arr), index: _valueDtoConverter.Convert(primary.ToValueDto()))];
 
         var result = new AddressedInstructions();
         IValue left, right;
@@ -132,7 +132,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         else
         {
             result.AddRange(visitable.Left.Accept(This));
-            left = new Name(result.OfType<Simple>().Last().Left!);
+            left = result.OfType<Simple>().Last().Left!;
         }
 
         if (visitable.Right is PrimaryExpression primaryRight)
@@ -140,7 +140,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         else
         {
             result.AddRange(visitable.Right.Accept(This));
-            right = new Name(result.OfType<Simple>().Last().Left!);
+            right = result.OfType<Simple>().Last().Left!;
         }
 
         result.Add(new Simple(left, visitable.Operator, right));
@@ -154,7 +154,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             return [new AsString(_valueDtoConverter.Convert(primary.ToValueDto()))];
         
         var result = visitable.Expression.Accept(This);
-        var last = new Name(result.OfType<Simple>().Last().Left!);
+        var last = result.OfType<Simple>().Last().Left!;
         result.Add(new AsString(last));
         
         return result;
@@ -162,7 +162,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
     public AddressedInstructions Visit(WithExpression visitable)
     {
-        var objectId = visitable.ObjectLiteral.Id;
+        var objectId = new Name(visitable.ObjectLiteral.Id);
         var createObject = new CreateObject(objectId);
 
         var result = new AddressedInstructions { createObject };
@@ -188,7 +188,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
         var copyFrom = visitable.Expression is IdentifierReference objectIdent
             ? new Name(objectIdent)
-            : new Name(result.OfType<Simple>().Last().Left!);
+            : result.OfType<Simple>().Last().Left!;
 
         for (var i = 0; i < visitable.ComputedCopiedProperties.Count; i++)
         {
@@ -214,7 +214,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         else
         {
             result.AddRange(visitable.Test.Accept(This));
-            var last = new Name(result.OfType<Simple>().Last().Left!);
+            var last = result.OfType<Simple>().Last().Left!;
             result.Add(new IfNotGoto(last, startBlockLabel));
         }
 
@@ -227,7 +227,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         result.OfType<Simple>().Last().Left = temp;
         result.Add(new EndBlock(BlockType.Condition, blockId), endBlockLabel.Name);
 
-        result.Add(new Simple(new Name(temp)));
+        result.Add(new Simple(temp));
 
         return result;
     }
@@ -241,14 +241,14 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             if (last is IWriteToComplexData assignment)
                 result.Add(assignment.ToSimple());
             else
-                result.Add(new Simple(new Name(last.Left!)));
+                result.Add(new Simple(last.Left!));
         }
 
         if (visitable.Destination.Empty())
-            result.OfType<Simple>().Last().Left = visitable.Destination.Id;
+            result.OfType<Simple>().Last().Left = new Name(visitable.Destination.Id);
         else
         {
-            var last = new Name(result.OfType<Simple>().Last().Left!);
+            var last = result.OfType<Simple>().Last().Left!;
             result.AddRange(visitable.Destination.Accept(This));
             var lastRead = result.OfType<IReadFromComplexData>().Last();
             result.Replace(lastRead.ToInstruction(), lastRead.ToAssignment(last));
@@ -270,7 +270,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             return [new DotRead(new Name(lhs.Id), right)];
 
         var result = visitable.Prev?.Accept(This) ?? [];
-        var left = new Name(result.OfType<Simple>().Last().Left!);
+        var left = result.OfType<Simple>().Last().Left!;
         result.Add(new DotRead(left, right));
 
         return result;
@@ -287,7 +287,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         else
         {
             result.AddRange(visitable.Index.Accept(This));
-            right = new Name(result.OfType<Simple>().Last().Left!);
+            right = result.OfType<Simple>().Last().Left!;
         }
 
         if (!visitable.HasPrev() && visitable.Parent is LeftHandSideExpression lhs)
@@ -295,7 +295,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         else
         {
             result.AddRange(visitable.Prev?.Accept(This) ?? []);
-            var left = new Name(result.OfType<Simple>().Last().Left!);
+            var left = result.OfType<Simple>().Last().Left!;
             result.Add(new IndexRead(left, right));
         }
         
@@ -320,8 +320,8 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
         if (methodCall)
         {
-            var caller = result.Any() ? result.OfType<Simple>().Last().Left! : visitable.Id;
-            result.Add(new PushParameter(new Name(caller)));
+            var caller = result.Count > 0 ? result.OfType<Simple>().Last().Left! : new Name(visitable.Id);
+            result.Add(new PushParameter(caller));
         }
 
         for (var i = 0; i < visitable.Parameters.Count; i++)
@@ -333,7 +333,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
             {
                 result.AddRange(expr.Accept(This));
                 var id = result.OfType<Simple>().Last().Left!;
-                result.Add(new PushParameter(new Name(id)));
+                result.Add(new PushParameter(id));
             }
         }
 
