@@ -1,10 +1,8 @@
 namespace HydraScript.Domain.BackEnd.Impl;
 
-public class VirtualMachine(
-    IOutputWriter writer,
-    IEnvironmentVariableProvider environmentVariableProvider) : IVirtualMachine
+public class VirtualMachine(IOutputWriter writer) : IVirtualMachine
 {
-    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(writer, environmentVariableProvider);
+    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(writer);
 
     public void Run(AddressedInstructions instructions)
     {
