@@ -10,11 +10,12 @@ public partial class AsString(IValue value) : Simple(value)
     {
         var frame = executeParams.Frames.Peek();
         var value = Right.right!.Get(frame);
-        frame[Left!] = value is string
+        var valueAsString = value is string
             ? value
             : JsonSerializer.Serialize(
                 value: Right.right!.Get(frame)!,
                 AsStringSerializationContext.Default.Object);
+        Left?.Set(frame, valueAsString);
 
         return Address.Next;
     }

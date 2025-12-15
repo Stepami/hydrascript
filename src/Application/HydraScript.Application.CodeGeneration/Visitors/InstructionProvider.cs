@@ -107,7 +107,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         }
 
         var result = visitable.Expression.Accept(_expressionVisitor);
-        var last = new Name(result.OfType<Simple>().Last().Left!);
+        var last = result.OfType<Simple>().Last().Left!;
         result.Add(new Return(last));
 
         return result;
@@ -115,7 +115,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
     public AddressedInstructions Visit(FunctionDeclaration visitable)
     {
-        if (!visitable.Statements.Any())
+        if (visitable.IsEmpty)
             return [];
 
         var functionInfo = new FunctionInfo(visitable.ComputedFunctionAddress);
@@ -132,7 +132,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         for (var i = 0; i < visitable.Arguments.Count; i++)
         {
             var arg = visitable.Arguments[i];
-            result.Add(new PopParameter(arg.Name, arg.Info.Value));
+            result.Add(new PopParameter(new Name(arg.Name), arg.Info.Value));
         }
 
         result.AddRange(visitable.Statements.Accept(This));
@@ -160,7 +160,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         else
         {
             result.AddRange(visitable.Condition.Accept(_expressionVisitor));
-            var last = new Name(result.OfType<Simple>().Last().Left!);
+            var last = result.OfType<Simple>().Last().Left!;
             result.Add(new IfNotGoto(last, endBlockLabel));
         }
 
@@ -204,7 +204,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         else
         {
             result.AddRange(visitable.Test.Accept(_expressionVisitor));
-            var last = new Name(result.OfType<Simple>().Last().Left!);
+            var last = result.OfType<Simple>().Last().Left!;
             result.Add(new IfNotGoto(last,
                 visitable.HasElseBlock()
                     ? startBlockLabel
@@ -239,11 +239,11 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         else
         {
             result.AddRange(visitable.Expression.Accept(_expressionVisitor));
-            var name = new Name(result.OfType<Simple>().Last().Left!);
+            var name = result.OfType<Simple>().Last().Left!;
             result.Add(new AsString(name));
         }
 
-        result.Add(new Print(new Name((result[result.End] as AsString)!.Left!)));
+        result.Add(new Print((result[result.End] as AsString)!.Left!));
 
         return result;
     }

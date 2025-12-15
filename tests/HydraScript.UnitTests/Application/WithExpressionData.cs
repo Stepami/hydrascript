@@ -27,8 +27,8 @@ public sealed class WithExpressionData : TheoryData<IAbstractSyntaxTree, Address
                         ]),
                         new ObjectLiteral([])))),
             [
-                new CreateObject("obj"),
-                new DotAssignment("obj", new Constant("x"), new Constant(1))
+                new CreateObject(new Name("obj")),
+                new DotAssignment(new Name("obj"), new Constant("x"), new Constant(1))
             ]);
 
         // let copyFrom = {x: 0;}
@@ -48,8 +48,8 @@ public sealed class WithExpressionData : TheoryData<IAbstractSyntaxTree, Address
                         ComputedCopiedProperties = []
                     })),
             [
-                new CreateObject("obj"),
-                new DotAssignment("obj", new Constant("x"), new Constant(1))
+                new CreateObject(new Name("obj")),
+                new DotAssignment(new Name("obj"), new Constant("x"), new Constant(1))
             ]);
     }
 }

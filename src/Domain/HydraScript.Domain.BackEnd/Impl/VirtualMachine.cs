@@ -8,7 +8,7 @@ public class VirtualMachine(
 
     public void Run(AddressedInstructions instructions)
     {
-        ExecuteParams.Frames.Push(new Frame(instructions.Start));
+        ExecuteParams.Frames.Push(new Frame());
 
         var address = instructions.Start;
         while (address is not null)

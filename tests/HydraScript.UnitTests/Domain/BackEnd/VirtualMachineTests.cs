@@ -17,7 +17,7 @@ public class VirtualMachineTests
     public void CorrectPrintToOutTest([Frozen] IOutputWriter writer, IExecuteParams exParams)
     {
         exParams.CallStack.Returns(new Stack<Call>());
-        exParams.Frames.Returns(new Stack<Frame>([new Frame(new HashAddress(0))]));
+        exParams.Frames.Returns(new Stack<Frame>([new Frame()]));
         exParams.Arguments.Returns(new Queue<object?>());
 
         var print = new Print(new Constant(223))
@@ -40,10 +40,10 @@ public class VirtualMachineTests
     {
         AddressedInstructions program =
         [
-            new Simple("a", (new Constant(1), new Constant(2)), "+"),
+            new Simple(new Name("a"), (new Constant(1), new Constant(2)), "+"),
             new AsString(new Name("a"))
             {
-                Left = "s"
+                Left = new Name("s")
             },
             new Halt()
         ];
@@ -61,23 +61,23 @@ public class VirtualMachineTests
         {
             new Goto(factorial.End),
             { new BeginBlock(BlockType.Function, blockId: factorial.ToString()), factorial.Start.Name },
-            new PopParameter("n", defaultValue: null),
-            new Simple("_t2", (new Name("n"), new Constant(2)), "<"),
+            new PopParameter(new Name("n"), defaultValue: null),
+            new Simple(new Name("_t2"), (new Name("n"), new Constant(2)), "<"),
             new IfNotGoto(new Name("_t2"), new Label("5")),
             new Return(new Name("n")),
-            { new Simple("_t5", (new Name("n"), new Constant(1)), "-"), "5" },
+            { new Simple(new Name("_t5"), (new Name("n"), new Constant(1)), "-"), "5" },
             new PushParameter(new Name("_t5")),
             new CallFunction(factorial, true)
             {
-                Left = "f"
+                Left = new Name("f")
             },
-            new Simple("_t8", (new Name("n"), new Name("f")), "*"),
+            new Simple(new Name("_t8"), (new Name("n"), new Name("f")), "*"),
             new Return(new Name("_t8")),
             { new EndBlock(BlockType.Function, blockId: factorial.ToString()), factorial.End.Name },
             new PushParameter(new Constant(6)),
             new CallFunction(factorial, true)
             {
-                Left = "fa6"
+                Left = new Name("fa6")
             },
             halt
         };
@@ -95,23 +95,23 @@ public class VirtualMachineTests
     [Theory, AutoHydraScriptData]
     public void CreateArrayReservesCertainSpaceTest(ExecuteParams vm)
     {
-        vm.Frames.Push(new Frame(new HashAddress(0)));
+        vm.Frames.Push(new Frame());
 
-        var createArray = new CreateArray("arr", 6)
+        var createArray = new CreateArray(new Name("arr"), 6)
         {
             Address = new HashAddress(1)
         };
         createArray.Execute(vm);
         Assert.Equal(6, ((List<object>)vm.Frames.Peek()["arr"]!).Count);
 
-        var indexAssignment = new IndexAssignment("arr", new Constant(0), new Constant(0))
+        var indexAssignment = new IndexAssignment(new Name("arr"), new Constant(0), new Constant(0))
         {
             Address = new HashAddress(2)
         };
         indexAssignment.Execute(vm);
         Assert.Equal(0, ((List<object>)vm.Frames.Peek()["arr"]!)[0]);
 
-        var removeFromArray = new RemoveFromArray("arr", new Constant(5))
+        var removeFromArray = new RemoveFromArray(new Name("arr"), new Constant(5))
         {
             Address = new HashAddress(3)
         };
@@ -125,8 +125,8 @@ public class VirtualMachineTests
         var halt = HaltTrackable();
         AddressedInstructions program =
         [
-            new CreateObject("obj"),
-            new DotAssignment("obj", new Constant("prop"), new Constant(null, "null")),
+            new CreateObject(new Name("obj")),
+            new DotAssignment(new Name("obj"), new Constant("prop"), new Constant(null, "null")),
             halt
         ];
 
