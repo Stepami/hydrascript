@@ -22,7 +22,7 @@ internal class ValueFactory(
         };
 
     public Name CreateName(string id, bool env = false) =>
-        env ? new Name(id, EnvFrame) : new Name(id, CurrentFrame);
+        env ? new EnvName(id, EnvFrame) : new Name(id, CurrentFrame);
 
     private CurrentFrame CurrentFrame { get; } = new(frameContext);
 
