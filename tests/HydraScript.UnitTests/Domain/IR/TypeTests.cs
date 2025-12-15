@@ -1,3 +1,4 @@
+using HydraScript.Application.StaticAnalysis.Impl;
 using HydraScript.Domain.IR.Types;
 
 namespace HydraScript.UnitTests.Domain.IR;
@@ -38,5 +39,14 @@ public class TypeTests
         str = new NullableType(str);
         str = new ArrayType(str);
         Assert.Equal("string?[]", str.ToString());
+    }
+
+    [Fact]
+    public void DefaultValueTest()
+    {
+        var calculator = new DefaultValueForTypeCalculator();
+        Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
+        Assert.Null(calculator.GetDefaultValueForType(new NullType()));
+        Assert.Null(calculator.GetDefaultValueForType(new ObjectType([])));
     }
 }
