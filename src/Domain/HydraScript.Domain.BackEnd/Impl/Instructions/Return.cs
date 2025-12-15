@@ -2,7 +2,7 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
 public class Return(IValue? value = null) : Instruction
 {
-    public override IAddress Execute(IExecuteParams executeParams)
+    public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Pop();
         var call = executeParams.CallStack.Pop();
@@ -11,7 +11,7 @@ public class Return(IValue? value = null) : Instruction
             executeParams.Frames.Peek()[call.Where] = value.Get(frame);
         }
 
-        return frame.ReturnAddress;
+        return call.From.Next;
     }
 
     protected override string ToStringInternal() =>

@@ -17,7 +17,7 @@ public class VirtualMachineTests
     public void CorrectPrintToOutTest([Frozen] IOutputWriter writer, IExecuteParams exParams)
     {
         exParams.CallStack.Returns(new Stack<Call>());
-        exParams.Frames.Returns(new Stack<Frame>([new Frame(new HashAddress(0))]));
+        exParams.Frames.Returns(new Stack<Frame>([new Frame()]));
         exParams.Arguments.Returns(new Queue<object?>());
 
         var print = new Print(new Constant(223))
@@ -95,7 +95,7 @@ public class VirtualMachineTests
     [Theory, AutoHydraScriptData]
     public void CreateArrayReservesCertainSpaceTest(ExecuteParams vm)
     {
-        vm.Frames.Push(new Frame(new HashAddress(0)));
+        vm.Frames.Push(new Frame());
 
         var createArray = new CreateArray("arr", 6)
         {
