@@ -245,7 +245,10 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         }
 
         if (visitable.Destination.Empty())
-            result.OfType<Simple>().Last().Left = _valueFactory.CreateName(visitable.Destination.Id);
+        {
+            var isEnv = visitable.Destination.Id.ToValueDto().Type is ValueDtoType.Env;
+            result.OfType<Simple>().Last().Left = _valueFactory.CreateName(visitable.Destination.Id, isEnv);
+        }
         else
         {
             var last = result.OfType<Simple>().Last().Left!;

@@ -9,7 +9,7 @@ public class Name(string id, IFrame frame) : IValue
 
     public void Set(object? value) => _frame[Id] = value;
 
-    public void SetFrame(IFrame newFrame) => _frame = newFrame;
+    public virtual void SetFrame(IFrame newFrame) => _frame = newFrame;
 
     public override string ToString() => Id;
 
