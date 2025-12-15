@@ -16,7 +16,7 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
         Add(
             new AsString(new Name("num"))
             {
-                Left = "str"
+                Left = new Name("str")
             },
             "str = num as string");
         Add(
@@ -31,17 +31,17 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
         Add(
             new CallFunction(new FunctionInfo("func"), true)
             {
-                Left = "ret"
+                Left = new Name("ret")
             },
             "ret = Call func");
         Add(
-            new CreateArray("arr", 5),
+            new CreateArray(new Name("arr"), 5),
             "array arr = [5]");
         Add(
-            new CreateObject("obj"),
+            new CreateObject(new Name("obj")),
             "object obj = {}");
         Add(
-            new DotAssignment("obj", new Constant("prop"), new Constant(3)),
+            new DotAssignment(new Name("obj"), new Constant("prop"), new Constant(3)),
             "obj.prop = 3");
         Add(
             new EndBlock(BlockType.Function, blockId: "func")
@@ -59,7 +59,7 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             new IfNotGoto(new Name("test"), new Label("17")),
             "IfNot test Goto 17");
         Add(
-            new IndexAssignment("arr", new Constant(1), new Constant(1)),
+            new IndexAssignment(new Name("arr"), new Constant(1), new Constant(1)),
             "arr[1] = 1");
         Add(
             new Print(new Name("str")),
@@ -68,10 +68,10 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             new PushParameter(new Name("value")),
             "PushParameter value");
         Add(
-            new PopParameter("param", defaultValue: null),
+            new PopParameter(new Name("param"), defaultValue: null),
             "PopParameter param");
         Add(
-            new RemoveFromArray("arr", new Constant(0)),
+            new RemoveFromArray(new Name("arr"), new Constant(0)),
             "RemoveFrom arr at 0");
         Add(
             new Return(),
@@ -80,10 +80,10 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             new Return(new Name("result")),
             "Return result");
         Add(
-            new Simple("a", (new Name("b"), new Name("c")), "+"),
+            new Simple(new Name("a"), (new Name("b"), new Name("c")), "+"),
             "a = b + c");
         Add(
-            new Simple("b", (null, new Name("c")), "-"),
+            new Simple(new Name("b"), (null, new Name("c")), "-"),
             "b = -c");
     }
 }
