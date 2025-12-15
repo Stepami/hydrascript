@@ -1,10 +1,10 @@
 namespace HydraScript.Domain.BackEnd.Impl.Frames;
 
-internal sealed class EnvFrame(IEnvironmentVariableProvider provider) : IFrame
+public sealed class EnvFrame(IEnvironmentVariableProvider provider) : IFrame
 {
     public object? this[string id]
     {
-        get => provider.GetEnvironmentVariable(id);
-        set => provider.SetEnvironmentVariable(id, value?.ToString());
+        get => provider.GetEnvironmentVariable(id[1..]);
+        set => provider.SetEnvironmentVariable(id[1..], value?.ToString());
     }
 }

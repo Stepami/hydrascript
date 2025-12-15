@@ -6,5 +6,5 @@ public interface IFrameContext
 
     void StepIn();
 
-    IFrame StepOut();
+    void StepOut();
 }

@@ -2,7 +2,7 @@ using HydraScript.Domain.BackEnd.Impl.Frames;
 
 namespace HydraScript.Domain.BackEnd.Impl;
 
-internal sealed class FrameContext : IFrameContext
+public sealed class FrameContext : IFrameContext
 {
     private readonly Stack<IFrame> _frames = [];
 
@@ -13,5 +13,5 @@ internal sealed class FrameContext : IFrameContext
             ? new Frame(frame)
             : new Frame());
 
-    public IFrame StepOut() => _frames.Pop();
+    public void StepOut() => _frames.Pop();
 }

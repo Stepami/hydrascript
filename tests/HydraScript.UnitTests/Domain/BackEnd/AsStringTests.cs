@@ -12,13 +12,13 @@ public class AsStringTests
     {
         // Arrange
         AddressedInstructions program = [new AsString(new Constant("string"))];
-        vm.ExecuteParams.Frames.Push(new Frame());
+        vm.ExecuteParams.FrameContext.StepIn();
 
         // Act
         program[program.Start].Execute(vm.ExecuteParams);
 
         // Assert
-        var frame = vm.ExecuteParams.Frames.Peek();
+        var frame = vm.ExecuteParams.FrameContext.Current;
         frame[program.Start.Name].Should().Be("string");
         frame[program.Start.Name].Should().NotBe("\"string\"");
     }

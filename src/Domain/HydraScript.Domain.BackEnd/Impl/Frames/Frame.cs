@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.BackEnd.Impl.Frames;
 
-public class Frame(IFrame? parentFrame = null) : IFrame
+internal sealed class Frame(IFrame? parentFrame = null) : IFrame
 {
     private readonly Dictionary<string, object?> _variables = new();
 

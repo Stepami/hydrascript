@@ -3,7 +3,6 @@ using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
-using HydraScript.Domain.BackEnd.Impl.Values;
 using HydraScript.Domain.Constants;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
@@ -26,15 +25,15 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     IVisitor<IfStatement, AddressedInstructions>,
     IVisitor<PrintStatement, AddressedInstructions>
 {
-    private readonly IValueDtoConverter _valueDtoConverter;
+    private readonly IValueFactory _valueFactory;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
 
     public InstructionProvider(
-        IValueDtoConverter valueDtoConverter,
+        IValueFactory valueFactory,
         [FromKeyedServices(CodeGeneratorType.Expression)]
         IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> expressionVisitor)
     {
-        _valueDtoConverter = valueDtoConverter;
+        _valueFactory = valueFactory;
         _expressionVisitor = expressionVisitor;
     }
 
@@ -103,7 +102,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
             case null:
                 return [new Return()];
             case PrimaryExpression primary:
-                return [new Return(_valueDtoConverter.Convert(primary.ToValueDto()))];
+                return [new Return(_valueFactory.Create(primary.ToValueDto()))];
         }
 
         var result = visitable.Expression.Accept(_expressionVisitor);
@@ -132,7 +131,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         for (var i = 0; i < visitable.Arguments.Count; i++)
         {
             var arg = visitable.Arguments[i];
-            result.Add(new PopParameter(new Name(arg.Name), arg.Info.Value));
+            result.Add(new PopParameter(_valueFactory.CreateName(arg.Name), arg.Info.Value));
         }
 
         result.AddRange(visitable.Statements.Accept(This));
@@ -156,7 +155,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         };
 
         if (visitable.Condition is PrimaryExpression primary)
-            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), endBlockLabel));
+            result.Add(new IfNotGoto(test: _valueFactory.Create(primary.ToValueDto()), endBlockLabel));
         else
         {
             result.AddRange(visitable.Condition.Accept(_expressionVisitor));
@@ -190,7 +189,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
     public AddressedInstructions Visit(IfStatement visitable)
     {
-        if (visitable.Empty())
+        if (visitable.Empty)
             return [];
 
         var blockId = $"if_else_{visitable.GetHashCode()}";
@@ -200,7 +199,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         var result = new AddressedInstructions();
 
         if (visitable.Test is PrimaryExpression primary)
-            result.Add(new IfNotGoto(test: _valueDtoConverter.Convert(primary.ToValueDto()), startBlockLabel));
+            result.Add(new IfNotGoto(test: _valueFactory.Create(primary.ToValueDto()), startBlockLabel));
         else
         {
             result.AddRange(visitable.Test.Accept(_expressionVisitor));
@@ -235,7 +234,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         AddressedInstructions result = [];
 
         if (visitable.Expression is PrimaryExpression prim)
-            result.Add(new AsString(_valueDtoConverter.Convert(prim.ToValueDto())));
+            result.Add(new AsString(_valueFactory.Create(prim.ToValueDto())));
         else
         {
             result.AddRange(visitable.Expression.Accept(_expressionVisitor));

@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.BackEnd.Impl.Frames;
 
-internal sealed class CurrentFrame(IFrameContext frameContext) : IFrame
+public sealed class CurrentFrame(IFrameContext frameContext) : IFrame
 {
     public object? this[string id]
     {

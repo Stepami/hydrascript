@@ -1,3 +1,4 @@
+using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.UnitTests.Domain.BackEnd;
@@ -7,7 +8,7 @@ public class ValuesTests
     [Fact]
     public void ConstantNotEqualToNameTest()
     {
-        var name = new Name("a");
+        var name = new Name("a", Substitute.For<IFrame>());
         var constant = new Constant("a");
             
         Assert.False(name.Equals(constant));
@@ -17,7 +18,7 @@ public class ValuesTests
     [Fact]
     public void ValueToStringCorrectTest()
     {
-        var name = new Name("bbb");
+        var name = new Name("bbb", Substitute.For<IFrame>());
         var constant = new Constant(1, "1.0");
             
         Assert.Equal("bbb", name.ToString());
@@ -27,8 +28,8 @@ public class ValuesTests
     [Fact]
     public void NameEqualsCorrectTest()
     {
-        var name1 = new Name("name");
-        var name2 = new Name("name");
+        var name1 = new Name("name", Substitute.For<IFrame>());
+        var name2 = new Name("name", Substitute.For<IFrame>());
             
         Assert.True(name1.Equals(name2));
     }

@@ -6,8 +6,7 @@ public class IfNotGoto(IValue test, Label jump) : Goto(jump)
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var frame = executeParams.Frames.Peek();
-        return !Convert.ToBoolean(test.Get(frame))
+        return !Convert.ToBoolean(test.Get())
             ? Jump
             : Address.Next;
     }

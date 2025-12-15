@@ -6,14 +6,12 @@ public class CreateArray(Name id, int size) : Simple(id)
 {
     private readonly Name _id = id;
 
-    public override IAddress? Execute(IExecuteParams executeParams)
+    protected override void Assign()
     {
-        var frame = executeParams.Frames.Peek();
         var list = new List<object>(size * 2);
         for (var i = 0; i < size; i++)
             list.Add(null!);
-        _id.Set(frame, list);
-        return Address.Next;
+        _id.Set(list);
     }
 
     protected override string ToStringInternal() =>

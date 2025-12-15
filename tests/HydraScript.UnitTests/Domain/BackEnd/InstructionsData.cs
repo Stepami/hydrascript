@@ -14,9 +14,9 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
     public InstructionsData()
     {
         Add(
-            new AsString(new Name("num"))
+            new AsString(Name("num"))
             {
-                Left = new Name("str")
+                Left = Name("str")
             },
             "str = num as string");
         Add(
@@ -31,17 +31,17 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
         Add(
             new CallFunction(new FunctionInfo("func"), true)
             {
-                Left = new Name("ret")
+                Left = Name("ret")
             },
             "ret = Call func");
         Add(
-            new CreateArray(new Name("arr"), 5),
+            new CreateArray(Name("arr"), 5),
             "array arr = [5]");
         Add(
-            new CreateObject(new Name("obj")),
+            new CreateObject(Name("obj")),
             "object obj = {}");
         Add(
-            new DotAssignment(new Name("obj"), new Constant("prop"), new Constant(3)),
+            new DotAssignment(Name("obj"), new Constant("prop"), new Constant(3)),
             "obj.prop = 3");
         Add(
             new EndBlock(BlockType.Function, blockId: "func")
@@ -56,34 +56,36 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             new Halt(),
             "End");
         Add(
-            new IfNotGoto(new Name("test"), new Label("17")),
+            new IfNotGoto(Name("test"), new Label("17")),
             "IfNot test Goto 17");
         Add(
-            new IndexAssignment(new Name("arr"), new Constant(1), new Constant(1)),
+            new IndexAssignment(Name("arr"), new Constant(1), new Constant(1)),
             "arr[1] = 1");
         Add(
-            new Print(new Name("str")),
+            new Print(Name("str")),
             "Print str");
         Add(
-            new PushParameter(new Name("value")),
+            new PushParameter(Name("value")),
             "PushParameter value");
         Add(
-            new PopParameter(new Name("param"), defaultValue: null),
+            new PopParameter(Name("param"), defaultValue: null),
             "PopParameter param");
         Add(
-            new RemoveFromArray(new Name("arr"), new Constant(0)),
+            new RemoveFromArray(Name("arr"), new Constant(0)),
             "RemoveFrom arr at 0");
         Add(
             new Return(),
             "Return");
         Add(
-            new Return(new Name("result")),
+            new Return(Name("result")),
             "Return result");
         Add(
-            new Simple(new Name("a"), (new Name("b"), new Name("c")), "+"),
+            new Simple(Name("a"), (Name("b"), Name("c")), "+"),
             "a = b + c");
         Add(
-            new Simple(new Name("b"), (null, new Name("c")), "-"),
+            new Simple(Name("b"), (null, Name("c")), "-"),
             "b = -c");
     }
+
+    private static Name Name(string id) => new(id, Substitute.For<IFrame>());
 }

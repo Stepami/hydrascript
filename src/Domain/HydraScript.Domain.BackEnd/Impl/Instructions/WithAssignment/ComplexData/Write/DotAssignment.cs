@@ -6,18 +6,15 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexDat
 public class DotAssignment(Name @object, Constant property, IValue value)
     : Simple(left: @object, (property, value), "."), IWriteToComplexData
 {
-    public override IAddress? Execute(IExecuteParams executeParams)
+    protected override void Assign()
     {
-        var frame = executeParams.Frames.Peek();
-        if (Left?.Get(frame) is Dictionary<string, object> obj)
-        {
-            var field = (string?)Right.left?.Get(frame) ?? string.Empty;
-            obj[field] = Right.right!.Get(frame)!;
-        }
+        if (Left?.Get() is not Dictionary<string, object> obj)
+            return;
 
-        return Address.Next;
+        var field = (string?)Right.left?.Get() ?? string.Empty;
+        obj[field] = Right.right!.Get()!;
     }
-    
+
     public Simple ToSimple() =>
         new DotRead(Left!, property);
 

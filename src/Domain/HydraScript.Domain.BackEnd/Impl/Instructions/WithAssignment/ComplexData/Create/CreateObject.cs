@@ -6,12 +6,8 @@ public class CreateObject(Name id) : Simple(id)
 {
     private readonly Name _id = id;
 
-    public override IAddress? Execute(IExecuteParams executeParams)
-    {
-        var frame = executeParams.Frames.Peek();
-        _id.Set(frame, new Dictionary<string, object>());
-        return Address.Next;
-    }
+    protected override void Assign() =>
+        _id.Set(new Dictionary<string, object>());
 
     protected override string ToStringInternal() =>
         $"object {_id} = {{}}";

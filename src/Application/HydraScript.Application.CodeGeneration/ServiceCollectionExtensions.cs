@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCodeGeneration(this IServiceCollection services)
     {
-        services.AddSingleton<IValueDtoConverter, ValueDtoConverter>();
+        services.AddSingleton<IValueFactory, ValueFactory>();
         services.AddKeyedSingleton<
             IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions>,
             InstructionProvider>(CodeGeneratorType.General);

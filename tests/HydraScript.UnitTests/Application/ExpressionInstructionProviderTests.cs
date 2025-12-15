@@ -1,6 +1,7 @@
 using HydraScript.Application.CodeGeneration.Impl;
 using HydraScript.Application.CodeGeneration.Visitors;
 using HydraScript.Domain.BackEnd;
+using HydraScript.Domain.BackEnd.Impl;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 
@@ -8,7 +9,8 @@ namespace HydraScript.UnitTests.Application;
 
 public class ExpressionInstructionProviderTests(ITestOutputHelper testOutputHelper)
 {
-    private readonly ExpressionInstructionProvider _expressionInstructionProvider = new(new ValueDtoConverter());
+    private readonly ExpressionInstructionProvider _expressionInstructionProvider =
+        new(new ValueFactory(new FrameContext(), new SystemEnvironmentProvider()));
 
     [Theory, ClassData(typeof(WithExpressionData))]
     public void Visit_WithExpression_ExpectedInstructions(
