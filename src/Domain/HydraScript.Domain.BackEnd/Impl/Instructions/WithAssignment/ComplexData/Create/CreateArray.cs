@@ -1,8 +1,10 @@
+using HydraScript.Domain.BackEnd.Impl.Values;
+
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
 
-public class CreateArray(string id, int size) : Simple(id)
+public class CreateArray(Name id, int size) : Simple(id)
 {
-    private readonly string _id = id;
+    private readonly Name _id = id;
 
     public override IAddress? Execute(IExecuteParams executeParams)
     {
@@ -10,7 +12,7 @@ public class CreateArray(string id, int size) : Simple(id)
         var list = new List<object>(size * 2);
         for (var i = 0; i < size; i++)
             list.Add(null!);
-        frame[_id] = list;
+        _id.Set(frame, list);
         return Address.Next;
     }
 

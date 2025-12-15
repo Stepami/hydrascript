@@ -12,7 +12,7 @@ public class AsStringTests
     {
         // Arrange
         AddressedInstructions program = [new AsString(new Constant("string"))];
-        vm.ExecuteParams.Frames.Push(new Frame(program.Start));
+        vm.ExecuteParams.Frames.Push(new Frame());
 
         // Act
         program[program.Start].Execute(vm.ExecuteParams);

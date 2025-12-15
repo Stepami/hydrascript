@@ -1,14 +1,17 @@
+using HydraScript.Domain.BackEnd.Impl.Values;
+
 namespace HydraScript.Domain.BackEnd.Impl.Instructions;
 
-public class PopParameter(string parameter, object? defaultValue) : Instruction
+public class PopParameter(Name parameter, object? defaultValue) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        if (executeParams.Arguments.TryDequeue(out var argument))
-            frame[parameter] = argument;
-        else
-            frame[parameter] = defaultValue;
+        parameter.Set(
+            frame,
+            executeParams.Arguments.TryDequeue(out var argument)
+                ? argument
+                : defaultValue);
         return Address.Next;
     }
 

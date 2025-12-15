@@ -3,13 +3,13 @@ using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
 
-public class DotAssignment(string @object, IValue property, IValue value)
+public class DotAssignment(Name @object, Constant property, IValue value)
     : Simple(left: @object, (property, value), "."), IWriteToComplexData
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
         var frame = executeParams.Frames.Peek();
-        if (frame[Left!] is Dictionary<string, object> obj)
+        if (Left?.Get(frame) is Dictionary<string, object> obj)
         {
             var field = (string?)Right.left?.Get(frame) ?? string.Empty;
             obj[field] = Right.right!.Get(frame)!;
@@ -19,7 +19,7 @@ public class DotAssignment(string @object, IValue property, IValue value)
     }
     
     public Simple ToSimple() =>
-        new DotRead(new Name(Left!), Right.left!);
+        new DotRead(Left!, property);
 
     protected override string ToStringInternal() =>
         $"{Left}.{Right.left} = {Right.right}";
