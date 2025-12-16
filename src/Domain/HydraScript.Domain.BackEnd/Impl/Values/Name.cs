@@ -17,7 +17,7 @@ public class Name(string id, IFrame frame) : IValue
         other is Name that &&
         Id == that.Id;
 
-    internal static IFrame NullFrameInstance { get; } = new NullFrame();
+    internal static readonly IFrame NullFrameInstance = new NullFrame();
 
     private sealed class NullFrame : IFrame
     {

@@ -8,5 +8,7 @@ public interface IValueFactory
 {
     public IValue Create(ValueDto dto);
 
-    public Name CreateName(string id, bool env = false);
+    public Name CreateName(IdentifierReference id);
+
+    public Name CreateName(string id);
 }

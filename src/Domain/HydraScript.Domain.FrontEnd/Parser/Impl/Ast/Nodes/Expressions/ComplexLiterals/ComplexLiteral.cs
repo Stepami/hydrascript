@@ -1,4 +1,5 @@
 using Cysharp.Text;
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 
@@ -15,5 +16,5 @@ public abstract class ComplexLiteral : Expression
         }
     }
 
-    public abstract string Id { get; }
+    public abstract IdentifierReference Id { get; }
 }

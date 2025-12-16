@@ -1,3 +1,5 @@
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
@@ -12,9 +14,9 @@ public partial class ArrayLiteral : ComplexLiteral
 
     protected override string NullIdPrefix => "arr";
 
-    public override string Id => Parent is AssignmentExpression assignment
+    public override IdentifierReference Id => new(Parent is AssignmentExpression assignment
         ? assignment.Destination.Id
-        : NullId;
+        : NullId);
 
     public ArrayLiteral(List<Expression> expressions)
     {
