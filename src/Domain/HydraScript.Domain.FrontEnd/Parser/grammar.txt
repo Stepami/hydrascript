@@ -43,7 +43,8 @@ AddExpression -> MulExpression (('+'|'-') MulExpression)*
 MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
 UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
 
-PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+PrimaryExpression -> "Ident" | EnvVar | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+EnvVar -> '$' "Ident"
 Literal -> "NullLiteral"
            "IntegerLiteral"
            "FloatLiteral"

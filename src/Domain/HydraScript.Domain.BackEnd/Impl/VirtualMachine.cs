@@ -1,12 +1,14 @@
 namespace HydraScript.Domain.BackEnd.Impl;
 
-public class VirtualMachine(IOutputWriter writer) : IVirtualMachine
+public class VirtualMachine(
+    IOutputWriter writer,
+    IFrameContext frameContext) : IVirtualMachine
 {
-    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(writer);
+    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(writer, frameContext);
 
     public void Run(AddressedInstructions instructions)
     {
-        ExecuteParams.Frames.Push(new Frame());
+        frameContext.StepIn();
 
         var address = instructions.Start;
         while (address is not null)

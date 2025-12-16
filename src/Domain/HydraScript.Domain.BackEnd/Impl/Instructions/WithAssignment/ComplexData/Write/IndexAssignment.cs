@@ -6,16 +6,13 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexDat
 public class IndexAssignment(Name array, IValue index, IValue value)
     : Simple(left: array, right: (index, value), "[]"), IWriteToComplexData
 {
-    public override IAddress? Execute(IExecuteParams executeParams)
+    protected override void Assign()
     {
-        var frame = executeParams.Frames.Peek();
-        if (Left?.Get(frame) is List<object> list)
-        {
-            var index = Convert.ToInt32(Right.left!.Get(frame));
-            list[index] = Right.right!.Get(frame)!;
-        }
+        if (Left?.Get() is not List<object> list)
+            return;
 
-        return Address.Next;
+        var index = Convert.ToInt32(Right.left!.Get());
+        list[index] = Right.right!.Get()!;
     }
 
     public Simple ToSimple() =>

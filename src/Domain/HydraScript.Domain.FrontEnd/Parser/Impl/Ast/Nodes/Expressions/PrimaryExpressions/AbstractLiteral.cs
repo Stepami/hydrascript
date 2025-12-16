@@ -2,7 +2,8 @@ using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
-public abstract class AbstractLiteral(TypeValue type) : PrimaryExpression
+[AutoVisitable<IAbstractSyntaxTreeNode>]
+public abstract partial class AbstractLiteral(TypeValue type) : PrimaryExpression
 {
     public TypeValue Type { get; } = type;
 

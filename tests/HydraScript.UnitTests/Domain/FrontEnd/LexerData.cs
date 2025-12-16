@@ -14,7 +14,7 @@ public sealed class LexerFailData : TheoryData<string>
 {
     public LexerFailData()
     {
-        Add("a + v $$$");
+        Add("a + v ```");
         Add("kkk &");
         Add("|| |");
     }

@@ -26,7 +26,7 @@ internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
             return null;
         if (type is ArrayType)
             return new List<object>();
-            
+
         return new object();
     }
 }

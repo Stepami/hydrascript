@@ -59,6 +59,18 @@ public class TopDownParser(ILexer lexer) : IParser
         CurrentIs("Operator") &&
         _tokens.Current.Value == @operator;
 
+    private bool CurrentIsUnaryOperator(bool expectEnv = true) =>
+        CurrentIsOperator("-") || CurrentIsOperator("!") ||
+        CurrentIsOperator("~") || (expectEnv && CurrentIsOperator("$"));
+
+    private bool CurrentIsDeclaration() =>
+        CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
+        CurrentIsKeyword("const") || CurrentIsKeyword("type");
+
+    private bool CurrentIsExpression() =>
+        CurrentIs("Ident") || CurrentIsLiteral() || CurrentIsUnaryOperator() ||
+        CurrentIs("LeftParen") || CurrentIs("LeftCurl") || CurrentIs("LeftBracket");
+
     /// <summary>
     /// Script -> StatementList
     /// </summary>
@@ -71,14 +83,9 @@ public class TopDownParser(ILexer lexer) : IParser
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
-        while (
-            CurrentIsKeyword("function") || CurrentIsKeyword("let") || CurrentIsKeyword("const") ||
-            CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen") ||
-            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
-            CurrentIs("LeftCurl") || CurrentIsKeyword("return") || CurrentIsKeyword("break") ||
-            CurrentIsKeyword("continue") || CurrentIsKeyword("if") || CurrentIsKeyword("while") ||
-            CurrentIsKeyword("type") || CurrentIs("Print")
-        )
+        while (CurrentIsDeclaration() || CurrentIsExpression() || CurrentIs("Print") ||
+               CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
+               CurrentIsKeyword("if") || CurrentIsKeyword("while"))
         {
             statementList.Add(StatementListItem());
         }
@@ -91,8 +98,7 @@ public class TopDownParser(ILexer lexer) : IParser
     /// </summary>
     private StatementListItem StatementListItem()
     {
-        if (CurrentIsKeyword("function") || CurrentIsKeyword("let") ||
-            CurrentIsKeyword("const") || CurrentIsKeyword("type"))
+        if (CurrentIsDeclaration())
         {
             return Declaration();
         }
@@ -113,8 +119,7 @@ public class TopDownParser(ILexer lexer) : IParser
     private Statement Statement()
     {
         if (CurrentIs("Ident") || CurrentIsLiteral() ||
-            CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-            CurrentIsOperator("!") || CurrentIsOperator("~"))
+            CurrentIs("LeftParen") || CurrentIsUnaryOperator())
             return ExpressionStatement();
 
         if (CurrentIs("LeftCurl"))
@@ -173,9 +178,7 @@ public class TopDownParser(ILexer lexer) : IParser
     private ReturnStatement ReturnStatement()
     {
         var ret = Expect("Keyword", "return");
-        if (CurrentIs("Ident") || CurrentIsLiteral() || CurrentIs("LeftParen")||
-            CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~") ||
-            CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        if (CurrentIsExpression())
         {
             return new ReturnStatement(Expression()) { Segment = ret.Segment };
         }
@@ -350,7 +353,7 @@ public class TopDownParser(ILexer lexer) : IParser
             else if (CurrentIs("Assign"))
             {
                 Expect("Assign");
-                var value = Literal();
+                var value = LiteralNode();
                 indexOfFirstDefaultArgument = args.Count < indexOfFirstDefaultArgument
                     ? args.Count
                     : indexOfFirstDefaultArgument;
@@ -409,9 +412,7 @@ public class TopDownParser(ILexer lexer) : IParser
         var identRef = new IdentifierReference(ident.Value) { Segment = ident.Segment };
         var assignment = new AssignmentExpression(
                 new MemberExpression(identRef),
-                new ImplicitLiteral(
-                    new TypeIdentValue(
-                        new IdentifierReference("undefined"))))
+                new ImplicitLiteral(TypeIdentValue.Undefined))
             { Segment = ident.Segment };
 
         if (CurrentIs("Assign"))
@@ -472,10 +473,7 @@ public class TopDownParser(ILexer lexer) : IParser
         {
             Expect("LeftParen");
             var expressions = new List<Expression>();
-            if (CurrentIs("Ident") || CurrentIsLiteral() ||
-                CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-                CurrentIsOperator("!") || CurrentIsOperator("~") ||
-                CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+            if (CurrentIsExpression())
             {
                 expressions.Add(Expression());
             }
@@ -715,7 +713,7 @@ public class TopDownParser(ILexer lexer) : IParser
     /// </summary>
     private Expression UnaryExpression()
     {
-        if (CurrentIsOperator("-") || CurrentIsOperator("!") || CurrentIsOperator("~"))
+        if (CurrentIsUnaryOperator(expectEnv: false))
         {
             var op = Expect("Operator");
             return new UnaryExpression(op.Value, UnaryExpression())
@@ -736,7 +734,8 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// PrimaryExpression -> "Ident" | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+    /// PrimaryExpression -> "Ident" | EnvVar | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+    /// EnvVar -> '$' "Ident"
     /// </summary>
     private Expression PrimaryExpression()
     {
@@ -751,17 +750,25 @@ public class TopDownParser(ILexer lexer) : IParser
         if (CurrentIs("Ident"))
         {
             var ident = Expect("Ident");
-            var id = new IdentifierReference(ident.Value)
+            return new IdentifierReference(ident.Value)
             {
                 Segment = ident.Segment
             };
+        }
 
-            return id;
+        if (CurrentIsOperator("$"))
+        {
+            var dollar =  Expect("Operator");
+            var ident = Expect("Ident");
+            return new EnvVarReference(ident.Value)
+            {
+                Segment = dollar.Segment + ident.Segment
+            };
         }
 
         if (CurrentIsLiteral())
         {
-            return Literal();
+            return LiteralNode();
         }
 
         if (CurrentIs("LeftCurl"))
@@ -784,16 +791,13 @@ public class TopDownParser(ILexer lexer) : IParser
     ///            "StringLiteral"
     ///            "BooleanLiteral"
     /// </summary>
-    private Literal Literal()
+    private Literal LiteralNode()
     {
         var segment = _tokens.Current.Segment;
         if (CurrentIs("StringLiteral"))
         {
             var str = Expect("StringLiteral");
-            return new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "string")
-                        {Segment = str.Segment}),
+            return Literal.String(
                 value: Regex.Unescape(str.Value.Trim('"')),
                 segment,
                 label: str.Value
@@ -801,35 +805,21 @@ public class TopDownParser(ILexer lexer) : IParser
                     .Replace(@"""", @"\"""));
         }
 
+        if (CurrentIs("NullLiteral"))
+        {
+            Expect("NullLiteral");
+            return Literal.Null(segment);
+        }
+
         return _tokens.Current.Type.Tag switch
         {
-            "NullLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "null")
-                        { Segment = _tokens.Current.Segment }),
-                Expect("NullLiteral").Value == "null" ? null : string.Empty,
-                segment,
-                label: "null"),
-            "IntegerLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "number")
-                        { Segment = _tokens.Current.Segment }),
-                value: double.Parse(Expect("IntegerLiteral").Value),
-                segment),
-            "FloatLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "number")
-                        { Segment = _tokens.Current.Segment }),
+            "IntegerLiteral" => Literal.Number(value: double.Parse(Expect("IntegerLiteral").Value), segment),
+            "FloatLiteral" => Literal.Number(
                 value: double.Parse(
                     Expect("FloatLiteral").Value,
                     CultureInfo.InvariantCulture),
                 segment),
-            "BooleanLiteral" => new Literal(
-                new TypeIdentValue(
-                    TypeId: new IdentifierReference(name: "boolean")
-                        { Segment = _tokens.Current.Segment }),
-                value: bool.Parse(Expect("BooleanLiteral").Value),
-                segment),
+            "BooleanLiteral" => Literal.Boolean(value: bool.Parse(Expect("BooleanLiteral").Value), segment),
             _ => throw new ParserException("There are no more supported literals")
         };
     }
@@ -864,10 +854,7 @@ public class TopDownParser(ILexer lexer) : IParser
     {
         var lb = Expect("LeftBracket").Segment;
         var expressions = new List<Expression>();
-        while (CurrentIs("Ident") || CurrentIsLiteral() ||
-               CurrentIs("LeftParen") || CurrentIsOperator("-") ||
-               CurrentIsOperator("!") || CurrentIsOperator("~") ||
-               CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        while (CurrentIsExpression())
         {
             expressions.Add(Expression());
             if (!CurrentIs("RightBracket"))

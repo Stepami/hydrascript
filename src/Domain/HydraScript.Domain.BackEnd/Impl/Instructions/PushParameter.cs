@@ -4,8 +4,7 @@ public class PushParameter(IValue value) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        executeParams.Arguments.Enqueue(
-            value.Get(executeParams.Frames.Peek()));
+        executeParams.Arguments.Enqueue(value.Get());
         return Address.Next;
     }
 

@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Benchmarks/">
-    <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" Type="C#" />
+    <Project Path="benchmarks\HydraScript.Benchmarks\HydraScript.Benchmarks.csproj" />
     <File Path="benchmarks\Readme.md" />
   </Folder>
   <Folder Name="/SolutionItems/">
@@ -28,6 +28,7 @@
     <File Path=".github/workflows/release.yml" />
   </Folder>
   <Folder Name="/Src/">
+    <File Path="src/Directory.Build.props" />
     <Project Path="src/HydraScript/HydraScript.csproj" />
   </Folder>
   <Folder Name="/Src/Application/">

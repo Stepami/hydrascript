@@ -9,7 +9,7 @@ namespace HydraScript.UnitTests.Domain.FrontEnd;
 public class AstNodeTests
 {
     [Fact]
-    public void PrecedenceTest()
+    public void ChildOf_Precedence_Success()
     {
         var lexicalDecl = new LexicalDeclaration(false);
         List<StatementListItem> stmtItemList = [lexicalDecl];
@@ -27,5 +27,12 @@ public class AstNodeTests
 
         Assert.True(lexicalDecl.ChildOf<FunctionDeclaration>());
         Assert.False(lexicalDecl.ChildOf<Literal>());
+    }
+
+    [Fact]
+    public void IfStatement_ThenIsNotBlockAndElseIsNull_NotEmpty()
+    {
+        var ifStatement = new IfStatement(Literal.Boolean(true), new InsideStatementJump("break"));
+        ifStatement.Empty.Should().BeFalse();
     }
 }

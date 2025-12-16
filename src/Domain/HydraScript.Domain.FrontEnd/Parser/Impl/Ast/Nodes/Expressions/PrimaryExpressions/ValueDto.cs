@@ -6,15 +6,19 @@ public record ValueDto(
     object? Value,
     string? Label)
 {
+    public static ValueDto ConstantDto(object? value, string label) =>
+        new(ValueDtoType.Constant, Name: null, value, label);
+
     public static ValueDto NameDto(string name) =>
         new(ValueDtoType.Name, name, Value: null, Label: null);
 
-    public static ValueDto ConstantDto(object? value, string label) =>
-        new(ValueDtoType.Constant, Name: null, value, label);
+    public static ValueDto EnvDto(string name) =>
+        new(ValueDtoType.Env, name, Value: null, Label: null);
 };
 
 public enum ValueDtoType
 {
     Constant = 1,
-    Name = 2
+    Name = 2,
+    Env = 3
 }

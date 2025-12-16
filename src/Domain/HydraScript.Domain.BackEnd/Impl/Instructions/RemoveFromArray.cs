@@ -6,10 +6,9 @@ public class RemoveFromArray(Name id, IValue index) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var frame = executeParams.Frames.Peek();
-        if (id.Get(frame) is List<object> list)
+        if (id.Get() is List<object> list)
         {
-            list.RemoveAt(Convert.ToInt32(index.Get(frame)));
+            list.RemoveAt(Convert.ToInt32(index.Get()));
         }
         return Address.Next;
     }

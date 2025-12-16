@@ -6,9 +6,7 @@ public class PopParameter(Name parameter, object? defaultValue) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var frame = executeParams.Frames.Peek();
         parameter.Set(
-            frame,
             executeParams.Arguments.TryDequeue(out var argument)
                 ? argument
                 : defaultValue);

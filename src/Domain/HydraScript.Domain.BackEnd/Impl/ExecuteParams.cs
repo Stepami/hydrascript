@@ -1,9 +1,14 @@
 namespace HydraScript.Domain.BackEnd.Impl;
 
-public class ExecuteParams(IOutputWriter textWriter) : IExecuteParams
+public class ExecuteParams(
+    IOutputWriter textWriter,
+    IFrameContext frameContext) : IExecuteParams
 {
-    public Stack<Call> CallStack { get; } = new();
-    public Stack<Frame> Frames { get; } = new();
-    public Queue<object?> Arguments { get; } = new();
+    public Stack<Call> CallStack { get; } = [];
+
+    public Queue<object?> Arguments { get; } = [];
+
     public IOutputWriter Writer { get; } = textWriter;
+
+    public IFrameContext FrameContext { get; } = frameContext;
 }

@@ -23,4 +23,16 @@ public partial class Literal : AbstractLiteral
 
     public override ValueDto ToValueDto() =>
         ValueDto.ConstantDto(_value, _label);
+
+    public static Literal String(string value, string? segment = null, string? label = null) =>
+        new(TypeIdentValue.String, value, segment ?? "(1, 1)-(1, 1)", label);
+
+    public static Literal Number(double value, string? segment = null) =>
+        new(TypeIdentValue.Number, value, segment ?? "(1, 1)-(1, 1)");
+
+    public static Literal Boolean(bool value, string? segment = null) =>
+        new(TypeIdentValue.Boolean, value, segment ?? "(1, 1)-(1, 1)");
+
+    public static Literal Null(string? segment = null) =>
+        new(TypeIdentValue.Null, value: null, segment ?? "(1, 1)-(1, 1)", label: "null");
 }

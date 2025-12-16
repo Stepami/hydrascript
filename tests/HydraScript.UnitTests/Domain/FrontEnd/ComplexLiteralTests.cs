@@ -9,7 +9,7 @@ public class ComplexLiteralTests(ITestOutputHelper testOutputHelper)
     {
         var complexLiteralId = complexLiteral.Id;
         testOutputHelper.WriteLine(complexLiteralId);
-        complexLiteralId.Should().StartWith(expectedPrefix);
+        complexLiteralId.Name.Should().StartWith(expectedPrefix);
     }
 
     public static TheoryData<ComplexLiteral, string> StartsWithData =>
