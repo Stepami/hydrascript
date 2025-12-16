@@ -15,9 +15,9 @@ public class AddressedInstructionsTests
         [
             new AsString(new Constant(2))
             {
-                Left = new Name("s")
+                Left = new Name("s", Substitute.For<IFrame>())
             },
-            new Print(new Name("s")),
+            new Print(new Name("s", Substitute.For<IFrame>())),
             new Halt()
         ];
 
@@ -44,17 +44,20 @@ public class AddressedInstructionsTests
     {
         var instructions = new AddressedInstructions
         {
-            new Simple(new Name("a"), (new Constant(1), new Constant(2)), "-"),
+            new Simple(new Name("a", Substitute.For<IFrame>()), (new Constant(1), new Constant(2)), "-"),
             {
                 new AsString(new Constant(true))
-                    { Left = new Name("s") },
+                    { Left = new Name("s", Substitute.For<IFrame>()) },
                 "as_str"
             },
-            new Print(new Name("s"))
+            new Print(new Name("s", Substitute.For<IFrame>())),
         };
 
         var old = instructions[new Label("as_str")];
-        var @new = new AsString(new Name("a")) { Left = new Name("s") };
+        var @new = new AsString(new Name("a", Substitute.For<IFrame>()))
+        {
+            Left = new Name("s", Substitute.For<IFrame>()),
+        };
         instructions.Replace(old, @new);
 
         var prev = instructions.First();

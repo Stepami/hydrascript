@@ -1,3 +1,5 @@
+using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
+
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 
 [AutoVisitable<IAbstractSyntaxTreeNode>]
@@ -12,7 +14,7 @@ public partial class ObjectLiteral : ComplexLiteral
 
     protected override string NullIdPrefix => "obj";
 
-    public override string Id
+    public override IdentifierReference Id
     {
         get
         {
@@ -22,7 +24,7 @@ public partial class ObjectLiteral : ComplexLiteral
             if (Parent is WithExpression{Parent:AssignmentExpression withAssignment})
                 return withAssignment.Destination.Id;
 
-            return NullId;
+            return new(NullId);
         }
     }
 

@@ -4,12 +4,16 @@ public class Return(IValue? value = null) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var callFrame = executeParams.Frames.Pop();
         var call = executeParams.CallStack.Pop();
         if (call.Where != null && value != null)
         {
-            var frame = executeParams.Frames.Peek();
-            call.Where?.Set(frame, value.Get(callFrame));
+            var returnValue = value.Get();
+            executeParams.FrameContext.StepOut();
+            call.Where?.Set(returnValue);
+        }
+        else
+        {
+            executeParams.FrameContext.StepOut();
         }
 
         return call.From.Next;

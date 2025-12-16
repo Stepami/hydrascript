@@ -1,4 +1,5 @@
 using Cysharp.Text;
+using HydraScript.Domain.BackEnd.Impl.Frames;
 using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
@@ -48,19 +49,26 @@ public class Simple : Instruction
     }
 
     protected override void OnSetOfAddress(IAddress address) =>
-        Left ??= new Name(address.Name);
+        Left ??= new Name(address.Name, Name.NullFrameInstance);
 
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        var frame = executeParams.Frames.Peek();
-        Left?.Set(frame, Right.left is null ? GetUnaryResult(frame) : GetBinaryResult(frame));
-
+        Left?.SetFrame(new CurrentFrame(executeParams.FrameContext));
+        Assign();
         return Address.Next;
     }
 
-    private object? GetUnaryResult(Frame frame)
+    /// <summary>
+    /// Совершить "присваивание" результата в <see cref="Left"/>
+    /// </summary>
+    protected virtual void Assign()
     {
-        var value = Right.right!.Get(frame);
+        Left?.Set(Right.left is null ? GetUnaryResult() : GetBinaryResult());
+    }
+
+    private object? GetUnaryResult()
+    {
+        var value = Right.right!.Get();
         return _operator switch
         {
             "-" => -Convert.ToDouble(value),
@@ -71,9 +79,9 @@ public class Simple : Instruction
         };
     }
 
-    private object? GetBinaryResult(Frame frame)
+    private object? GetBinaryResult()
     {
-        object? lValue = Right.left!.Get(frame), rValue = Right.right!.Get(frame);
+        object? lValue = Right.left!.Get(), rValue = Right.right!.Get();
         return _operator switch
         {
             "+" when lValue is string => ZString.Concat(lValue, rValue),

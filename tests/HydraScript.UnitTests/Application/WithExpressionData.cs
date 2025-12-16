@@ -4,7 +4,6 @@ using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Wr
 using HydraScript.Domain.BackEnd.Impl.Values;
 using HydraScript.Domain.FrontEnd.Parser;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
-using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
@@ -24,13 +23,12 @@ public sealed class WithExpressionData : TheoryData<IAbstractSyntaxTree, Address
                         new ObjectLiteral([
                             new Property(
                                 new IdentifierReference("x"),
-                                new Literal(new TypeIdentValue(new IdentifierReference("number")), 1,
-                                    "(1, 15)-(1, 16)"))
+                                Literal.Number(1, "(1, 15)-(1, 16)"))
                         ]),
                         new ObjectLiteral([])))),
             [
-                new CreateObject(new Name("obj")),
-                new DotAssignment(new Name("obj"), new Constant("x"), new Constant(1))
+                new CreateObject(new Name("obj", Substitute.For<IFrame>())),
+                new DotAssignment(new Name("obj", Substitute.For<IFrame>()), new Constant("x"), new Constant(1))
             ]);
 
         // let copyFrom = {x: 0;}
@@ -44,15 +42,14 @@ public sealed class WithExpressionData : TheoryData<IAbstractSyntaxTree, Address
                         new ObjectLiteral([
                             new Property(
                                 new IdentifierReference("x"),
-                                new Literal(new TypeIdentValue(new IdentifierReference("number")), 1,
-                                    "(1, 15)-(1, 16)"))
+                                Literal.Number(1, "(1, 15)-(1, 16)"))
                         ]))
                     {
                         ComputedCopiedProperties = []
                     })),
             [
-                new CreateObject(new Name("obj")),
-                new DotAssignment(new Name("obj"), new Constant("x"), new Constant(1))
+                new CreateObject(new Name("obj", Substitute.For<IFrame>())),
+                new DotAssignment(new Name("obj", Substitute.For<IFrame>()), new Constant("x"), new Constant(1))
             ]);
     }
 }

@@ -9,7 +9,7 @@ public class Constant(object? value, string representation) : IValue
     {
     }
 
-    public object? Get(Frame? frame) => _value;
+    public object? Get() => _value;
 
     public override string ToString() => representation;
 

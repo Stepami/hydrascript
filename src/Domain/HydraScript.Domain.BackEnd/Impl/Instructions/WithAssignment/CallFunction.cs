@@ -1,3 +1,5 @@
+using HydraScript.Domain.BackEnd.Impl.Frames;
+
 namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 
 public class CallFunction(
@@ -12,9 +14,9 @@ public class CallFunction(
 
     public override IAddress Execute(IExecuteParams executeParams)
     {
-        var frame = new Frame(executeParams.Frames.Peek());
+        Left?.SetFrame(new CurrentFrame(executeParams.FrameContext));
+        executeParams.FrameContext.StepIn();
         executeParams.CallStack.Push(new Call(Address, function, Left));
-        executeParams.Frames.Push(frame);
         return function.Start;
     }
 

@@ -6,18 +6,15 @@ namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 
 public partial class AsString(IValue value) : Simple(value)
 {
-    public override IAddress? Execute(IExecuteParams executeParams)
+    protected override void Assign()
     {
-        var frame = executeParams.Frames.Peek();
-        var value = Right.right!.Get(frame);
+        var value = Right.right!.Get();
         var valueAsString = value is string
             ? value
             : JsonSerializer.Serialize(
-                value: Right.right!.Get(frame)!,
+                value: Right.right!.Get()!,
                 AsStringSerializationContext.Default.Object);
-        Left?.Set(frame, valueAsString);
-
-        return Address.Next;
+        Left?.Set(valueAsString);
     }
 
     protected override string ToStringInternal() =>

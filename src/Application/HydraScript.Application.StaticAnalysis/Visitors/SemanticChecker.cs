@@ -24,6 +24,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<ReturnStatement, Type>,
     IVisitor<ExpressionStatement, Type>,
     IVisitor<IdentifierReference, Type>,
+    IVisitor<EnvVarReference, Type>,
     IVisitor<Literal, Type>,
     IVisitor<ImplicitLiteral, Type>,
     IVisitor<ArrayLiteral, ArrayType>,
@@ -154,13 +155,20 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
+    public Type Visit(EnvVarReference visitable) => "string";
+
     public Type Visit(Literal visitable) =>
         visitable.Type.Accept(_typeBuilder);
 
     public Type Visit(ImplicitLiteral visitable)
     {
         var type = visitable.Type.Accept(_typeBuilder);
-        visitable.ComputedDefaultValue = _calculator.GetDefaultValueForType(type);
+        if (!visitable.IsDefined)
+        {
+            var definedValue = _calculator.GetDefaultValueForType(type);
+            visitable.SetValue(definedValue);
+        }
+
         return type;
     }
 
@@ -336,9 +344,11 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             return destinationType;
         }
 
-        var symbol =
-            _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(visitable.Destination.Id)) ??
-            throw new UnknownIdentifierReference(visitable.Destination.Id);
+        // здесь может быть переменная программы, а может быть переменная среды
+        var symbol = visitable.Destination.Id.ToValueDto().Type is ValueDtoType.Name
+            ? _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(visitable.Destination.Id)) ??
+              throw new UnknownIdentifierReference(visitable.Destination.Id)
+            : new VariableSymbol(visitable.Destination.Id, "string");
 
         if (symbol.ReadOnly)
             throw new AssignmentToConst(visitable.Destination.Id);

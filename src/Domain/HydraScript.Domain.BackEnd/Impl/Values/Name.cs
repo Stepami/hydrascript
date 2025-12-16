@@ -1,17 +1,30 @@
 namespace HydraScript.Domain.BackEnd.Impl.Values;
 
-public class Name(string id) : IValue
+public class Name(string id, IFrame frame) : IValue
 {
-    private readonly string _id = id;
+    protected string Id { get; } = id;
+    private IFrame _frame = frame;
 
-    public object? Get(Frame? frame) => frame![_id];
+    public object? Get() => _frame[Id];
 
-    public void Set(Frame? frame, object? value) =>
-        frame?[_id] = value;
+    public void Set(object? value) => _frame[Id] = value;
 
-    public override string ToString() => _id;
+    public virtual void SetFrame(IFrame newFrame) => _frame = newFrame;
+
+    public override string ToString() => Id;
 
     public bool Equals(IValue? other) =>
         other is Name that &&
-        _id == that._id;
+        Id == that.Id;
+
+    internal static readonly IFrame NullFrameInstance = new NullFrame();
+
+    private sealed class NullFrame : IFrame
+    {
+        public object? this[string id]
+        {
+            get => null;
+            set { }
+        }
+    }
 }

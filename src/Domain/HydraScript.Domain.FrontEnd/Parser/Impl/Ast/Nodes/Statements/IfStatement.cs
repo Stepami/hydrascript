@@ -23,10 +23,10 @@ public partial class IfStatement : Statement
         Children = Else is not null ? [Test, Then, Else] : [Test, Then];
     }
 
-    public bool Empty() => this is
+    public bool Empty => this is
     {
-        Then.Count: 0,
-        Else: null or { Count: 0 }
+        Then: BlockStatement { Count: 0 },
+        Else: null or BlockStatement { Count: 0 }
     };
 
     public bool HasElseBlock() => Else is { Count: > 0 };

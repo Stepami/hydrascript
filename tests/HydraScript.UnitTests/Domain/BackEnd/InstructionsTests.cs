@@ -8,11 +8,11 @@ public class InstructionsTests
 {
     [Theory]
     [ClassData(typeof(InstructionsData))]
-    public void ToStringCorrectTest(IExecutableInstruction instruction, string expected) =>
+    public void ToString_Always_Expected(IExecutableInstruction instruction, string expected) =>
         Assert.Equal(expected, instruction.ToString());
 
     [Fact]
-    public void GotoJumpChangedTest()
+    public void SetJump_NewAddress_ValueChanged()
     {
         var @goto = new Goto(new Label("1"));
         @goto.SetJump(new Label("5"));

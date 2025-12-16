@@ -4,7 +4,7 @@ public class Print(IValue value) : Instruction
 {
     public override IAddress? Execute(IExecuteParams executeParams)
     {
-        executeParams.Writer.WriteLine(value.Get(executeParams.Frames.Peek()));
+        executeParams.Writer.WriteLine(value.Get());
         return Address.Next;
     }
 
