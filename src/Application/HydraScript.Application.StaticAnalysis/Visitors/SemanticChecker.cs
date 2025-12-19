@@ -442,6 +442,13 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             throw new CannotDefineType(visitable.Expression.Segment);
 
         var to = visitable.Cast.Accept(_typeBuilder);
+        visitable.ToType = to switch
+        {
+            _ when to.Equals("string") => CastAsExpression.DestinationType.String,
+            _ when to.Equals("number") => CastAsExpression.DestinationType.Number,
+            _ when to.Equals("boolean") => CastAsExpression.DestinationType.Boolean,
+            _ => CastAsExpression.DestinationType.Undefined
+        };
 
         return _explicitCastValidator.IsAllowed(from, to)
             ? to

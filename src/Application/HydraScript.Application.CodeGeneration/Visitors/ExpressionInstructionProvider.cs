@@ -151,13 +151,22 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
 
     public AddressedInstructions Visit(CastAsExpression visitable)
     {
+        Func<IValue, IExecutableInstruction> asFactory = visitable.ToType switch
+        {
+            CastAsExpression.DestinationType.Undefined => throw new NotSupportedException(),
+            CastAsExpression.DestinationType.String => value => new AsString(value),
+            CastAsExpression.DestinationType.Number => value => new AsNumber(value),
+            CastAsExpression.DestinationType.Boolean => value => new AsBool(value),
+            _ => throw new ArgumentOutOfRangeException(nameof(visitable.ToType))
+        };
+
         if (visitable.Expression is PrimaryExpression primary)
-            return [new AsString(_valueFactory.Create(primary.ToValueDto()))];
-        
+            return [asFactory(_valueFactory.Create(primary.ToValueDto()))];
+
         var result = visitable.Expression.Accept(This);
         var last = result.OfType<Simple>().Last().Left!;
-        result.Add(new AsString(last));
-        
+        result.Add(asFactory(last));
+
         return result;
     }
 
