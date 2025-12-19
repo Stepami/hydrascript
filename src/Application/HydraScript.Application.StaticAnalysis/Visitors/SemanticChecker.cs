@@ -50,6 +50,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IComputedTypesStorage _computedTypes;
     private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
+    private readonly IExplicitCastValidator _explicitCastValidator;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
@@ -59,6 +60,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         ISymbolTableStorage symbolTables,
         IComputedTypesStorage computedTypes,
         IAmbiguousInvocationStorage ambiguousInvocations,
+        IExplicitCastValidator explicitCastValidator,
         IVisitor<TypeValue, Type> typeBuilder)
     {
         _calculator = calculator;
@@ -67,6 +69,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _symbolTables = symbolTables;
         _computedTypes = computedTypes;
         _ambiguousInvocations = ambiguousInvocations;
+        _explicitCastValidator = explicitCastValidator;
         _typeBuilder = typeBuilder;
     }
 
@@ -84,7 +87,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _symbolTables.Clear();
         _computedTypes.Clear();
         _ambiguousInvocations.Clear();
-        
+
         return "undefined";
     }
 
@@ -433,14 +436,16 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(CastAsExpression visitable)
     {
         Type undefined = "undefined";
-        var exprType = visitable.Expression.Accept(This);
+        var from = visitable.Expression.Accept(This);
 
-        if (exprType.Equals(undefined))
+        if (from.Equals(undefined))
             throw new CannotDefineType(visitable.Expression.Segment);
 
-        return visitable.Cast.Accept(_typeBuilder) == "string"
-            ? "string"
-            : throw new NotSupportedException("Other types but 'string' have not been supported for casting yet");
+        var to = visitable.Cast.Accept(_typeBuilder);
+
+        return _explicitCastValidator.IsAllowed(from, to)
+            ? to
+            : throw new ExplicitCastNotSupported(visitable, from, to);
     }
 
     public Type Visit(CallExpression visitable)

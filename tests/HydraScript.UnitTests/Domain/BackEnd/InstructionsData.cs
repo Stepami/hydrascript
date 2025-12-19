@@ -19,7 +19,7 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             {
                 Left = Name("str")
             },
-            "str = num as string");
+            "str = num as String");
         Add(
             new BeginBlock(BlockType.Function, blockId: "func")
             {
