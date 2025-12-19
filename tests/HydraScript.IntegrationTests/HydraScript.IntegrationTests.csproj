@@ -26,6 +26,9 @@
         <None Update="Samples\arreditread.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\cast.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\ceil.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

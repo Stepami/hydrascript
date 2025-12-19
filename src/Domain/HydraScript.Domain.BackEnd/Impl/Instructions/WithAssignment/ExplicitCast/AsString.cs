@@ -2,23 +2,12 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
+namespace HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ExplicitCast;
 
-public partial class AsString(IValue value) : Simple(value)
+public partial class AsString(IValue value) : AsInstruction<string>(value)
 {
-    protected override void Assign()
-    {
-        var value = Right.right!.Get();
-        var valueAsString = value is string
-            ? value
-            : JsonSerializer.Serialize(
-                value: Right.right!.Get()!,
-                AsStringSerializationContext.Default.Object);
-        Left?.Set(valueAsString);
-    }
-
-    protected override string ToStringInternal() =>
-        $"{Left} = {Right.right} as string";
+    protected override string Convert(object? value) =>
+        JsonSerializer.Serialize(value, AsStringSerializationContext.Default.Object);
 
     [JsonSourceGenerationOptions(
         GenerationMode = JsonSourceGenerationMode.Serialization,

@@ -2,6 +2,7 @@ using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ExplicitCast;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.Constants;
 using HydraScript.Domain.FrontEnd.Parser;
@@ -231,18 +232,26 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
     public AddressedInstructions Visit(PrintStatement visitable)
     {
-        AddressedInstructions result = [];
-
         if (visitable.Expression is PrimaryExpression prim)
-            result.Add(new AsString(_valueFactory.Create(prim.ToValueDto())));
-        else
         {
-            result.AddRange(visitable.Expression.Accept(_expressionVisitor));
-            var name = result.OfType<Simple>().Last().Left!;
-            result.Add(new AsString(name));
+            var valueDto = prim.ToValueDto();
+            var printedValue = _valueFactory.Create(valueDto);
+            IExecutableInstruction instruction = valueDto is { Type: ValueDtoType.Env } or { Type: ValueDtoType.Constant, Value: string }
+                ? new Print(printedValue)
+                : new AsString(printedValue);
+            AddressedInstructions shortResult = [instruction];
+            if (instruction is AsString asString)
+                shortResult.Add(new Print(asString.Left!));
+            return shortResult;
         }
 
-        result.Add(new Print((result[result.End] as AsString)!.Left!));
+        AddressedInstructions result = [];
+
+        result.AddRange(visitable.Expression.Accept(_expressionVisitor));
+        var name = result.OfType<Simple>().Last().Left!;
+        var nameAsString = new AsString(name);
+        result.Add(nameAsString);
+        result.Add(new Print(nameAsString.Left!));
 
         return result;
     }

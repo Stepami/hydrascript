@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IStandardLibraryProvider, StandardLibraryProvider>();
         services.AddSingleton<IJavaScriptTypesProvider, JavaScriptTypesProvider>();
         services.AddSingleton<IDefaultValueForTypeCalculator, DefaultValueForTypeCalculator>();
+        services.AddSingleton<IExplicitCastValidator, ExplicitCastValidator>();
 
         services.AddSingleton<IAmbiguousInvocationStorage, AmbiguousInvocationStorage>();
 

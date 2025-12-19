@@ -15,12 +15,12 @@ public class NullableType(Type type) : Type($"{type}?")
             Type.ResolveReference(reference, refId, visited);
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(Type? obj)
     {
         if (obj is NullableType that)
             return Equals(Type, that.Type);
 
-        return obj is NullType or Any || (obj is Type type && type.Equals(Type));
+        return obj is NullType or Any || (obj is not null && obj.Equals(Type));
     }
 
     public override int GetHashCode() =>
