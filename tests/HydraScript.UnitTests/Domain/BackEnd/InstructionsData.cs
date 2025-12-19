@@ -4,6 +4,7 @@ using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Create;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ComplexData.Write;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ExplicitCast;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.BackEnd.Impl.Values;
 

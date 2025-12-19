@@ -2,6 +2,7 @@ using HydraScript.Domain.BackEnd;
 using HydraScript.Domain.BackEnd.Impl.Addresses;
 using HydraScript.Domain.BackEnd.Impl.Instructions;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment;
+using HydraScript.Domain.BackEnd.Impl.Instructions.WithAssignment.ExplicitCast;
 using HydraScript.Domain.BackEnd.Impl.Instructions.WithJump;
 using HydraScript.Domain.Constants;
 using HydraScript.Domain.FrontEnd.Parser;
