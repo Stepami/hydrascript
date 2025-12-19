@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.BackEnd;
 
-public interface IOutputWriter
+public interface IConsole
 {
     public void WriteLine(object? obj);
 

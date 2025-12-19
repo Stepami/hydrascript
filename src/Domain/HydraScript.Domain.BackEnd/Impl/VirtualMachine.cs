@@ -1,10 +1,10 @@
 namespace HydraScript.Domain.BackEnd.Impl;
 
 public class VirtualMachine(
-    IOutputWriter writer,
+    IConsole console,
     IFrameContext frameContext) : IVirtualMachine
 {
-    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(writer, frameContext);
+    public IExecuteParams ExecuteParams { get; } = new ExecuteParams(console, frameContext);
 
     public void Run(AddressedInstructions instructions)
     {

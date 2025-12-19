@@ -14,7 +14,7 @@ public class Executor(
 {
     public int Invoke()
     {
-        var writer = virtualMachine.ExecuteParams.Writer;
+        var writer = virtualMachine.ExecuteParams.Console;
         try
         {
             var sourceCode = sourceCodeProvider.GetText();
