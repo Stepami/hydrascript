@@ -15,7 +15,7 @@ public class ArrayType(Type type) : Type($"{type}[]")
             Type.ResolveReference(reference, refId, visited);
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(Type? obj)
     {
         if (obj is ArrayType that)
             return Equals(Type, that.Type);

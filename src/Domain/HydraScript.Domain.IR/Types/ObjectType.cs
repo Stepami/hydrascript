@@ -69,7 +69,7 @@ public class ObjectType : Type
                 this[key]!.ResolveReference(reference, refId, visited);
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(Type? obj)
     {
         if (obj is ObjectType that)
             return ReferenceEquals(this, that) ||
