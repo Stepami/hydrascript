@@ -63,14 +63,19 @@ public static class TokenTypes
                 Priority: 11);
 
             yield return new(
-                Tag: "Print",
+                Tag: "Output",
                 Pattern: "[>]{3}",
                 Priority: 12);
 
             yield return new(
+                Tag: "Input",
+                Pattern: "[<]{3}",
+                Priority: 13);
+
+            yield return new(
                 Tag: "Operator",
                 Pattern: "[+]{1,2}|[-]|[*]|[/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}|[~]|[:]{2}|[$]",
-                Priority: 13);
+                Priority: 14);
 
             yield return new(
                 Tag: "Comma",

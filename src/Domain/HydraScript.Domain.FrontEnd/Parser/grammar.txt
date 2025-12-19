@@ -11,6 +11,7 @@ Statement -> BlockStatement
              BreakStatement
              ReturnStatement
              OutputStatement
+             InputStatement
              
 Declaration -> LexicalDeclaration
                FunctionDeclaration
@@ -68,6 +69,7 @@ BreakStatement -> 'break'
 ReturnStatement -> 'return' Expression?
 
 OutputStatement -> '>>>' Expression
+InputStatement -> '<<<' (Ident | EnvVar)
 
 TypeDeclaration -> 'type' "Ident" = TypeValue
 TypeValue -> TypeValueBase TypeValueSuffix*
