@@ -114,7 +114,7 @@ public class TopDownParser(ILexer lexer) : IParser
     ///              ContinueStatement
     ///              BreakStatement
     ///              ReturnStatement
-    ///              PrintStatement
+    ///              OutputStatement
     /// </summary>
     private Statement Statement()
     {
@@ -147,7 +147,7 @@ public class TopDownParser(ILexer lexer) : IParser
             return WhileStatement();
 
         if (CurrentIs("Print"))
-            return PrintStatement();
+            return OutputStatement();
 
         return null!;
     }
@@ -220,12 +220,12 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// PrintStatement -> '>>>' Expression
+    /// OutputStatement -> '>>>' Expression
     /// </summary>
-    private PrintStatement PrintStatement()
+    private OutputStatement OutputStatement()
     {
         Expect("Print");
-        return new PrintStatement(Expression());
+        return new OutputStatement(Expression());
     }
 
     /// <summary>

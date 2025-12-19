@@ -24,7 +24,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     IVisitor<FunctionDeclaration, AddressedInstructions>,
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>,
-    IVisitor<PrintStatement, AddressedInstructions>
+    IVisitor<OutputStatement, AddressedInstructions>
 {
     private readonly IValueFactory _valueFactory;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
@@ -230,7 +230,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         return result;
     }
 
-    public AddressedInstructions Visit(PrintStatement visitable)
+    public AddressedInstructions Visit(OutputStatement visitable)
     {
         if (visitable.Expression is PrimaryExpression prim)
         {
