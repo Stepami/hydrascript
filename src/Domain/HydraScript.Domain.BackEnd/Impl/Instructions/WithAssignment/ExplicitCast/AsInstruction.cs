@@ -12,5 +12,5 @@ public abstract class AsInstruction<T>(IValue value) : Simple(value)
     protected abstract T Convert(object? value);
 
     protected override string ToStringInternal() =>
-        $"{Left} = {Right.right} as {typeof(T).Name})";
+        $"{Left} = {Right.right} as {typeof(T).Name}";
 }
