@@ -249,9 +249,9 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
         result.AddRange(visitable.Expression.Accept(_expressionVisitor));
         var name = result.OfType<Simple>().Last().Left!;
-        result.Add(new AsString(name));
-
-        result.Add(new Print((result[result.End] as AsString)!.Left!));
+        var nameAsString = new AsString(name);
+        result.Add(nameAsString);
+        result.Add(new Print(nameAsString.Left!));
 
         return result;
     }
