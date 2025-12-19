@@ -1,6 +1,6 @@
 namespace HydraScript.Domain.IR.Types;
 
-public class Type
+public class Type : IEquatable<Type>
 {
     private readonly string _name = string.Empty;
 
@@ -18,13 +18,15 @@ public class Type
     {
     }
 
-    public override bool Equals(object? obj) =>
+    public virtual bool Equals(Type? obj) =>
         obj switch
         {
             Any => true,
-            Type that => _name == that._name,
+            not null => _name == obj._name,
             _ => false
         };
+
+    public override bool Equals(object? obj) => Equals(obj as Type);
 
     public override int GetHashCode() =>
         _name.GetHashCode();

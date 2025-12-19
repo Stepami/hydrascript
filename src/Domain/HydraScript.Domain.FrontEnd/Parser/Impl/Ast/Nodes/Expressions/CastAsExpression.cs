@@ -9,6 +9,7 @@ public partial class CastAsExpression : Expression
 
     public Expression Expression { get; }
     public TypeValue Cast { get; }
+    public DestinationType ToType { get; set; }
 
     public CastAsExpression(Expression expression, TypeValue cast)
     {
@@ -28,4 +29,12 @@ public partial class CastAsExpression : Expression
     }
 
     protected override string NodeRepresentation() => $"as {Cast}";
+
+    public enum DestinationType
+    {
+        Undefined,
+        String,
+        Number,
+        Boolean,
+    }
 }
