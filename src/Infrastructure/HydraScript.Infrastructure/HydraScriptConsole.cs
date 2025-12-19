@@ -17,4 +17,6 @@ internal partial class HydraScriptConsole(ILogger<HydraScriptConsole> logger) : 
     private static partial void WriteError(ILogger<HydraScriptConsole> logger, Exception e, string message);
 
     public void WriteError(Exception e, string message) => WriteError(logger, e, message);
+
+    public string ReadLine() => Console.ReadLine() ?? string.Empty;
 }
