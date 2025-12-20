@@ -83,7 +83,7 @@ public class TopDownParser(ILexer lexer) : IParser
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
-        while (CurrentIsDeclaration() || CurrentIsExpression() || CurrentIs("Print") ||
+        while (CurrentIsDeclaration() || CurrentIsExpression() || CurrentIs("Output") ||
                CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
                CurrentIsKeyword("if") || CurrentIsKeyword("while"))
         {
@@ -146,7 +146,7 @@ public class TopDownParser(ILexer lexer) : IParser
         if (CurrentIsKeyword("while"))
             return WhileStatement();
 
-        if (CurrentIs("Print"))
+        if (CurrentIs("Output"))
             return OutputStatement();
 
         return null!;
@@ -224,7 +224,7 @@ public class TopDownParser(ILexer lexer) : IParser
     /// </summary>
     private OutputStatement OutputStatement()
     {
-        Expect("Print");
+        Expect("Output");
         return new OutputStatement(Expression());
     }
 
