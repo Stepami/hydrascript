@@ -15,5 +15,5 @@ public partial class OutputStatement : Statement
         Children = [Expression];
     }
 
-    protected override string NodeRepresentation() => "print";
+    protected override string NodeRepresentation() => "output";
 }
