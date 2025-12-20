@@ -42,7 +42,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<CallExpression, Type>,
     IVisitor<FunctionDeclaration, Type>,
     IVisitor<BlockStatement, Type>,
-    IVisitor<PrintStatement, Type>
+    IVisitor<OutputStatement, Type>,
+    IVisitor<InputStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
@@ -367,7 +368,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(MemberExpression visitable)
     {
-        var idType = visitable.Id.Accept(This);
+        IAbstractSyntaxTreeNode id = visitable.Id;
+        var idType = id.Accept(This);
         visitable.ComputedIdTypeGuid = _computedTypes.Save(idType);
         return visitable.Empty() ? idType : visitable.AccessChain?.Accept(This) ?? "undefined";
     }
@@ -548,9 +550,18 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         return "undefined";
     }
 
-    public Type Visit(PrintStatement visitable)
+    public Type Visit(OutputStatement visitable)
     {
         visitable.Expression.Accept(This);
+        return "undefined";
+    }
+
+    public Type Visit(InputStatement visitable)
+    {
+        IAbstractSyntaxTreeNode id = visitable.Destination;
+        var idType = id.Accept(This);
+        if (!idType.Equals("string"))
+            throw new UnsupportedOperation(visitable.Segment, idType, "<<<");
         return "undefined";
     }
 }

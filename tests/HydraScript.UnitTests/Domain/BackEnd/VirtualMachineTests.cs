@@ -14,15 +14,15 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 public class VirtualMachineTests
 {
     [Theory, AutoHydraScriptData]
-    public void CorrectPrintToOutTest([Frozen] IOutputWriter writer, TestVirtualMachine vm)
+    public void CorrectPrintToOutTest([Frozen] IConsole console, TestVirtualMachine vm)
     {
-        var print = new Print(new Constant(223))
+        var print = new Output(new Constant(223))
         {
             Address = new HashAddress(1)
         };
 
         print.Execute(vm.ExecuteParams);
-        writer.Received(1).WriteLine(223);
+        console.Received(1).WriteLine(223);
     }
 
     [Theory, AutoHydraScriptData]

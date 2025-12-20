@@ -6,7 +6,7 @@ public interface IExecuteParams
 
     public Queue<object?> Arguments { get; }
 
-    public IOutputWriter Writer { get; }
+    public IConsole Console { get; }
 
     public IFrameContext FrameContext { get; }
 }
