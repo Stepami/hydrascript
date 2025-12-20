@@ -42,7 +42,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<CallExpression, Type>,
     IVisitor<FunctionDeclaration, Type>,
     IVisitor<BlockStatement, Type>,
-    IVisitor<OutputStatement, Type>
+    IVisitor<OutputStatement, Type>,
+    IVisitor<InputStatement, Type>
 {
     private readonly IDefaultValueForTypeCalculator _calculator;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
@@ -551,6 +552,14 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(OutputStatement visitable)
     {
         visitable.Expression.Accept(This);
+        return "undefined";
+    }
+
+    public Type Visit(InputStatement visitable)
+    {
+        var idType = visitable.Destination.Accept(This);
+        if (!idType.Equals("string"))
+            throw new UnsupportedOperation(visitable.Segment, idType, "<<<");
         return "undefined";
     }
 }
