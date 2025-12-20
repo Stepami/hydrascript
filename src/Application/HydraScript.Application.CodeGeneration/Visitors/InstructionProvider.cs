@@ -24,7 +24,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     IVisitor<FunctionDeclaration, AddressedInstructions>,
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>,
-    IVisitor<OutputStatement, AddressedInstructions>
+    IVisitor<OutputStatement, AddressedInstructions>,
+    IVisitor<InputStatement, AddressedInstructions>
 {
     private readonly IValueFactory _valueFactory;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
@@ -255,4 +256,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
 
         return result;
     }
+
+    public AddressedInstructions Visit(InputStatement visitable) =>
+        [new Input(_valueFactory.Create(visitable.Destination))];
 }
