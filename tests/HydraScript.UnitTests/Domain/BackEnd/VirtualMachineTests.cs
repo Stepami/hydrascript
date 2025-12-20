@@ -16,7 +16,7 @@ public class VirtualMachineTests
     [Theory, AutoHydraScriptData]
     public void CorrectPrintToOutTest([Frozen] IConsole console, TestVirtualMachine vm)
     {
-        var print = new Print(new Constant(223))
+        var print = new Output(new Constant(223))
         {
             Address = new HashAddress(1)
         };

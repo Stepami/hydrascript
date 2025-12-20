@@ -63,8 +63,8 @@ public class InstructionsData : TheoryData<IExecutableInstruction, string>
             new IndexAssignment(Name("arr"), new Constant(1), new Constant(1)),
             "arr[1] = 1");
         Add(
-            new Print(Name("str")),
-            "Print str");
+            new Output(Name("str")),
+            "Output str");
         Add(
             new PushParameter(Name("value")),
             "PushParameter value");
