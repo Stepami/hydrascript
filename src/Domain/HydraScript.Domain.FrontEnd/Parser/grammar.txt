@@ -10,7 +10,8 @@ Statement -> BlockStatement
              ContinueStatement
              BreakStatement
              ReturnStatement
-             PrintStatement
+             OutputStatement
+             InputStatement
              
 Declaration -> LexicalDeclaration
                FunctionDeclaration
@@ -67,7 +68,8 @@ BreakStatement -> 'break'
 
 ReturnStatement -> 'return' Expression?
 
-PrintStatement -> '>>>' Expression
+OutputStatement -> '>>>' Expression
+InputStatement -> '<<<' (Ident | EnvVar)
 
 TypeDeclaration -> 'type' "Ident" = TypeValue
 TypeValue -> TypeValueBase TypeValueSuffix*

@@ -11,7 +11,7 @@ public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFi
     public void Invoke_DumpOptionPassed_FilesCreated()
     {
         using var runner = fixture.GetRunner(new TestHostFixture.Options(Dump: true, InMemoryScript: ">>>[]"));
-        var outputWriter = runner.ServiceProvider.GetRequiredService<IOutputWriter>();
+        var outputWriter = runner.ServiceProvider.GetRequiredService<IConsole>();
         var fileSystemMock = runner.ServiceProvider.GetRequiredService<IFileSystem>();
         fileSystemMock.File
             .WhenForAnyArgs(x => x.WriteAllText(Arg.Any<string>(), Arg.Any<string>()))

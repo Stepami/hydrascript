@@ -11,7 +11,8 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
         using var runner = fixture.GetRunner(
             new TestHostFixture.Options(
                 FileName: relativePathToFile,
-                MockFileSystem: false));
+                MockFileSystem: false,
+                MockEnv: false));
         var code = runner.Invoke();
         code.Should().Be(Executor.ExitCodes.Success);
     }

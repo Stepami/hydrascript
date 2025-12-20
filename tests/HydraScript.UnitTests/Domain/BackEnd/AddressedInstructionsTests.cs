@@ -18,7 +18,7 @@ public class AddressedInstructionsTests
             {
                 Left = new Name("s", Substitute.For<IFrame>())
             },
-            new Print(new Name("s", Substitute.For<IFrame>())),
+            new Output(new Name("s", Substitute.For<IFrame>())),
             new Halt()
         ];
 
@@ -51,7 +51,7 @@ public class AddressedInstructionsTests
                     { Left = new Name("s", Substitute.For<IFrame>()) },
                 "as_str"
             },
-            new Print(new Name("s", Substitute.For<IFrame>())),
+            new Output(new Name("s", Substitute.For<IFrame>())),
         };
 
         var old = instructions[new Label("as_str")];

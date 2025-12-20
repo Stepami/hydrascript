@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IFrameContext, FrameContext>();
         services.AddSingleton(SystemEnvironmentVariableProvider.Instance);
-        services.AddSingleton<IOutputWriter, LoggingWriter>();
+        services.AddSingleton<IConsole, HydraScriptConsole>();
         services.AddSingleton<IVirtualMachine, VirtualMachine>();
 
         return services;

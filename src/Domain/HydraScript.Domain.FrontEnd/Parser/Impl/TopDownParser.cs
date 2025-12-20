@@ -83,7 +83,8 @@ public class TopDownParser(ILexer lexer) : IParser
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
-        while (CurrentIsDeclaration() || CurrentIsExpression() || CurrentIs("Print") ||
+        while (CurrentIsDeclaration() || CurrentIsExpression() ||
+               CurrentIs("Output") || CurrentIs("Input") ||
                CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
                CurrentIsKeyword("if") || CurrentIsKeyword("while"))
         {
@@ -114,7 +115,8 @@ public class TopDownParser(ILexer lexer) : IParser
     ///              ContinueStatement
     ///              BreakStatement
     ///              ReturnStatement
-    ///              PrintStatement
+    ///              OutputStatement
+    ///              InputStatement
     /// </summary>
     private Statement Statement()
     {
@@ -146,8 +148,11 @@ public class TopDownParser(ILexer lexer) : IParser
         if (CurrentIsKeyword("while"))
             return WhileStatement();
 
-        if (CurrentIs("Print"))
-            return PrintStatement();
+        if (CurrentIs("Output"))
+            return OutputStatement();
+
+        if (CurrentIs("Input"))
+            return InputStatement();
 
         return null!;
     }
@@ -220,12 +225,38 @@ public class TopDownParser(ILexer lexer) : IParser
     }
 
     /// <summary>
-    /// PrintStatement -> '>>>' Expression
+    /// OutputStatement -> '>>>' Expression
     /// </summary>
-    private PrintStatement PrintStatement()
+    private OutputStatement OutputStatement()
     {
-        Expect("Print");
-        return new PrintStatement(Expression());
+        Expect("Output");
+        return new OutputStatement(Expression());
+    }
+
+    /// <summary>
+    /// InputStatement -> '&lt;&lt;&lt;' (Ident | EnvVar)
+    /// </summary>
+    private InputStatement InputStatement()
+    {
+        var input = Expect("Input");
+        if (CurrentIsOperator("$"))
+        {
+            var dollar = Expect("Operator");
+            var envIdent = Expect("Ident");
+            return new InputStatement(new EnvVarReference(envIdent.Value)
+            {
+                Segment = dollar.Segment + envIdent.Segment
+            })
+            {
+                Segment = input.Segment + envIdent.Segment
+            };
+        }
+
+        var ident = Expect("Ident");
+        return new InputStatement(new IdentifierReference(ident.Value) { Segment = ident.Segment })
+        {
+            Segment = input.Segment + ident.Segment
+        };
     }
 
     /// <summary>

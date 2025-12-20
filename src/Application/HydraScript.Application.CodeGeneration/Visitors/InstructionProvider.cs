@@ -24,7 +24,8 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
     IVisitor<FunctionDeclaration, AddressedInstructions>,
     IVisitor<WhileStatement, AddressedInstructions>,
     IVisitor<IfStatement, AddressedInstructions>,
-    IVisitor<PrintStatement, AddressedInstructions>
+    IVisitor<OutputStatement, AddressedInstructions>,
+    IVisitor<InputStatement, AddressedInstructions>
 {
     private readonly IValueFactory _valueFactory;
     private readonly IVisitor<IAbstractSyntaxTreeNode, AddressedInstructions> _expressionVisitor;
@@ -132,7 +133,7 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         for (var i = 0; i < visitable.Arguments.Count; i++)
         {
             var arg = visitable.Arguments[i];
-            result.Add(new PopParameter(_valueFactory.CreateName(arg.Name), arg.Info.Value));
+            result.Add(new PopParameter(_valueFactory.Create(arg.Name), arg.Info.Value));
         }
 
         result.AddRange(visitable.Statements.Accept(This));
@@ -230,18 +231,18 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         return result;
     }
 
-    public AddressedInstructions Visit(PrintStatement visitable)
+    public AddressedInstructions Visit(OutputStatement visitable)
     {
         if (visitable.Expression is PrimaryExpression prim)
         {
             var valueDto = prim.ToValueDto();
             var printedValue = _valueFactory.Create(valueDto);
             IExecutableInstruction instruction = valueDto is { Type: ValueDtoType.Env } or { Type: ValueDtoType.Constant, Value: string }
-                ? new Print(printedValue)
+                ? new Output(printedValue)
                 : new AsString(printedValue);
             AddressedInstructions shortResult = [instruction];
             if (instruction is AsString asString)
-                shortResult.Add(new Print(asString.Left!));
+                shortResult.Add(new Output(asString.Left!));
             return shortResult;
         }
 
@@ -251,8 +252,11 @@ internal class InstructionProvider : VisitorBase<IAbstractSyntaxTreeNode, Addres
         var name = result.OfType<Simple>().Last().Left!;
         var nameAsString = new AsString(name);
         result.Add(nameAsString);
-        result.Add(new Print(nameAsString.Left!));
+        result.Add(new Output(nameAsString.Left!));
 
         return result;
     }
+
+    public AddressedInstructions Visit(InputStatement visitable) =>
+        [new Input(_valueFactory.Create(visitable.Destination))];
 }

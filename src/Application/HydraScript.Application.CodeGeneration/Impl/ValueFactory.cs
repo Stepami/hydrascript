@@ -21,7 +21,7 @@ internal class ValueFactory(
             _ => throw new ArgumentOutOfRangeException(nameof(dto))
         };
 
-    public Name CreateName(IdentifierReference id)
+    public Name Create(IdentifierReference id)
     {
         var dto = id.ToValueDto();
         return dto switch
@@ -34,7 +34,7 @@ internal class ValueFactory(
         };
     }
 
-    public Name CreateName(string id) => new(id, CurrentFrame);
+    public Name Create(string id) => new(id, CurrentFrame);
 
     private CurrentFrame CurrentFrame { get; } = new(frameContext);
 
