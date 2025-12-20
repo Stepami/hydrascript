@@ -368,7 +368,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(MemberExpression visitable)
     {
-        var idType = visitable.Id.Accept(This);
+        IAbstractSyntaxTreeNode id = visitable.Id;
+        var idType = id.Accept(This);
         visitable.ComputedIdTypeGuid = _computedTypes.Save(idType);
         return visitable.Empty() ? idType : visitable.AccessChain?.Accept(This) ?? "undefined";
     }
@@ -557,7 +558,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(InputStatement visitable)
     {
-        var idType = visitable.Destination.Accept(This);
+        IAbstractSyntaxTreeNode id = visitable.Destination;
+        var idType = id.Accept(This);
         if (!idType.Equals("string"))
             throw new UnsupportedOperation(visitable.Segment, idType, "<<<");
         return "undefined";
