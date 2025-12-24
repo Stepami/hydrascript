@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Frozen;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Lexer.TokenTypes;
@@ -23,7 +22,6 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
     public IEnumerator<TokenType> GetEnumerator() =>
         Types.Values.AsEnumerable().GetEnumerator();
 
-    [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public int Count => Types.Values.Length;

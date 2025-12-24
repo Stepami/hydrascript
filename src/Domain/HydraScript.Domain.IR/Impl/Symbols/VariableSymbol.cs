@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
 namespace HydraScript.Domain.IR.Impl.Symbols;
@@ -15,7 +14,6 @@ public class VariableSymbol(
 
     public void Initialize() => Initialized = true;
 
-    [ExcludeFromCodeCoverage]
     public override string ToString() =>
         $"{(ReadOnly ? "const " : "")}{Name}: {Type}";
 }
