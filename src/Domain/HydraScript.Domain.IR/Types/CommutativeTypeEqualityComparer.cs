@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace HydraScript.Domain.IR.Types;
 
 public readonly ref struct CommutativeTypeEqualityComparer : IEqualityComparer<Type>
@@ -5,5 +7,6 @@ public readonly ref struct CommutativeTypeEqualityComparer : IEqualityComparer<T
     public bool Equals(Type? x, Type? y) =>
         x?.Equals(y) != false || y?.Equals(x) != false;
 
+    [ExcludeFromCodeCoverage]
     public int GetHashCode(Type obj) => obj.GetHashCode();
 }
