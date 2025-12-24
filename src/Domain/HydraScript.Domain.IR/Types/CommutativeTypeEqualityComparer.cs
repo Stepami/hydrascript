@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace HydraScript.Domain.IR.Types;
 
 public readonly ref struct CommutativeTypeEqualityComparer : IEqualityComparer<Type>
