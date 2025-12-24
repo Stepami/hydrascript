@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Cysharp.Text;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
 
@@ -25,7 +24,6 @@ public class FunctionSymbol(
     public void DefineReturnType(Type returnType) =>
         _returnType = returnType;
 
-    [ExcludeFromCodeCoverage]
     public override string ToString()
     {
         using var zsb = ZString.CreateStringBuilder();

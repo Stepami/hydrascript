@@ -99,32 +99,14 @@ public class ObjectType : Type
         public ObjectTypeHasher(ObjectType reference) =>
             _reference = reference;
 
-        private int Hash(Type type) => type switch
-        {
-            ArrayType arrayType => HashArrayType(arrayType),
-            ObjectType objectType => HashObjectType(objectType),
-            NullableType nullableType => HashNullableType(nullableType),
-            _ => type.GetHashCode()
-        };
-
         public int HashObjectType(ObjectType objectType) =>
             objectType._properties.Keys.Select(
                     key => HashCode.Combine(
                         key,
                         objectType[key]!.Equals(_reference)
                             ? "@this".GetHashCode()
-                            : objectType[key]!.GetType().GetHashCode()))
+                            : HashCode.Combine(key, objectType[key]!.GetType())))
                 .Aggregate(36, HashCode.Combine);
-
-        private int HashArrayType(ArrayType arrayType) =>
-            arrayType.Type.Equals(_reference)
-                ? "@this".GetHashCode()
-                : Hash(arrayType.Type);
-
-        private int HashNullableType(NullableType nullableType) =>
-            nullableType.Type.Equals(_reference)
-                ? "@this".GetHashCode()
-                : Hash(nullableType.Type);
     }
 
     private class ObjectTypePrinter

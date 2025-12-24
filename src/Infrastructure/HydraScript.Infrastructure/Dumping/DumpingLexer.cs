@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Lexer;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,6 @@ internal class DumpingLexer(
     ILexer lexer,
     IDumpingService dumpingService) : ILexer
 {
-    [ExcludeFromCodeCoverage]
     public IStructure Structure => lexer.Structure;
 
     public IEnumerable<Token> GetTokens(string text)

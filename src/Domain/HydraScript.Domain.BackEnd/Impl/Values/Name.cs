@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace HydraScript.Domain.BackEnd.Impl.Values;
 
 public class Name(string id, IFrame frame) : IValue
@@ -19,6 +21,7 @@ public class Name(string id, IFrame frame) : IValue
 
     internal static readonly IFrame NullFrameInstance = new NullFrame();
 
+    [ExcludeFromCodeCoverage]
     private sealed class NullFrame : IFrame
     {
         public object? this[string id]
