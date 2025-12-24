@@ -101,8 +101,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         if (parameters is [ObjectType methodOwner, ..] && visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
             _methodStorage.BindMethod(methodOwner, functionSymbol, functionSymbolId);
 
-        Type undefined = "undefined";
-        if (functionSymbol.Type.Equals(undefined))
+        if (functionSymbol.Type.Equals("undefined"))
         {
             if (visitable.HasReturnStatement)
                 _functionStorage.Save(functionSymbol, visitable);

@@ -95,8 +95,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(WhileStatement visitable)
     {
         var condType = visitable.Condition.Accept(This);
-        Type boolean = "boolean";
-        if (!condType.Equals(boolean))
+        if (!condType.Equals("boolean"))
             throw new NotBooleanTestExpression(visitable.Segment, condType);
 
         visitable.Statement.Accept(This);
@@ -107,8 +106,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(IfStatement visitable)
     {
         var testType = visitable.Test.Accept(This);
-        Type boolean = "boolean";
-        if (!testType.Equals(boolean))
+        if (!testType.Equals("boolean"))
             throw new NotBooleanTestExpression(visitable.Segment, testType);
 
         visitable.Then.Accept(This);
@@ -219,8 +217,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(ConditionalExpression visitable)
     {
         var tType = visitable.Test.Accept(This);
-        Type boolean = "boolean";
-        if (!tType.Equals(boolean))
+        if (!tType.Equals("boolean"))
             throw new NotBooleanTestExpression(visitable.Test.Segment, tType);
 
         var cType = visitable.Consequent.Accept(This);
@@ -296,7 +293,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(LexicalDeclaration visitable)
     {
-        Type undefined = "undefined", @void = "void";
+        Type undefined = "undefined";
 
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
@@ -306,7 +303,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
             if (sourceType.Equals(undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
-            if (sourceType.Equals(@void))
+            if (sourceType.Equals("void"))
                 throw new CannotAssignVoid(assignment.Source.Segment);
             if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
                 throw new IncompatibleTypesOfOperands(
@@ -384,9 +381,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (prevType is not ArrayType arrayType)
             throw new NonAccessibleType(prevType);
 
-        Type number = "number";
         var indexType = visitable.Index.Accept(This);
-        if (!indexType.Equals(number))
+        if (!indexType.Equals("number"))
             throw new ArrayAccessException(visitable.Segment, indexType);
 
         var elemType = arrayType.Type;
@@ -437,10 +433,9 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(CastAsExpression visitable)
     {
-        Type undefined = "undefined";
         var from = visitable.Expression.Accept(This);
 
-        if (from.Equals(undefined))
+        if (from.Equals("undefined"))
             throw new CannotDefineType(visitable.Expression.Segment);
 
         var to = visitable.Cast.Accept(_typeBuilder);
@@ -495,8 +490,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                     throw new WrongTypeOfArgument(expr.Segment, expectedType, actualType);
             });
 
-        Type undefined = "undefined";
-        if (functionSymbol.Type.Equals(undefined))
+        if (functionSymbol.Type.Equals("undefined"))
         {
             var declaration = _functionStorage.Get(functionSymbol);
             functionReturnType = declaration.Accept(This);

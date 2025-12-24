@@ -4,25 +4,19 @@ namespace HydraScript.Application.StaticAnalysis.Impl;
 
 internal class DefaultValueForTypeCalculator : IDefaultValueForTypeCalculator
 {
-    private readonly Type _boolean = "boolean";
-    private readonly Type _number = "number";
-    private readonly Type _string = "string";
-    private readonly Type _void = "void";
-    private readonly Type _null = new NullType();
-
     public object? GetDefaultValueForType(Type type)
     {
         if (type is NullableType)
             return null;
-        if (type.Equals(_boolean))
+        if (type.Equals("boolean"))
             return false;
-        if (type.Equals(_number))
+        if (type.Equals("number"))
             return 0;
-        if (type.Equals(_string))
+        if (type.Equals("string"))
             return string.Empty;
-        if (type.Equals(_void))
+        if (type.Equals("void"))
             return new object();
-        if (type.Equals(_null))
+        if (type.Equals(new NullType()))
             return null;
         if (type is ArrayType)
             return new List<object>();
