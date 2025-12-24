@@ -23,7 +23,6 @@ public class Structure<TContainer>(ITokenTypesProvider provider) : IStructure
     public IEnumerator<TokenType> GetEnumerator() =>
         Types.Values.AsEnumerable().GetEnumerator();
 
-    [ExcludeFromCodeCoverage]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public int Count => Types.Values.Length;

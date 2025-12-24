@@ -15,7 +15,6 @@ public class TypeSymbol(Type type, string? name = null) :
     public override int GetHashCode() =>
         HashCode.Combine(Name, Type);
 
-    [ExcludeFromCodeCoverage]
     public override string ToString() =>
         $"type {Name} = {Type}";
 }

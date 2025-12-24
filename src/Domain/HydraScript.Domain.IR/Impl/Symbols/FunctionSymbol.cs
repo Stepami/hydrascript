@@ -25,7 +25,6 @@ public class FunctionSymbol(
     public void DefineReturnType(Type returnType) =>
         _returnType = returnType;
 
-    [ExcludeFromCodeCoverage]
     public override string ToString()
     {
         using var zsb = ZString.CreateStringBuilder();

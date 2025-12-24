@@ -5,6 +5,8 @@
         <Functions>
             <Exclude>
                 <Function>.*ToString.*</Function>
+                <Function>.*GetHashCode.*</Function>
+                <Function>.*GetEnumerator.*</Function>
             </Exclude>
         </Functions>
 
