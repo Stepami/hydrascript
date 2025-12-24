@@ -47,6 +47,9 @@
         <None Update="Samples\equals.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Samples\env.js">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Samples\exprtest.js">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
