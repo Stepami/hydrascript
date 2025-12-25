@@ -330,6 +330,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
     public Type Visit(AssignmentExpression visitable)
     {
+        var typeComparer = default(CommutativeTypeEqualityComparer);
+
         if (visitable.Destination is CallExpression)
             throw new WrongAssignmentTarget(visitable.Destination);
 
@@ -337,7 +339,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (!visitable.Destination.Empty())
         {
             var destinationType = visitable.Destination.Accept(This);
-            if (!destinationType.Equals(sourceType))
+            if (!typeComparer.Equals(destinationType, sourceType))
                 throw new IncompatibleTypesOfOperands(
                     visitable.Segment,
                     left: destinationType,
@@ -354,7 +356,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (symbol.ReadOnly)
             throw new AssignmentToConst(visitable.Destination.Id);
 
-        if (!sourceType.Equals(symbol.Type))
+        if (!typeComparer.Equals(sourceType, symbol.Type))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
                 left: symbol.Type,
