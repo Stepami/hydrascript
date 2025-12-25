@@ -225,9 +225,9 @@ let c = add(1, 2) // c is number
 
 ### Methods
 
-A function can be method if it's bound to an object using the "Golang approach":
+A function can be method if it's bound to an object using the "Golang-like approach":
 ```
-# The binding is done with type alias
+# The binding is done with object type alias
 
 // step 1. Declare type alias
 type Point2 = {
