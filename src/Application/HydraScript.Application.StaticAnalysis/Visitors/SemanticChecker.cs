@@ -238,7 +238,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var lType = visitable.Left.Accept(This);
         var rType = visitable.Right.Accept(This);
 
-        if (visitable.Operator != "::" && !lType.Equals(rType))
+        if (visitable.Operator != "::" && !default(CommutativeTypeEqualityComparer).Equals(lType, rType))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
                 left: lType,
@@ -305,7 +305,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 throw new CannotDefineType(assignment.Source.Segment);
             if (sourceType.Equals("void"))
                 throw new CannotAssignVoid(assignment.Source.Segment);
-            if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
+            if (!registeredSymbol.Type.Equals(undefined) &&
+                !default(CommutativeTypeEqualityComparer).Equals(registeredSymbol.Type, sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
                     left: registeredSymbol.Type,
