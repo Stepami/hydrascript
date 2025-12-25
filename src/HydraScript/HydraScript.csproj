@@ -18,7 +18,7 @@
         <PackageReference Include="System.CommandLine" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(PublishAot)' == 'false'">
+    <PropertyGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
         <IsPackable>true</IsPackable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>HydraScript</PackageId>
@@ -39,7 +39,7 @@
         <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(PublishAot)' == 'false'">
+    <ItemGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath=""/>
         <None Include="../../README.md" Pack="true" Visible="false" PackagePath=""/>
         <None Include="../../icon.png" Pack="true" Visible="false" PackagePath=""/>
