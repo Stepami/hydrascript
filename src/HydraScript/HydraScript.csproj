@@ -6,13 +6,6 @@
         <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <OptimizationPreference>Size</OptimizationPreference>
-        <InvariantGlobalization>true</InvariantGlobalization>
-        <StackTraceSupport>false</StackTraceSupport>
-        <UseSystemResourceKeys>true</UseSystemResourceKeys>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj"
                           OutputItemType="Analyzer"
@@ -23,6 +16,33 @@
 
     <ItemGroup>
         <PackageReference Include="System.CommandLine" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>HydraScript</PackageId>
+        <Description>TypeScript &amp; Go inspired small interpreted programming language written in C#</Description>
+        <Authors>Stepami</Authors>
+        <Company>N/A</Company>
+        <Copyright>Copyright © Stepami 2025</Copyright>
+        <RepositoryUrl>https://github.com/Stepami/hydrascript</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/Stepami/hydrascript</PackageProjectUrl>
+        <Title>HydraScript</Title>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageTags>interpreter script scripting cgi json backend bash perl typescript go csharp</PackageTags>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>hydrascript</ToolCommandName>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
+        <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath=""/>
+        <None Include="../../README.md" Pack="true" Visible="false" PackagePath=""/>
+        <None Include="../../icon.png" Pack="true" Visible="false" PackagePath=""/>
     </ItemGroup>
 
 </Project>
