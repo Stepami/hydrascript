@@ -2,63 +2,74 @@
 
 ![logo](hydrascript-logo.jpg)
 
-## "Расширенное подмножество ЯП JavaScript"
+## Installation
 
-### Скачать
-
-Файл интерпретатора собирается в рамках релиза на три платформы:
+Interpreter executable is built during release for 3 following platforms:
 - Windows (x64)
 - MacOS (arm64 Apple Silicon)
 - Linux (x64)
 
-Скачать нужную версию можно со страницы соответствующего релиза
+Download hydrascript executable on the corresponding release page.
 
-[Последний релиз доступен по этой ссылке](https://github.com/Stepami/hydrascript/releases/latest)
+[The latest relase is available here.](https://github.com/Stepami/hydrascript/releases/latest)
 
-### Вводная информация
+Alternatively you can consume HydraScript as dotnet tool:
+```
+dotnet tool update --global hydrascript
+```
 
-За основу был взят стандарт [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
+## Project History
 
-[Лексическая структура](src/Domain/HydraScript.Domain.Constants/TokenTypes.cs)
+It started as a bachelor thesis "Extended JavaScript Subset". Now it's named "HydraScript", because as I fix one bug another occurs.
 
-[Грамматика](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
+I took [ECMA-262 standard](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/) as a basis and made:
+- [Lexical structure](src/Domain/HydraScript.Domain.Constants/TokenTypes.cs)
+- [Grammar](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
 
-[Рабочие примеры](tests/HydraScript.IntegrationTests/Samples)
+[Working samples can be found here.](tests/HydraScript.IntegrationTests/Samples) I use them for integration tests.
 
-### Цели проекта
-1. Частично реализовать JavaScript с объектами и статической структурной типизацией, избавившись от таких понятий, как `constructor`, `class`, `interface`
-2. Публично реверс-инжинирить современный статический анализ (вывод типов, форвард рефы, ошибки выполнения на стадии компиляции)
-3. Упростить понимание области конструирования компиляторов за счёт исходного кода проекта - собрать понятные реализации алгоритмов и типовых задач в репозитории (Lexer, Parser, CFG, SSA, DCE, etc.)
+## Project Goals
+1. Partially implement JavaScript with objects and strong static structural typing, getting rid of such things as: `constructor`, `class`, `interface`
+2. Publicly reverse engineer modern static analysis (type inference, forward refs, compile-time detection of the runtime errors, etc.)
+3. Simplifying compilers construction domain with HydraScript source code
+4. Gather clear and concise standard problem solutions and algorithm implementations (Lexer, Parser, CFG, SSA, DCE, etc.)
 
-### Конструкции языка
+## Language docs
 
-#### Типизация
-В языке структурная статическая сильная типизация.
+### Comments
 
-Есть 5 примитивных типов:
+All comments are single-line:
+```
+// double slash comment
+# shebang comment
+```
+
+### Typing
+The HydraScript has strong static structural typing.
+
+There are 5 primitive types:
 1. number
 2. boolean
 3. string
 4. null
 5. void
 
-Остальные типы делятся на группы:
-- NullableType (тип, который допускает значение ```null```)
-- ObjectType (тип объекта, является NullableType)
-- ArrayType (списковый тип)
+The other types can be grouped as such:
+- NullableType (type that allows ```null```)
+- ObjectType (the type of object, obviously, and also is NullableType)
+- ArrayType (the type of array)
 
-##### Значения по умолчанию
+**The types have the following default values:**
 
-| Тип          | Значение |
-|--------------|----------|
-| number       | 0        |
-| boolean      | false    |
-| string       | ""       |
-| NullableType | null     |
-| ArrayType    | []       |
-##### type alias
-Можно создать свой type alias по типу того, как это сделано в С++
+| Type         | Value |
+|--------------|-------|
+| number       | 0     |
+| boolean      | false |
+| string       | ""    |
+| NullableType | null  |
+| ArrayType    | []    |
 
+**You can also create your own type alias as in C++ or TypeScript:**
 ```
 type int = number
 type maybeInt = int?
@@ -72,42 +83,94 @@ type composite = {
     arr: ints;
 }
 ```
-#### Объявление переменных
+
+### Variables
+
+For declaring mutable variables use `let`:
 ```
-let i = 1 // интерпретатор выведет тип из выражения
-let j: number // запишет значение по умолчанию в переменную
-let k: number = 1 // полностью явное объявление
+let i = 1 // HydraScript infers type from expression
+let j: number // Here it writes to j the default value
+let k: number = 1 // Fully explicit declaration
+```
+For declaring readonly variables use `const`:
+```
+const flag = true
 ```
 
-#### Объекты
+To work with Environment Variables place `$` before identifier:
+```
+$MY_ENV_VAR = "my_env_var_value"
+const flagValue = $FLAG_VALUE
+```
+
+### Input and Output
+
+The HydraScript is able to print any values in console and read strings from it:
+```
+# output
+>>> [1, 2, 3]
+>>> { x: true; }
+>>> "Hello, world!"
+
+// input
+let name: string
+<<< name
+```
+
+### Objects
+
+Object literal declaration is similar to JSON:
 ```
 let v2d = {
     x: 3;
     y: 4;
 }
 ```
-#### Списки
+
+You can clone objects using `with` expressions like in C#:
+```
+let v = {
+    x: 2;
+    y: 1;
+}
+
+let vToX = v with { y: 0; }
+```
+
+### Arrays
+
+HydraScript arrays are basically lists. Legacy naming, unfortunately.
+
+Array literal declaration is similar to JSON:
 ```
 let array = [1, 2, 3]
-let size = ~array // длина списка
-array::1 // удаление элемента по индексу
-array = array ++ [5, 7] // конкатенация списков
 ```
-#### Операторы
-| Оператор         | Вид      | Типы операндов         | Тип операции   |
-|------------------|----------|------------------------|----------------|
-| +                | бинарный | оба number, оба string | number, string |
-| *, -, /, %       | бинарный | number                 | number         |
-| &#124;&#124;, && | бинарный | boolean                | boolean        |
-| !=, ==           | бинарный | равный с двух сторон   | boolean        |
-| <=, >=, >, <     | бинарный | number                 | boolean        |
-| !                | унарный  | boolean                | boolean        |
-| -                | унарный  | number                 | number         |
-| ++               | бинарный | []                     | []             |
-| ::               | бинарный | [] и number            | void           |
-| ~                | унарный  | []                     | number         |
 
-#### Ветвление
+You have special operators to work with arrays:
+```
+let size = ~array // length
+array::1 // remove at index
+array = array ++ [5, 7] // concatenation
+```
+
+### Operators
+
+| Operator         | Binary or Unary | Operand Types              | Result Type      |
+|------------------|-----------------|----------------------------|------------------|
+| +                | binary          | both number or both string | number or string |
+| *, -, /, %       | binary          | number                     | number           |
+| &#124;&#124;, && | binary          | boolean                    | boolean          |
+| !=, ==           | binary          | same on both sides         | boolean          |
+| <=, >=, >, <     | binary          | number                     | boolean          |
+| !                | unary           | boolean                    | boolean          |
+| -                | unary           | number                     | number           |
+| ++               | binary          | []                         | []               |
+| ::               | binary          | [] и number                | void             |
+| ~                | unary           | []                         | number           |
+
+### Conditionals
+
+The language supports classic `if-else`:
 ```
 if (1 == 1) {
     // ...
@@ -117,15 +180,18 @@ if (1 == 1) {
 else {
     // ...
 }
-// в общем как в Си подобных языках
-// главное, чтобы выражение условия
-// возвращало boolean
+// basically C-like syntax and semantic
+// test expression must have boolean type
 ```
-Также есть тернарный оператор
+
+There is also ternary operator:
 ```
 let x = 1 > 0 ? 0 <= 1 ? 1 : 0 : -2 < 0 ? -1 : 0
 ```
-#### Цикл
+
+### Loops
+
+Now it has only `while`:
 ```
 while (cond) {
     // ...
@@ -134,62 +200,114 @@ while (cond) {
     break
 }
 ```
-#### Функции
+
+### Functions
+
+Functions are similar to TypeScript:
 ```
-// объявление
+// declaration
 function add(a: number, b: number): number {
     return a + b
 }
-// вызов
+
+// call
 let c = add(1, 2)
 ```
-#### Методы
-```
-// сделаны подобно Go - привязка по имени типа
 
-// шаг 1. Объявить type alias
+The return type can be specified explicitly or inferred:
+```
+// this is also valid
+function add(a: number, b: number) {
+    return a + b
+}
+let c = add(1, 2) // c is number
+```
+
+### Methods
+
+A function can be method if it's bound to an object using the "Golang-like approach":
+```
+# The binding is done with object type alias
+
+// step 1. Declare type alias
 type Point2 = {
     x: number;
     y: number;
 }
 
-// шаг 2. Объявить переменную этого типа
+// step 2. Declare variable of type defined earlier
+// It's obligatory to explicitly define type after colon to make it work
 let v2d: Point2 = {
     x: 3;
     y: 4;
 }
 
-// шаг 3. Указать первым параметром функции - объект типа
+// step 3. While declaring function place first the paremeter with aliased object type
+// it's basically explicit "this"
 function lengthSquared(obj: Point2) {
     let x = obj.x
     let y = obj.y
     return x * x + y * y
 }
-```
-#### Операции доступа
-```
-// объекты
-let x = v2d.x
+
+// step 4. make a call
 let s = v2d.lengthSquared()
-// массивы
+```
+
+### Overloads and default parameters
+
+Both, methods and functions, do support overloading and default parameters:
+```
+function func(x = 0){
+    >>> x
+}
+
+function func(x:number, y:number) {
+    return x + y
+}
+
+func()
+func(1)
+func(func(2, 3))
+```
+
+### Access operators
+
+Access means being able to get element of an array or property of an object:
+```
+// objects
+let x = v2d.x
+
+// arrays
 let l = array[2]
 ```
-#### Приведение типов
+
+### Type casting
+
+HydraScript supports explicit casting through `as` keyword:
 ```
 let s = v2d as string
-```
-#### Печать на экран
-```
-let obj = {}
->>>obj
->>>"Hello, World!"
+let one = "1" as number
+let falseValue = 0 as boolean
+
+let nullableNumber = null as number?
 ```
 
-### Требования
+One can cast using following rules:
+- `any` -> `string`
+- `string` -> `number`
+- `string` -> `boolean`
+- `boolean` -> `number`
+- `number` -> `boolean`
+- `type?` -> `type`
+- `type` -> `type?`
+- `null` -> `type?`
 
-До версии **2.3.0** для запуска интерпретатора требовалась [установка .NET Runtime](https://dotnet.microsoft.com/ru-ru/download/dotnet)
+## Requirements
 
-Таблица соответствий hydrascript и dotnet:
+Before **2.3.0** version executable launch needed [.NET Runtime installed.](https://dotnet.microsoft.com/ru-ru/download/dotnet)
+
+There is match table of hydrascript and dotnet:
 
 | hydrascript                                                       | dotnet |
 |-------------------------------------------------------------------|--------|
@@ -199,31 +317,31 @@ let obj = {}
 | 2.0.0                                                             | .NET 8 |
 | <ul><li>2.1.0</li><li>2.1.1</li><li>2.2.0</li></ul>               | .NET 9 |
 
-### Сборка
-Необходим .NET SDK 9.0.202 (поддержка SLNX)
+If you use dotnet tool then requirements is specified on NuGet page.
 
-После клонирования репозитория идём в папку проекта `HydraScript`.
+## Build from source
+Install **latest** .NET SDK. The project uses **SLNX** as solution format.
 
-Там выполняем команду:
+Do this inside `HydraScript` root after cloning repository:
 ```dotnet publish ./src/HydraScript/HydraScript.csproj -r <RUNTIME_IDENTIFIER> -o <OUTPUT_DIRECTORY>```
 
-Список идентификаторов рантайма лежит [тут](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids)
+[Runtime identifier list can be found here](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids)
 
-### Запуск
+## How to run
 
-Простой:
+Default:
 ```
 HydraScript file.js
 ```
 
-С выводом дебаг инфы (токены, ast, инструкции):
+Dumping debug info as files (tokens, ast, ir code):
 ```
 HydraScript file.js --dump
 ```
 
-### Источники:
+## Sources:
 
-1. Курсы "Конструирование Компиляторов" и "Генерация Оптимального Кода" кафедры ИУ-9 МГТУ им. Н.Э. Баумана [@bmstu-iu9](https://www.github.com/bmstu-iu9)
+1. "Compilers Construction" and "Optimized Code Generation" courses of [@bmstu-iu9](https://www.github.com/bmstu-iu9)
 2. [ECMA-262](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
 3. [DragonBook](https://suif.stanford.edu/dragonbook/)
 4. [Stanford CS143 Lectures](https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/)
