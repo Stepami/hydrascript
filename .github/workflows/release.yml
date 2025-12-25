@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 jobs:
   create-release:
@@ -70,7 +71,9 @@ jobs:
       - name: Publish
         run: |
           mkdir output
-          dotnet publish ./src/HydraScript/HydraScript.csproj -r ${{ matrix.config.rid }} -p:Version=${{ needs.create-release.outputs.publish_version }} -o ./output
+          dotnet publish ./src/HydraScript/HydraScript.csproj -r ${{ matrix.config.rid }} \
+            -p:Version=${{ needs.create-release.outputs.publish_version }} \
+            -o ./output
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
@@ -85,6 +88,8 @@ jobs:
     name: Publish release
     runs-on: ubuntu-latest
     needs: upload-release-assets
+    outputs:
+      determined_version: ${{ needs.upload-release-assets.outputs.determined_version }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -104,3 +109,23 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
           milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
+
+  publish-nuget:
+    name: Publish as dotnet tool to NuGet
+    runs-on: ubuntu-latest
+    needs: publish-release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Build
+        run: dotnet build ./src/HydraScript/HydraScript.csproj -c Release -v n \
+          /p:Version=${{ needs.publish-release.outputs.determined_version }} \
+          /p:PublishAot=false /p:PublishSingleFile=false
+      - name: Publish
+        run: dotnet nuget push ./src/HydraScript/bin/Release/*.nupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json
