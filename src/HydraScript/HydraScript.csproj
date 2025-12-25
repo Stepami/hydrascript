@@ -6,13 +6,6 @@
         <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <OptimizationPreference>Size</OptimizationPreference>
-        <InvariantGlobalization>true</InvariantGlobalization>
-        <StackTraceSupport>false</StackTraceSupport>
-        <UseSystemResourceKeys>true</UseSystemResourceKeys>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure.LexerRegexGenerator\HydraScript.Infrastructure.LexerRegexGenerator.csproj"
                           OutputItemType="Analyzer"
