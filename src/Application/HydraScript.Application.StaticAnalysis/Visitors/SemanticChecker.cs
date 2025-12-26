@@ -235,50 +235,37 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var lType = visitable.Left.Accept(This);
         var rType = visitable.Right.Accept(This);
 
-        if (visitable.Operator != "::" && !default(CommutativeTypeEqualityComparer).Equals(lType, rType))
+        if (!lType.TryGetOperator(visitable.Operator, out var @operator))
+            throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator);
+
+        var operation = new OperationDescriptor(visitable.Operator, OperandTypes: [lType, rType]);
+        if (!@operator.TryGetResultType(operation, out var resultType))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
                 left: lType,
                 right: rType);
 
-        return visitable.Operator switch
-        {
-            "+" when lType.Equals(_typesService.Number) => _typesService.Number,
-            "+" when lType.Equals(_typesService.String) => _typesService.String,
-            "+" => throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "-" or "*" or "/" or "%" => lType.Equals(_typesService.Number)
-                ? _typesService.Number
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "||" or "&&" => lType.Equals(_typesService.Boolean)
-                ? _typesService.Boolean
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "==" or "!=" => _typesService.Boolean,
-            ">" or ">=" or "<" or "<=" => lType.Equals(_typesService.Number)
-                ? _typesService.Boolean
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "++" when lType is ArrayType { Type: Any } && rType is ArrayType { Type: Any } =>
-                throw new CannotDefineType(visitable.Segment),
-            "++" => lType is ArrayType lArrType && rType is ArrayType rArrType
-                ? lArrType.Type is not Any ? lArrType : rArrType.Type is not Any ? rArrType : throw new CannotDefineType(visitable.Segment)
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "::" when lType is StringType or not ArrayType =>
-                throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "::" => rType.Equals(_typesService.Number) ? _typesService.Void : throw new ArrayAccessException(visitable.Segment, rType),
-            _ => _typesService.Undefined
-        };
+        if (resultType.Equals(_typesService.Undefined))
+            throw new CannotDefineType(visitable.Segment);
+
+        return resultType;
     }
 
     public Type Visit(UnaryExpression visitable)
     {
         var eType = visitable.Expression.Accept(This);
 
-        return visitable.Operator switch
-        {
-            "-" when eType.Equals(_typesService.Number) => _typesService.Number,
-            "!" when eType.Equals(_typesService.Boolean) => _typesService.Boolean,
-            "~" when eType is ArrayType => _typesService.Number,
-            _ => throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator)
-        };
+        if (!eType.TryGetOperator(visitable.Operator, out var @operator))
+            throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator);
+
+        var operation = new OperationDescriptor(visitable.Operator, OperandTypes: [eType]);
+        if (!@operator.TryGetResultType(operation, out var resultType))
+            throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator);
+
+        if (resultType.Equals(_typesService.Undefined))
+            throw new CannotDefineType(visitable.Segment);
+
+        return resultType;
     }
 
     public Type Visit(LexicalDeclaration visitable)
@@ -369,14 +356,14 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             ?? (visitable.Parent as MemberExpression)!.ComputedIdTypeGuid;
         var prevType = _computedTypes.Get(prevTypeGuid);
 
-        if (prevType is not ArrayType arrayType)
+        if (!prevType.TryGetOperator("[]", out var indexOperator))
             throw new NonAccessibleType(prevType);
 
         var indexType = visitable.Index.Accept(This);
-        if (!indexType.Equals(_typesService.Number))
+        var indexAccessDescriptor = new OperationDescriptor("[]", [prevType, indexType]);
+        if (!indexOperator.TryGetResultType(indexAccessDescriptor, out var elemType))
             throw new ArrayAccessException(visitable.Segment, indexType);
 
-        var elemType = arrayType.Type;
         visitable.ComputedTypeGuid = _computedTypes.Save(elemType);
         return visitable.HasNext() ? visitable.Next?.Accept(This) ?? _typesService.Undefined : elemType;
     }
