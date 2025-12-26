@@ -73,7 +73,8 @@ public class Simple : Instruction
         {
             "-" => -Convert.ToDouble(value),
             "!" => !Convert.ToBoolean(value),
-            "~" => ((List<object>)value!).Count,
+            "~" when value is List<object> list => list.Count,
+            "~" when value is string @string => @string.Length,
             "" => value,
             _ => throw new NotSupportedException($"_operator {_operator} is not supported")
         };
@@ -98,9 +99,13 @@ public class Simple : Instruction
             ">=" => Convert.ToDouble(lValue) >= Convert.ToDouble(rValue),
             "<" => Convert.ToDouble(lValue) < Convert.ToDouble(rValue),
             "<=" => Convert.ToDouble(lValue) <= Convert.ToDouble(rValue),
-            "." => ((Dictionary<string, object>)lValue!)[rValue!.ToString()!],
-            "[]" => ((List<object>)lValue!)[Convert.ToInt32(rValue)],
-            "++" => ((List<object>)lValue!).Concat((List<object>)rValue!).ToList(),
+            "." when lValue is Dictionary<string, object> @object => @object[rValue!.ToString()!],
+            "[]" when lValue is List<object> list => list[Convert.ToInt32(rValue)],
+            "[]" when lValue is string @string => @string.Substring(Convert.ToInt32(rValue), 1),
+            "++" when lValue is List<object> lList && rValue is List<object> rList =>
+                lList.Concat(rList).ToList(),
+            "++" when lValue is string lString && rValue is string rString =>
+                ZString.Concat(lString, rString),
             _ => throw new NotSupportedException($"_operator {_operator} is not supported")
         };
     }
