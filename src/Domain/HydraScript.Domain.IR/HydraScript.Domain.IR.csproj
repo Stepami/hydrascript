@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="ZString" />
+    <PackageReference Include="ZLinq" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,16 @@
+using HydraScript.Domain.IR.Types.Operators;
+
 namespace HydraScript.Domain.IR.Types;
 
-public class ArrayType(Type type) : Type($"{type}[]")
+public class ArrayType(Type type) :
+    Type(
+        $"{type}[]",
+        [
+            default(ArrayConcatOperator),
+            default(LengthOperator),
+            default(IndexOperator),
+            default(RemoveFromArrayOperator)
+        ])
 {
     public Type Type { get; private set; } = type;
 

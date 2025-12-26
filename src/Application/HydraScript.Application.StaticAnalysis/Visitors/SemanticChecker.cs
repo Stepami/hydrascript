@@ -45,36 +45,33 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     IVisitor<OutputStatement, Type>,
     IVisitor<InputStatement, Type>
 {
-    private readonly IDefaultValueForTypeCalculator _calculator;
+    private readonly IHydraScriptTypesService _typesService;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
     private readonly IComputedTypesStorage _computedTypes;
     private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
-    private readonly IExplicitCastValidator _explicitCastValidator;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
     public SemanticChecker(
-        IDefaultValueForTypeCalculator calculator,
+        IHydraScriptTypesService typesService,
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
         IComputedTypesStorage computedTypes,
         IAmbiguousInvocationStorage ambiguousInvocations,
-        IExplicitCastValidator explicitCastValidator,
         IVisitor<TypeValue, Type> typeBuilder)
     {
-        _calculator = calculator;
+        _typesService = typesService;
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
         _computedTypes = computedTypes;
         _ambiguousInvocations = ambiguousInvocations;
-        _explicitCastValidator = explicitCastValidator;
         _typeBuilder = typeBuilder;
     }
 
-    public override Type Visit(IAbstractSyntaxTreeNode visitable) => "undefined";
+    public override Type Visit(IAbstractSyntaxTreeNode visitable) => _typesService.Undefined;
 
     public Type Visit(ScriptBody visitable)
     {
@@ -89,30 +86,30 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _computedTypes.Clear();
         _ambiguousInvocations.Clear();
 
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(WhileStatement visitable)
     {
         var condType = visitable.Condition.Accept(This);
-        if (!condType.Equals("boolean"))
+        if (!condType.Equals(_typesService.Boolean))
             throw new NotBooleanTestExpression(visitable.Segment, condType);
 
         visitable.Statement.Accept(This);
 
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(IfStatement visitable)
     {
         var testType = visitable.Test.Accept(This);
-        if (!testType.Equals("boolean"))
+        if (!testType.Equals(_typesService.Boolean))
             throw new NotBooleanTestExpression(visitable.Segment, testType);
 
         visitable.Then.Accept(This);
         visitable.Else?.Accept(This);
 
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(InsideStatementJump visitable)
@@ -135,7 +132,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 break;
         }
 
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(ReturnStatement visitable)
@@ -143,7 +140,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (!visitable.ChildOf<FunctionDeclaration>())
             throw new ReturnOutsideFunction(visitable.Segment);
 
-        return visitable.Expression?.Accept(This) ?? "void";
+        return visitable.Expression?.Accept(This) ?? _typesService.Void;
     }
 
     public Type Visit(ExpressionStatement visitable) =>
@@ -157,7 +154,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         return symbol?.Type ?? throw new UnknownIdentifierReference(visitable);
     }
 
-    public Type Visit(EnvVarReference visitable) => "string";
+    public Type Visit(EnvVarReference visitable) => _typesService.String;
 
     public Type Visit(Literal visitable) =>
         visitable.Type.Accept(_typeBuilder);
@@ -167,7 +164,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var type = visitable.Type.Accept(_typeBuilder);
         if (!visitable.IsDefined)
         {
-            var definedValue = _calculator.GetDefaultValueForType(type);
+            var definedValue = _typesService.GetDefaultValueForType(type);
             visitable.SetValue(definedValue);
         }
 
@@ -217,7 +214,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(ConditionalExpression visitable)
     {
         var tType = visitable.Test.Accept(This);
-        if (!tType.Equals("boolean"))
+        if (!tType.Equals(_typesService.Boolean))
             throw new NotBooleanTestExpression(visitable.Test.Segment, tType);
 
         var cType = visitable.Consequent.Accept(This);
@@ -238,82 +235,61 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var lType = visitable.Left.Accept(This);
         var rType = visitable.Right.Accept(This);
 
-        if (visitable.Operator != "::" && !lType.Equals(rType))
+        if (!lType.TryGetOperator(visitable.Operator, out var @operator))
+            throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator);
+
+        var operation = new OperationDescriptor(visitable.Operator, OperandTypes: [lType, rType]);
+        if (!@operator.TryGetResultType(operation, out var resultType))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
                 left: lType,
                 right: rType);
 
-        Type number = "number";
-        Type @string = "string";
-        Type boolean = "boolean";
+        if (resultType.Equals(_typesService.Undefined))
+            throw new CannotDefineType(visitable.Segment);
 
-        return visitable.Operator switch
-        {
-            "+" when lType.Equals(number) => number,
-            "+" when lType.Equals(@string) => @string,
-            "+" => throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "-" or "*" or "/" or "%" => lType.Equals(number)
-                ? number
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "||" or "&&" => lType.Equals(boolean)
-                ? boolean
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "==" or "!=" => boolean,
-            ">" or ">=" or "<" or "<=" => lType.Equals(number)
-                ? boolean
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "++" when lType is ArrayType { Type: Any } && rType is ArrayType { Type: Any } =>
-                throw new CannotDefineType(visitable.Segment),
-            "++" => lType is ArrayType lArrType && rType is ArrayType rArrType
-                ? lArrType.Type is not Any ? lArrType : rArrType.Type is not Any ? rArrType : throw new CannotDefineType(visitable.Segment)
-                : throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "::" when lType is not ArrayType =>
-                throw new UnsupportedOperation(visitable.Segment, lType, visitable.Operator),
-            "::" => rType.Equals(number) ? "void" : throw new ArrayAccessException(visitable.Segment, rType),
-            _ => "undefined"
-        };
+        return resultType;
     }
 
     public Type Visit(UnaryExpression visitable)
     {
         var eType = visitable.Expression.Accept(This);
 
-        Type number = "number";
-        Type boolean = "boolean";
+        if (!eType.TryGetOperator(visitable.Operator, out var @operator))
+            throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator);
 
-        return visitable.Operator switch
-        {
-            "-" when eType.Equals(number) => number,
-            "!" when eType.Equals(boolean) => boolean,
-            "~" when eType is ArrayType => number,
-            _ => throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator)
-        };
+        var operation = new OperationDescriptor(visitable.Operator, OperandTypes: [eType]);
+        if (!@operator.TryGetResultType(operation, out var resultType))
+            throw new UnsupportedOperation(visitable.Segment, eType, visitable.Operator);
+
+        if (resultType.Equals(_typesService.Undefined))
+            throw new CannotDefineType(visitable.Segment);
+
+        return resultType;
     }
 
     public Type Visit(LexicalDeclaration visitable)
     {
-        Type undefined = "undefined";
-
         for (var i = 0; i < visitable.Assignments.Count; i++)
         {
             var assignment = visitable.Assignments[i];
             var registeredSymbol = _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(assignment.Destination.Id))!;
             var sourceType = assignment.Source.Accept(This);
 
-            if (sourceType.Equals(undefined))
+            if (sourceType.Equals(_typesService.Undefined))
                 throw new CannotDefineType(assignment.Source.Segment);
-            if (sourceType.Equals("void"))
+            if (sourceType.Equals(_typesService.Void))
                 throw new CannotAssignVoid(assignment.Source.Segment);
-            if (!registeredSymbol.Type.Equals(undefined) && !registeredSymbol.Type.Equals(sourceType))
+            if (!registeredSymbol.Type.Equals(_typesService.Undefined) &&
+                !default(CommutativeTypeEqualityComparer).Equals(registeredSymbol.Type, sourceType))
                 throw new IncompatibleTypesOfOperands(
                     assignment.Segment,
                     left: registeredSymbol.Type,
                     right: sourceType);
-            if (sourceType is NullType && registeredSymbol.Type.Equals(undefined))
+            if (sourceType is NullType && registeredSymbol.Type.Equals(_typesService.Undefined))
                 throw new CannotAssignNullWhenUndefined(assignment.Segment);
 
-            var actualType = registeredSymbol.Type.Equals(undefined)
+            var actualType = registeredSymbol.Type.Equals(_typesService.Undefined)
                 ? sourceType
                 : registeredSymbol.Type;
             var actualSymbol = actualType switch
@@ -325,11 +301,13 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             _symbolTables[visitable.Scope].AddSymbol(actualSymbol);
         }
 
-        return undefined;
+        return _typesService.Undefined;
     }
 
     public Type Visit(AssignmentExpression visitable)
     {
+        var typeComparer = default(CommutativeTypeEqualityComparer);
+
         if (visitable.Destination is CallExpression)
             throw new WrongAssignmentTarget(visitable.Destination);
 
@@ -337,7 +315,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (!visitable.Destination.Empty())
         {
             var destinationType = visitable.Destination.Accept(This);
-            if (!destinationType.Equals(sourceType))
+            if (!typeComparer.Equals(destinationType, sourceType))
                 throw new IncompatibleTypesOfOperands(
                     visitable.Segment,
                     left: destinationType,
@@ -349,12 +327,12 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         var symbol = visitable.Destination.Id.ToValueDto().Type is ValueDtoType.Name
             ? _symbolTables[visitable.Scope].FindSymbol(new VariableSymbolId(visitable.Destination.Id)) ??
               throw new UnknownIdentifierReference(visitable.Destination.Id)
-            : new VariableSymbol(visitable.Destination.Id, "string");
+            : new VariableSymbol(visitable.Destination.Id, _typesService.String);
 
         if (symbol.ReadOnly)
             throw new AssignmentToConst(visitable.Destination.Id);
 
-        if (!sourceType.Equals(symbol.Type))
+        if (!typeComparer.Equals(sourceType, symbol.Type))
             throw new IncompatibleTypesOfOperands(
                 visitable.Segment,
                 left: symbol.Type,
@@ -368,7 +346,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IAbstractSyntaxTreeNode id = visitable.Id;
         var idType = id.Accept(This);
         visitable.ComputedIdTypeGuid = _computedTypes.Save(idType);
-        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(This) ?? "undefined";
+        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(This) ?? _typesService.Undefined;
     }
 
     public Type Visit(IndexAccess visitable)
@@ -378,16 +356,16 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             ?? (visitable.Parent as MemberExpression)!.ComputedIdTypeGuid;
         var prevType = _computedTypes.Get(prevTypeGuid);
 
-        if (prevType is not ArrayType arrayType)
+        if (!prevType.TryGetOperator("[]", out var indexOperator))
             throw new NonAccessibleType(prevType);
 
         var indexType = visitable.Index.Accept(This);
-        if (!indexType.Equals("number"))
+        var indexAccessDescriptor = new OperationDescriptor("[]", [prevType, indexType]);
+        if (!indexOperator.TryGetResultType(indexAccessDescriptor, out var elemType))
             throw new ArrayAccessException(visitable.Segment, indexType);
 
-        var elemType = arrayType.Type;
         visitable.ComputedTypeGuid = _computedTypes.Save(elemType);
-        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? "undefined" : elemType;
+        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? _typesService.Undefined : elemType;
     }
 
     public Type Visit(DotAccess visitable)
@@ -407,7 +385,7 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                 ? objectType
                 : throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
         visitable.ComputedTypeGuid = _computedTypes.Save(fieldType);
-        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? "undefined" : fieldType;
+        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? _typesService.Undefined : fieldType;
     }
 
     public ObjectType Visit(WithExpression visitable)
@@ -435,19 +413,19 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     {
         var from = visitable.Expression.Accept(This);
 
-        if (from.Equals("undefined"))
+        if (from.Equals(_typesService.Undefined))
             throw new CannotDefineType(visitable.Expression.Segment);
 
         var to = visitable.Cast.Accept(_typeBuilder);
         visitable.ToType = to switch
         {
-            _ when to.Equals("string") => CastAsExpression.DestinationType.String,
-            _ when to.Equals("number") => CastAsExpression.DestinationType.Number,
-            _ when to.Equals("boolean") => CastAsExpression.DestinationType.Boolean,
+            _ when to.Equals(_typesService.String) => CastAsExpression.DestinationType.String,
+            _ when to.Equals(_typesService.Number) => CastAsExpression.DestinationType.Number,
+            _ when to.Equals(_typesService.Boolean) => CastAsExpression.DestinationType.Boolean,
             _ => CastAsExpression.DestinationType.Undefined
         };
 
-        return _explicitCastValidator.IsAllowed(from, to)
+        return _typesService.IsExplicitCastAllowed(from, to)
             ? to
             : throw new ExplicitCastNotSupported(visitable, from, to);
     }
@@ -490,14 +468,13 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
                     throw new WrongTypeOfArgument(expr.Segment, expectedType, actualType);
             });
 
-        if (functionSymbol.Type.Equals("undefined"))
+        if (functionSymbol.Type.Equals(_typesService.Undefined))
         {
             var declaration = _functionStorage.Get(functionSymbol);
             functionReturnType = declaration.Accept(This);
         }
 
-        Type @void = "void";
-        if (!functionReturnType.Equals(@void))
+        if (!functionReturnType.Equals(_typesService.Void))
             visitable.HasReturnValue = true;
         return functionReturnType;
     }
@@ -509,26 +486,24 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _functionStorage.RemoveIfPresent(symbol);
         visitable.Statements.Accept(This);
 
-        Type undefined = "undefined";
         HashSet<Type> returnTypes = [];
         for (var i = 0; i < visitable.ReturnStatements.Count; i++)
         {
             var returnStatementType = visitable.ReturnStatements[i].Accept(This);
             returnTypes.Add(returnStatementType);
-            if (returnTypes.Count > 1 && symbol.Type.Equals(undefined))
+            if (returnTypes.Count > 1 && symbol.Type.Equals(_typesService.Undefined))
                 throw new CannotDefineType(visitable.Segment);
-            if (!symbol.Type.Equals(undefined) && !symbol.Type.Equals(returnStatementType))
+            if (!symbol.Type.Equals(_typesService.Undefined) && !symbol.Type.Equals(returnStatementType))
                 throw new WrongReturnType(
                     visitable.ReturnStatements[i].Segment,
                     expected: symbol.Type,
                     actual: returnStatementType);
         }
 
-        if (symbol.Type.Equals(undefined))
+        if (symbol.Type.Equals(_typesService.Undefined))
             symbol.DefineReturnType(returnTypes.Single());
 
-        Type @void = "void";
-        if (!symbol.Type.Equals(@void) && !visitable.AllCodePathsEndedWithReturn)
+        if (!symbol.Type.Equals(_typesService.Void) && !visitable.AllCodePathsEndedWithReturn)
             throw new FunctionWithoutReturnStatement(visitable.Segment);
 
         if (symbol.Type is NullType)
@@ -541,21 +516,21 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     {
         for (var i = 0; i < visitable.Count; i++)
             visitable[i].Accept(This);
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(OutputStatement visitable)
     {
         visitable.Expression.Accept(This);
-        return "undefined";
+        return _typesService.Undefined;
     }
 
     public Type Visit(InputStatement visitable)
     {
         IAbstractSyntaxTreeNode id = visitable.Destination;
         var idType = id.Accept(This);
-        if (!idType.Equals("string"))
+        if (!idType.Equals(_typesService.String))
             throw new UnsupportedOperation(visitable.Segment, idType, "<<<");
-        return "undefined";
+        return _typesService.Undefined;
     }
 }

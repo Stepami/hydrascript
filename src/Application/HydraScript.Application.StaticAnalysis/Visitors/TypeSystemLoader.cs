@@ -12,16 +12,13 @@ internal class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     IVisitor<TypeDeclaration>
 {
     private readonly ITypeDeclarationsResolver _resolver;
-    private readonly IJavaScriptTypesProvider _provider;
     private readonly ISymbolTableStorage _symbolTables;
 
     public TypeSystemLoader(
         ITypeDeclarationsResolver resolver,
-        IJavaScriptTypesProvider provider,
         ISymbolTableStorage symbolTables)
     {
         _resolver = resolver;
-        _provider = provider;
         _symbolTables = symbolTables;
     }
 
@@ -45,7 +42,7 @@ internal class TypeSystemLoader : VisitorNoReturnBase<IAbstractSyntaxTreeNode>,
     {
         var symbolTable = _symbolTables[visitable.Scope];
         if (symbolTable.ContainsSymbol(new TypeSymbolId(visitable.TypeId)) ||
-            _provider.Contains(visitable.TypeId.Name))
+            _resolver.TypesService.Contains(visitable.TypeId.Name))
             throw new DeclarationAlreadyExists(visitable.TypeId);
 
         symbolTable.AddSymbol(
