@@ -44,7 +44,7 @@ public class TypeTests
     [Fact]
     public void DefaultValueTest()
     {
-        var calculator = new DefaultValueForTypeCalculator();
+        var calculator = new DefaultValueForTypeCalculator(new JavaScriptTypesProvider());
         Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
         Assert.Null(calculator.GetDefaultValueForType(new NullType()));
         Assert.Null(calculator.GetDefaultValueForType(new ObjectType([])));
