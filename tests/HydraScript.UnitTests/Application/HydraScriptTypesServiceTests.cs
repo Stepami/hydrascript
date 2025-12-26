@@ -8,7 +8,7 @@ public class HydraScriptTypesServiceTests
     private readonly HydraScriptTypesService _typesService = new();
 
     [Theory, MemberData(nameof(ConversionsData))]
-    public void IsAllowed_Always_Success(Type from, Type to, bool expected) =>
+    public void IsExplicitCastAllowed_Always_Success(Type from, Type to, bool expected) =>
         _typesService.IsExplicitCastAllowed(from, to).Should().Be(expected);
 
     public static TheoryData<Type, Type, bool> ConversionsData =>
@@ -27,7 +27,7 @@ public class HydraScriptTypesServiceTests
         };
 
     [Fact]
-    public void DefaultValueTest()
+    public void GetDefaultValueForType_NullableTypes_ReturnsNull()
     {
         var calculator = new HydraScriptTypesService();
         Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
