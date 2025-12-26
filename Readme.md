@@ -84,6 +84,20 @@ type composite = {
 }
 ```
 
+#### Strings
+
+Strings support following operations:
+- index access, returns `string`:
+```
+let str = "str"
+>>> str[1] // t
+```
+- length getter:
+```
+let str = "str"
+>>> ~str // 3
+```
+
 ### Variables
 
 For declaring mutable variables use `let`:
@@ -165,8 +179,8 @@ array = array ++ [5, 7] // concatenation
 | !                | unary           | boolean                    | boolean          |
 | -                | unary           | number                     | number           |
 | ++               | binary          | []                         | []               |
-| ::               | binary          | [] и number                | void             |
-| ~                | unary           | []                         | number           |
+| ::               | binary          | [] and number              | void             |
+| ~                | unary           | [] or string               | number           |
 
 ### Conditionals
 
