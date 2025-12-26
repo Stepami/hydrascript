@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace HydraScript.Domain.IR.Types;
 
 public class NullableType(Type type) : Type($"{type}?")
@@ -14,6 +16,9 @@ public class NullableType(Type type) : Type($"{type}?")
         else
             Type.ResolveReference(reference, refId, visited);
     }
+
+    public override bool TryGetOperator(string value, [MaybeNullWhen(false)] out IOperator @operator) =>
+        Type.TryGetOperator(value, out @operator);
 
     public override bool Equals(Type? obj)
     {
