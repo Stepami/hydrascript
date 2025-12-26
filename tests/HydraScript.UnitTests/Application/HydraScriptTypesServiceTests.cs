@@ -3,13 +3,13 @@ using HydraScript.Domain.IR.Types;
 
 namespace HydraScript.UnitTests.Application;
 
-public class ExplicitCastValidatorTests
+public class HydraScriptTypesServiceTests
 {
-    private readonly ExplicitCastValidator _explicitCastValidator = new(new JavaScriptTypesProvider());
+    private readonly HydraScriptTypesService _typesService = new();
 
     [Theory, MemberData(nameof(ConversionsData))]
     public void IsAllowed_Always_Success(Type from, Type to, bool expected) =>
-        _explicitCastValidator.IsAllowed(from, to).Should().Be(expected);
+        _typesService.IsExplicitCastAllowed(from, to).Should().Be(expected);
 
     public static TheoryData<Type, Type, bool> ConversionsData =>
         new()
@@ -25,4 +25,13 @@ public class ExplicitCastValidatorTests
             { new ArrayType("number"), "number", false },
             { new ArrayType("number"), new NullableType("boolean"), false },
         };
+
+    [Fact]
+    public void DefaultValueTest()
+    {
+        var calculator = new HydraScriptTypesService();
+        Assert.Null(calculator.GetDefaultValueForType(new NullableType(new Any())));
+        Assert.Null(calculator.GetDefaultValueForType(new NullType()));
+        Assert.Null(calculator.GetDefaultValueForType(new ObjectType([])));
+    }
 }
