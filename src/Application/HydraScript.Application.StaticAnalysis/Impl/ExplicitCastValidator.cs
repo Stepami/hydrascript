@@ -2,18 +2,13 @@ using HydraScript.Domain.IR.Types;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
 
-internal sealed class ExplicitCastValidator : IExplicitCastValidator
+internal sealed class ExplicitCastValidator(IJavaScriptTypesProvider typesProvider) : IExplicitCastValidator
 {
-    private static readonly Type Boolean = "boolean";
-    private static readonly Type Number = "number";
-    private static readonly Type String = "string";
-    private static readonly Any Any = new();
-
     private readonly Dictionary<Type, List<Type>> _allowedConversions = new()
     {
-        { String, [Any] },
-        { Number, [String, Boolean] },
-        { Boolean, [String, Number] },
+        { typesProvider.String, [new Any()] },
+        { typesProvider.Number, [typesProvider.String, typesProvider.Boolean] },
+        { typesProvider.Boolean, [typesProvider.String, typesProvider.Number] },
     };
 
     public bool IsAllowed(Type from, Type to)

@@ -5,7 +5,7 @@ namespace HydraScript.UnitTests.Application;
 
 public class ExplicitCastValidatorTests
 {
-    private readonly ExplicitCastValidator _explicitCastValidator = new();
+    private readonly ExplicitCastValidator _explicitCastValidator = new(new JavaScriptTypesProvider());
 
     [Theory, MemberData(nameof(ConversionsData))]
     public void IsAllowed_Always_Success(Type from, Type to, bool expected) =>
