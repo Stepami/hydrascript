@@ -14,7 +14,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     IVisitor<LexicalDeclaration>,
     IVisitor<FunctionDeclaration>
 {
-    private readonly IJavaScriptTypesProvider _typesProvider;
+    private readonly IHydraScriptTypesService _typesService;
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
@@ -23,7 +23,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
     private readonly IVisitor<FunctionDeclaration, ReturnAnalyzerResult> _returnAnalyzer;
 
     public DeclarationVisitor(
-        IJavaScriptTypesProvider typesProvider,
+        IHydraScriptTypesService typesService,
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
@@ -31,7 +31,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         IVisitor<TypeValue, Type> typeBuilder,
         IVisitor<FunctionDeclaration, ReturnAnalyzerResult> returnAnalyzer)
     {
-        _typesProvider = typesProvider;
+        _typesService = typesService;
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
@@ -57,9 +57,9 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
             var destinationType = assignment.DestinationType?.Accept(
-                _typeBuilder) ?? _typesProvider.Undefined;
+                _typeBuilder) ?? _typesService.Undefined;
 
-            if (destinationType == _typesProvider.Undefined &&
+            if (destinationType == _typesService.Undefined &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
                 throw visitable.ReadOnly
                     ? new ConstWithoutInitializer(assignment.Destination.Id)
@@ -104,12 +104,12 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         if (parameters is [ObjectType methodOwner, ..] && visitable.Arguments is [{ TypeValue: TypeIdentValue }, ..])
             _methodStorage.BindMethod(methodOwner, functionSymbol, functionSymbolId);
 
-        if (functionSymbol.Type.Equals(_typesProvider.Undefined))
+        if (functionSymbol.Type.Equals(_typesService.Undefined))
         {
             if (visitable.HasReturnStatement)
                 _functionStorage.Save(functionSymbol, visitable);
             else
-                functionSymbol.DefineReturnType(_typesProvider.Void);
+                functionSymbol.DefineReturnType(_typesService.Void);
         }
 
         parentTable.AddSymbol(functionSymbol);

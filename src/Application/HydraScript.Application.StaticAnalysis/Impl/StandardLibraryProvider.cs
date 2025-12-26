@@ -4,18 +4,13 @@ using HydraScript.Domain.IR.Impl.Symbols;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
 
-internal class StandardLibraryProvider : IStandardLibraryProvider
+internal class StandardLibraryProvider(IHydraScriptTypesService typesService) : IStandardLibraryProvider
 {
-    private readonly IJavaScriptTypesProvider _provider;
-
-    public StandardLibraryProvider(IJavaScriptTypesProvider provider) =>
-        _provider = provider;
-
     public ISymbolTable GetStandardLibrary()
     {
         var library = new SymbolTable();
 
-        foreach (var type in _provider.GetDefaultTypes())
+        foreach (var type in typesService.GetDefaultTypes())
             library.AddSymbol(new TypeSymbol(type));
 
         var symbolTable = new SymbolTable();

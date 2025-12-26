@@ -5,7 +5,7 @@ using ZLinq;
 namespace HydraScript.Application.StaticAnalysis.Impl;
 
 internal class TypeDeclarationsResolver(
-    IJavaScriptTypesProvider provider,
+    IHydraScriptTypesService typesService,
     ISymbolTableStorage symbolTables,
     IVisitor<TypeValue, Type> typeBuilder) : ITypeDeclarationsResolver
 {
@@ -16,7 +16,7 @@ internal class TypeDeclarationsResolver(
 
     public void Resolve()
     {
-        var defaults = provider.GetDefaultTypes()
+        var defaults = TypesService.GetDefaultTypes()
             .AsValueEnumerable()
             .Select(x => new TypeSymbol(x))
             .ToList();
@@ -43,4 +43,6 @@ internal class TypeDeclarationsResolver(
             }
         }
     }
+
+    public IHydraScriptTypesService TypesService { get; } = typesService;
 }
