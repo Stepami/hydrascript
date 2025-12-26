@@ -1,13 +1,15 @@
+using HydraScript.Domain.IR.Types.Operators;
+
 namespace HydraScript.Domain.IR.Types;
 
-public sealed class StringType() : ArrayType("string")
+public sealed class StringType() :
+    Type(
+        "string",
+        [
+            default(StringConcatOperator),
+            default(LengthOperator),
+            default(IndexOperator)
+        ])
 {
-    public override bool Equals(Type? obj)
-    {
-        if (obj?.Equals("string") is true)
-            return true;
-        return base.Equals(obj);
-    }
-
-    public override string ToString() => "string";
+    public static readonly StringType Instance = new();
 }
