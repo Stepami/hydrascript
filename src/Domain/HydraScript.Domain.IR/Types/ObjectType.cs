@@ -1,9 +1,10 @@
 using Cysharp.Text;
 using HydraScript.Domain.IR.Impl.Symbols.Ids;
+using ZLinq;
 
 namespace HydraScript.Domain.IR.Types;
 
-public class ObjectType : Type
+public sealed class ObjectType : Type
 {
     private readonly Dictionary<string, Type> _properties;
     private readonly List<FunctionSymbolId> _methods = [];
@@ -12,7 +13,7 @@ public class ObjectType : Type
 
     public string LastAccessedMethodName { get; private set; } = string.Empty;
 
-    public ObjectType(Dictionary<string, Type> properties)
+    public ObjectType(Dictionary<string, Type> properties) : base(string.Empty)
     {
         _properties = properties;
         _hasher = new ObjectTypeHasher(this);
@@ -92,33 +93,21 @@ public class ObjectType : Type
         return result;
     }
 
-    private class ObjectTypeHasher
+    private sealed class ObjectTypeHasher(ObjectType reference)
     {
-        private readonly ObjectType _reference;
-
-        public ObjectTypeHasher(ObjectType reference) =>
-            _reference = reference;
-
         public int HashObjectType(ObjectType objectType) =>
-            objectType._properties.Keys.Select(
+            objectType._properties.Keys.AsValueEnumerable().Select(
                     key => HashCode.Combine(
                         key,
-                        objectType[key]!.Equals(_reference)
+                        objectType[key]!.Equals(reference)
                             ? "@this".GetHashCode()
                             : HashCode.Combine(key, objectType[key]!.GetType())))
                 .Aggregate(36, HashCode.Combine);
     }
 
-    private class ObjectTypePrinter
+    private sealed class ObjectTypePrinter(ObjectType reference)
     {
-        private readonly ObjectType _reference;
-        private readonly ISet<Type> _visited;
-
-        public ObjectTypePrinter(ObjectType reference)
-        {
-            _reference = reference;
-            _visited = new HashSet<Type>();
-        }
+        private readonly HashSet<Type> _visited = [];
 
         public void Clear() => _visited.Clear();
 
@@ -134,7 +123,7 @@ public class ObjectType : Type
         {
             if (_visited.Contains(objectType))
                 return string.Empty;
-            if (!objectType.Equals(_reference))
+            if (!objectType.Equals(reference))
                 _visited.Add(objectType);
 
             using var zsb = ZString.CreateStringBuilder();
@@ -144,7 +133,7 @@ public class ObjectType : Type
                 var type = objectType[key];
                 var prop = $"{key}: ";
 
-                if (type!.Equals(_reference))
+                if (type!.Equals(reference))
                     prop += "@this";
                 else
                 {
@@ -164,7 +153,7 @@ public class ObjectType : Type
         private string PrintArrayType(ArrayType arrayType)
         {
             using var zsb = ZString.CreateStringBuilder();
-            zsb.Append(arrayType.Type.Equals(_reference)
+            zsb.Append(arrayType.Type.Equals(reference)
                 ? "@this"
                 : Print(arrayType.Type));
             zsb.Append("[]");
@@ -175,7 +164,7 @@ public class ObjectType : Type
         private string PrintNullableType(NullableType nullableType)
         {
             using var zsb = ZString.CreateStringBuilder();
-            zsb.Append(nullableType.Type.Equals(_reference)
+            zsb.Append(nullableType.Type.Equals(reference)
                 ? "@this"
                 : Print(nullableType.Type));
             zsb.Append('?');
