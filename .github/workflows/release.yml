@@ -110,7 +110,7 @@ jobs:
 
   publish-nuget:
     name: Publish as dotnet tool to NuGet
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: publish-release
     steps:
       - name: Checkout
@@ -120,10 +120,10 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Build
-        run: dotnet build ./src/HydraScript/HydraScript.csproj -c Release -v n \
-          /p:Version=${{ needs.publish-release.outputs.determined_version }} \
+        run: dotnet build ./src/HydraScript/HydraScript.csproj -c Release -v n `
+          /p:Version=${{ needs.publish-release.outputs.determined_version }} `
           /p:PublishAot=false /p:PublishSingleFile=false
       - name: Publish
-        run: dotnet nuget push ./src/HydraScript/bin/Release/*.nupkg \
-          --api-key ${{ secrets.NUGET_API_KEY }} \
+        run: dotnet nuget push ./src/HydraScript/bin/Release/*.nupkg `
+          --api-key ${{ secrets.NUGET_API_KEY }} `
           --source https://api.nuget.org/v3/index.json
