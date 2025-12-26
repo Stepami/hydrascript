@@ -125,6 +125,6 @@ jobs:
           -p:Version=${{ needs.publish-release.outputs.publish_version }} `
           -p:PublishAot=false -p:PublishSingleFile=false
       - name: Publish
-        run: dotnet nuget push ./src/HydraScript/bin/Release/*.nupkg `
+        run: dotnet nuget push (ls "./src/HydraScript/bin/Release/*.nupkg") `
           --api-key ${{ secrets.NUGET_API_KEY }} `
           --source "https://api.nuget.org/v3/index.json"
