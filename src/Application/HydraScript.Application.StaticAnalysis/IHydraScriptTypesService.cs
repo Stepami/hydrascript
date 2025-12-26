@@ -8,8 +8,6 @@ public interface IHydraScriptTypesService
 
     public Type String { get; }
 
-    public Type Null { get; }
-
     public Type Undefined { get; }
 
     public Type Void { get; }

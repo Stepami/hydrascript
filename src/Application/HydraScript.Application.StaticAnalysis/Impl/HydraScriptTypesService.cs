@@ -26,17 +26,17 @@ internal class HydraScriptTypesService : IHydraScriptTypesService
         };
     }
 
-    public Type Number { get; } = "number";
+    public Type Number => NumberType.Instance;
 
-    public Type Boolean { get; } = "boolean";
+    public Type Boolean => BooleanType.Instance;
 
-    public Type String { get; } = new StringType();
+    public Type String => StringType.Instance;
 
-    public Type Null { get; } = new NullType();
+    private Type Null => NullType.Instance;
 
-    public Type Undefined { get; } = "undefined";
+    public Type Undefined => "undefined";
 
-    public Type Void { get; } = "void";
+    public Type Void => "void";
 
     public IEnumerable<Type> GetDefaultTypes() => _types;
 
