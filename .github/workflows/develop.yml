@@ -48,7 +48,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build /p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Debug -v n
+        run: dotnet build -p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Debug -v n
       - name: Unit Tests
         run: dotnet test -c Debug --no-build -v n --filter-trait Category=Unit
       - name: Integration Tests
