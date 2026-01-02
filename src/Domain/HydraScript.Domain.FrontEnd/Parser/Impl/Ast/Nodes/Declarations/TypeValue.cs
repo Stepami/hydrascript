@@ -1,4 +1,3 @@
-using Cysharp.Text;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.PrimaryExpressions;
 
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
@@ -44,6 +43,5 @@ public record PropertyTypeValue(
 [AutoVisitable<TypeValue>]
 public partial record ObjectTypeValue(List<PropertyTypeValue> Properties) : TypeValue
 {
-    public override string ToString() =>
-        ZString.Concat('{', ZString.Join(';', Properties), '}');
+    public override string ToString() => $"{{{string.Join(';', Properties)}}}";
 }
