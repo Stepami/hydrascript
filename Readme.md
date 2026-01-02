@@ -6,17 +6,18 @@
 
 Interpreter executable is built during release for 3 following platforms:
 - Windows (x64)
-- MacOS (arm64 Apple Silicon)
+- macOS (arm64 Apple Silicon)
 - Linux (x64)
 
 Download hydrascript executable on the corresponding release page.
 
-[The latest relase is available here.](https://github.com/Stepami/hydrascript/releases/latest)
+[The latest release is available here.](https://github.com/Stepami/hydrascript/releases/latest)
 
 Alternatively you can consume HydraScript as dotnet tool:
 ```
 dotnet tool update --global hydrascript
 ```
+NuGet link: https://www.nuget.org/packages/hydrascript
 
 ## Project History
 
@@ -361,4 +362,4 @@ HydraScript file.js --dump
 4. [Stanford CS143 Lectures](https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/)
 5. [Simple Virtual Machine](https://github.com/parrt/simple-virtual-machine)
 6. Ахо А., Ульман Дж. Теория синтаксического анализа, перевода и компиляции
-7. Свердлов С.З. Языки программирования и методы трансляции
+7. Свердлов С. З. Языки программирования и методы трансляции
