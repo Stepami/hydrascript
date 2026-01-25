@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     </PropertyGroup>
 
     <ItemGroup>
