@@ -1,4 +1,10 @@
 <Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="EnvironmentAbstractions" Version="5.0.0" />
@@ -7,16 +13,33 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.1" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.2" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.2" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.1.0" />
-    <PackageVersion Include="Visitor.NET" Version="4.2.0" />
-    <PackageVersion Include="Visitor.NET.AutoVisitableGen" Version="1.5.2" />
+    <PackageVersion Include="Visitor.NET" Version="4.2.1" />
+    <PackageVersion Include="Visitor.NET.AutoVisitableGen" Version="1.5.3" />
     <PackageVersion Include="ZLinq" Version="1.5.4" />
     <PackageVersion Include="ZLogger" Version="2.5.10" />
     <PackageVersion Include="ZString" Version="2.6.0" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageVersion Include="AutoFixture" Version="4.18.1" />
+    <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.1" />
+    <PackageVersion Include="AutoFixture.Xunit3" Version="4.19.0" />
+    <PackageVersion Include="Fare" Version="2.2.1" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.3.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.2.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.3.2" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="PolymorphicContracts.AutoFixture" Version="2.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.XUnit3" Version="1.2.0" />
+    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="3.2.2" />
   </ItemGroup>
 </Project>

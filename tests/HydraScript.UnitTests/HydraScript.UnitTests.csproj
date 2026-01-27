@@ -1,16 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
         <PackageReference Include="AutoFixture.Xunit3" />
-        <PackageReference Include="Fare" />
         <PackageReference Include="AwesomeAssertions" />
         <PackageReference Include="PolymorphicContracts.AutoFixture" />
-        <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>
 
     <ItemGroup>
