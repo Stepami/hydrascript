@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
     <ItemGroup>
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
         <PackageReference Include="AutoFixture.Xunit3" />
@@ -10,5 +10,5 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\HydraScript\HydraScript.csproj" />
     </ItemGroup>
-  
+
 </Project>
