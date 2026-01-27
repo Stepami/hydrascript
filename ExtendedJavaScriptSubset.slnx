@@ -28,8 +28,8 @@
     <File Path=".github/workflows/release.yml" />
   </Folder>
   <Folder Name="/Src/">
-    <Project Path="src/HydraScript/HydraScript.csproj" />
     <File Path="src/Directory.Build.props" />
+    <Project Path="src/HydraScript/HydraScript.csproj" />
   </Folder>
   <Folder Name="/Src/Application/">
     <Project Path="src/Application/HydraScript.Application.CodeGeneration/HydraScript.Application.CodeGeneration.csproj" />
