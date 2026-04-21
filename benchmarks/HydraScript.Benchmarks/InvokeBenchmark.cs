@@ -15,12 +15,16 @@ public class InvokeBenchmark
 {
     private ServiceProvider? _provider;
     private Executor? _executor;
-    private readonly UpdatableFileOptions _updatableFileOptions = new(new FileInfo(nameof(FileInfo)));
 
-    private readonly IReadOnlyList<FileInfo> _scriptPaths =
+    private readonly UpdatableFileOptions _updatableFileOptions = new(new FileInfo(nameof(FileInfo)));
+    private readonly FileInfo[] _scriptPaths =
         Directory.GetFiles("Samples")
             .Select(x => new FileInfo(x))
             .ToArray();
+
+    private readonly int _benchmarkSize;
+
+    public InvokeBenchmark() => _benchmarkSize = _scriptPaths.Length / 3;
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -35,13 +39,16 @@ public class InvokeBenchmark
         _executor = _provider.GetRequiredService<Executor>();
     }
 
+    [IterationSetup]
+    public void IterationSetup() => Random.Shared.Shuffle(_scriptPaths);
+
     [GlobalCleanup]
     public void GlobalCleanup() => _provider?.Dispose();
 
     [Benchmark]
     public void Invoke()
     {
-        for (var i = 0; i < _scriptPaths.Count; i++)
+        for (var i = 0; i <_benchmarkSize; i++)
         {
             _updatableFileOptions.Update(_scriptPaths[i]);
             _executor?.Invoke();
