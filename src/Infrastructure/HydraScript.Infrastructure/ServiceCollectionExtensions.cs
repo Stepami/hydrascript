@@ -15,12 +15,11 @@ namespace HydraScript.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDomain<TGeneratedRegexContainer>(this IServiceCollection services)
-        where TGeneratedRegexContainer : class, IGeneratedRegexContainer
+    public static IServiceCollection AddDomain(this IServiceCollection services)
     {
         services.AddSingleton<ITextCoordinateSystemComputer, TextCoordinateSystemComputer>();
         services.AddSingleton<ITokenTypesProvider, TokenTypesProvider>();
-        services.AddSingleton<IStructure, Structure<TGeneratedRegexContainer>>();
+        services.AddSingleton<IStructure, Structure<GeneratedRegexContainer>>();
         services.AddSingleton<ILexer, RegexLexer>();
         services.AddSingleton<IParser, TopDownParser>();
 
