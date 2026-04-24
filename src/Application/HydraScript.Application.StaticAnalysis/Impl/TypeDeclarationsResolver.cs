@@ -20,10 +20,11 @@ internal class TypeDeclarationsResolver(
         // build phase
         for (var i = 0; i < _declarationsToResolve.Count; i++)
         {
+            var declarationToResolve = _declarationsToResolve[i];
             var typeSymbol = new TypeSymbol(
-                _declarationsToResolve[i].TypeValue.Accept(typeBuilder),
-                _declarationsToResolve[i].TypeId);
-            symbolTables[_declarationsToResolve[i].Scope].AddSymbol(typeSymbol);
+                declarationToResolve.TypeValue.Accept(typeBuilder),
+                declarationToResolve.TypeId);
+            symbolTables[declarationToResolve.Scope].AddSymbol(typeSymbol);
         }
 
         var defaults = TypesService.GetDefaultTypes()
