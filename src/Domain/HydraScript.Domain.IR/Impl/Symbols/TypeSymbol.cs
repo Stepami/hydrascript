@@ -7,6 +7,11 @@ public class TypeSymbol(Type type, string? name = null) :
 {
     public override TypeSymbolId Id { get; } = new(name ?? type.ToString());
 
+    public void Resolve(TypeSymbol referenceSymbol) =>
+        Type.ResolveReference(
+            referenceSymbol.Type,
+            referenceSymbol.Name);
+
     public override bool Equals(object? obj) =>
         obj is TypeSymbol typeSymbol &&
         Name == typeSymbol.Name && Type.Equals(typeSymbol.Type);

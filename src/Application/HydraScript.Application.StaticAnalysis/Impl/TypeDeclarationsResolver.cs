@@ -1,5 +1,6 @@
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Declarations;
 using HydraScript.Domain.IR.Impl.Symbols;
+using HydraScript.Domain.IR.Impl.Symbols.Ids;
 using ZLinq;
 
 namespace HydraScript.Application.StaticAnalysis.Impl;
@@ -9,39 +10,44 @@ internal class TypeDeclarationsResolver(
     ISymbolTableStorage symbolTables,
     IVisitor<TypeValue, Type> typeBuilder) : ITypeDeclarationsResolver
 {
-    private readonly Queue<TypeDeclaration> _declarationsToResolve = [];
+    private readonly List<TypeDeclaration> _declarationsToResolve = [];
 
     public void Store(TypeDeclaration declaration) =>
-        _declarationsToResolve.Enqueue(declaration);
+        _declarationsToResolve.Add(declaration);
 
     public void Resolve()
     {
+        // build phase
+        for (var i = 0; i < _declarationsToResolve.Count; i++)
+        {
+            var typeSymbol = new TypeSymbol(
+                _declarationsToResolve[i].TypeValue.Accept(typeBuilder),
+                _declarationsToResolve[i].TypeId);
+            symbolTables[_declarationsToResolve[i].Scope].AddSymbol(typeSymbol);
+        }
+
         var defaults = TypesService.GetDefaultTypes()
             .AsValueEnumerable()
             .Select(x => new TypeSymbol(x))
             .ToList();
 
-        while (_declarationsToResolve.Count != 0)
+        // resolve phase
+        for (var i = 0; i < _declarationsToResolve.Count; i++)
         {
-            var declarationToResolve = _declarationsToResolve.Dequeue();
-            var typeSymbol = new TypeSymbol(
-                declarationToResolve.TypeValue.Accept(typeBuilder),
-                declarationToResolve.TypeId);
-            symbolTables[declarationToResolve.Scope].AddSymbol(typeSymbol);
-
-            var resolvingCandidates = symbolTables[declarationToResolve.Scope]
-                .GetAvailableSymbols()
+            var symbolTable = symbolTables[_declarationsToResolve[i].Scope];
+            var typeSymbol = symbolTable.FindSymbol(new TypeSymbolId(_declarationsToResolve[i].TypeId))!;
+            var resolvingCandidates = symbolTable.GetAvailableSymbols()
                 .AsValueEnumerable()
                 .OfType<TypeSymbol>()
                 .Except(defaults);
 
             foreach (var referenceSymbol in resolvingCandidates)
             {
-                typeSymbol.Type.ResolveReference(
-                    referenceSymbol.Type,
-                    referenceSymbol.Name);
+                typeSymbol.Resolve(referenceSymbol);
             }
         }
+
+        _declarationsToResolve.Clear();
     }
 
     public IHydraScriptTypesService TypesService { get; } = typesService;
