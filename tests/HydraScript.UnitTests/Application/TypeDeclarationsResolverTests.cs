@@ -78,7 +78,8 @@ public class TypeDeclarationsResolverTests
         var itemType = symbolTable.FindSymbol(new TypeSymbolId(itemTypeName))?.Type;
         var resultType = symbolTable.FindSymbol(new TypeSymbolId(resultTypeName))?.Type as ObjectType;
 
+        itemType.Should().NotBeNull();
         resultType.Should().NotBeNull();
-        resultType["result"].Should().Be(itemType);
+        resultType["result"].Should().Be(new ArrayType(itemType));
     }
 }
