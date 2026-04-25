@@ -73,8 +73,8 @@ public class Simple : Instruction
         {
             "-" => -Convert.ToDouble(value),
             "!" => !Convert.ToBoolean(value),
-            "~" when value is List<object> list => list.Count,
-            "~" when value is string @string => @string.Length,
+            "~" when value is List<object> list => Convert.ToDouble(list.Count),
+            "~" when value is string @string => Convert.ToDouble(@string.Length),
             "" => value,
             _ => throw new NotSupportedException($"_operator {_operator} is not supported")
         };

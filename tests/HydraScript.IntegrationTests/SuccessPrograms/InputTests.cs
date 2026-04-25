@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 
-namespace HydraScript.IntegrationTests;
+namespace HydraScript.IntegrationTests.SuccessPrograms;
 
 public class InputTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
