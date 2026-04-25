@@ -3,7 +3,7 @@ using HydraScript.Domain.BackEnd;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
-namespace HydraScript.IntegrationTests;
+namespace HydraScript.IntegrationTests.SuccessPrograms;
 
 public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {

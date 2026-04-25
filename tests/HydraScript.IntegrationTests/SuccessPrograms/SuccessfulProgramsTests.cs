@@ -1,6 +1,6 @@
 using HydraScript.Infrastructure;
 
-namespace HydraScript.IntegrationTests;
+namespace HydraScript.IntegrationTests.SuccessPrograms;
 
 public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<TestHostFixture>
 {
