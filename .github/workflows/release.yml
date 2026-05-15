@@ -20,7 +20,7 @@ jobs:
       publish_version: ${{ steps.version_step.outputs.publishVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup .NET
@@ -32,11 +32,11 @@ jobs:
           echo "majorMinorPatch=$tag" >> $GITHUB_OUTPUT
           echo "publishVersion=${tag:1}" >> $GITHUB_OUTPUT
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.5.0
         with:
           versionSpec: '0.20.x'
       - name: Create release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/create@v4.2.0
+        uses: gittools/actions/gitreleasemanager/create@v4.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
@@ -61,13 +61,13 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.5.0
         with:
           versionSpec: '0.20.x'
       - name: Publish
@@ -77,7 +77,7 @@ jobs:
       - name: Rename Executable
         run: mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }} ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
       - name: Add asset to a release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/addasset@v4.2.0
+        uses: gittools/actions/gitreleasemanager/addasset@v4.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
@@ -94,17 +94,17 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
       - name: Setup GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v4.2.0
+        uses: gittools/actions/gitreleasemanager/setup@v4.5.0
         with:
           versionSpec: '0.20.x'
       - name: Publish release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/publish@v4.2.0
+        uses: gittools/actions/gitreleasemanager/publish@v4.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
           milestone: ${{ needs.upload-release-assets.outputs.determined_version }}
       - name: Close release with GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/close@v4.2.0
+        uses: gittools/actions/gitreleasemanager/close@v4.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'Stepami/hydrascript'
@@ -116,7 +116,7 @@ jobs:
     needs: publish-release
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
