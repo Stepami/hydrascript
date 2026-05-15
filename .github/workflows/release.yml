@@ -72,10 +72,9 @@ jobs:
           versionSpec: '0.20.x'
       - name: Publish
         run: >-
-          dotnet publish ./src/HydraScript/HydraScript.csproj
+          dotnet publish ./src/HydraScript/HydraScript.csproj -o ./output
           -r ${{ matrix.config.rid }}
           -p:Version=${{ needs.create-release.outputs.publish_version }}
-          -o ./output
       - name: Rename Executable
         run: >-
           mv ./output/HydraScript${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
@@ -87,6 +86,23 @@ jobs:
           repository: 'Stepami/hydrascript'
           milestone: ${{ needs.create-release.outputs.determined_version }}
           assets: ./output/hydrascript_${{ matrix.config.rid }}${{ matrix.config.rid == 'win-x64' && '.exe' || '' }}
+      - name: Pack rid-specific package
+        run: >-
+          dotnet pack ./src/HydraScript/HydraScript.csproj -c Release -o ./pack-rid-output -v n
+          -r ${{ matrix.config.rid }}
+          -p:Version=${{ needs.create-release.outputs.publish_version }}
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: nuget_login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+      - name: Publish rid-specific package to NuGet
+        run: >-
+          dotnet nuget push
+          ./pack-rid-output/HydraScript.${{ matrix.config.rid }}.${{ needs.create-release.outputs.publish_version }}.nupkg
+          --skip-duplicate
+          --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
+          --source "https://api.nuget.org/v3/index.json"
 
   publish-release:
     name: Publish release
@@ -129,54 +145,25 @@ jobs:
         run: >-
           dotnet pack ./src/HydraScript/HydraScript.csproj -c Release -o ./pack-output -v n
           -p:Version=${{ needs.publish-release.outputs.publish_version }}
-          -p:PublishAot=false
+      - name: Pack any
+        run: >-
+          dotnet pack ./src/HydraScript/HydraScript.csproj -c Release -o ./pack-output -v n
+          -p:Version=${{ needs.publish-release.outputs.publish_version }}
+          -r any -p:PublishAot=false
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
         id: nuget_login
         with:
           user: ${{ secrets.NUGET_USER }}
-      - name: Publish
+      - name: Publish any
         run: >-
-          dotnet nuget push ./pack-output/HydraScript.${{ needs.publish-release.outputs.publish_version }}.nupkg
+          dotnet nuget push ./pack-output/HydraScript.any.${{ needs.publish-release.outputs.publish_version }}.nupkg
           --skip-duplicate
           --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
           --source "https://api.nuget.org/v3/index.json"
-
-  publish-rid-nuget:
-    name: Publish as runtime-specific dotnet tool to NuGet
-    needs: publish-release
-    strategy:
-      matrix:
-        config:
-          - os: ubuntu-latest
-            rid: linux-x64
-          - os: macos-latest
-            rid: osx-arm64
-          - os: windows-latest
-            rid: win-x64
-    runs-on: ${{ matrix.config.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 10.0.x
-      - name: Pack
-        run: >-
-          dotnet pack ./src/HydraScript/HydraScript.csproj
-          -c Release -o ./pack-rid-output -v n
-          -r ${{ matrix.config.rid }}
-          -p:Version=${{ needs.publish-release.outputs.publish_version }}
-      - name: NuGet login (OIDC → temp API key)
-        uses: NuGet/login@v1
-        id: nuget_login
-        with:
-          user: ${{ secrets.NUGET_USER }}
       - name: Publish
         run: >-
-          dotnet nuget push
-          ./pack-rid-output/HydraScript.${{ matrix.config.rid }}.${{ needs.publish-release.outputs.publish_version }}.nupkg
+          dotnet nuget push ./pack-output/HydraScript.${{ needs.publish-release.outputs.publish_version }}.nupkg
           --skip-duplicate
           --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
           --source "https://api.nuget.org/v3/index.json"
