@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <PublishAot>true</PublishAot>
-        <RuntimeIdentifiers>linux-x64;win-x64;osx-arm64;</RuntimeIdentifiers>
+        <ToolPackageRuntimeIdentifiers>any;linux-x64;win-x64;osx-arm64;</ToolPackageRuntimeIdentifiers>
         <IsPackable>true</IsPackable>
         <PackageId>HydraScript</PackageId>
         <Description>TypeScript &amp; Go inspired small interpreted programming language written in C#</Description>
