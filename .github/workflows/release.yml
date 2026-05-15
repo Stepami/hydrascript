@@ -9,6 +9,7 @@ permissions:
   contents: write
   issues: write
   actions: write
+  id-token: write
 
 jobs:
   create-release:
@@ -124,7 +125,12 @@ jobs:
         run: dotnet build ./src/HydraScript/HydraScript.csproj -c Release -v n `
           -p:Version=${{ needs.publish-release.outputs.publish_version }} `
           -p:PublishAot=false -p:PublishSingleFile=false
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: nuget_login
+        with:
+          user: ${{ secrets.NUGET_USER }}
       - name: Publish
         run: dotnet nuget push (ls "./src/HydraScript/bin/Release/*.nupkg") `
-          --api-key ${{ secrets.NUGET_API_KEY }} `
+          --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }} `
           --source "https://api.nuget.org/v3/index.json"
