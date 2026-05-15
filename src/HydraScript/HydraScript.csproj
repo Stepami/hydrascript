@@ -3,18 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <PublishAot>true</PublishAot>
-        <PublishSingleFile>true</PublishSingleFile>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.CommandLine" />
-    </ItemGroup>
-
-    <PropertyGroup>
+        <RuntimeIdentifiers>linux-x64;win-x64;osx-arm64;</RuntimeIdentifiers>
         <IsPackable>true</IsPackable>
         <PackageId>HydraScript</PackageId>
         <Description>TypeScript &amp; Go inspired small interpreted programming language written in C#</Description>
@@ -33,6 +22,14 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" />
+    </ItemGroup>
 
     <ItemGroup>
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath=""/>
