@@ -21,7 +21,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup .NET
@@ -29,12 +29,12 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Setup GitVersion
-        uses: gittools/actions/gitversion/setup@v4.2.0
+        uses: gittools/actions/gitversion/setup@v4.5.0
         with:
           versionSpec: '6.4.x'
       - name: Determine Version
         id: version_step
-        uses: gittools/actions/gitversion/execute@v4.2.0
+        uses: gittools/actions/gitversion/execute@v4.5.0
       - name: Push New Version Tag
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
@@ -48,7 +48,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build -p:Version=${{ steps.version_step.outputs.fullSemVer }} --no-restore -c Debug -v n
+        run: >-
+          dotnet build -p:Version=${{ steps.version_step.outputs.fullSemVer }}
+          --no-restore -c Debug -v n
       - name: Unit Tests
         run: dotnet test -c Debug --no-build -v n --filter-trait Category=Unit
       - name: Integration Tests
@@ -72,7 +74,7 @@ jobs:
           show_branch: true
           only_changed_files: true
       - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.15
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.10
         with:
           reports: './tests/HydraScript.IntegrationTests/bin/Debug/net10.0/TestResults/coverage.cobertura.xml' 
           targetdir: './coverage-report' 

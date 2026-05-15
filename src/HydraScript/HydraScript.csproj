@@ -3,20 +3,8 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <PublishAot>true</PublishAot>
-        <PublishSingleFile>true</PublishSingleFile>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.CommandLine" />
-    </ItemGroup>
-
-    <PropertyGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
+        <RuntimeIdentifiers>linux-x64;win-x64;osx-arm64;</RuntimeIdentifiers>
         <IsPackable>true</IsPackable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>HydraScript</PackageId>
         <Description>TypeScript &amp; Go inspired small interpreted programming language written in C#</Description>
         <Authors>Stepami</Authors>
@@ -35,7 +23,15 @@
         <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(PublishAot)' == 'false' And '$(PublishSingleFile)' == 'false'">
+    <ItemGroup>
+        <ProjectReference Include="..\Infrastructure\HydraScript.Infrastructure\HydraScript.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath=""/>
         <None Include="../../README.md" Pack="true" Visible="false" PackagePath=""/>
         <None Include="../../icon.png" Pack="true" Visible="false" PackagePath=""/>
