@@ -12,6 +12,7 @@ public partial class TopDownParser
 {
     /// <summary>
     /// Expression -> CastExpression | AssignmentExpression
+    /// AssignmentExpression -> LeftHandSideExpression "Operator"? '=' Expression
     /// </summary>
     private Expression Expression()
     {
@@ -101,7 +102,7 @@ public partial class TopDownParser
     }
 
     /// <summary>
-    /// CastExpression -> WithExpression 'as' 'string'
+    /// CastExpression -> WithExpression 'as' TypeValue
     /// </summary>
     private Expression CastExpression()
     {
