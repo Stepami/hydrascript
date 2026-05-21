@@ -46,12 +46,12 @@ public partial class TopDownParser
         var indexOfFirstDefaultArgument = int.MaxValue;
         while (CurrentIs("Ident"))
         {
-            var arg = Expect("Ident").Value;
+            var arg = Expect("Ident");
             if (CurrentIs("Colon"))
             {
                 Expect("Colon");
                 var type = TypeValue();
-                args.Add(new NamedArgument(arg, type));
+                args.Add(new NamedArgument(arg.Value, type));
             }
             else if (CurrentIs("Assign"))
             {
@@ -60,8 +60,9 @@ public partial class TopDownParser
                 indexOfFirstDefaultArgument = args.Count < indexOfFirstDefaultArgument
                     ? args.Count
                     : indexOfFirstDefaultArgument;
-                args.Add(new DefaultValueArgument(arg, value));
+                args.Add(new DefaultValueArgument(arg.Value, value));
             }
+            else throw new ParserException($"Expected ':' or '=' after argument name <{arg}>");
 
             if (!CurrentIs("RightParen"))
                 Expect("Comma");
