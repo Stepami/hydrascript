@@ -55,7 +55,7 @@ public partial class TopDownParser
             }
             else if (CurrentIs("Assign"))
             {
-                Expect("Assign");
+                Expect("Assign", "=");
                 var value = LiteralNode();
                 indexOfFirstDefaultArgument = args.Count < indexOfFirstDefaultArgument
                     ? args.Count
@@ -114,7 +114,7 @@ public partial class TopDownParser
 
         if (CurrentIs("Assign"))
         {
-            var assignSegment = Expect("Assign").Segment;
+            var assignSegment = Expect("Assign", "=").Segment;
             return new AssignmentExpression(
                     new MemberExpression(identRef), Expression())
                 { Segment = assignSegment };
@@ -124,7 +124,7 @@ public partial class TopDownParser
         {
             Expect("Colon");
             var type = TypeValue();
-            var assignSegment = CurrentIs("Assign") ? Expect("Assign").Segment : string.Empty;
+            var assignSegment = CurrentIs("Assign") ? Expect("Assign", "=").Segment : string.Empty;
             var expression = assignSegment is not "" ? Expression() : new ImplicitLiteral(type);
             return new AssignmentExpression(
                     new MemberExpression(identRef), expression, type)
@@ -141,7 +141,7 @@ public partial class TopDownParser
     {
         var typeWord = Expect("Keyword", "type");
         var ident = Expect("Ident");
-        Expect("Assign");
+        Expect("Assign", "=");
         var type = TypeValue();
 
         var typeId = new IdentifierReference(name: ident.Value)

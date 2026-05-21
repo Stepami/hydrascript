@@ -141,7 +141,7 @@ public partial class TopDownParser
         var input = Expect("Input");
         if (CurrentIsOperator("$"))
         {
-            var dollar = Expect("Operator");
+            var dollar = Expect("Operator", "$");
             var envIdent = Expect("Ident");
             return new InputStatement(
                 new EnvVarReference(envIdent.Value)

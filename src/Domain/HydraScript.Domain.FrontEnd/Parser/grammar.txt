@@ -21,7 +21,7 @@ BlockStatement -> '{' StatementList '}'
 ExpressionStatement -> Expression
 Expression -> CastExpression | AssignmentExpression
 CastExpression -> WithExpression 'as' TypeValue
-AssignmentExpression -> MemberExpression '=' Expression
+AssignmentExpression -> MemberExpression "Assign" Expression
 
 LeftHandSideExpression -> PrimaryExpression
                           ParenthesizedExpression

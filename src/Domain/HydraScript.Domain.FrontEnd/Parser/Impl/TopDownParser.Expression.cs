@@ -11,7 +11,7 @@ public partial class TopDownParser
 {
     /// <summary>
     /// Expression -> CastExpression | AssignmentExpression
-    /// AssignmentExpression -> MemberExpression '=' Expression
+    /// AssignmentExpression -> MemberExpression "Assign" Expression
     /// </summary>
     private Expression Expression()
     {
