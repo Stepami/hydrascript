@@ -68,11 +68,8 @@ public partial class TopDownParser
                 Expect("Comma");
         }
 
-        var rp = Expect("RightParen");
-
-        TypeValue returnType = new TypeIdentValue(
-            TypeId: new IdentifierReference(name: "undefined")
-                { Segment = rp.Segment });
+        Expect("RightParen");
+        TypeValue returnType = TypeIdentValue.Undefined;
 
         if (CurrentIs("Colon"))
         {
@@ -94,12 +91,12 @@ public partial class TopDownParser
         Expect("Keyword", readOnly ? "const" : "let");
         var declaration = new LexicalDeclaration(readOnly);
 
-        AddToDeclaration(declaration);
+        declaration.AddAssignment(DeclarationAssignmentExpression());
 
         while (CurrentIs("Comma"))
         {
             Expect("Comma");
-            AddToDeclaration(declaration);
+            declaration.AddAssignment(DeclarationAssignmentExpression());
         }
 
         return declaration;
@@ -110,45 +107,31 @@ public partial class TopDownParser
     /// Typed -> Type Initializer?
     /// Initializer -> '=' Expression
     /// </summary>
-    private void AddToDeclaration(LexicalDeclaration declaration)
+    private AssignmentExpression DeclarationAssignmentExpression()
     {
         var ident = Expect("Ident");
         var identRef = new IdentifierReference(ident.Value) { Segment = ident.Segment };
-        var assignment = new AssignmentExpression(
-                new MemberExpression(identRef),
-                new ImplicitLiteral(TypeIdentValue.Undefined))
-            { Segment = ident.Segment };
 
         if (CurrentIs("Assign"))
         {
             var assignSegment = Expect("Assign").Segment;
-            var expression = Expression();
-            assignment = new AssignmentExpression(
-                new MemberExpression(identRef), expression) { Segment = assignSegment };
+            return new AssignmentExpression(
+                    new MemberExpression(identRef), Expression())
+                { Segment = assignSegment };
         }
-        else if (CurrentIs("Colon"))
+
+        if (CurrentIs("Colon"))
         {
             Expect("Colon");
             var type = TypeValue();
-            if (CurrentIs("Assign"))
-            {
-                var assignSegment = Expect("Assign").Segment;
-                var expression = Expression();
-                assignment = new AssignmentExpression(
-                    new MemberExpression(identRef),
-                    expression, type) { Segment = assignSegment };
-            }
-            else
-            {
-                var expression = new ImplicitLiteral(type);
-                assignment = new AssignmentExpression(
-                    lhs: new MemberExpression(identRef),
-                    expression,
-                    type);
-            }
+            var assignSegment = CurrentIs("Assign") ? Expect("Assign").Segment : string.Empty;
+            var expression = assignSegment is not "" ? Expression() : new ImplicitLiteral(type);
+            return new AssignmentExpression(
+                    new MemberExpression(identRef), expression, type)
+                { Segment = assignSegment };
         }
 
-        declaration.AddAssignment(assignment);
+        throw new ParserException($"Expected ':' or '=' after var name <{ident}>");
     }
 
     /// <summary>

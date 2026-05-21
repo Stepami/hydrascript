@@ -56,8 +56,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             if (_symbolTables[visitable.Scope].ContainsSymbol(new VariableSymbolId(assignment.Destination.Id)))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
-            var destinationType = assignment.DestinationType?.Accept(
-                _typeBuilder) ?? _typesService.Undefined;
+            var destinationType = assignment.DestinationType?.Accept(_typeBuilder) ?? _typesService.Undefined;
 
             if (destinationType == _typesService.Undefined &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
