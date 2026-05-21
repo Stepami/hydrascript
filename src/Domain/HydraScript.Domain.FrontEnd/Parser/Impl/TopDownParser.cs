@@ -62,11 +62,16 @@ public partial class TopDownParser(ILexer lexer) : IParser
         CurrentIs("Ident") || CurrentIsLiteral() || CurrentIsUnaryOperator() ||
         CurrentIs("LeftParen") || CurrentIs("LeftCurl") || CurrentIs("LeftBracket");
 
+    private bool CurrentIsStatement() =>
+        CurrentIsExpression() ||
+        CurrentIs("Output") || CurrentIs("Input") ||
+        CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
+        CurrentIsKeyword("if") || CurrentIsKeyword("while");
+
     /// <summary>
     /// Script -> StatementList
     /// </summary>
-    private ScriptBody Script() =>
-        new(StatementList());
+    private ScriptBody Script() => new(StatementList());
 
     /// <summary>
     /// StatementList -> StatementListItem*
@@ -74,10 +79,7 @@ public partial class TopDownParser(ILexer lexer) : IParser
     private List<StatementListItem> StatementList()
     {
         var statementList = new List<StatementListItem>();
-        while (CurrentIsDeclaration() || CurrentIsExpression() ||
-               CurrentIs("Output") || CurrentIs("Input") ||
-               CurrentIsKeyword("return") || CurrentIsKeyword("break") || CurrentIsKeyword("continue") ||
-               CurrentIsKeyword("if") || CurrentIsKeyword("while"))
+        while (CurrentIsDeclaration() || CurrentIsStatement())
         {
             statementList.Add(StatementListItem());
         }
@@ -91,9 +93,7 @@ public partial class TopDownParser(ILexer lexer) : IParser
     private StatementListItem StatementListItem()
     {
         if (CurrentIsDeclaration())
-        {
             return Declaration();
-        }
 
         return Statement();
     }

@@ -54,7 +54,7 @@ public partial class TopDownParser
         if (CurrentIs("Input"))
             return InputStatement();
 
-        return null!;
+        throw new ParserException(nameof(Statement), _tokens.Current);
     }
 
     /// <summary>

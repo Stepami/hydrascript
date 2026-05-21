@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using HydraScript.Domain.FrontEnd.Lexer;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessExpressions;
 using HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.ComplexLiterals;
@@ -12,7 +11,7 @@ public partial class TopDownParser
 {
     /// <summary>
     /// Expression -> CastExpression | AssignmentExpression
-    /// AssignmentExpression -> MemberExpression "Operator"? '=' Expression
+    /// AssignmentExpression -> MemberExpression '=' Expression
     /// </summary>
     private Expression Expression()
     {
@@ -28,7 +27,8 @@ public partial class TopDownParser
     }
 
     /// <summary>
-    /// CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
+    /// CallExpression -> MemberExpression Arguments
+    /// Arguments -> '(' (Expression ',')* ')'
     /// </summary>
     private Expression CallExpression()
     {
@@ -46,55 +46,49 @@ public partial class TopDownParser
             }
 
             var rp = Expect("RightParen");
-            return new CallExpression((member as MemberExpression)!, expressions)
+            return new CallExpression(member, expressions)
                 { Segment = member.Segment + rp.Segment };
         }
 
-        return member;
+        return member.Empty() && !CurrentIs("Assign") ? member.Id : member;
     }
 
     /// <summary>
-    /// MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
+    /// MemberExpression -> Var ('[' Expression ']' | '.' 'Ident')*
     /// </summary>
-    private Expression MemberExpression()
+    private MemberExpression MemberExpression()
     {
-        var primary = PrimaryExpression();
-
-        if (!CurrentIs("LeftBracket") && !CurrentIs("Dot") &&
-            !CurrentIs("Assign") && !CurrentIs("LeftParen"))
-            return primary;
-
-        var identRef = (primary as IdentifierReference)!;
-        var accessChain = new List<AccessExpression>();
+        var memberRoot = Var();
+        var accessChain = new LinkedList<AccessExpression>();
         while (CurrentIs("LeftBracket") || CurrentIs("Dot"))
         {
-            Token access;
             if (CurrentIs("LeftBracket"))
             {
-                access = Expect("LeftBracket");
-                var lb = access.Segment;
+                var lb = Expect("LeftBracket").Segment;
                 var expr = Expression();
                 var rb = Expect("RightBracket").Segment;
-                accessChain.Add(
-                    new IndexAccess(expr, accessChain.LastOrDefault()) { Segment = lb + rb });
+                accessChain.AddLast(
+                    new IndexAccess(expr, accessChain.Last?.Value)
+                        { Segment = lb + rb });
             }
             else if (CurrentIs("Dot"))
             {
-                access = Expect("Dot");
-                var identToken = Expect("Ident");
-                var idRef = new IdentifierReference(identToken.Value)
-                    { Segment = identToken.Segment };
-                accessChain.Add(
-                    new DotAccess(idRef, accessChain.LastOrDefault()) { Segment = access.Segment });
+                var access = Expect("Dot");
+                var propToken = Expect("Ident");
+                var propIdent = new IdentifierReference(propToken.Value)
+                    { Segment = propToken.Segment };
+                accessChain.AddLast(
+                    new DotAccess(propIdent, accessChain.Last?.Value)
+                        { Segment = access.Segment });
             }
         }
 
         return new MemberExpression(
-            identRef,
-            accessChain.FirstOrDefault(),
-            tail: accessChain.LastOrDefault())
+            memberRoot,
+            accessChain.First?.Value,
+            tail: accessChain.Last?.Value)
         {
-            Segment = identRef.Segment
+            Segment = memberRoot.Segment
         };
     }
 
@@ -285,18 +279,14 @@ public partial class TopDownParser
     }
 
     /// <summary>
-    /// LeftHandSideExpression -> MemberExpression | CallExpression
+    /// LeftHandSideExpression -> PrimaryExpression
+    ///                           ParenthesizedExpression
+    ///                           ComplexLiteral
+    ///                           MemberExpression
+    ///                           CallExpression
+    /// ParenthesizedExpression -> '(' Expression ')'
     /// </summary>
     private Expression LeftHandSideExpression()
-    {
-        return CallExpression();
-    }
-
-    /// <summary>
-    /// PrimaryExpression -> "Ident" | EnvVar | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
-    /// EnvVar -> '$' "Ident"
-    /// </summary>
-    private Expression PrimaryExpression()
     {
         if (CurrentIs("LeftParen"))
         {
@@ -306,6 +296,33 @@ public partial class TopDownParser
             return expr;
         }
 
+        if (CurrentIs("LeftCurl") || CurrentIs("LeftBracket"))
+        {
+            return ComplexLiteral();
+        }
+
+        if (CurrentIs("Ident") || CurrentIsOperator("$"))
+        {
+            return CallExpression();
+        }
+
+        return PrimaryExpression();
+    }
+
+    /// <summary>
+    /// PrimaryExpression -> Var | Literal
+    /// </summary>
+    private PrimaryExpression PrimaryExpression()
+    {
+        return LiteralNode();
+    }
+
+    /// <summary>
+    /// Var -> "Ident" | EnvVar
+    /// EnvVar -> '$' "Ident"
+    /// </summary>
+    private IdentifierReference Var()
+    {
         if (CurrentIs("Ident"))
         {
             var ident = Expect("Ident");
@@ -315,32 +332,12 @@ public partial class TopDownParser
             };
         }
 
-        if (CurrentIsOperator("$"))
+        var dollar = Expect("Operator");
+        var envIdent = Expect("Ident");
+        return new EnvVarReference(envIdent.Value)
         {
-            var dollar = Expect("Operator");
-            var ident = Expect("Ident");
-            return new EnvVarReference(ident.Value)
-            {
-                Segment = dollar.Segment + ident.Segment
-            };
-        }
-
-        if (CurrentIsLiteral())
-        {
-            return LiteralNode();
-        }
-
-        if (CurrentIs("LeftCurl"))
-        {
-            return ObjectLiteral();
-        }
-
-        if (CurrentIs("LeftBracket"))
-        {
-            return ArrayLiteral();
-        }
-
-        return null!;
+            Segment = dollar.Segment + envIdent.Segment
+        };
     }
 
     /// <summary>
@@ -379,12 +376,27 @@ public partial class TopDownParser
                     CultureInfo.InvariantCulture),
                 segment),
             "BooleanLiteral" => Literal.Boolean(value: bool.Parse(Expect("BooleanLiteral").Value), segment),
-            _ => throw new ParserException("There are no more supported literals")
+            _ => throw new ParserException("Literal", _tokens.Current)
         };
     }
 
     /// <summary>
+    /// ComplexLiteral -> ObjectLiteral | ArrayLiteral
+    /// </summary>
+    private ComplexLiteral ComplexLiteral()
+    {
+        if (CurrentIs("LeftCurl"))
+        {
+            return ObjectLiteral();
+        }
+
+        return ArrayLiteral();
+    }
+
+    /// <summary>
     /// ObjectLiteral -> '{' PropertyDefinitionList '}'
+    /// PropertyDefinitionList -> (FieldProperty ';')*
+    /// FieldProperty -> "Ident" ':' Expression
     /// </summary>
     private ObjectLiteral ObjectLiteral()
     {
@@ -409,6 +421,7 @@ public partial class TopDownParser
 
     /// <summary>
     /// ArrayLiteral -> '[' ElementList ']'
+    /// ElementList -> (Expression ',')*
     /// </summary>
     private ArrayLiteral ArrayLiteral()
     {

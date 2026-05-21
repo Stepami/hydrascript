@@ -30,7 +30,7 @@ public partial class TopDownParser
             return TypeDeclaration();
         }
 
-        return null!;
+        throw new ParserException(nameof(Declaration), _tokens.Current);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public partial class TopDownParser
             return WithSuffix(new ObjectTypeValue(propertyTypes));
         }
 
-        return null!;
+        throw new ParserException(nameof(TypeValue), _tokens.Current);
     }
 
     /// <summary>
