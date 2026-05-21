@@ -308,9 +308,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     {
         var typeComparer = default(CommutativeTypeEqualityComparer);
 
-        if (visitable.Destination is CallExpression)
-            throw new WrongAssignmentTarget(visitable.Destination);
-
         var sourceType = visitable.Source.Accept(This);
         if (!visitable.Destination.Empty())
         {

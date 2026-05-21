@@ -12,12 +12,12 @@ public partial class TopDownParser
 {
     /// <summary>
     /// Expression -> CastExpression | AssignmentExpression
-    /// AssignmentExpression -> LeftHandSideExpression "Operator"? '=' Expression
+    /// AssignmentExpression -> MemberExpression "Operator"? '=' Expression
     /// </summary>
     private Expression Expression()
     {
         var expr = CastExpression();
-        if (expr is LeftHandSideExpression lhs && CurrentIs("Assign"))
+        if (expr is MemberExpression lhs && CurrentIs("Assign"))
         {
             var assign = Expect("Assign");
             return new AssignmentExpression(lhs, Expression())

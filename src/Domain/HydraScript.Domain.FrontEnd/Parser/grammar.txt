@@ -25,7 +25,7 @@ Expression -> CastExpression
 
 CastExpression -> WithExpression 'as' TypeValue
 
-AssignmentExpression -> LeftHandSideExpression "Operator"? '=' Expression
+AssignmentExpression -> MemberExpression "Operator"? '=' Expression
 
 LeftHandSideExpression -> MemberExpression
                           CallExpression
