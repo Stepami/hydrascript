@@ -37,15 +37,12 @@ public partial class TopDownParser
         {
             Expect("LeftParen");
             var expressions = new List<Expression>();
-            if (CurrentIsExpression())
-            {
-                expressions.Add(Expression());
-            }
 
-            while (CurrentIs("Comma"))
+            while (CurrentIsExpression())
             {
-                Expect("Comma");
                 expressions.Add(Expression());
+                if (!CurrentIs("RightParen"))
+                    Expect("Comma");
             }
 
             var rp = Expect("RightParen");
