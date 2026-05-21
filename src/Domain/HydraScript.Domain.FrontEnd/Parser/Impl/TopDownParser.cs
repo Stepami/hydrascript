@@ -24,9 +24,9 @@ public partial class TopDownParser(ILexer lexer) : IParser
         var current = _tokens.Current;
 
         if (!CurrentIs(expectedTag))
-            throw new ParserException(_tokens.Current.Segment, expectedTag, _tokens.Current);
+            throw new ParserException(expectedTag, _tokens.Current);
         if (_tokens.Current.Value != (expectedValue ?? _tokens.Current.Value))
-            throw new ParserException(_tokens.Current.Segment, expectedValue, _tokens.Current);
+            throw new ParserException(expectedValue, _tokens.Current);
 
         _tokens.MoveNext();
         return current;
