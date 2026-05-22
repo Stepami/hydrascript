@@ -317,7 +317,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         if (visitable.IsEmptyCall)
             return [];
 
-        var methodCall = !visitable.Empty();
+        var methodCall = !visitable.Member.Empty();
         AddressedInstructions result = [];
 
         if (methodCall)

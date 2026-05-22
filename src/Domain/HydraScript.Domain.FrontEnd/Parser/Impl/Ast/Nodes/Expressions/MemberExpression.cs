@@ -35,7 +35,7 @@ public partial class MemberExpression : LeftHandSideExpression
 
     public override IdentifierReference Id => _identifierReference;
 
-    public override bool Empty() => AccessChain is null;
+    public bool Empty() => AccessChain.Count == 0;
 
     protected override string NodeRepresentation() => nameof(MemberExpression);
 }

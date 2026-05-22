@@ -30,7 +30,5 @@ public partial class CallExpression : LeftHandSideExpression
 
     public override IdentifierReference Id => Member.Id;
 
-    public override bool Empty() => Member.Empty();
-
     protected override string NodeRepresentation() => "()";
 }
