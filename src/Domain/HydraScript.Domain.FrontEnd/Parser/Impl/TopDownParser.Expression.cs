@@ -19,7 +19,13 @@ public partial class TopDownParser
         if (expr is MemberExpression lhs && CurrentIs("Assign"))
         {
             var assign = Expect("Assign");
-            return new AssignmentExpression(lhs, Expression())
+            var source = assign.Value is "="
+                ? Expression()
+                : new BinaryExpression(
+                    lhs.Empty() ? lhs.Id.Clone() : lhs.Clone(),
+                    assign.Value[..^1],
+                    Expression());
+            return new AssignmentExpression(lhs, source)
                 { Segment = assign.Segment };
         }
 
