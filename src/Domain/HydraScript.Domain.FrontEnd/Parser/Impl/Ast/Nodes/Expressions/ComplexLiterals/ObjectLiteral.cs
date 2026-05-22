@@ -40,7 +40,7 @@ public partial class ObjectLiteral : ComplexLiteral
     {
         ArgumentNullException.ThrowIfNull(scope);
         Scope = scope;
-        Scope.AddOpenScope(Parent.Scope);
+        Scope.AddOpenScope(Parent?.Scope ?? Scope.Empty);
     }
 
     protected override string NodeRepresentation() => "{}";

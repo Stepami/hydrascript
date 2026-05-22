@@ -5,9 +5,9 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast;
 
 public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
 {
-    public IAbstractSyntaxTreeNode Parent { get; set; } = null!;
+    public IAbstractSyntaxTreeNode? Parent { get; internal set; }
 
-    public Scope Scope { get; protected set; } = null!;
+    public Scope Scope { get; protected set; } = Scope.Empty;
 
     /// <summary>Базовая стратегия - инициализация через родительский узел</summary>
     /// <param name="scope">Обязательно <c>null</c></param>
@@ -15,7 +15,7 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     {
         if (scope is not null)
             throw new ArgumentException("'scope' must be null");
-        Scope = Parent.Scope;
+        Scope = Parent?.Scope ?? Scope.Empty;
     }
 
     public string Segment { get; init; } = string.Empty;
@@ -47,7 +47,7 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     public bool ChildOf<T>(Predicate<T>? condition = null) where T : IAbstractSyntaxTreeNode
     {
         var parent = Parent;
-        while (parent != null!)
+        while (parent != null)
         {
             if (parent is T node)
             {

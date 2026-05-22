@@ -79,7 +79,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         visitable.ReturnStatements = returnAnalyzerResult.ReturnStatements;
         visitable.AllCodePathsEndedWithReturn = returnAnalyzerResult.CodePathEndedWithReturn;
 
-        var parentTable = _symbolTables[visitable.Parent.Scope];
+        var parentTable = _symbolTables[visitable.Parent?.Scope ?? Scope.Empty];
 
         var parameters = new List<Type>();
         for (var i = 0; i < visitable.Arguments.Count; i++)

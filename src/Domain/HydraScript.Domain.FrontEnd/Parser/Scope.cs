@@ -1,12 +1,24 @@
 namespace HydraScript.Domain.FrontEnd.Parser;
 
-public record Scope
+public sealed record Scope
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    private Scope(Guid id)
+    {
+        Id = id;
+    }
+
+    public Scope() : this(Guid.NewGuid())
+    {
+    }
+
+    public Guid Id { get; }
+
     public Scope? OpenScope { get; private set; }
 
     public void AddOpenScope(Scope scope) =>
         OpenScope = scope;
 
     public override string ToString() => Id.ToString();
+
+    public static readonly Scope Empty = new(Guid.Empty);
 }

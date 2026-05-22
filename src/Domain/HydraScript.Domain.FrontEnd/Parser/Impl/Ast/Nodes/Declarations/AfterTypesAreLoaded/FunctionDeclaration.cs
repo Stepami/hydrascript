@@ -48,10 +48,10 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
     {
         ArgumentNullException.ThrowIfNull(scope);
         Scope = scope;
-        Scope.AddOpenScope(Parent.Scope);
+        Scope.AddOpenScope(Parent?.Scope ?? Scope.Empty);
 
-        _arguments.ForEach(x => x.TypeValue.Scope = Parent.Scope);
-        ReturnTypeValue.Scope = Parent.Scope;
+        _arguments.ForEach(x => x.TypeValue.Scope = Parent?.Scope ?? Scope.Empty);
+        ReturnTypeValue.Scope = Parent?.Scope ?? Scope.Empty;
     }
 
     protected override string NodeRepresentation() =>
