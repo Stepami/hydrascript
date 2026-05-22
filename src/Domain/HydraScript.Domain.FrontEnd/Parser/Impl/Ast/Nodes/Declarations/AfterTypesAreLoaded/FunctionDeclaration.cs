@@ -56,12 +56,4 @@ public partial class FunctionDeclaration : AfterTypesAreLoadedDeclaration
 
     protected override string NodeRepresentation() =>
         ZString.Concat<string, char, string>("function", ' ', Name);
-
-    public override FunctionDeclaration Clone() =>
-        new(
-            Name.Clone(),
-            ReturnTypeValue.DeepClone(),
-            _arguments.Select(x => x.DeepClone()).ToList(),
-            Statements.Clone(),
-            IndexOfFirstDefaultArgument);
 }

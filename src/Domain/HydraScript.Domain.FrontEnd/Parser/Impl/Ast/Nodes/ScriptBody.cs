@@ -23,7 +23,4 @@ public partial class ScriptBody : AbstractSyntaxTreeNode
     }
 
     protected override string NodeRepresentation() => "Script";
-
-    public override ScriptBody Clone() =>
-        new(_statementList.Select(x => x.Clone()).ToList());
 }

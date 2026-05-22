@@ -32,7 +32,4 @@ public partial class IfStatement : Statement
     public bool HasElseBlock() => Else is { Count: > 0 };
 
     protected override string NodeRepresentation() => "if";
-
-    public override IfStatement Clone() =>
-        new(Test.Clone(), Then.Clone(), Else?.Clone());
 }

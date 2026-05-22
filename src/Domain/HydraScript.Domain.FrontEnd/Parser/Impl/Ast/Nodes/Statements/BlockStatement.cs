@@ -24,7 +24,4 @@ public partial class BlockStatement : Statement
     }
 
     protected override string NodeRepresentation() => "{}";
-
-    public override BlockStatement Clone() =>
-        new(_statementList.Select(x => x.Clone()).ToList());
 }

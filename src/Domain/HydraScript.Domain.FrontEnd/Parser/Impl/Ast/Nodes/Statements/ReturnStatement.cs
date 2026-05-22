@@ -16,6 +16,4 @@ public partial class ReturnStatement : Statement
     }
 
     protected override string NodeRepresentation() => "return";
-
-    public override ReturnStatement Clone() => new(Expression?.Clone());
 }

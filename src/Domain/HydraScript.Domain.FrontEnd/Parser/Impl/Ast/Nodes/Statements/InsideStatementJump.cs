@@ -6,6 +6,4 @@ public partial class InsideStatementJump(string keyword) : Statement
     public string Keyword { get; } = keyword;
 
     protected override string NodeRepresentation() => Keyword;
-
-    public override InsideStatementJump Clone() => new(Keyword);
 }

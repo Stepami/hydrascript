@@ -21,15 +21,4 @@ public partial class LexicalDeclaration(bool readOnly) : AfterTypesAreLoadedDecl
 
     protected override string NodeRepresentation() =>
         ReadOnly ? "const" : "let";
-
-    public override LexicalDeclaration Clone()
-    {
-        var clone = new LexicalDeclaration(ReadOnly);
-        for (var i = 0; i < _assignments.Count; i++)
-        {
-            clone.AddAssignment(_assignments[i].Clone());
-        }
-
-        return clone;
-    }
 }
