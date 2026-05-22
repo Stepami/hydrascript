@@ -9,6 +9,8 @@ public interface IFunctionArgument
     public TypeValue TypeValue { get; }
 
     public ValueDto Info { get; }
+
+    public IFunctionArgument DeepClone();
 }
 
 public record NamedArgument(
@@ -19,6 +21,11 @@ public record NamedArgument(
         $"{Name}: {TypeValue}";
 
     public ValueDto Info { get; } = ValueDto.NameDto(Name);
+
+    public IFunctionArgument DeepClone() => this with
+    {
+        TypeValue = TypeValue.DeepClone()
+    };
 }
 
 public record DefaultValueArgument : IFunctionArgument
@@ -35,6 +42,11 @@ public record DefaultValueArgument : IFunctionArgument
     public TypeValue TypeValue { get; }
 
     public ValueDto Info { get; }
+
+    public IFunctionArgument DeepClone() =>
+        new DefaultValueArgument(
+            Name,
+            new Literal(TypeValue.DeepClone(), Info.Value, label: Info.Label));
 
     public override string ToString() =>
         $"{Name} = {Info.Label}";

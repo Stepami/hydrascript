@@ -23,4 +23,7 @@ public partial class ConditionalExpression : Expression
     }
 
     protected override string NodeRepresentation() => "?:";
+
+    public override ConditionalExpression Clone() =>
+        new(Test.Clone(), Consequent.Clone(), Alternate.Clone());
 }

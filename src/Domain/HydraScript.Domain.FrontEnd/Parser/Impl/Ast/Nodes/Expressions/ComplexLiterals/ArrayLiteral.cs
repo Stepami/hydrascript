@@ -25,4 +25,7 @@ public partial class ArrayLiteral : ComplexLiteral
     }
 
     protected override string NodeRepresentation() => "[]";
+
+    public override ArrayLiteral Clone() =>
+        new(_expressions.Select(x => x.Clone()).ToList());
 }

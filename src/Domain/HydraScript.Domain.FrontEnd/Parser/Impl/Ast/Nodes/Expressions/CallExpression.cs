@@ -31,4 +31,7 @@ public partial class CallExpression : LeftHandSideExpression
     public override IdentifierReference Id => Member.Id;
 
     protected override string NodeRepresentation() => "()";
+
+    public override CallExpression Clone() =>
+        new(Member.Clone(), _parameters.Select(x => x.Clone()).ToList());
 }

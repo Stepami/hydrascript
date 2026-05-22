@@ -7,6 +7,8 @@
                 <Function>.*ToString.*</Function>
                 <Function>.*GetHashCode.*</Function>
                 <Function>.*GetEnumerator.*</Function>
+                <Function>.*Clone.*</Function>
+                <Function>.*DeepClone.*</Function>
             </Exclude>
         </Functions>
 

@@ -36,6 +36,8 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     public IReadOnlyList<IAbstractSyntaxTreeNode> GetAllNodes() =>
         new TraverseEnumerator(this).AsValueEnumerable().ToArray();
 
+    public abstract IAbstractSyntaxTreeNode Clone();
+
     /// <summary>
     /// Метод возвращает <c>true</c>, если узел - потомок заданного типа и выполняется заданное условие.<br/>
     /// В случае, когда условие не задано, проверяется просто соответствие типов.
@@ -45,13 +47,11 @@ public abstract class AbstractSyntaxTreeNode : IAbstractSyntaxTreeNode
     public bool ChildOf<T>(Predicate<T>? condition = null) where T : IAbstractSyntaxTreeNode
     {
         var parent = Parent;
-        while (parent != default!)
+        while (parent != null!)
         {
             if (parent is T node)
             {
-                return condition is not null
-                    ? condition(node)
-                    : true;
+                return condition?.Invoke(node) ?? true;
             }
 
             parent = parent.Parent;

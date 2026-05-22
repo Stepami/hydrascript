@@ -16,4 +16,6 @@ public partial class ExpressionStatement : Statement
     }
 
     protected override string NodeRepresentation() => nameof(ExpressionStatement);
+
+    public override ExpressionStatement Clone() => new(Expression.Clone());
 }

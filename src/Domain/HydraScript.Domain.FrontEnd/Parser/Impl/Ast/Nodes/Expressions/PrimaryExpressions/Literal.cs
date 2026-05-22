@@ -11,7 +11,7 @@ public partial class Literal : AbstractLiteral
     public Literal(
         TypeValue type,
         object? value,
-        string segment,
+        string segment = "",
         string? label = null) : base(type)
     {
         _label = (label ?? value?.ToString())!;
@@ -20,6 +20,8 @@ public partial class Literal : AbstractLiteral
     }
 
     protected override string NodeRepresentation() => _label;
+
+    public override Literal Clone() => new(Type.DeepClone(), _value, Segment, _label);
 
     public override ValueDto ToValueDto() =>
         ValueDto.ConstantDto(_value, _label);

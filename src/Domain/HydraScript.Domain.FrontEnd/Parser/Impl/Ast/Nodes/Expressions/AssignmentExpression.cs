@@ -35,4 +35,7 @@ public partial class AssignmentExpression : Expression
     }
 
     protected override string NodeRepresentation() => "=";
+
+    public override AssignmentExpression Clone() =>
+        new (Destination.Clone(), Source.Clone(), DestinationType);
 }

@@ -17,4 +17,6 @@ public partial class TypeDeclaration(IdentifierReference typeId, TypeValue typeV
 
     protected override string NodeRepresentation() =>
         $"type {TypeId.Name} = {TypeValue}";
+
+    public override TypeDeclaration Clone() => new(TypeId.Clone(), TypeValue.DeepClone());
 }

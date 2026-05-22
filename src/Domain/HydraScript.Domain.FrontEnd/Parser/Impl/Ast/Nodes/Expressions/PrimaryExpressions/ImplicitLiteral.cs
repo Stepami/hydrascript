@@ -12,11 +12,13 @@ public partial class ImplicitLiteral(TypeValue type) : AbstractLiteral(type)
         TypeIdentValue { TypeId.Name: "boolean" } => false,
         TypeIdentValue { TypeId.Name: "null" } or NullableTypeValue => null,
         ArrayTypeValue => new List<object>(),
-        _ => new Undefined()
+        _ => default(Undefined)
     };
 
     protected override string NodeRepresentation() =>
         $"Implicit {Type}";
+
+    public override ImplicitLiteral Clone() => new(Type.DeepClone());
 
     public void SetValue(object? value) => _defaultValue = value;
 
@@ -29,5 +31,5 @@ public partial class ImplicitLiteral(TypeValue type) : AbstractLiteral(type)
                 ? "null"
                 : _defaultValue.ToString()!);
 
-    private sealed class Undefined;
+    private readonly struct Undefined;
 }

@@ -20,4 +20,6 @@ public partial class WhileStatement : Statement
     }
 
     protected override string NodeRepresentation() => "while";
+
+    public override WhileStatement Clone() => new(Condition.Clone(), Statement.Clone());
 }

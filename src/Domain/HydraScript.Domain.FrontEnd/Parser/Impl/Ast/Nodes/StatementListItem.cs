@@ -1,10 +1,19 @@
 namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes;
 
 public abstract class StatementListItem :
-    AbstractSyntaxTreeNode;
+    AbstractSyntaxTreeNode
+{
+    public abstract override StatementListItem Clone();
+}
 
 public abstract class Statement :
-    StatementListItem;
+    StatementListItem
+{
+    public abstract override Statement Clone();
+}
 
 public abstract class Declaration :
-    StatementListItem;
+    StatementListItem
+{
+    public abstract override Declaration Clone();
+}

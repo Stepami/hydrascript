@@ -23,4 +23,6 @@ public partial class BinaryExpression : Expression
     }
 
     protected override string NodeRepresentation() => Operator;
+
+    public override BinaryExpression Clone() => new(Left.Clone(), Operator, Right.Clone());
 }

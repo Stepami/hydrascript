@@ -7,6 +7,8 @@ public partial class EnvVarReference(string name) : IdentifierReference(name)
 {
     protected override string NodeRepresentation() => ZString.Concat('$', Name);
 
+    public override EnvVarReference Clone() => new(Name);
+
     public override ValueDto ToValueDto() =>
         ValueDto.EnvDto(Name);
 }

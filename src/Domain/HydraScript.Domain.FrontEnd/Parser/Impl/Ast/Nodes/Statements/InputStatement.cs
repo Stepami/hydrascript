@@ -18,4 +18,6 @@ public partial class InputStatement : Statement
     }
 
     protected override string NodeRepresentation() => "input";
+
+    public override InputStatement Clone() => new(Destination.Clone());
 }
