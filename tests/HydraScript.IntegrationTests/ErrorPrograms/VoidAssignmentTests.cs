@@ -17,8 +17,7 @@ public class VoidAssignmentTests(TestHostFixture fixture) : IClassFixture<TestHo
                 let x = func(true)
             """;
         using var runner = fixture.GetRunner(new TestHostFixture.Options(InMemoryScript: script));
-        var code = runner.Invoke();
-        code.Should().Be(Executor.ExitCodes.HydraScriptError);
+        runner.Invoke().Should().Be(Executor.ExitCodes.HydraScriptError);
         fixture.LogMessages.Should()
             .Contain(x => x.Contains("Cannot assign void"));
     }
