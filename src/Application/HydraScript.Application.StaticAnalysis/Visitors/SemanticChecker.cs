@@ -49,7 +49,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     private readonly IFunctionWithUndefinedReturnStorage _functionStorage;
     private readonly IMethodStorage _methodStorage;
     private readonly ISymbolTableStorage _symbolTables;
-    private readonly IComputedTypesStorage _computedTypes;
     private readonly IAmbiguousInvocationStorage _ambiguousInvocations;
     private readonly IVisitor<TypeValue, Type> _typeBuilder;
 
@@ -58,7 +57,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         IFunctionWithUndefinedReturnStorage functionStorage,
         IMethodStorage methodStorage,
         ISymbolTableStorage symbolTables,
-        IComputedTypesStorage computedTypes,
         IAmbiguousInvocationStorage ambiguousInvocations,
         IVisitor<TypeValue, Type> typeBuilder)
     {
@@ -66,7 +64,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         _functionStorage = functionStorage;
         _methodStorage = methodStorage;
         _symbolTables = symbolTables;
-        _computedTypes = computedTypes;
         _ambiguousInvocations = ambiguousInvocations;
         _typeBuilder = typeBuilder;
     }
@@ -83,7 +80,6 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
 
         _methodStorage.Clear();
         _symbolTables.Clear();
-        _computedTypes.Clear();
         _ambiguousInvocations.Clear();
 
         return _typesService.Undefined;
@@ -341,17 +337,18 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
     public Type Visit(MemberExpression visitable)
     {
         IAbstractSyntaxTreeNode id = visitable.Id;
-        var idType = id.Accept(This);
-        visitable.ComputedIdTypeGuid = _computedTypes.Save(idType);
-        return visitable.Empty() ? idType : visitable.AccessChain?.Accept(This) ?? _typesService.Undefined;
+        return visitable.Empty()
+            ? id.Accept(This)
+            : visitable.AccessChain.Last?.Value.Accept(This) ?? _typesService.Undefined;
     }
 
     public Type Visit(IndexAccess visitable)
     {
-        var prevTypeGuid =
-            visitable.Prev?.ComputedTypeGuid
-            ?? (visitable.Parent as MemberExpression)!.ComputedIdTypeGuid;
-        var prevType = _computedTypes.Get(prevTypeGuid);
+        var prevType =
+            visitable.Prev?.Accept(This) ??
+            (visitable.Parent is MemberExpression { Id: IAbstractSyntaxTreeNode id }
+                ? id.Accept(This)
+                : _typesService.Undefined);
 
         if (!prevType.TryGetOperator("[]", out var indexOperator))
             throw new NonAccessibleType(prevType);
@@ -361,16 +358,16 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
         if (!indexOperator.TryGetResultType(indexAccessDescriptor, out var elemType))
             throw new ArrayAccessException(visitable.Segment, indexType);
 
-        visitable.ComputedTypeGuid = _computedTypes.Save(elemType);
-        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? _typesService.Undefined : elemType;
+        return elemType;
     }
 
     public Type Visit(DotAccess visitable)
     {
-        var prevTypeGuid =
-            visitable.Prev?.ComputedTypeGuid
-            ?? (visitable.Parent as MemberExpression)!.ComputedIdTypeGuid;
-        var prevType = _computedTypes.Get(prevTypeGuid);
+        var prevType =
+            visitable.Prev?.Accept(This) ??
+            (visitable.Parent is MemberExpression { Id: IAbstractSyntaxTreeNode id }
+                ? id.Accept(This)
+                : _typesService.Undefined);
 
         if (prevType is not ObjectType objectType)
             throw new NonAccessibleType(prevType);
@@ -381,8 +378,8 @@ internal class SemanticChecker : VisitorBase<IAbstractSyntaxTreeNode, Type>,
             return hasMethod
                 ? objectType
                 : throw new ObjectAccessException(visitable.Segment, objectType, visitable.Property);
-        visitable.ComputedTypeGuid = _computedTypes.Save(fieldType);
-        return visitable.HasNext() ? visitable.Next?.Accept(This) ?? _typesService.Undefined : fieldType;
+
+        return fieldType;
     }
 
     public ObjectType Visit(WithExpression visitable)

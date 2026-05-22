@@ -6,7 +6,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessEx
 public partial class DotAccess : AccessExpression
 {
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        HasNext() ? [Property, Next!] : [Property];
+        Next is { } next ? [Property, next] : [Property];
 
     public IdentifierReference Property { get; }
 
@@ -17,4 +17,6 @@ public partial class DotAccess : AccessExpression
     }
 
     protected override string NodeRepresentation() => ".";
+
+    public override DotAccess Clone() => new(Property.Clone(), Prev?.Clone());
 }

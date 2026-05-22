@@ -15,7 +15,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMethodStorage, MethodStorage>();
         services.AddSingleton<ISymbolTableStorage, SymbolTableStorage>();
 
-        services.AddSingleton<IComputedTypesStorage, ComputedTypesStorage>();
         services.AddSingleton<ITypeDeclarationsResolver, TypeDeclarationsResolver>();
 
         services.AddSingleton<IStandardLibraryProvider, StandardLibraryProvider>();

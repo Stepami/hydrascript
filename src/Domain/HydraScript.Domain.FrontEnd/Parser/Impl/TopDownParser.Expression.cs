@@ -83,10 +83,7 @@ public partial class TopDownParser
             }
         }
 
-        return new MemberExpression(
-            memberRoot,
-            accessChain.First?.Value,
-            tail: accessChain.Last?.Value)
+        return new MemberExpression(memberRoot, accessChain)
         {
             Segment = memberRoot.Segment
         };
@@ -208,8 +205,8 @@ public partial class TopDownParser
     private Expression RelationExpression()
     {
         var left = AdditiveExpression();
-        while (CurrentIsOperator(">") || CurrentIsOperator("<") || CurrentIsOperator(">=") ||
-               CurrentIsOperator("<="))
+        while (CurrentIsOperator(">") || CurrentIsOperator("<") ||
+               CurrentIsOperator(">=") || CurrentIsOperator("<="))
         {
             var op = Expect("Operator");
             var right = AdditiveExpression();

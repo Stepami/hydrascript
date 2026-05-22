@@ -9,28 +9,24 @@ public partial class MemberExpression : LeftHandSideExpression
     private readonly IdentifierReference _identifierReference;
 
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        AccessChain is not null ? [Id, AccessChain] : [Id];
+        AccessChain.First is { Value: { } head } ? [Id, head] : [Id];
 
-    public AccessExpression? AccessChain { get; }
-    public AccessExpression? Tail { get; }
+    public LinkedList<AccessExpression> AccessChain { get; }
 
-    public Guid ComputedIdTypeGuid { get; set; } = Guid.Empty;
-
-    public MemberExpression(IdentifierReference identifierReference)
+    public MemberExpression(IdentifierReference identifierReference) :
+        this(identifierReference, [])
     {
-        _identifierReference = identifierReference;
-        _identifierReference.Parent = this;
     }
 
     public MemberExpression(
         IdentifierReference identifierReference,
-        AccessExpression? accessChain,
-        AccessExpression? tail) : this(identifierReference)
+        LinkedList<AccessExpression> accessChain)
     {
-        AccessChain = accessChain;
-        AccessChain?.Parent = this;
+        _identifierReference = identifierReference;
+        _identifierReference.Parent = this;
 
-        Tail = tail;
+        AccessChain = accessChain;
+        AccessChain.First?.Value.Parent = this;
     }
 
     public override IdentifierReference Id => _identifierReference;
@@ -38,4 +34,16 @@ public partial class MemberExpression : LeftHandSideExpression
     public bool Empty() => AccessChain.Count == 0;
 
     protected override string NodeRepresentation() => nameof(MemberExpression);
+
+    public override MemberExpression Clone()
+    {
+        var clonedAccessChain = new LinkedList<AccessExpression>();
+        var clonedTail = AccessChain.Last?.Value.Clone();
+        while (clonedTail != null)
+        {
+            clonedAccessChain.AddFirst(clonedTail);
+            clonedTail = clonedTail.Prev;
+        }
+        return new MemberExpression(Id.Clone(), clonedAccessChain);
+    }
 }
