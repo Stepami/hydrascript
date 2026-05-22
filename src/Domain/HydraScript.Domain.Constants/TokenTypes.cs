@@ -71,11 +71,26 @@ public static class TokenTypes
                 Tag: "Input",
                 Pattern: "[<]{3}",
                 Priority: 13);
+            
+            yield return new(
+                Tag: "Assign",
+                Pattern: "[+]{1,2}[=]|[-][=]|[*][=]|[/][=]|[%][=]|[|][|][=]|[&][&][=]",
+                Priority: 14);
 
             yield return new(
                 Tag: "Operator",
-                Pattern: "[+]{1,2}|[-]|[*]|[/]|[%]|([!]|[=])[=]|([<]|[>])[=]?|[!]|[|]{2}|[&]{2}|[~]|[:]{2}|[$]",
-                Priority: 14);
+                Pattern: "[=][=]|[!][=]|[<][=]|[>][=]",
+                Priority: 15);
+
+            yield return new(
+                Tag: "Assign",
+                Pattern: "[=]",
+                Priority: 16);
+
+            yield return new(
+                Tag: "Operator",
+                Pattern: "[+][+]|[-]|[+*/%<>!~$]|[|][|]|[&][&]|[:][:]",
+                Priority: 17);
 
             yield return new(
                 Tag: "Comma",
@@ -116,11 +131,6 @@ public static class TokenTypes
                 Tag: "RightBracket",
                 Pattern: "[]]",
                 Priority: 109);
-
-            yield return new(
-                Tag: "Assign",
-                Pattern: "[=]",
-                Priority: 99);
 
             yield return new(
                 Tag: "QuestionMark",
