@@ -4,7 +4,7 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessEx
 public partial class IndexAccess : AccessExpression
 {
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children =>
-        HasNext() ? [Index, Next!] : [Index];
+        Next is { } next ? [Index, next] : [Index];
 
     public Expression Index { get; }
 
@@ -15,4 +15,6 @@ public partial class IndexAccess : AccessExpression
     }
 
     protected override string NodeRepresentation() => "[]";
+
+    public override IndexAccess Clone() => new(Index.Clone(), Prev?.Clone());
 }

@@ -18,10 +18,10 @@ public partial class ObjectLiteral : ComplexLiteral
     {
         get
         {
-            if (Parent is AssignmentExpression assignment) 
+            if (Parent is AssignmentExpression assignment)
                 return assignment.Destination.Id;
 
-            if (Parent is WithExpression{Parent:AssignmentExpression withAssignment})
+            if (Parent is WithExpression { Parent: AssignmentExpression withAssignment })
                 return withAssignment.Destination.Id;
 
             return new(NullId);
@@ -40,8 +40,11 @@ public partial class ObjectLiteral : ComplexLiteral
     {
         ArgumentNullException.ThrowIfNull(scope);
         Scope = scope;
-        Scope.AddOpenScope(Parent.Scope);
+        Scope.AddOpenScope(Parent?.Scope ?? Scope.Empty);
     }
 
     protected override string NodeRepresentation() => "{}";
+
+    public override ObjectLiteral Clone() =>
+        new(_properties.Select(x => x.Clone()).ToList());
 }

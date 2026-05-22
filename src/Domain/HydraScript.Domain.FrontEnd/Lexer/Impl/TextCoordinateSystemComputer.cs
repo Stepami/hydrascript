@@ -4,7 +4,7 @@ namespace HydraScript.Domain.FrontEnd.Lexer.Impl;
 
 public class TextCoordinateSystemComputer : ITextCoordinateSystemComputer
 {
-    private readonly SearchValues<char> _sv = SearchValues.Create(['\n']);
+    private readonly SearchValues<char> _sv = SearchValues.Create('\n');
 
     /// <inheritdoc/>
     public IReadOnlyList<int> GetLines(string text)

@@ -24,4 +24,7 @@ public partial class WithExpression : Expression
     }
 
     protected override string NodeRepresentation() => "with";
+
+    public override WithExpression Clone() =>
+        new(Expression.Clone(), ObjectLiteral.Clone());
 }

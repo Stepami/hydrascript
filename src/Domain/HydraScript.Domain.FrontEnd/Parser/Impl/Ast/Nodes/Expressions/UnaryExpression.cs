@@ -19,4 +19,6 @@ public partial class UnaryExpression : Expression
     }
 
     protected override string NodeRepresentation() => Operator;
+
+    public override UnaryExpression Clone() => new(Operator, Expression.Clone());
 }

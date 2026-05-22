@@ -56,8 +56,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
             if (_symbolTables[visitable.Scope].ContainsSymbol(new VariableSymbolId(assignment.Destination.Id)))
                 throw new DeclarationAlreadyExists(assignment.Destination.Id);
 
-            var destinationType = assignment.DestinationType?.Accept(
-                _typeBuilder) ?? _typesService.Undefined;
+            var destinationType = assignment.DestinationType?.Accept(_typeBuilder) ?? _typesService.Undefined;
 
             if (destinationType == _typesService.Undefined &&
                 assignment.Source is ImplicitLiteral or ArrayLiteral { Expressions.Count: 0 })
@@ -80,7 +79,7 @@ internal class DeclarationVisitor : VisitorNoReturnBase<IAbstractSyntaxTreeNode>
         visitable.ReturnStatements = returnAnalyzerResult.ReturnStatements;
         visitable.AllCodePathsEndedWithReturn = returnAnalyzerResult.CodePathEndedWithReturn;
 
-        var parentTable = _symbolTables[visitable.Parent.Scope];
+        var parentTable = _symbolTables[visitable.Parent?.Scope ?? Scope.Empty];
 
         var parameters = new List<Type>();
         for (var i = 0; i < visitable.Arguments.Count; i++)

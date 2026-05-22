@@ -1,4 +1,5 @@
 using HydraScript.Domain.BackEnd;
+using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
@@ -22,7 +23,7 @@ public class InputTests(TestHostFixture fixture) : IClassFixture<TestHostFixture
         env.When(x => x.SetEnvironmentVariable("SOME_NUMBER", "1"))
             .Do(_ => env.GetEnvironmentVariable("SOME_NUMBER").Returns("1"));
 
-        runner.Invoke();
+        runner.Invoke().Should().Be(Executor.ExitCodes.Success);
 
         console.Received(1).WriteLine("1");
     }

@@ -12,6 +12,7 @@ public class TokenTypesProvider : ITokenTypesProvider
             .Select(x => x.CanIgnore
                 ? new IgnorableType(x.Tag)
                 : new TokenType(x.Tag))
+            .Distinct()
             .Concat([new EndOfProgramType(), new ErrorType()])
             .ToFrozenDictionary(x => x.Tag);
 }

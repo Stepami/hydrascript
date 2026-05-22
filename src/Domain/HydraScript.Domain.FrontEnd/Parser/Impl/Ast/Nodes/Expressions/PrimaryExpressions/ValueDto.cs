@@ -14,7 +14,7 @@ public record ValueDto(
 
     public static ValueDto EnvDto(string name) =>
         new(ValueDtoType.Env, name, Value: null, Label: null);
-};
+}
 
 public enum ValueDtoType
 {

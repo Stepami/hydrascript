@@ -24,8 +24,7 @@ public class ArithmeticTests(TestHostFixture fixture) : IClassFixture<TestHostFi
         using var runner = fixture.GetRunner(
             new TestHostFixture.Options(
                 InMemoryScript: script));
-        var code = runner.Invoke();
-        code.Should().Be(Executor.ExitCodes.Success);
+        runner.Invoke().Should().Be(Executor.ExitCodes.Success);
         fixture.LogMessages.Should()
             .Contain(log => log.Contains("i is 5"));
     }

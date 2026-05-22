@@ -270,7 +270,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
     public AddressedInstructions Visit(MemberExpression visitable) =>
         visitable.Empty()
             ? []
-            : visitable.Tail?.Accept(This) ?? [];
+            : visitable.AccessChain.Last?.Value.Accept(This) ?? [];
 
     public AddressedInstructions Visit(DotAccess visitable)
     {
@@ -317,7 +317,7 @@ internal class ExpressionInstructionProvider : VisitorBase<IAbstractSyntaxTreeNo
         if (visitable.IsEmptyCall)
             return [];
 
-        var methodCall = !visitable.Empty();
+        var methodCall = !visitable.Member.Empty();
         AddressedInstructions result = [];
 
         if (methodCall)

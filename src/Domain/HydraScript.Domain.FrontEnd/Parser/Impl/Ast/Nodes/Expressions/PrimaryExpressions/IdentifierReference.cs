@@ -7,6 +7,8 @@ public partial class IdentifierReference(string name) : PrimaryExpression
 
     protected override string NodeRepresentation() => Name;
 
+    public override IdentifierReference Clone() => new(Name);
+
     public override ValueDto ToValueDto() =>
         ValueDto.NameDto(Name);
 

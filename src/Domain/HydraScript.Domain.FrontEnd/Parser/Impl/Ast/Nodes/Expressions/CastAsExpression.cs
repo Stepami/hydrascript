@@ -30,6 +30,8 @@ public partial class CastAsExpression : Expression
 
     protected override string NodeRepresentation() => $"as {Cast}";
 
+    public override CastAsExpression Clone() => new(Expression.Clone(), Cast);
+
     public enum DestinationType
     {
         Undefined,

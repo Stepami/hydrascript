@@ -2,12 +2,9 @@ namespace HydraScript.Domain.FrontEnd.Parser.Impl.Ast.Nodes.Expressions.AccessEx
 
 public abstract class AccessExpression : Expression
 {
-    public AccessExpression? Next { get; private set; }
+    protected AccessExpression? Next { get; private set; }
 
-    public AccessExpression? Prev =>
-        Parent as AccessExpression;
-
-    public Guid ComputedTypeGuid { get; set; } = Guid.Empty;
+    public AccessExpression? Prev => Parent as AccessExpression;
 
     protected AccessExpression(AccessExpression? prev)
     {
@@ -18,12 +15,10 @@ public abstract class AccessExpression : Expression
         }
     }
 
-    public bool HasNext() =>
-        Next is not null;
-
-    public bool HasPrev() =>
-        Prev is not null;
+    public bool HasPrev() => Prev is not null;
 
     public abstract override TReturn Accept<TReturn>(
         IVisitor<IAbstractSyntaxTreeNode, TReturn> visitor);
+
+    public abstract override AccessExpression Clone();
 }

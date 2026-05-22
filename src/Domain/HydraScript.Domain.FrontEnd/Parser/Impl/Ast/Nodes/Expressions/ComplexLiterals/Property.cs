@@ -31,4 +31,6 @@ public partial class Property : Expression
     }
 
     protected override string NodeRepresentation() => ":";
+
+    public override Property Clone() => new(Id.Clone(), Expression.Clone());
 }

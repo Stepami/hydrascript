@@ -5,6 +5,8 @@ namespace HydraScript.Infrastructure;
 
 public sealed partial class GeneratedRegexContainer : IGeneratedRegexContainer
 {
-    [GeneratedRegex(PatternContainer.Value, RegexOptions.Compiled)]
+    [GeneratedRegex(
+        PatternContainer.Value,
+        options: RegexOptions.Compiled | RegexOptions.ExplicitCapture)]
     public static partial Regex Regex { get; }
 }

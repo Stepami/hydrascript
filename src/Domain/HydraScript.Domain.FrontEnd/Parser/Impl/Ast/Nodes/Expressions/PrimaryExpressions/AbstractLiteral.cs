@@ -11,6 +11,6 @@ public abstract partial class AbstractLiteral(TypeValue type) : PrimaryExpressio
     public override void InitScope(Scope? scope = null)
     {
         base.InitScope(scope);
-        Type.Scope = Parent.Scope;
+        Type.Scope = Parent?.Scope ?? Scope.Empty;
     }
 }

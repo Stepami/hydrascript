@@ -7,12 +7,12 @@ public partial class AssignmentExpression : Expression
 {
     protected override IReadOnlyList<IAbstractSyntaxTreeNode> Children { get; }
 
-    public LeftHandSideExpression Destination { get; }
+    public MemberExpression Destination { get; }
     public Expression Source { get; }
     public TypeValue? DestinationType { get; }
 
     public AssignmentExpression(
-        LeftHandSideExpression lhs,
+        MemberExpression lhs,
         Expression source,
         TypeValue? destinationType = null)
     {
@@ -35,4 +35,7 @@ public partial class AssignmentExpression : Expression
     }
 
     protected override string NodeRepresentation() => "=";
+
+    public override AssignmentExpression Clone() =>
+        new (Destination.Clone(), Source.Clone(), DestinationType);
 }

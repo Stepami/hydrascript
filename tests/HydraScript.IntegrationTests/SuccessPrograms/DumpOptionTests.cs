@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using HydraScript.Domain.BackEnd;
+using HydraScript.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -21,7 +22,7 @@ public class DumpOptionTests(TestHostFixture fixture) : IClassFixture<TestHostFi
                 outputWriter.WriteLine(x.ArgAt<string>(1));
             });
 
-        runner.Invoke();
+        runner.Invoke().Should().Be(Executor.ExitCodes.Success);
         fileSystemMock.File.Received(1)
             .WriteAllText(
                 Arg.Is<string>(s => s.EndsWith(TestHostFixture.ScriptFileName + ".tokens")),

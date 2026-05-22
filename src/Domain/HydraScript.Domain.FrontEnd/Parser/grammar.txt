@@ -1,7 +1,6 @@
 Script -> StatementList
 StatementList -> StatementListItem*
-StatementListItem -> Statement
-                     Declaration
+StatementListItem -> Statement | Declaration
                      
 Statement -> BlockStatement
              ExpressionStatement
@@ -20,18 +19,29 @@ Declaration -> LexicalDeclaration
 BlockStatement -> '{' StatementList '}'
 
 ExpressionStatement -> Expression
-Expression -> CastExpression   
-              AssignmentExpression
+Expression -> CastExpression | AssignmentExpression
+CastExpression -> WithExpression 'as' TypeValue
+AssignmentExpression -> MemberExpression "Assign" Expression
 
-CastExpression -> WithExpression 'as' 'string'
-
-AssignmentExpression -> LeftHandSideExpression '=' Expression
-
-LeftHandSideExpression -> MemberExpression
+LeftHandSideExpression -> PrimaryExpression
+                          ParenthesizedExpression
+                          ComplexLiteral
+                          MemberExpression
                           CallExpression
-CallExpression -> MemberExpression Arguments (Arguments | '[' Expression ']' | '.' 'Ident')*
-MemberExpression -> "Ident" ('[' Expression ']' | '.' 'Ident')*
 
+ParenthesizedExpression -> '(' Expression ')'
+
+ComplexLiteral -> ObjectLiteral | ArrayLiteral
+
+ObjectLiteral -> '{' PropertyDefinitionList '}'
+PropertyDefinitionList -> (FieldProperty ';')*
+FieldProperty -> "Ident" ':' Expression
+
+ArrayLiteral -> '[' ElementList ']'
+ElementList -> (Expression ',')*
+
+CallExpression -> MemberExpression Arguments
+MemberExpression -> Var ('[' Expression ']' | '.' 'Ident')*
 Arguments -> '(' (Expression ',')* ')'
 
 WithExpression -> ConditionalExpression 'with' ObjectLiteral
@@ -44,19 +54,14 @@ AddExpression -> MulExpression (('+'|'-') MulExpression)*
 MulExpression -> UnaryExpression (('*'|'/'|'%'|'++'|'::') UnaryExpression)*
 UnaryExpression -> LeftHandSideExpression | ('-'|'!'|'~') UnaryExpression
 
-PrimaryExpression -> "Ident" | EnvVar | Literal | '(' Expression ')' | ObjectLiteral | ArrayLiteral
+PrimaryExpression -> Var | Literal
+Var -> "Ident" | EnvVar
 EnvVar -> '$' "Ident"
 Literal -> "NullLiteral"
            "IntegerLiteral"
            "FloatLiteral"
            "StringLiteral"
            "BooleanLiteral"
-ObjectLiteral -> '{' PropertyDefinitionList '}'
-PropertyDefinitionList -> (FieldProperty ';')*
-FieldProperty -> "Ident" ':' Expression
-
-ArrayLiteral -> '[' ElementList ']'
-ElementList -> (Expression ',')*
              
 IfStatement -> 'if' '(' Expression ')' Statement ('else' Statement)?
 

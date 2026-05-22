@@ -13,8 +13,7 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
                 FileName: relativePathToFile,
                 MockFileSystem: false,
                 MockEnv: false));
-        var code = runner.Invoke();
-        code.Should().Be(Executor.ExitCodes.Success);
+        runner.Invoke().Should().Be(Executor.ExitCodes.Success);
     }
 
     public class SuccessfulPrograms : TheoryData<string>
