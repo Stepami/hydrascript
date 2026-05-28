@@ -6,8 +6,9 @@ const negSizeStr = -(~obj.arr) as string
 >>> negSizeStr
 
 const correctCast = negSizeStr == "-2"
-if (correctCast){
-    let single = [0]
-    let x = single[0] = obj.arr[2 - 2]
+let num = correctCast ? -2 : 0
+if (correctCast) {
+    let single = [num]
+    let x = single[0] = num = obj.arr[2 - 2]
     >>> x
 }
