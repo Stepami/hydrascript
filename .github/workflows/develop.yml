@@ -80,13 +80,13 @@ jobs:
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: CoverageReport   
           path: coverage-report
       - name: Upload Windows Build
         if: github.ref != 'refs/heads/master' && github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}
           path: ./src/HydraScript/bin/Debug/net10.0

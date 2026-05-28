@@ -9,6 +9,7 @@
                 <Function>.*GetEnumerator.*</Function>
                 <Function>.*Clone.*</Function>
                 <Function>.*DeepClone.*</Function>
+                <Function>.*NodeRepresentation.*</Function>
             </Exclude>
         </Functions>
 
