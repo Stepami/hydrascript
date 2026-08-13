@@ -2,8 +2,7 @@ name: Release Workflow
 
 on:
   push:
-    branches:
-      - 'release'
+    branches: [release]
 
 permissions:
   contents: write

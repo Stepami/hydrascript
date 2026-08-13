@@ -1,0 +1,55 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches-ignore: [release]
+
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  build-and-cover:
+    name: Build & Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Debug -v n
+      - name: Unit Tests
+        run: dotnet test -c Debug --no-build -v n --filter-trait Category=Unit
+      - name: Integration Tests
+        run: |
+          dotnet test --project tests/HydraScript.IntegrationTests `
+            -c Debug --no-build -v n `
+            --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml `
+            --coverage-settings tests/coverage-exclude.xml
+          mkdir coverage-report
+      - name: Code Coverage Summary Report For Merge Request
+        uses: Affanmir/diff-cover-action@v2
+        with:
+          coverage-files: ./TestResults/coverage.cobertura.xml
+          compare-branch: 'origin/master'
+          fail-under: 80
+          title: 'HydraScript PR Coverage'
+          create-badge: 'true'
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
+        with:
+          reports: './TestResults/coverage.cobertura.xml'
+          targetdir: './coverage-report'
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: CoverageReport
+          path: coverage-report

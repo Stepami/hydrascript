@@ -1,0 +1,33 @@
+name: Push Workflow
+
+on:
+  push:
+    branches-ignore: [release, master]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Debug -v n
+      - name: Tests
+        run: dotnet test -c Debug --no-build -v n
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows_build_${{ github.sha }}
+          path: ./src/HydraScript/bin/Debug/net10.0

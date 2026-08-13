@@ -1,23 +1,15 @@
-name: Develop Workflow
+name: Master Push Workflow
 
 on:
   push:
-    branches-ignore:  
-      - 'release'
-  pull_request:
-    branches-ignore:
-      - 'release'
+    branches: [master]
 
 permissions:
-  actions: write
-  checks: write
   contents: write
-  issues: write
-  pull-requests: write
 
 jobs:
-  build-and-test:
-    name: Build & Test
+  build-and-tag:
+    name: Build & Tag
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -36,7 +28,6 @@ jobs:
         id: version_step
         uses: gittools/actions/gitversion/execute@v4
       - name: Push New Version Tag
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           $gv = 'v${{ steps.version_step.outputs.majorMinorPatch }}' #gitversion result
           $lt = $( git describe --tags --abbrev=0 ) # last tag version result
@@ -60,34 +51,17 @@ jobs:
             --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml `
             --coverage-settings tests/coverage-exclude.xml
           mkdir coverage-report
-      - name: Tmp Dir For diff-cover
-        if: github.event_name == 'pull_request'
-        run: New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\tmp"
-        shell: pwsh
-      - name: Code Coverage Summary Report For Merge Request
-        if: github.event_name == 'pull_request'
-        uses: Affanmir/diff-cover-action@v2
-        env:
-          PYTHONUTF8: "1"
-        with:
-          coverage-files: ./TestResults/coverage.cobertura.xml
-          compare-branch: 'origin/master'
-          fail-under: 80
-          title: 'HydraScript PR Coverage'
-          create-badge: 'true'
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
         with:
-          reports: './TestResults/coverage.cobertura.xml' 
-          targetdir: './coverage-report' 
+          reports: './TestResults/coverage.cobertura.xml'
+          targetdir: './coverage-report'
       - name: Upload coverage report artifact
-        if: github.event_name == 'push'
         uses: actions/upload-artifact@v7
         with:
-          name: CoverageReport   
+          name: CoverageReport
           path: coverage-report
       - name: Upload Windows Build
-        if: github.ref != 'refs/heads/master' && github.event_name == 'push'
         uses: actions/upload-artifact@v7
         with:
           name: windows_build_${{ steps.version_step.outputs.fullSemVer }}

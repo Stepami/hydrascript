@@ -24,8 +24,10 @@
     <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
   </Folder>
   <Folder Name="/SolutionItems/GithubFolder/Workflows/">
-    <File Path=".github/workflows/develop.yml" />
     <File Path=".github/workflows/release.yml" />
+    <File Path=".github/workflows/master.yml" />
+    <File Path=".github/workflows/push.yml" />
+    <File Path=".github/workflows/pr.yml" />
   </Folder>
   <Folder Name="/Src/">
     <File Path="src/Directory.Build.props" />
