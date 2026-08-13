@@ -60,6 +60,10 @@ jobs:
             --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml `
             --coverage-settings tests/coverage-exclude.xml
           mkdir coverage-report
+      - name: Tmp Dir For diff-cover
+        if: github.event_name == 'pull_request'
+        run: New-Item -ItemType Directory -Force -Path "$env:SystemDrive\tmp"
+        shell: pwsh
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
         uses: Affanmir/diff-cover-action@v2
