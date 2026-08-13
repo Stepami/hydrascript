@@ -62,21 +62,17 @@ jobs:
           mkdir coverage-report
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
-        uses: 5monkeys/cobertura-action@master
+        uses: Affanmir/diff-cover-action@v2
         with:
-          path: ./tests/HydraScript.IntegrationTests/bin/Debug/net10.0/TestResults/coverage.cobertura.xml
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 80
-          fail_below_threshold: true
-          show_class_names: true
-          show_missing: true
-          link_missing_lines: true
-          show_branch: true
-          only_changed_files: true
+          coverage-files: ./TestResults/coverage.cobertura.xml
+          compare-branch: 'origin/master'
+          fail-under: 80
+          title: 'HydraScript PR Coverage'
+          create-badge: 'true'
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
         with:
-          reports: './tests/HydraScript.IntegrationTests/bin/Debug/net10.0/TestResults/coverage.cobertura.xml' 
+          reports: './TestResults/coverage.cobertura.xml' 
           targetdir: './coverage-report' 
       - name: Upload coverage report artifact
         if: github.event_name == 'push'
