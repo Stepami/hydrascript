@@ -62,7 +62,7 @@ jobs:
           mkdir coverage-report
       - name: Tmp Dir For diff-cover
         if: github.event_name == 'pull_request'
-        run: New-Item -ItemType Directory -Force -Path "$env:SystemDrive\tmp"
+        run: New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\tmp"
         shell: pwsh
       - name: Code Coverage Summary Report For Merge Request
         if: github.event_name == 'pull_request'
