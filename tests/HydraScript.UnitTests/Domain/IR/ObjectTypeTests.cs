@@ -8,32 +8,32 @@ public class ObjectTypeTests
     public void ObjectTypeEqualityTest()
     {
         var number = new Type("number");
-        var p2d1 = new ObjectType(new Dictionary<string, Type>(
+        var point2Num1 = new ObjectType(new Dictionary<string, Type>(
         [
             new("x", number),
             new("y", number)
         ]));
-        var p2d2 = new ObjectType(new Dictionary<string, Type>(
+        var point2Num2 = new ObjectType(new Dictionary<string, Type>(
         [
             new("x", number),
             new("y", number)
         ]));
-        Assert.Equal(p2d1, p2d2);
+        Assert.Equal(point2Num1, point2Num2);
 
-        var p3d1 = new ObjectType(new Dictionary<string, Type>(
+        var point3Num1 = new ObjectType(new Dictionary<string, Type>(
         [
             new("a", number),
             new("x", number),
             new("y", number)
         ]));
-        var p3d2 = new ObjectType(new Dictionary<string, Type>(
+        var point3Num2 = new ObjectType(new Dictionary<string, Type>(
         [
             new("y", number),
             new("x", number),
             new("z", number)
         ]));
-        Assert.NotEqual(p3d1, p3d2);
-        Assert.NotEqual(p3d2, p2d1);
+        Assert.NotEqual(point3Num1, point3Num2);
+        Assert.NotEqual(point3Num2, point2Num1);
     }
         
     [Fact]
