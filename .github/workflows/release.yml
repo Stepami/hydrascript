@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
       - name: Determine Version
         id: version_step
         run: |
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.x
       - name: Setup GitReleaseManager
@@ -112,7 +112,7 @@ jobs:
       publish_version: ${{ needs.upload-release-assets.outputs.publish_version }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
       - name: Setup GitReleaseManager
         uses: gittools/actions/gitreleasemanager/setup@v4
         with:
@@ -138,7 +138,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.x
       - name: Pack
