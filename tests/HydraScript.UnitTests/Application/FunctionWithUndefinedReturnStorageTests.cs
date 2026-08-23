@@ -13,7 +13,7 @@ public class FunctionWithUndefinedReturnStorageTests
     private const string FunctionName = nameof(FunctionName);
 
     [Fact]
-    public void StorageIsEmptyAfterFlushTest()
+    public void Flush_AfterSave_ReturnsSavedDeclarationAndClearsStorage()
     {
         IFunctionWithUndefinedReturnStorage storage = new FunctionWithUndefinedReturnStorage();
 
@@ -38,7 +38,7 @@ public class FunctionWithUndefinedReturnStorageTests
     }
 
     [Fact]
-    public void StorageIsCorrectOrderTest()
+    public void Flush_MultipleSavedDeclarations_ReturnsInSaveOrder()
     {
         FunctionDeclaration[] declarations = [
             new(

@@ -9,7 +9,7 @@ namespace HydraScript.UnitTests.Domain.FrontEnd;
 public class StructureTests
 {
     [Fact]
-    public void ToStringCorrectTest()
+    public void ToString_Always_ReturnsExpectedRepresentation()
     {
         var tokenTypes = new List<TokenType>
         {

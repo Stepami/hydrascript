@@ -5,7 +5,7 @@ namespace HydraScript.UnitTests.Domain.IR;
 public class TypeTests
 {
     [Fact]
-    public void TypeEqualityTest()
+    public void Equals_DifferentTypeCombinations_ReturnsExpectedResult()
     {
         var number = new Type("number");
         var arrayOfNumbers = new ArrayType(number);
@@ -16,7 +16,7 @@ public class TypeTests
     }
 
     [Fact]
-    public void TypeStringRepresentationTest()
+    public void ToString_ArrayOfArray_ReturnsExpectedRepresentation()
     {
         var matrix = new ArrayType(new ArrayType(new Type("number")));
             
@@ -24,7 +24,7 @@ public class TypeTests
     }
 
     [Fact]
-    public void NullTests()
+    public void Equals_NullComparedWithNullable_ReturnsTrue()
     {
         var number = new Type("number");
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -32,7 +32,7 @@ public class TypeTests
     }
 
     [Fact]
-    public void TypeWrappingTest()
+    public void ToString_WrappedNullableStringArray_ReturnsExpectedRepresentation()
     {
         var str = new Type("string");
         str = new NullableType(str);

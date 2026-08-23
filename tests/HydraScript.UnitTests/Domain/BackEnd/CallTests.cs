@@ -6,7 +6,7 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 public class CallTests
 {
     [Fact]
-    public void ToStringCorrect()
+    public void ToString_Always_Success()
     {
         var call = new Call(
             new Label("9"),

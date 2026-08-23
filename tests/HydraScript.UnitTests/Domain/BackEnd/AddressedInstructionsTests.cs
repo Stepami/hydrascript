@@ -10,7 +10,7 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 public class AddressedInstructionsTests
 {
     [Fact]
-    public void EnumerationPreservedAfterRemovalTest()
+    public void Remove_MiddleInstruction_PreservesEnumeration()
     {
         AddressedInstructions instructions =
         [
@@ -28,7 +28,7 @@ public class AddressedInstructionsTests
     }
     
     [Fact]
-    public void RemovalOfLastDoesNotThrowTest()
+    public void Remove_LastInstruction_DoesNotThrow()
     {
         AddressedInstructions instructions =
         [
@@ -41,7 +41,7 @@ public class AddressedInstructionsTests
     }
 
     [Fact]
-    public void ReplacementPreservesOrderTest()
+    public void Replace_MiddleInstruction_PreservesOrder()
     {
         var instructions = new AddressedInstructions
         {

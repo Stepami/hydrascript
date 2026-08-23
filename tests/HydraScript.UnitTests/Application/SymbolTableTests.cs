@@ -6,7 +6,7 @@ namespace HydraScript.UnitTests.Application;
 public class SymbolTableTests
 {
     [Theory, AutoHydraScriptData]
-    public void FindSymbolTest(ISymbol symbol)
+    public void FindSymbol_OpenScopeContainsSymbol_ReturnsSymbol(ISymbol symbol)
     {
         var id = symbol.Id;
 

@@ -5,7 +5,7 @@ namespace HydraScript.UnitTests.Domain.IR;
 public class ObjectTypeTests
 {
     [Fact]
-    public void ObjectTypeEqualityTest()
+    public void Equals_Always_Success()
     {
         var number = new Type("number");
         var point2Num1 = new ObjectType(new Dictionary<string, Type>(
@@ -35,9 +35,9 @@ public class ObjectTypeTests
         Assert.NotEqual(point3Num1, point3Num2);
         Assert.NotEqual(point3Num2, point2Num1);
     }
-        
+
     [Fact]
-    public void RecursiveTypeReferenceResolvingTest()
+    public void ResolveReference_RecursiveSelfReferences_Success()
     {
         var number = new Type("number");
         var array = new ArrayType(new Type("self"));
@@ -54,14 +54,14 @@ public class ObjectTypeTests
         ]));
 
         linkedListType.ResolveReference(linkedListType, refId: "self");
-            
+
         Assert.Equal(linkedListType, ((ObjectType)linkedListType["wrapped"]!)["next"]);
         Assert.Equal(linkedListType, array.Type);
         Assert.Equal(linkedListType, nullable.Type);
     }
 
     [Fact]
-    public void NonSpecifiedTypesVisitingTest()
+    public void ResolveReference_NonSpecifiedTypes_Success()
     {
         var objectType = new ObjectType(new Dictionary<string, Type>(
         [
@@ -70,16 +70,15 @@ public class ObjectTypeTests
             new("next", new Type("self")),
             new("prop", new Type("number"))
         ]));
-        var ex = Record.Exception(
-            () => objectType.ResolveReference(
-                objectType,
-                refId: "self"));
+        var ex = Record.Exception(() => objectType.ResolveReference(
+            objectType,
+            refId: "self"));
         Assert.Null(ex);
         Assert.Equal(objectType["next"], objectType);
     }
 
     [Fact]
-    public void ObjectTypeToStringTest()
+    public void ToString_RecursiveType_ContainsThisMarker()
     {
         var number = new Type("number");
         var array = new ArrayType(new Type("self"));
@@ -101,7 +100,7 @@ public class ObjectTypeTests
     }
 
     [Fact]
-    public void SerializationOfTypeWithRecursivePropertyTest()
+    public void ToString_RecursiveProperty_ContainsReferenceMarker()
     {
         var nodeType = new ObjectType(new Dictionary<string, Type>(
         [

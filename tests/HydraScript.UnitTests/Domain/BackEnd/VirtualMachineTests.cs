@@ -14,7 +14,7 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 public class VirtualMachineTests
 {
     [Theory, AutoHydraScriptData]
-    public void CorrectPrintToOutTest([Frozen] IConsole console, TestVirtualMachine vm)
+    public void Execute_OutputInstruction_WritesValueToConsole([Frozen] IConsole console, TestVirtualMachine vm)
     {
         var print = new Output(new Constant(223))
         {
@@ -32,7 +32,7 @@ public class VirtualMachineTests
     }
 
     [Theory, AutoHydraScriptData]
-    public void VirtualMachineFramesClearedAfterExecutionTest(TestVirtualMachine vm)
+    public void Run_AfterProgramExecution_ClearsFrames(TestVirtualMachine vm)
     {
         AddressedInstructions program =
         [
@@ -49,7 +49,7 @@ public class VirtualMachineTests
     }
 
     [Theory, AutoHydraScriptData]
-    public void VirtualMachineHandlesRecursionTest(TestVirtualMachine vm)
+    public void Run_RecursiveProgram_ComputesExpectedResult(TestVirtualMachine vm)
     {
         var halt = HaltTrackable();
         var factorial = new FunctionInfo("fact");
@@ -82,14 +82,13 @@ public class VirtualMachineTests
         Assert.Empty(vm.ExecuteParams.CallStack);
         Assert.Empty(vm.ExecuteParams.Arguments);
         halt.Received(1).Execute(
-            Arg.Is<IExecuteParams>(
-                vmParam =>
-                    Convert.ToInt32(vmParam.FrameContext.Current["fa6"]) == 720));
+            Arg.Is<IExecuteParams>(vmParam =>
+                Convert.ToInt32(vmParam.FrameContext.Current["fa6"]) == 720));
         vm.ExecuteParams.FrameContext.StepOut();
     }
 
     [Theory, AutoHydraScriptData]
-    public void CreateArrayReservesCertainSpaceTest(TestVirtualMachine vm)
+    public void Execute_CreateArrayInstruction_ReservesRequestedSpace(TestVirtualMachine vm)
     {
         vm.ExecuteParams.FrameContext.StepIn();
 
@@ -116,7 +115,7 @@ public class VirtualMachineTests
     }
 
     [Theory, AutoHydraScriptData]
-    public void ObjectCreationTest(TestVirtualMachine vm)
+    public void Run_ObjectCreationProgram_Success(TestVirtualMachine vm)
     {
         var halt = HaltTrackable();
         AddressedInstructions program =
@@ -128,9 +127,8 @@ public class VirtualMachineTests
 
         vm.Run(program);
         halt.Received(1).Execute(
-            Arg.Is<IExecuteParams>(
-                vmParam =>
-                    ((Dictionary<string, object?>)vmParam.FrameContext.Current["obj"]!)["prop"] == null));
+            Arg.Is<IExecuteParams>(vmParam =>
+                ((Dictionary<string, object?>)vmParam.FrameContext.Current["obj"]!)["prop"] == null));
         vm.ExecuteParams.FrameContext.StepOut();
     }
 
