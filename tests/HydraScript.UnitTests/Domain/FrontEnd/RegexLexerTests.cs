@@ -15,16 +15,16 @@ public class RegexLexerTests(ITestOutputHelper output)
 
     [Theory]
     [ClassData(typeof(LexerSuccessData))]
-    public void LexerDoesNotThrowTest(string text) =>
+    public void GetTokens_ValidInput_Success(string text) =>
         Assert.Null(Record.Exception(() => _regexLexer.GetTokens(text)));
 
     [Theory]
     [ClassData(typeof(LexerFailData))]
-    public void LexerThrowsErrorTest(string text) =>
+    public void GetTokens_InvalidInput_ThrowsLexerException(string text) =>
         Assert.Throws<LexerException>(() => _regexLexer.GetTokens(text).ToList());
 
     [Fact]
-    public void LexerToStringCorrectTest()
+    public void ToString_Tokens_ReturnExpectedRepresentations()
     {
         const string text = "8";
         var tokens = _regexLexer.GetTokens(text).ToList();
@@ -33,7 +33,7 @@ public class RegexLexerTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void EmptyTextTest() =>
+    public void GetTokens_EmptyText_ReturnsTokens() =>
         Assert.NotEmpty(_regexLexer.GetTokens(""));
 
     [Fact]

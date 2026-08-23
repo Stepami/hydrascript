@@ -5,7 +5,7 @@ namespace HydraScript.UnitTests.Domain.BackEnd;
 public class HashAddressTests
 {
     [Fact]
-    public void EqualsReturnsFalseForTwoDifferentObjectsWithSameSeed()
+    public void Equals_DifferentObjectsWithSameSeed_ReturnsFalse()
     {
         const int seed = 1;
 
@@ -16,7 +16,7 @@ public class HashAddressTests
     }
     
     [Fact]
-    public void EqualsReturnsTrueForTwoSameObjectsWithSameSeed()
+    public void Equals_SameObjectWithSameSeed_ReturnsTrue()
     {
         var address = new HashAddress(1);
 
@@ -24,7 +24,7 @@ public class HashAddressTests
     }
     
     [Fact]
-    public void EqualsReturnsFalseForTwoObjectsWithDifferentSeed()
+    public void Equals_ObjectsWithDifferentSeed_ReturnsFalse()
     {
         var addressOne = new HashAddress(0);
         var addressTwo = new HashAddress(1);

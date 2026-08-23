@@ -5,7 +5,9 @@ using System.Numerics;
 
 namespace HydraScript.UnitTests.Domain.FrontEnd;
 
-public record LexerInput([property:MinLength(10), MaxLength(25)] TokenInput[] TokenInputs) : IReadOnlyList<string>
+public sealed record LexerInput(
+    [property:MinLength(10), MaxLength(25)] TokenInput[] TokenInputs) :
+    IReadOnlyList<string>
 {
     public IEnumerator<string> GetEnumerator() =>
         TokenInputs.Select(x => x.Value).GetEnumerator();
@@ -22,7 +24,7 @@ public record LexerInput([property:MinLength(10), MaxLength(25)] TokenInput[] To
             (x, y) => x + y).Value;
 }
 
-public record TokenInput(
+public sealed record TokenInput(
     [property: RegularExpression(TokenInput.Pattern)]
     string Value) :
     IAdditiveIdentity<TokenInput, TokenInput>,

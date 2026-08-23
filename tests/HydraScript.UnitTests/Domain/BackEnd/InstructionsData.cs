@@ -10,7 +10,7 @@ using HydraScript.Domain.BackEnd.Impl.Values;
 
 namespace HydraScript.UnitTests.Domain.BackEnd;
 
-public class InstructionsData : TheoryData<IExecutableInstruction, string>
+public sealed class InstructionsData : TheoryData<IExecutableInstruction, string>
 {
     public InstructionsData()
     {

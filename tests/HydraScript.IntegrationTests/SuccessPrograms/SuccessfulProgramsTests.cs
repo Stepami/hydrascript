@@ -16,7 +16,7 @@ public class SuccessfulProgramsTests(TestHostFixture fixture) : IClassFixture<Te
         runner.Invoke().Should().Be(Executor.ExitCodes.Success);
     }
 
-    public class SuccessfulPrograms : TheoryData<string>
+    public sealed class SuccessfulPrograms : TheoryData<string>
     {
         public SuccessfulPrograms()
         {

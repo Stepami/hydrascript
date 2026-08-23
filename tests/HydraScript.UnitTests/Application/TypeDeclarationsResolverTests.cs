@@ -25,7 +25,7 @@ public class TypeDeclarationsResolverTests
         // Arrange
         const string itemTypeName = "QueryStringParseResultItem";
         const string resultTypeName = "QueryStringParseResult";
-        
+
         var scope = new Scope();
         var symbolTable = new SymbolTable();
         symbolTable.AddSymbol(new TypeSymbol(itemTypeName));
