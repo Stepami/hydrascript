@@ -1,6 +1,12 @@
-# Testing follow-up
+# Testing
 
 Read this before changing executable code/tests or choosing validation commands. Use the applicable Rider and .NET skills required by [AGENTS.md](../AGENTS.md).
+
+## Testing model
+
+Use component tests to isolate compiler/runtime contracts, generator tests to verify build-time output, and interpreter regressions to verify language behavior across the real pipeline. These suites complement one another: a script sample's successful exit is a smoke check, not a substitute for output/error assertions.
+
+NSubstitute is the shared test-double library; use the existing AutoFixture and assertion helpers where applicable. xUnit provides fixture/test-context support, while `TestHostFixture` explicitly composes interpreter services. The current setup does not use Moq or XUnit.DependencyInjection; see the [test-double choice](https://github.com/Stepami/hydrascript/pull/75) and [runner/fixture migration](https://github.com/Stepami/hydrascript/pull/176) for implementation context.
 
 ## Detect the runner
 
@@ -28,6 +34,14 @@ Before locating C# tests, use `rider-skills:finding-tests` and its documented Ri
 - [SuccessfulProgramsTests](../tests/HydraScript.IntegrationTests/SuccessPrograms/SuccessfulProgramsTests.cs) automatically enumerates files directly in `Samples/`; those cases assert successful exit only. A new sample joins that smoke suite, but does not establish expected output. Add a focused assertion for behavior-sensitive regressions. Samples are copied to test output with `PreserveNewest`.
 - Fixture defaults mock files and environment variables; sample tests explicitly use real ones. Avoid introducing machine-dependent state, input waits, or real environment mutation into new cases.
 - New diagnostics need targeted negative cases; do not assume the existing sample suite covers them.
+
+## Fixture ownership and isolation
+
+- `TestHostFixture.GetRunner` begins with production `AddDomain`, `AddApplication`, and `AddInfrastructure` registrations. Keep the interpreter stages real in integration tests; substitute external dependencies rather than the behavior under test.
+- Each returned runner owns a new service provider. Dispose the runner after use; do not assume invoking the same runner again resets mutable interpreter state.
+- Use `configureTestServices` for scenario-specific replacements after the fixture defaults. File-system and environment doubles are enabled by default; an in-memory script replaces source loading.
+- A class fixture can outlive individual tests and theory rows. `LogMessages` is cleared only when the fixture is disposed, not when a runner is created or disposed. Restrict assertions to messages captured for the current invocation, or use a separate fixture when isolation is required.
+- Captured messages come from the fixture's fake logger, with error messages including exception text. The production CLI uses its own console logging setup; tests of captured messages are not byte-for-byte CLI-format tests.
 
 ## Commands from the repository root
 
@@ -66,6 +80,8 @@ dotnet test --project tests/HydraScript.IntegrationTests -c Debug --no-build --c
 ```
 
 [PR CI](../.github/workflows/pr.yml) runs unit-category tests and integration coverage on Ubuntu, then requires **80% changed-line coverage** against `origin/master` using `diff-cover`. It reads `TestResults/coverage.cobertura.xml`. The threshold is not an overall project percentage. [Push CI](../.github/workflows/push.yml) runs all tests on Windows; [master CI](../.github/workflows/master.yml) collects integration coverage on Windows.
+
+Treat the unit suite and integration coverage gate as separate checks: an integration coverage report does not establish that component or generator tests passed.
 
 Respect [coverage-exclude.xml](../tests/coverage-exclude.xml). Do not expand exclusions simply to pass the gate. Local coverage collection alone does not verify the CI diff threshold.
 
