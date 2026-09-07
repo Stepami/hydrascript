@@ -4,6 +4,7 @@
     <File Path="benchmarks\Readme.md" />
   </Folder>
   <Folder Name="/SolutionItems/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="CODE_OF_CONDUCT.md" />
     <File Path="CONTRIBUTING.md" />
