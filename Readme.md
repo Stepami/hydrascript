@@ -2,6 +2,10 @@
 
 ![logo](hydrascript-logo.jpg)
 
+## Agent development
+
+Start with [AGENTS.md](AGENTS.md) for required tooling and task routing, then load the linked architecture, testing, and decision-history guidance.
+
 ## Installation
 
 Interpreter executable is built during release for 3 following platforms:
@@ -25,7 +29,7 @@ It started as a bachelor thesis "Extended JavaScript Subset". Now it's named "Hy
 
 I took [ECMA-262 standard](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/) as a basis and made:
 - [Lexical structure](src/Domain/HydraScript.Domain.Constants/TokenTypes.cs)
-- [Grammar](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
+- [Grammar](docs/grammar.txt)
 
 [Working samples can be found here.](tests/HydraScript.IntegrationTests/Samples) I use them for integration tests.
 
