@@ -2,6 +2,10 @@
 
 ![logo](hydrascript-logo.jpg)
 
+## Agent development
+
+Start with [AGENTS.md](AGENTS.md) for required tooling and task routing, then load the linked architecture, testing, and decision-history guidance.
+
 ## Installation
 
 Interpreter executable is built during release for 3 following platforms:
@@ -25,7 +29,7 @@ It started as a bachelor thesis "Extended JavaScript Subset". Now it's named "Hy
 
 I took [ECMA-262 standard](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/) as a basis and made:
 - [Lexical structure](src/Domain/HydraScript.Domain.Constants/TokenTypes.cs)
-- [Grammar](src/Domain/HydraScript.Domain.FrontEnd/Parser/grammar.txt)
+- [Grammar](docs/grammar.txt)
 
 [Working samples can be found here.](tests/HydraScript.IntegrationTests/Samples) I use them for integration tests.
 
@@ -182,6 +186,40 @@ array = array ++ [5, 7] // concatenation
 | ++               | binary          | []                         | []               |
 | ::               | binary          | [] and number              | void             |
 | ~                | unary           | [] or string               | number           |
+
+### Compound assignments
+
+Combine a binary operation with assignment to an existing mutable target. For example, `x += 2` is parsed as `x = x + 2`.
+
+Supported operators are `+=`, `-=`, `*=`, `/=`, `%=`, `++=`, `&&=`, and `||=`. The same operand-type rules apply as for the corresponding binary operator: arithmetic uses numbers, `+=` also concatenates strings, `++=` concatenates arrays, and `&&=` / `||=` operate on booleans.
+
+```text
+let count = 2
+count += 3 // 5
+count *= 4 // 20
+
+let text = "Hydra"
+text += "Script" // "HydraScript"
+
+let values = [1, 2]
+values ++= [3] // [1, 2, 3]
+
+let enabled = false
+enabled ||= true // true
+enabled &&= false // false
+```
+
+Writable object properties and array elements also support compound assignment:
+
+```text
+let point = { x: 1; }
+point.x += 2 // 3
+
+let numbers = [2, 4]
+numbers[0] *= 3 // [6, 4]
+```
+
+These forms follow the usual assignment and type checks; they do not make read-only targets writable. Logical assignments do not short-circuit: their right-hand expressions are evaluated even when the current target value already determines the boolean result. For member targets, keep index expressions free of side effects: parser expansion can evaluate them more than once.
 
 ### Conditionals
 
@@ -349,10 +387,13 @@ Default:
 HydraScript file.js
 ```
 
-Dumping debug info as files (tokens, ast, ir code):
+Dumping debug info as files (tokens, AST, and VM instructions):
+
 ```
 HydraScript file.js --dump
 ```
+
+This writes `file.tokens`, `file.dot`, and `file.tac` beside the script while still executing it. See the [dump guide](docs/dump.md) for file formats, examples, and AST rendering.
 
 ## Sources:
 
