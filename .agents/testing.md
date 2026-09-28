@@ -12,7 +12,7 @@ NSubstitute is the shared test-double library; use the existing AutoFixture and 
 
 The checked-in configuration is SDK-style .NET 10, **xUnit on Microsoft.Testing.Platform (MTP)**, in native MTP `dotnet test` mode. [global.json](../global.json) selects the runner; [tests/Directory.Build.props](../tests/Directory.Build.props) enables the xUnit MTP runner and executable test projects. The current package is `xunit.v3.mtp-v2`; its version is centrally managed and should be read from [Directory.Packages.props](../Directory.Packages.props).
 
-Use `dotnet-test:platform-detection` and `dotnet-test:run-tests` before selecting commands; use `dotnet-test:filter-syntax` for unfamiliar filters. Recheck configuration after dependency/SDK changes.
+Use `run-tests` directly before running .NET tests or selecting commands and flags; it handles the required runner discovery. Use `platform-detection` for identification-only questions and `filter-syntax` for unfamiliar filters. Resolve equivalent prefixed skill names from the installed catalog. Recheck configuration after dependency/SDK changes.
 
 ## Where tests live
 
@@ -22,11 +22,11 @@ Use `dotnet-test:platform-detection` and `dotnet-test:run-tests` before selectin
 | [LexerRegexGenerator.UnitTests](../tests/HydraScript.Infrastructure.LexerRegexGenerator.UnitTests) | Generated pattern source and ordering | Explicit `Category=Unit`; Roslyn GeneratorDriver and xUnit assertions |
 | [HydraScript.IntegrationTests](../tests/HydraScript.IntegrationTests) | Real interpreter pipeline, success/error programs, console/input/dumps | TestHostFixture composes production services and substitutes external dependencies |
 
-Before locating C# tests, use `rider-skills:finding-tests` and its documented Rider `findTests` route. Read the returned tests and fixture before adding coverage. Follow the skill's fallback rules when tooling is unavailable.
+Before locating tests for C# production code, use `finding-tests` and its documented Rider `findTests` route. Read the returned tests and fixture before adding coverage. Follow the skill's fallback rules when tooling is unavailable.
 
 ## Writing tests
 
-- Use `dotnet-test:code-testing-agent` for test implementation and `dotnet-test:assertion-quality` for assertions; use the relevant gap-analysis skill when the task is specifically about missing coverage.
+- Use the `code-testing-agent` skill for test implementation: focused work stays direct, while broad suites use its `code-testing-generator` agent and prescribed pipeline. Route test-quality and gap/coverage audits through the `test-quality-auditor` agent and its selected specialist; `assertion-quality` is not a prerequisite for every focused test addition. Use `testability-obstacle` when one behavior requires a minimal production seam for deterministic tests and seam selection is still open; use `code-testing-agent` when a suitable seam already exists.
 - Follow `MethodName_Scenario_ExpectedBehavior` (Roy Osherove). The happy-path convention requested in issue #205 is `MethodName_Always_Success`; prefer a specific scenario/outcome when it adds information.
 - Add a minimal regression at the stage that owns the defect. For language behavior, also verify the interpreter's observable result where unit tests cannot establish it.
 - Reuse [AutoHydraScriptDataAttribute](../tests/HydraScript.UnitTests/AutoHydraScriptDataAttribute.cs) for applicable unit fixtures and [TestHostFixture](../tests/HydraScript.IntegrationTests/TestHostFixture.cs) for pipeline tests. Keep semantic inputs explicit when randomized data would hide the case.
